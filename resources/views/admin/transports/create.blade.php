@@ -116,7 +116,14 @@
     </div>
 </div>
 @endsection
-
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('placa');
+       
+    });
+    </script>
+@endsection
 @section('javascript')
     <script>
             

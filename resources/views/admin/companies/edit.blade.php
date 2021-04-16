@@ -96,6 +96,13 @@
                             </form>
                         </div>
                     </div>
+@endsection
 
-                    @endsection
-
+@section('validacion')
+    <script>    
+	$(function(){
+        soloLetras('name');
+        soloAlfaNumerico('description');
+    });
+    </script>
+@endsection

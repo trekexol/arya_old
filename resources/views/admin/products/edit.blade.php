@@ -272,10 +272,17 @@
                             </form>
                         </div>
                     </div>
+ @endsection
+ @section('validacion')
+ <script>    
+ $(function(){
+     soloAlfaNumerico('code_comercial');
+     soloAlfaNumerico('description');
+ });
+ </script>
+@endsection
 
-                    @endsection
-
-                @section('javascript_edit')
+@section('javascript_edit')
                     <script>
                             $("#estado").on('change',function(){
                                 var estado_id = $(this).val();

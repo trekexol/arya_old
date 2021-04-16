@@ -267,3 +267,19 @@
     </div>
 </div>
 @endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('code_client');
+        soloAlfaNumerico('razon_social');
+        sololetras('name');
+        soloNumeros('cedula_rif');
+        sololetras('country');
+        sololetras('city');
+        soloAlfaNumerico('direction');
+        soloNumeros('phone1');
+        soloNumeros('phone2');
+        sololetras('seller');
+    });
+    </script>
+@endsection

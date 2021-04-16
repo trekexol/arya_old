@@ -86,3 +86,11 @@
     </div>
 </div>
 @endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('description');
+       
+    });
+    </script>
+@endsection

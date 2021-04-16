@@ -64,3 +64,11 @@
     </div>
 </div>
 @endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('code');
+       
+    });
+    </script>
+@endsection

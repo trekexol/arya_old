@@ -69,7 +69,7 @@
                             <label for="price" class="col-md-2 col-form-label text-md-right">Precio</label>
 
                             <div class="col-md-4">
-                                <input id="price" type="text" readonly class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $product->price }}" required autocomplete="price">
+                                <input id="price" type="number" readonly class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $product->price }}" required autocomplete="price">
 
                                 @error('price')
                                     <span class="invalid-feedback" role="alert">
@@ -121,4 +121,12 @@
         </div>
     </div>
 </div>
+@endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('code');
+       
+    });
+    </script>
 @endsection

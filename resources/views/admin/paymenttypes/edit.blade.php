@@ -197,3 +197,12 @@
     </div>
 </div>
 @endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('description');
+        soloAlfaNumerico('small_box');
+       
+    });
+    </script>
+@endsection

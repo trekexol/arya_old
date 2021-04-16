@@ -251,7 +251,7 @@
                             <label for="acumulado_prestaciones" class="col-md-2 col-form-label text-md-right">Acumulado Prestaciones</label>
 
                             <div class="col-md-4">
-                                <input id="acumulado_prestaciones" type="text" class="form-control @error('acumulado_prestaciones') is-invalid @enderror" name="acumulado_prestaciones" value="{{ old('acumulado_prestaciones') }}" required autocomplete="acumulado_prestaciones">
+                                <input id="acumulado_prestaciones" type="number" class="form-control @error('acumulado_prestaciones') is-invalid @enderror" name="acumulado_prestaciones" value="{{ old('acumulado_prestaciones') }}" required autocomplete="acumulado_prestaciones">
 
                                 @error('acumulado_prestaciones')
                                     <span class="invalid-feedback" role="alert">
@@ -262,7 +262,7 @@
                             <label for="acumulado_utilidades" class="col-md-2 col-form-label text-md-right">Acumulado Utilidades</label>
 
                             <div class="col-md-4">
-                                <input id="acumulado_utilidades" type="text" class="form-control @error('acumulado_utilidades') is-invalid @enderror" name="acumulado_utilidades" value="{{ old('acumulado_utilidades') }}" required autocomplete="acumulado_utilidades">
+                                <input id="acumulado_utilidades" type="number" class="form-control @error('acumulado_utilidades') is-invalid @enderror" name="acumulado_utilidades" value="{{ old('acumulado_utilidades') }}" required autocomplete="acumulado_utilidades">
 
                                 @error('acumulado_utilidades')
                                     <span class="invalid-feedback" role="alert">
@@ -308,7 +308,18 @@
     </div>
 </div>
 @endsection
-
+@section('validacion')
+    <script>    
+	$(function(){
+        soloLetras('nombres');
+        soloLetras('apellidos');
+        soloNumeros('telefono1');
+        soloNumeros('telefono2');
+        soloAlfaNumerico('code_employee');
+        soloAlfaNumerico('direccion');
+    });
+    </script>
+@endsection
 @section('javascript')
     <script>
             

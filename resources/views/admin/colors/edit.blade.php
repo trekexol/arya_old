@@ -23,7 +23,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card">
-                    <div class="card-header">Editar Colot</div>
+                    <div class="card-header">Editar Color</div>
     
                     <div class="card-body">
                     <form  method="POST"   action="{{ route('colors.update',$var->id) }}" enctype="multipart/form-data" >
@@ -85,4 +85,11 @@
         </div>
     </div>
 </div>
+@endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('description');
+    });
+    </script>
 @endsection

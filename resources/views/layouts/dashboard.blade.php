@@ -125,10 +125,45 @@
         <!-- Page level custom scripts -->
         <script src="{{asset('vendor/sb-admin/js/demo/datatables-demo.js')}}"></script>
     <!-- END SCRIPTS FOR TABLES -->
+
+        <script src="{{asset('js/formulario.js')}}"></script>
     
     @yield('javascript')  
   @yield('javascript_edit')
   @yield('js_charts')
+
+  @yield('validacion_usuario')
+
+  @yield('validacion')
+  
+  <script>
+    function soloNumeros(idCampo){
+    $('#'+idCampo).keyup(function (){
+          this.value = (this.value + '').replace(/[^0-9]/g, '');
+      });  
+    }
+  </script>
+  <script>
+    function soloLetras(idCampo){
+    $('#'+idCampo).keyup(function (){
+          this.value = (this.value + '').replace(/[^a-zA-Z\s]/g, '');
+      });  
+    }
+  </script>
+    <script>
+        function soloAlfaNumerico(idCampo){
+        $('#'+idCampo).keyup(function (){
+              this.value = (this.value + '').replace(/[^a-zA-Z0-9\s]/g, '');
+          });  
+        }
+      </script>
+      <script>
+        function soloNumeroPunto(idCampo){
+        $('#'+idCampo).keyup(function (){
+              this.value = (this.value + '').replace(/[^0-9.]/g, '');
+          });  
+        }
+      </script>
 
 </body>
 

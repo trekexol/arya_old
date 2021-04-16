@@ -65,3 +65,11 @@
     </div>
 </div>
 @endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloLetras('name');
+        soloAlfaNumerico('description');
+    });
+    </script>
+@endsection

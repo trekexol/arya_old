@@ -91,7 +91,7 @@
                                 <label for="description" class="col-md-2 col-form-label text-md-right">Descripción</label>
 
                                 <div class="col-md-4">
-                                    <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}" required autocomplete="description">
+                                    <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}" maxlength="150" required autocomplete="description">
 
                                     @error('description')
                                         <span class="invalid-feedback" role="alert">
@@ -102,7 +102,7 @@
                                 <label for="direction" class="col-md-2 col-form-label text-md-right">Dirección</label>
 
                                 <div class="col-md-4">
-                                    <input id="direction" type="text" class="form-control @error('direction') is-invalid @enderror" name="direction" value="{{ old('direction') }}" required autocomplete="direction">
+                                    <input id="direction" type="text" class="form-control @error('direction') is-invalid @enderror" name="direction" value="{{ old('direction') }}" maxlength="150" required autocomplete="direction">
 
                                     @error('direction')
                                         <span class="invalid-feedback" role="alert">
@@ -117,7 +117,7 @@
                             <label for="phone" class="col-md-2 col-form-label text-md-right">Teléfono</label>
 
                             <div class="col-md-4">
-                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone">
+                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" maxlength="30" required autocomplete="phone">
 
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
@@ -128,7 +128,7 @@
                             <label for="phone2" class="col-md-2 col-form-label text-md-right">Teléfono 2</label>
 
                             <div class="col-md-4">
-                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ old('phone2') }}" required autocomplete="phone2">
+                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ old('phone2') }}" maxlength="30" required autocomplete="phone2">
 
                                 @error('phone2')
                                     <span class="invalid-feedback" role="alert">
@@ -144,7 +144,7 @@
                             <label for="person_contact" class="col-md-2 col-form-label text-md-right">Persona Contácto</label>
 
                             <div class="col-md-4">
-                                <input id="person_contact" type="text" class="form-control @error('person_contact') is-invalid @enderror" name="person_contact" value="{{ old('person_contact') }}" required autocomplete="person_contact">
+                                <input id="person_contact" type="text" class="form-control @error('person_contact') is-invalid @enderror" name="person_contact" value="{{ old('person_contact') }}" maxlength="160" required autocomplete="person_contact">
 
                                 @error('person_contact')
                                     <span class="invalid-feedback" role="alert">
@@ -156,7 +156,7 @@
                             <label for="phone_contact" class="col-md-2 col-form-label text-md-right">Teléfono Contácto</label>
 
                             <div class="col-md-4">
-                                <input id="phone_contact" type="text" class="form-control @error('phone_contact') is-invalid @enderror" name="phone_contact" value="{{ old('phone_contact') }}" required autocomplete="phone_contact">
+                                <input id="phone_contact" type="text" class="form-control @error('phone_contact') is-invalid @enderror" name="phone_contact" value="{{ old('phone_contact') }}" maxlength="30" required autocomplete="phone_contact">
 
                                 @error('phone_contact')
                                     <span class="invalid-feedback" role="alert">
@@ -171,7 +171,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observación</label>
 
                             <div class="col-md-4">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" required autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" maxlength="150" required autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">
@@ -210,7 +210,20 @@
     </div>
 </div>
 @endsection
-
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('description');
+        soloAlfaNumerico('direction');
+        soloNumeros('phone');
+        soloNumeros('phone2');
+        sololetras('person_contact');
+        soloNumeros('phone_contact');
+        soloAlfaNumerico('observation');
+       
+    });
+    </script>
+@endsection
 @section('javascript')
     <script>
             

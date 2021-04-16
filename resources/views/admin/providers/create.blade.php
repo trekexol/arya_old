@@ -218,3 +218,17 @@
     </div>
 </div>
 @endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('code_provider');
+        soloAlfaNumerico('razon_social');
+        soloLetras('country');
+        soloLetras('city');
+        soloAlfaNumerico('direction');
+        soloNumeros('phone1');
+        soloNumeros('phone2');
+       
+    });
+    </script>
+@endsection

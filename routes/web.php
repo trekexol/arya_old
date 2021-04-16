@@ -335,3 +335,17 @@ Route::group(["prefix"=>'historictransports'],function(){
     Route::get('{idtransport}/selectemployee','HistoricTransportController@selectemployee')->name('historictransports.selectemployee');
     Route::get('{idtransport}/{idemployee}/create','HistoricTransportController@create')->name('historictransports.create');
 });
+
+
+Route::group(["prefix"=>'accounts'],function(){
+    Route::get('/','AccountController@index')->name('accounts');
+    Route::get('register','AccountController@create')->name('accounts.create');
+    Route::post('store','AccountController@store')->name('accounts.store');
+    Route::get('{id}/edit','AccountController@edit')->name('accounts.edit');
+    Route::delete('{id}/delete','AccountController@destroy')->name('accounts.delete');
+    Route::patch('{id}/update','AccountController@update')->name('accounts.update');
+
+    Route::get('register/{id}','AccountController@createlevel')->name('accounts.createlevel');
+    
+
+});

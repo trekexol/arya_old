@@ -60,23 +60,12 @@
             <a class="collapse-item" href="{{ route('colors') }}">Colores</a>
             <a class="collapse-item" href="{{ route('transports') }}">Transportes</a>
             <a class="collapse-item" href="{{ route('historictransports') }}">Historial de Transporte</a>
+           
         </div>
     </div>
 </li>
 
   
-    <!-- 
-    <a class="collapse-item" href="{{ route('clients')}}">Clientes</a>
-    <a class="collapse-item" href="{{ route('vendors') }}">Vendedores</a>
-     <a class="collapse-item" href="{{ route('providers')}}">Proveedores</a>
-            <a class="collapse-item" href="{{ route('inventories')}}">Inventario</a>
-               <a class="collapse-item" href="{{ route('products')}}">Productos</a>
-                <a class="collapse-item" href="{{ route('indexbcvs') }}">Indices BCV</a>
-            <a class="collapse-item" href="{{ route('employees') }}">Empleados</a>
-            
-         
-           
--->
 
 
  
@@ -178,7 +167,7 @@
             </div>
         </div>
     </li>
-
+-->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseContabilidad"
             aria-expanded="true" aria-controls="collapseContabilidad">
@@ -188,18 +177,18 @@
         <div id="collapseContabilidad" class="collapse" aria-labelledby="headingContabilidad" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
              
-            <a  class="collapse-header" href="buttons.html">Contabilidad</a>
-                <a class="collapse-item" href="buttons.html">Plan de Cuentas</a>
-                <a class="collapse-item" href="buttons.html">Ajustes Contables</a>
+           <!-- <a  class="collapse-header" href="">Contabilidad</a>-->
+                <a class="collapse-item" href="{{ route('accounts')}}">Plan de Cuentas</a>
+               <!-- <a class="collapse-item" href="buttons.html">Ajustes Contables</a>
                 <a class="collapse-item" href="buttons.html">Balance General</a>
                 <a class="collapse-item" href="buttons.html">Ingresos y Egresos</a>
                 <a class="collapse-item" href="buttons.html">Listado Diario</a>
                 <a class="collapse-item" href="buttons.html">Ejercicio Anterior</a>
-           
+            -->
             </div>
         </div>
     </li>
--->
+
 
     <li class="nav-item">
         <a class="nav-link" href="{{ route('inventories')}}">

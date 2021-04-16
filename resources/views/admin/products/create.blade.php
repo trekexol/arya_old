@@ -116,7 +116,7 @@
                             <label for="price" class="col-md-2 col-form-label text-md-right">Precio</label>
 
                             <div class="col-md-4">
-                                <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price') }}" required autocomplete="price">
+                                <input id="price" type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price') }}" required autocomplete="price">
 
                                 @error('price')
                                     <span class="invalid-feedback" role="alert">
@@ -127,7 +127,7 @@
                             <label for="price_buy" class="col-md-2 col-form-label text-md-right">Precio Compra</label>
 
                             <div class="col-md-4">
-                                <input id="price_buy" type="text" class="form-control @error('price_buy') is-invalid @enderror" name="price_buy" value="{{ old('price_buy') }}" required autocomplete="price_buy">
+                                <input id="price_buy" type="number" class="form-control @error('price_buy') is-invalid @enderror" name="price_buy" value="{{ old('price_buy') }}" required autocomplete="price_buy">
 
                                 @error('price_buy')
                                     <span class="invalid-feedback" role="alert">
@@ -142,7 +142,7 @@
                             <label for="cost_average" class="col-md-2 col-form-label text-md-right">Costo Promedio</label>
 
                             <div class="col-md-4">
-                                <input id="cost_average" type="text" class="form-control @error('cost_average') is-invalid @enderror" name="cost_average" value="{{ old('cost_average') }}" required autocomplete="cost_average">
+                                <input id="cost_average" type="number" class="form-control @error('cost_average') is-invalid @enderror" name="cost_average" value="{{ old('cost_average') }}" required autocomplete="cost_average">
 
                                 @error('cost_average')
                                     <span class="invalid-feedback" role="alert">
@@ -195,14 +195,8 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="rol" class="col-md-2 col-form-label text-md-right">Status</label>
-
-                            <div class="col-md-4">
-                            <select class="form-control" name="status" id="status">
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                            </div>
+                            
+                            
                         </div>
                         
                         <br>
@@ -219,6 +213,14 @@
         </div>
     </div>
 </div>
+@endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('code_comercial');
+        soloAlfaNumerico('description');
+    });
+    </script>
 @endsection
 
 @section('javascript')

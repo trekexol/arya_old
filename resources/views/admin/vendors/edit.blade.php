@@ -338,6 +338,21 @@
                     </div>
 
                     @endsection
+                    @section('validacion_usuario')
+                    <script>
+                        
+                    $(function(){
+                        soloAlfaNumerico('code');
+                        soloNumeros('cedula_rif');
+                        soloLetras('name');
+                        soloLetras('surname');
+                        soloNumeros('comision');
+                        soloNumeros('phone');
+                        soloNumeros('phone2');
+                    });
+
+                    </script>
+                    @endsection
 
                 @section('javascript_edit')
                     <script>

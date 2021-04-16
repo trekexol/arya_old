@@ -331,9 +331,15 @@
                             </form>
                         </div>
                     </div>
-
-                    @endsection
-
+ @endsection
+                @section('validacion')
+                    <script>    
+                    $(function(){
+                        soloAlfaNumerico('placa');
+                       
+                    });
+                    </script>
+                @endsection
                 @section('javascript_edit')
                     <script>
                             $("#estado").on('change',function(){

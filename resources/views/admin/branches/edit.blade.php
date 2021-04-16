@@ -132,7 +132,7 @@
                             <label for="phone" class="col-md-2 col-form-label text-md-right">Teléfono</label>
 
                             <div class="col-md-4">
-                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ $var->phone }}" required autocomplete="phone">
+                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ $var->phone }}" maxlength="30" required autocomplete="phone">
 
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
@@ -143,7 +143,7 @@
                             <label for="phone2" class="col-md-2 col-form-label text-md-right">Teléfono 2</label>
 
                             <div class="col-md-4">
-                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ $var->phone2 }}" required autocomplete="phone2">
+                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ $var->phone2 }}" maxlength="30" required autocomplete="phone2">
 
                                 @error('phone2')
                                     <span class="invalid-feedback" role="alert">
@@ -237,6 +237,20 @@
         </div>
     </div>
 </div>
+@endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloAlfaNumerico('description');
+        soloAlfaNumerico('direction');
+        soloNumeros('phone');
+        soloNumeros('phone2');
+        sololetras('person_contact');
+        soloNumeros('phone_contact');
+        soloAlfaNumerico('observation');
+       
+    });
+    </script>
 @endsection
 @section('javascript_edit')
 <script>

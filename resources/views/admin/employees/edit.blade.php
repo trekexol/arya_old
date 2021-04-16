@@ -363,9 +363,19 @@
                             </form>
                         </div>
                     </div>
-
-                    @endsection
-
+@endsection
+@section('validacion')
+    <script>    
+	$(function(){
+        soloLetras('nombres');
+        soloLetras('apellidos');
+        soloNumeros('telefono1');
+        soloNumeros('telefono2');
+        soloAlfaNumerico('code_employee');
+        soloAlfaNumerico('direccion');
+    });
+    </script>
+@endsection
                 @section('javascript_edit')
                     <script>
                             $("#estado").on('change',function(){

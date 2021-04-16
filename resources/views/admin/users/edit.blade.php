@@ -148,3 +148,18 @@
 
                     @endsection
 
+                    @section('validacion_usuario')
+                    <script>
+                           
+                    $(function(){
+                        soloLetras('name');
+                       
+                    });
+                    
+                 
+                
+                
+                
+                    </script>
+                @endsection
+                
