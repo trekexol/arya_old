@@ -31,23 +31,51 @@
                        
                        
                         <div class="form-group row">
-                            <label for="period" class="col-md-2 col-form-label text-md-right">Periodo</label>
+                            <label for="code_one" class="col-md-2 col-form-label text-md-right">Código</label>
 
-                            <div class="col-md-4">
-                                <input id="period" type="number" class="form-control @error('period') is-invalid @enderror" name="period" value="{{ old('period') }}" required autocomplete="period">
+                            <div class="col-md-1">
+                                <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ old('code_one') }}" required autocomplete="code_one" autofocus>
 
-                                @error('period')
+                                @error('code_one')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <label for="code" class="col-md-2 col-form-label text-md-right">Código</label>
+                            
+                           <div class="col-md-1">
+                                <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ old('code_two') }}" required autocomplete="code_two" autofocus>
 
-                            <div class="col-md-4">
-                                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code') }}" required autocomplete="code" autofocus>
+                                @error('code_two')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-1">
+                                <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ old('code_three') }}" required autocomplete="code_three" autofocus>
 
-                                @error('code')
+                                @error('code_three')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-1">
+                                <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ old('code_four') }}" required autocomplete="code_four" autofocus>
+
+                                @error('code_four')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="period" class="col-md-2 col-form-label text-md-right">Periodo</label>
+
+                            <div class="col-md-2">
+                                <input id="period" type="number" class="form-control @error('period') is-invalid @enderror" name="period" value="{{ $datenow }}" required autocomplete="period">
+
+                                @error('period')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

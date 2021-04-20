@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Account;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+
+use Carbon\Carbon;
+
 class AccountController extends Controller
 {
  
@@ -18,7 +22,7 @@ class AccountController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $accounts = Account::orderBy('id' ,'DESC')->get();
+        $accounts = Account::All();
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -34,21 +38,37 @@ class AccountController extends Controller
    public function create()
    {
 
-        return view('admin.accounts.create');
+        $date = Carbon::now();
+        $datenow = $date->format('Y');
+
+        return view('admin.accounts.create',compact('datenow'));
    }
 
-   public function createlevel($id)
+   public function createlevel($code_one,$code_two,$code_three,$code_four)
    {
-        $var = Account::find($id);
-        $code = $var->code;
+        if($code_one != 0){
+
+            if($code_two != 0){
 
 
-        for($i=0;$i<strlen($code);$i++)
-        {
-           
+                if($code_three != 0){
+
+
+                    if($code_four != 0){
+
+                    }
+                }
+            }
         }
+        $var = DB::table('accounts')->where('code_one', $code_one)
+                                    ->where('code_two', $code_two)
+                                    ->where('code_three', $code_three)
+                                    ->where('code_four', $code_four)->first();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y');
        
-        return view('admin.accounts.createlevel',compact('var'));
+        return view('admin.accounts.createlevel',compact('var','datenow'));
    }
 
    /**
@@ -62,9 +82,9 @@ class AccountController extends Controller
    
     $data = request()->validate([
         
-       
+        
+
         'period'            =>'required',
-        'code'              =>'required',
         'description'       =>'required',
         'type'              =>'required',
         'level'             =>'required',
@@ -77,8 +97,12 @@ class AccountController extends Controller
 
     $var = new Account();
 
+    $var->code_one = request('code_one');
+    $var->code_two = request('code_two');
+    $var->code_three = request('code_three');
+    $var->code_four = request('code_four');
+
     $var->period = request('period');
-    $var->code = request('code');
     $var->description = request('description');
     $var->type = request('type');
     $var->level = request('level');

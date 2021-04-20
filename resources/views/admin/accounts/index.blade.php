@@ -47,7 +47,7 @@
                 <th>Nivel</th>
                 <th>Tipo</th>
                 
-                <th>Balance Previo</th>
+                <th >Saldo Anterior</th>
                 <th>Debe</th>
                 <th>Haber</th>
                 <th>Status</th>
@@ -59,11 +59,15 @@
             <tbody>
                 @if (empty($accounts))
                 @else  
+                <?php
+                    $intercalar = true;
+                ?>
+               
                     @foreach ($accounts as $account)
                         <tr>
-                            
-                           
-                            <td>{{$account->code}}</td>
+                        @if($intercalar)
+                        <?php $intercalar = false;?>
+                            <td>{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
                             <td>{{$account->description}}</td>
                             <td>{{$account->level}}</td>
                             <td>{{$account->type}}</td>
@@ -78,11 +82,34 @@
                                 <td>Inactivo</td>
                             @endif
                             
-                            <td>   
-                                <a href="accounts/register/{{$account->id}}" title="Agregar"><i class="fa fa-plus"></i></a>
-                                <a href="accounts/{{$account->id}}/edit" title="Editar"><i class="fa fa-edit"></i></a>
+                            <td>  
+                            <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}" title="Crear"><i class="fa fa-plus"></i></a>
+                           </td>
+                        </tr>   
+
+                        @else
+                            <?php $intercalar = true; ?>
+
+                            <td style="background: #E0D7CD;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
+                            <td style="background: #E0D7CD;">{{$account->description}}</td>
+                            <td style="background: #E0D7CD;">{{$account->level}}</td>
+                            <td style="background: #E0D7CD;">{{$account->type}}</td>
+                            
+                            <td style="background: #E0D7CD;">{{$account->balance_previus}}</td>
+                            <td style="background: #E0D7CD;">{{$account->debe}}</td>
+                            <td style="background: #E0D7CD;">{{$account->haber}}</td>
+
+                            @if($account->status == 1)
+                                <td style="background: #E0D7CD;">Activo</td>
+                            @else
+                                <td style="background: #E0D7CD;">Inactivo</td>
+                            @endif
+                            
+                                <td style="background: #E0D7CD;">
+                                <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}" title="Crear"><i class="fa fa-plus"></i></a>
                              </td>
-                        </tr>     
+                        </tr>   
+                        @endif  
                     @endforeach   
                 @endif
             </tbody>

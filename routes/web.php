@@ -345,7 +345,7 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::delete('{id}/delete','AccountController@destroy')->name('accounts.delete');
     Route::patch('{id}/update','AccountController@update')->name('accounts.update');
 
-    Route::get('register/{id}','AccountController@createlevel')->name('accounts.createlevel');
+    Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}','AccountController@createlevel')->name('accounts.createlevel');
     
 
 });

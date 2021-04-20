@@ -34,7 +34,7 @@
                             <label for="code" class="col-md-2 col-form-label text-md-right">Código</label>
 
                             <div class="col-md-4">
-                                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $var->code }}" required autocomplete="code" autofocus>
+                                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}" required autocomplete="code" readonly autofocus>
 
                                 @error('code')
                                     <span class="invalid-feedback" role="alert">
