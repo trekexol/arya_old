@@ -1,4 +1,4 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -60,6 +60,7 @@
             <a class="collapse-item" href="{{ route('colors') }}">Colores</a>
             <a class="collapse-item" href="{{ route('transports') }}">Transportes</a>
             <a class="collapse-item" href="{{ route('historictransports') }}">Historial de Transporte</a>
+            <a class="collapse-item" href="{{ route('headervouchers') }}">Comprobante Cabecera</a>
            
         </div>
     </div>
@@ -179,8 +180,8 @@
              
            <!-- <a  class="collapse-header" href="">Contabilidad</a>-->
                 <a class="collapse-item" href="{{ route('accounts')}}">Plan de Cuentas</a>
-               <!-- <a class="collapse-item" href="buttons.html">Ajustes Contables</a>
-                <a class="collapse-item" href="buttons.html">Balance General</a>
+                <a class="collapse-item" href="{{ route('detailvouchers.create')}}">Ajustes Contables</a>
+               <!-- <a class="collapse-item" href="buttons.html">Balance General</a>
                 <a class="collapse-item" href="buttons.html">Ingresos y Egresos</a>
                 <a class="collapse-item" href="buttons.html">Listado Diario</a>
                 <a class="collapse-item" href="buttons.html">Ejercicio Anterior</a>

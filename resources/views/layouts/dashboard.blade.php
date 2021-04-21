@@ -11,7 +11,7 @@
 
     <title>SB Admin 2 - Dashboard</title>
 
-    
+    @yield('header')
 
     <!-- Custom fonts for this template INDEX-->
     <link href="{{asset('vendor/sb-admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -58,13 +58,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
+            
             <!-- End of Footer -->
 
         </div>

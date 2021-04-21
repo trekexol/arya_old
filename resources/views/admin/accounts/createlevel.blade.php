@@ -26,10 +26,16 @@
                 <div class="card-header">Insertar una nueva Cuenta</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('accounts.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('accounts.storeNewLevel') }}" enctype="multipart/form-data">
                         @csrf
                        
-                       
+                        <input type="hidden" name="code_one" value="{{$var->code_one}}" readonly>
+                        <input type="hidden" name="code_two" value="{{$var->code_two}}" readonly>
+                        <input type="hidden" name="code_three" value="{{$var->code_three}}" readonly>
+                        <input type="hidden" name="code_four" value="{{$var->code_four}}" readonly>
+
+                        <input type="hidden" name="period" value="{{$var->period}}" readonly>
+
                         <div class="form-group row">
                             <label for="code" class="col-md-2 col-form-label text-md-right">Código</label>
 
@@ -45,7 +51,7 @@
                             <label for="level" class="col-md-2 col-form-label text-md-right">Nivel</label>
 
                             <div class="col-md-4">
-                                <input id="level" type="number" class="form-control @error('level') is-invalid @enderror" name="level" value="{{ $var->level+1 }}" required autocomplete="level">
+                                <input id="level" type="number" class="form-control @error('level') is-invalid @enderror" name="level" value="{{ $var->level }}" readonly required autocomplete="level">
 
                                 @error('level')
                                     <span class="invalid-feedback" role="alert">
@@ -93,31 +99,7 @@
                             
                         </div>
 
-                        <div class="form-group row">
-                            <label for="debe" class="col-md-2 col-form-label text-md-right">Debe</label>
-
-                            <div class="col-md-4">
-                                <input id="debe" type="number" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ old('debe') }}" required autocomplete="debe">
-
-                                @error('debe')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="haber" class="col-md-2 col-form-label text-md-right">Haber</label>
-
-                            <div class="col-md-4">
-                                <input id="haber" type="number" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ old('haber') }}" required autocomplete="haber">
-
-                                @error('haber')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
+                        
                         <br>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

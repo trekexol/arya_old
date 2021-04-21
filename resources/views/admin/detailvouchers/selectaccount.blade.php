@@ -2,71 +2,6 @@
 
 @section('content')
 
-@section('header')
-
-
-<!-- CSS media query within a style sheet -->
-<style>
-
-  body {
-   
-    zoom: 80%;
-  }
-
-</style>
-@endsection
-<!-- container-fluid -->
-<div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="row py-lg-2">
-        <div class="col-md-3 dropdown mb-4">
-            <button class="btn btn-primary dropdown-toggle" type="button"
-                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                Niveles
-            </button>
-            <div class="dropdown-menu animated--fade-in"
-                aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Nivel 1</a>
-                <a class="dropdown-item" href="#">Nivel 2</a>
-                <a class="dropdown-item" href="#">Nivel 3</a>
-                <a class="dropdown-item" href="#">Todos</a>
-            </div>
-        </div>
-        <div class="col-md-3 dropdown mb-4">
-            <button class="btn btn-info dropdown-toggle" type="button"
-                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                Opciones de Cuentas
-            </button>
-            <div class="dropdown-menu animated--fade-in"
-                aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Listado de Cuentas</a>
-                <a class="dropdown-item" href="#">Bajar Cuentas a Excel</a>
-                <a class="dropdown-item" href="#">Imprimir Cuentas</a>
-                <a class="dropdown-item" href="#">Subir Cuentas</a>
-            </div>
-        </div> 
-        <div class="col-md-3">
-            <a href="#" class="btn btn-success btn-icon-split">
-                <span class="icon text-white-50">
-                    <i class="fas fa-eye"></i>
-                </span>
-                <span class="text">Ver Ejercicio Anterior</span>
-            </a>
-        </div>
-            <div class="col-md-3">
-                <a href="#" class="btn btn-danger btn-icon-split">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-window-close"></i>
-                    </span>
-                    <span class="text">Cierre de Ejercicio</span>
-                </a>
-            </div>
-        
-    </div>
-  </div>
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
   @include('admin.layouts.success')   {{-- SAVE --}}
@@ -74,16 +9,12 @@
   @include('admin.layouts.delete')    {{-- DELELTE --}}
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
-
+<!-- container-fluid -->
+<div class="container-fluid">
 <div class="card shadow mb-4">
-    <div class="card-header py-3 ">
-        
-            
-        <div class="col-md-3 float-md-right">
-            <a href="{{ route('accounts.create')}}" class="btn btn-primary btn-icon-splitt" role="button" aria-pressed="true">Registrar una Cuenta</a>
-          </div>
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Seleccione una Cuenta</h6>
     </div>
-    
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -139,7 +70,7 @@
                             
                             
                             <td style="text-align:right; color:black;">  
-                                <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus"></i></a>
+                                <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-plus"></i></a>
                             </td>
                         </tr>   
 
@@ -158,7 +89,7 @@
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->balance_previus+$account->debe-$account->haber}}</td>
                             
                                 <td style="background: #E0D7CD; text-align:right; color:black;">
-                                <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus"></i></a>
+                                <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-plus"></i></a>
                              </td>
                         </tr>   
                         @endif  
@@ -170,13 +101,4 @@
     </div>
 </div>
   
-@endsection
-
-@section('javascript')
-
-    <script>
-    $('#dataTable').DataTable({
-        "order": []
-    });
-    </script> 
 @endsection

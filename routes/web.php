@@ -345,7 +345,39 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::delete('{id}/delete','AccountController@destroy')->name('accounts.delete');
     Route::patch('{id}/update','AccountController@update')->name('accounts.update');
 
-    Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}','AccountController@createlevel')->name('accounts.createlevel');
+    Route::post('store','AccountController@storeNewLevel')->name('accounts.storeNewLevel');
+
+
+    Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}/{period}','AccountController@createlevel')->name('accounts.createlevel');
     
 
+});
+
+Route::group(["prefix"=>'headervouchers'],function(){
+    Route::get('/','HeaderVoucherController@index')->name('headervouchers');
+    Route::get('register','HeaderVoucherController@create')->name('headervouchers.create');
+    Route::post('store','HeaderVoucherController@store')->name('headervouchers.store');
+    Route::get('{id}/edit','HeaderVoucherController@edit')->name('headervouchers.edit');
+    Route::delete('{id}/delete','HeaderVoucherController@destroy')->name('headervouchers.delete');
+    Route::patch('{id}/update','HeaderVoucherController@update')->name('headervouchers.update');
+
+});
+
+Route::group(["prefix"=>'detailvouchers'],function(){
+    Route::get('/','DetailVoucherController@index')->name('detailvouchers');
+    Route::get('register','DetailVoucherController@create')->name('detailvouchers.create');
+    Route::post('store','DetailVoucherController@store')->name('detailvouchers.store');
+    Route::get('{id}/edit','DetailVoucherController@edit')->name('detailvouchers.edit');
+    Route::delete('{id}/delete','DetailVoucherController@destroy')->name('detailvouchers.delete');
+    Route::patch('{id}/update','DetailVoucherController@update')->name('detailvouchers.update');
+   
+    Route::get('selectaccount/{id_header}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
+    
+    Route::get('selectheadervouche','DetailVoucherController@selectheader')->name('detailvouchers.selectheadervouche');
+
+    Route::get('register/{id_header}','DetailVoucherController@createselect')->name('detailvouchers.createselect');
+
+    Route::get('register/{id_header}/{code_one}/{code_two}/{code_three}/{code_four}/{period}','DetailVoucherController@createselectaccount')->name('detailvouchers.createselectaccount');
+
+    
 });
