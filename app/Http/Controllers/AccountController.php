@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\DetailVoucher;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
@@ -23,13 +24,19 @@ class AccountController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $accounts = Account::orderBy('code_one', 'asc')
+       /* $accounts = Account::orderBy('code_one', 'asc')
                             ->orderBy('code_two', 'asc')
                             ->orderBy('code_three', 'asc')
                             ->orderBy('code_four', 'asc')
                             ->get();
 
-                           
+                           */
+        $this->calculation();
+        $accounts = Account::orderBy('code_one', 'asc')
+                            ->orderBy('code_two', 'asc')
+                            ->orderBy('code_three', 'asc')
+                            ->orderBy('code_four', 'asc')
+                            ->get();
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -120,12 +127,295 @@ class AccountController extends Controller
    }
     }
 
-   /**
-    * Store a newly created resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
+    public function calculation()
+    {
+        
+      /*  $details = DetailVoucher::orderBy('code_one', 'asc')
+                         ->orderBy('code_two', 'asc')
+                         ->orderBy('code_three', 'asc')
+                         ->orderBy('code_four', 'asc')
+                         ->get();*/
+
+        $accounts = Account::orderBy('code_one', 'asc')
+                         ->orderBy('code_two', 'asc')
+                         ->orderBy('code_three', 'asc')
+                         ->orderBy('code_four', 'asc')
+                         ->get();
+ 
+         foreach ($accounts as $var) {
+ 
+                    
+             if($var->code_one != 0){
+                 
+                 if($var->code_two != 0){
+ 
+ 
+                     if($var->code_three != 0){
+ 
+ 
+                         if($var->code_four != 0){
+                            $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                                    ->where('code_two', $var->code_two)
+                                                                    ->where('code_three', $var->code_three)
+                                                                    ->where('code_four', $var->code_four)
+                                                                    ->sum('debe');
+
+                            $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                                        ->where('code_two', $var->code_two)
+                                                                        ->where('code_three', $var->code_three)
+                                                                        ->where('code_four', $var->code_four)
+                                                                        ->sum('haber');          
+
+                             $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         ->where('code_three', $var->code_three)
+                                                         ->where('code_four', $var->code_four)
+                                                         
+                                                         ->update(['debe' => $total_debe,'haber' => $total_haber]);
+                          
+                                                        
+ 
+                         }else{
+                            
+                           
+                     $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         ->where('code_three', $var->code_three)
+                                                         ->sum('debe');
+ 
+                     $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         ->where('code_three', $var->code_three)
+                                                         ->sum('haber');     
+                                                         
+                   /*  $level_three = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                                     ->where('code_two', $var->code_two)
+                                                                     ->where('code_three', $var->code_three)
+                                                                     ->where('code_four', $var->code_four)
+                                                                     ->get();
+                     if(isset($level_three)){       
+                             foreach($level_three as $three){
+                                 $total_debe += $three->debe;
+                                 $total_haber += $three->haber;
+                             } 
+                     }      */                             
+                     $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         ->where('code_three', $var->code_three)
+                                                         ->where('code_four', $var->code_four)
+                                                         
+                                                         ->update(['debe' => $total_debe,'haber' => $total_haber]); 
+                         
+                 }
+                     }else{
+                         
+                     $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         
+                                                         ->sum('debe');
+ 
+                     $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         ->sum('haber'); 
+                                                         
+                    /* $level_two = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         ->where('code_three', $var->code_three)
+                                                         ->where('code_four', $var->code_four)
+                                                         ->get();
+                     if(isset($level_two)){
+                         foreach($level_two as $two){
+                             $total_debe += $two->debe;
+                             $total_haber += $two->haber;
+                         } 
+                     }*/
+                     $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                         ->where('code_two', $var->code_two)
+                                                         ->where('code_three', $var->code_three)
+                                                         ->where('code_four', $var->code_four)
+                                                         
+                                                         ->update(['debe' => $total_debe,'haber' => $total_haber]); 
+                     
+                     }
+                 }else{
+                     //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
+                   
+                     $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                              ->sum('debe');
+ 
+                     $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                                 ->sum('haber');   
+                                
+                     $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                   ->where('code_two', $var->code_two)
+                                                   ->where('code_three', $var->code_three)
+                                                   ->where('code_four', $var->code_four)
+                                                   
+                                                   ->update(['debe' => $total_debe,'haber' => $total_haber]); 
+ 
+                 }
+             }else{
+                 return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+             }
+         } 
+         
+         return true;
+     }
+    
+ 
+
+
+//FUNCION QUE CALCULA DESDE LA TABLA DETAILVOUCHER, SUMA TODOS LOS DEBE Y TODOS LOS HABER POR CODIGO
+    public function calculation2()
+   {
+       
+        $accounts = DetailVoucher::orderBy('code_one', 'asc')
+                        ->orderBy('code_two', 'asc')
+                        ->orderBy('code_three', 'asc')
+                        ->orderBy('code_four', 'asc')
+                        ->get();
+
+        foreach ($accounts as $var) {
+
+                   
+            if($var->code_one != 0){
+                
+                if($var->code_two != 0){
+
+
+                    if($var->code_three != 0){
+
+
+                        if($var->code_four != 0){
+                            $level_four = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                                    ->where('code_two', $var->code_two)
+                                                                    ->where('code_three', $var->code_three)
+                                                                    ->where('code_four', $var->code_four)
+                                                                    ->first();
+                           /* $total_debe =0;
+                            $total_haber =0;
+
+                            if(isset($level_four)){  
+                                foreach($level_four as $four){
+                                    $total_debe += $four->debe;
+                                    $total_haber += $four->haber;
+                                } 
+                            }                            
+                            $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->where('code_three', $var->code_three)
+                                                        ->where('code_four', $var->code_four)
+                                                        
+                                                        ->update(['debe' => $total_debe,'haber' => $total_haber]); */
+                            $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->where('code_three', $var->code_three)
+                                                        ->where('code_four', $var->code_four)
+                                                        
+                                                        ->update(['debe' => $level_four->debe,'haber' =>$level_four->haber]);
+
+                        }else{
+                           
+                          
+                    $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->where('code_three', $var->code_three)
+                                                        ->sum('debe');
+
+                    $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->where('code_three', $var->code_three)
+                                                        ->sum('haber');     
+                                                        
+                  /*  $level_three = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                                    ->where('code_two', $var->code_two)
+                                                                    ->where('code_three', $var->code_three)
+                                                                    ->where('code_four', $var->code_four)
+                                                                    ->get();
+                    if(isset($level_three)){       
+                            foreach($level_three as $three){
+                                $total_debe += $three->debe;
+                                $total_haber += $three->haber;
+                            } 
+                    }      */                             
+                    $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->where('code_three', $var->code_three)
+                                                        ->where('code_four', $var->code_four)
+                                                        
+                                                        ->update(['debe' => $total_debe,'haber' => $total_haber]); 
+                        
+                }
+                    }else{
+                        
+                    $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        
+                                                        ->sum('debe');
+
+                    $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->sum('haber'); 
+                                                        
+                   /* $level_two = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->where('code_three', $var->code_three)
+                                                        ->where('code_four', $var->code_four)
+                                                        ->get();
+                    if(isset($level_two)){
+                        foreach($level_two as $two){
+                            $total_debe += $two->debe;
+                            $total_haber += $two->haber;
+                        } 
+                    }*/
+                    $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                        ->where('code_two', $var->code_two)
+                                                        ->where('code_three', $var->code_three)
+                                                        ->where('code_four', $var->code_four)
+                                                        
+                                                        ->update(['debe' => $total_debe,'haber' => $total_haber]); 
+                    
+                    }
+                }else{
+                    //Cuentas NIVEL 2
+                  
+                    $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                             ->sum('debe');
+
+                    $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                                ->sum('haber');   
+                                                  
+                                                  
+                   /* $level_one = DB::table('detail_vouchers')->where('code_one', $var->code_one)
+                                                  ->where('code_two', $var->code_two)
+                                                  ->where('code_three', $var->code_three)
+                                                  ->where('code_four', $var->code_four)
+                                                  ->get();
+                    if(isset($level_one)){
+                        foreach($level_one as $one){
+                            $total_debe += $one->debe;
+                            $total_haber += $one->haber;
+                        } 
+                    }*/
+                    
+                    $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                                  ->where('code_two', $var->code_two)
+                                                  ->where('code_three', $var->code_three)
+                                                  ->where('code_four', $var->code_four)
+                                                  
+                                                  ->update(['debe' => $total_debe,'haber' => $total_haber]); 
+
+                }
+            }else{
+                return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+            }
+        } 
+        
+        return true;
+    }
+   
+
+
    public function store(Request $request)
     {
 
@@ -244,7 +534,8 @@ class AccountController extends Controller
 
             $var->status =  "1";
         
-            $var->save();
+            
+            
 
             return redirect('/accounts')->withSuccess('Registro Exitoso!');
 

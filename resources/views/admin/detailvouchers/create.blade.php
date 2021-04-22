@@ -129,7 +129,7 @@ $suma_haber = 0;
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="debe" >Debe</label>
-                                <input id="debe" type="text" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ $account->debe ?? old('debe') }}" required autocomplete="debe">
+                                <input id="debe" type="text" class="form-control @error('debe') is-invalid @enderror" name="debe" value="0.00" required autocomplete="debe">
 
                                 @error('debe')
                                     <span class="invalid-feedback" role="alert">
@@ -139,7 +139,7 @@ $suma_haber = 0;
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="haber" >Haber</label>
-                                <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ $account->haber ?? old('haber') }}" required autocomplete="haber">
+                                <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="0.00" required autocomplete="haber">
 
                                 @error('haber')
                                     <span class="invalid-feedback" role="alert">
@@ -174,7 +174,12 @@ $suma_haber = 0;
                                     @foreach ($detailvouchers as $key => $var)
                                     <tr>
                                    
-                                    <td><i class="fa fa-circle" style="color: rgb(84, 196, 84)"></i> {{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}</td>
+                                        @if($var->status == 'N')
+                                            <td><i class="fa fa-circle" style="color: rgb(252, 128, 128)"></i> {{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}</td>
+                                        @else
+                                            <td><i class="fa fa-circle" style="color: rgb(84, 196, 84)"></i> {{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}</td>
+                                        @endif
+
                                     <td>{{$var->description}}</td>
                 
                                     <?php
@@ -214,7 +219,7 @@ $suma_haber = 0;
                                         
                                         
                                             <td>
-                                            <a href="{{route('detailvouchers.edit',$var->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                            <a href="{{route('detailvouchers.edit',$var->id ?? '') }}" title="Editar"><i class="fa fa-edit"></i></a>  
                                             </td>
                                        
                                         </tr>
@@ -229,7 +234,8 @@ $suma_haber = 0;
                         <label for="reference" class="col-md-2 col-form-label text-md-right"><i class="fa fa-circle" style="color: rgb(255, 94, 94)"><strong> No Contabilizado</strong></i></label>
                     </div>
 
-                        
+                    <a href="{{route('detailvouchers.contabilizar',$header->id ?? -1) }}" class="btn btn-success" title="Contabilizar">Contabilizar</a>  
+                                            
                 </div>
             </div>
         </div>

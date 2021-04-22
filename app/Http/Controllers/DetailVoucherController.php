@@ -23,12 +23,12 @@ class DetailVoucherController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $detailvouchers = DetailVoucher::All();
+       // $detailvouchers = DetailVoucher::All();
         }elseif($users_role == '2'){
            return view('admin.index');
        }
 
-       return view('admin.detailvouchers.index',compact('detailvouchers'));
+       return view('admin.detailvouchers.index');
    }
 
    /**
@@ -40,9 +40,9 @@ class DetailVoucherController extends Controller
    {
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
-        $detailvouchers = DetailVoucher::All();
+       // $detailvouchers = DetailVoucher::All();
 
-        return view('admin.detailvouchers.create',compact('datenow','detailvouchers'));
+        return view('admin.detailvouchers.create',compact('datenow'));
    }
    public function createselect($id_header)
    {
@@ -50,7 +50,7 @@ class DetailVoucherController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        $detailvouchers = DetailVoucher::All();
+        $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
 
         return view('admin.detailvouchers.create',compact('header','datenow','detailvouchers'));
    }
@@ -65,7 +65,7 @@ class DetailVoucherController extends Controller
                                 ->where('code_four', $code_four)
                                 ->where('period', $period)->first();
 
-        $detailvouchers = DetailVoucher::All();
+        $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
 
         if(isset($header)){                           
             if(isset($account)){     
@@ -109,6 +109,35 @@ class DetailVoucherController extends Controller
         return view('admin.detailvouchers.selectheadervouche',compact('headervouchers'));
    }
 
+
+   public function contabilizar($id_header)
+   {
+
+  //  dd($id_header);
+    $header = HeaderVoucher::find($id_header); 
+
+    if(isset($header)){  
+
+           
+            
+            $affected = DB::table('detail_vouchers')->where('id_header_voucher', '=', $id_header)->update(array('status' => 'C'));
+
+            $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
+
+            
+              
+                $date = Carbon::now();
+                $datenow = $date->format('Y-m-d');    
+                                
+                    return view('admin.detailvouchers.create',compact('header','datenow','detailvouchers'));
+                                        
+            
+            }else{
+                return redirect('/detailvouchers/register')->withDanger('No existe el Header!');
+            }                              
+
+   }
+
    /**
     * Store a newly created resource in storage.
     *
@@ -147,11 +176,11 @@ class DetailVoucherController extends Controller
             $var->haber = request('haber');
             $var->ref = request('ref');
           
-            $var->status =  "1";
+            $var->status =  "N";
         
             $var->save();
 
-            return redirect('/detailvouchers/register')->withSuccess('Registro Exitoso!');
+            return redirect('/detailvouchers/register/'.$var->id_header_voucher.'')->withSuccess('Registro Exitoso!');
 
        
     }

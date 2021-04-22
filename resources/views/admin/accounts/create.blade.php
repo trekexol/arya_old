@@ -117,7 +117,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="balance_previus" class="col-md-2 col-form-label text-md-right">Balance Previo</label>
+                            <label for="balance_previus" class="col-md-2 col-form-label text-md-right">Saldo Anterior</label>
 
                             <div class="col-md-4">
                                 <input id="balance_previus" type="number" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ old('balance_previus') }}" required autocomplete="balance_previus">

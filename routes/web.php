@@ -345,8 +345,8 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::delete('{id}/delete','AccountController@destroy')->name('accounts.delete');
     Route::patch('{id}/update','AccountController@update')->name('accounts.update');
 
-    Route::post('store','AccountController@storeNewLevel')->name('accounts.storeNewLevel');
-
+    Route::post('store/newlevel','AccountController@storeNewLevel')->name('accounts.storeNewLevel');
+    
 
     Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}/{period}','AccountController@createlevel')->name('accounts.createlevel');
     
@@ -379,5 +379,6 @@ Route::group(["prefix"=>'detailvouchers'],function(){
 
     Route::get('register/{id_header}/{code_one}/{code_two}/{code_three}/{code_four}/{period}','DetailVoucherController@createselectaccount')->name('detailvouchers.createselectaccount');
 
+    Route::get('contabilizar/{id_header}','DetailVoucherController@contabilizar')->name('detailvouchers.contabilizar');
     
 });
