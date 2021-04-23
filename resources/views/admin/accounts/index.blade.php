@@ -130,12 +130,12 @@
                             <td style="text-align:right; color:black;">{{$account->level}}</td>
                             <td style="text-align:right; color:black;">{{$account->type}}</td>
                             
-                            <td style="text-align:right; color:black;">{{$account->balance_previus}}</td>
-                            <td style="text-align:right; color:black;">{{$account->debe}}</td>
-                            <td style="text-align:right; color:black;">{{$account->haber}}</td>
+                            <td style="text-align:right; color:black;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black;">{{number_format($account->debe, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black;">{{number_format($account->haber, 2, ',', '.')}}</td>
 
                             
-                            <td style="text-align:right; color:black;">{{$account->balance_previus+$account->debe-$account->haber}}</td>
+                            <td style="text-align:right; color:black;">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
                             
                             
                             <td style="text-align:right; color:black;">  
@@ -151,11 +151,11 @@
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->level}}</td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->type}}</td>
                             
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->balance_previus}}</td>
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->debe}}</td>
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->haber}}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{number_format($account->debe, 2, ',', '.')}}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{number_format($account->haber, 2, ',', '.')}}</td>
 
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->balance_previus+$account->debe-$account->haber}}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
                             
                                 <td style="background: #E0D7CD; text-align:right; color:black;">
                                 <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus"></i></a>

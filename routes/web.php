@@ -382,3 +382,24 @@ Route::group(["prefix"=>'detailvouchers'],function(){
     Route::get('contabilizar/{id_header}','DetailVoucherController@contabilizar')->name('detailvouchers.contabilizar');
     
 });
+
+Route::group(["prefix"=>'quotations'],function(){
+    Route::get('/','QuotationController@index')->name('quotations');
+    Route::get('register/{id_quotation}','QuotationController@create')->name('quotations.create');
+    Route::post('store','QuotationController@store')->name('quotations.store');
+    Route::get('{id}/edit','QuotationController@edit')->name('quotations.edit');
+    Route::delete('{id}/delete','QuotationController@destroy')->name('quotations.delete');
+    Route::patch('{id}/update','QuotationController@update')->name('quotations.update');
+
+    Route::get('registerquotation','QuotationController@createquotation')->name('quotations.createquotation');
+
+    Route::get('registerquotation/{id_client}','QuotationController@createquotationclient')->name('quotations.createquotationclient');
+    Route::get('selectclient','QuotationController@selectclient')->name('quotations.selectclient');
+    
+    Route::get('registerquotation/{id_client}/{id_vendor}','QuotationController@createquotationvendor')->name('quotations.createquotationvendor');
+    Route::get('selectvendor','QuotationController@selectvendor')->name('quotations.selectvendor');
+
+
+    Route::get('selectproduct','QuotationController@selectproduct')->name('quotations.selectproduct');
+    Route::get('register/{id_quotation}/{id_product}','QuotationController@createproduct')->name('quotations.createproduct');
+});

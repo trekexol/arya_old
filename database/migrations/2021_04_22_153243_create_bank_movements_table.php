@@ -15,7 +15,7 @@ class CreateBankMovementsTable extends Migration
     {
         Schema::create('bank_movements', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('account_code_one');
+           /* $table->unsignedInteger('account_code_one');
             $table->unsignedInteger('account_code_two');
             $table->unsignedInteger('account_code_three');
             $table->unsignedInteger('account_code_four');
@@ -42,9 +42,9 @@ class CreateBankMovementsTable extends Migration
             $table->string('status',1);
             
            /* $table->foreign(['code_one','code_two','code_three','code_four','period'])
-            ->references(['code_one','code_two','code_three','code_four','period'])->on('accounts');*/
+            ->references(['code_one','code_two','code_three','code_four','period'])->on('accounts');
 
-            $table->foreign('id_header')->references('id')->on('header_vouchers');
+            $table->foreign('id_header')->references('id')->on('header_vouchers');*/
             $table->timestamps();
         });
     }
