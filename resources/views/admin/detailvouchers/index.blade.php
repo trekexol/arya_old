@@ -92,3 +92,11 @@
 </div>
 
 @endsection
+@section('javascript')
+
+    <script>
+    $('#dataTable').DataTable({
+        "order": []
+    });
+    </script> 
+@endsection

@@ -22,6 +22,8 @@ $suma_haber = 0;
             </ul>
         </div>
     @endif
+   
+    
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -31,6 +33,8 @@ $suma_haber = 0;
                 <div class="card-body">
                     <form method="POST" action="{{ route('headervouchers.store') }}" enctype="multipart/form-data">
                         @csrf
+
+                        
                        
                         <div class="form-group row">
                             <label for="reference" class="col-md-2 col-form-label text-md-right">Referencia</label>
@@ -89,69 +93,71 @@ $suma_haber = 0;
                             </div>
                         </div>
                        
-                        
-                <form method="POST" action="{{ route('detailvouchers.store') }}" enctype="multipart/form-data">
+                      
+                <form method="POST" action="{{ route('detailvouchers.store') }}" id="fo" enctype="multipart/form-data">
                     @csrf
                         
                         <input type="hidden" name="id_header_voucher" value="{{$header->id ?? ''}}" readonly>
                         <input type="hidden" name="period" value="{{$account->period ?? ''}}" readonly>
                        
-                        <div class="form-row">
-                            
-                            <div class="form-group col-md-1">
-                                <label for="description" >Cuenta</label>
-                                <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ $account->code_one ?? old('code_one') }}" required autocomplete="code_one" autofocus>
-                            </div>
-                            <div class="form-group col-md-1">
-                                <label for="description" >.</label>
-                                <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ $account->code_two ?? old('code_two') }}" required autocomplete="code_two" autofocus>
-                            </div> 
-                            <div class="form-group col-md-1">
-                                <label for="description" >.</label>
-                              <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ $account->code_three ?? old('code_three') }}" required autocomplete="code_three" autofocus>
-                            </div>   
-                            <div class="form-group col-md-1">
-                                <label for="description" >.</label>
-                                 <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ $account->code_four ?? old('code_four') }}" required autocomplete="code_four" autofocus>
-                            </div>
-                            <div class="form-group col-md-1">
-                                <a href="{{ route('detailvouchers.selectaccount',$header->id ?? -1) }}" title="Editar"><i class="fa fa-eye"></i></a>  
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="description" >Descripción</label>
-                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $account->description ?? old('description') }}" required autocomplete="description">
+                                <div class="form-row">
+                                    
+                                    <div class="form-group col-md-1">
+                                        <label for="description" >Cuenta</label>
+                                        <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one" autofocus>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <label for="description" >.</label>
+                                        <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two" autofocus>
+                                    </div> 
+                                    <div class="form-group col-md-1">
+                                        <label for="description" >.</label>
+                                    <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three" autofocus>
+                                    </div>   
+                                    <div class="form-group col-md-1">
+                                        <label for="description" >.</label>
+                                        <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four" autofocus>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <a href="{{ route('detailvouchers.selectaccount',$header->id ?? -1) }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="description" >Descripción</label>
+                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ session()->get('accountdetail')->description ?? $account->description ?? '' }}" required autocomplete="description">
 
-                                @error('description')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="debe" >Debe</label>
-                                <input id="debe" type="text" class="form-control @error('debe') is-invalid @enderror" name="debe" value="0.00" required autocomplete="debe">
+                                        @error('description')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                   
+                                    <div class="form-group col-md-2">
+                                        <label for="debe" >Debe</label>
+                                        <input id="debe" type="text" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ session()->get('detail')->haber ?? '0.00' }}" required autocomplete="debe">
 
-                                @error('debe')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="haber" >Haber</label>
-                                <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="0.00" required autocomplete="haber">
+                                        @error('debe')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="haber" >Haber</label>
+                                        <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ session()->get('detail')->debe ?? '0.00' }}" required autocomplete="haber">
 
-                                @error('haber')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-1">
-                                <button type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
-                            </div>
-                        </div>    
-                </form>      
+                                        @error('haber')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <button type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
+                                    </div>
+                                </div>    
+                        
+                        </form>      
                        <div class="card-body">
                         <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -234,13 +240,27 @@ $suma_haber = 0;
                         <label for="reference" class="col-md-2 col-form-label text-md-right"><i class="fa fa-circle" style="color: rgb(255, 94, 94)"><strong> No Contabilizado</strong></i></label>
                     </div>
 
-                    <a href="{{route('detailvouchers.contabilizar',$header->id ?? -1) }}" class="btn btn-success" title="Contabilizar">Contabilizar</a>  
+                    <a href="{{route('detailvouchers.contabilizar',$header->id ?? -1) }}" id="btncontabilizar" name="btncontabilizar" class="btn btn-success" title="Contabilizar">Contabilizar</a>  
                                             
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection
 
-                       
+@section('javascript')
+
+
+<script>
+var botones = document.querySelectorAll('.btncontabilizar');
+botones.disabled = true;
+
+$('#dataTable').DataTable({
+    "order": []
+});
+
+</script> 
+
+@endsection                      

@@ -180,9 +180,18 @@ class DetailVoucherController extends Controller
         
             $var->save();
 
-            return redirect('/detailvouchers/register/'.$var->id_header_voucher.'')->withSuccess('Registro Exitoso!');
+            $account = DB::table('accounts')->where('code_one', $var->code_one)
+                                ->where('code_two', $var->code_two)
+                                ->where('code_three', $var->code_three)
+                                ->where('code_four', $var->code_four)
+                                ->where('period', $var->period)->first();
 
-       
+
+           return redirect('/detailvouchers/register/'.$var->id_header_voucher.'')->with('detail',$var)->with('accountdetail',$account);
+           
+          /* return redirect('/detailvouchers/register/'.$var->id_header_voucher.'
+            /'.$var->code_one.'/'.$var->code_two.'/'.$var->code_three.'/'.$var->code_four.'
+            /'.$var->period.'')->with('var2',$var);*/
     }
 
    /**
