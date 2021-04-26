@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Product;
 use App\Quotation;
+use App\QuotationProduct;
 use App\Transport;
 use App\Vendor;
 use Carbon\Carbon;
@@ -39,16 +40,16 @@ class QuotationController extends Controller
     
 public function createquotation()
    {
-    $clients     = Client::all();
+   /* $clients     = Client::all();
   
-    $vendors     = Vendor::all();
+    $vendors     = Vendor::all();*/
 
     $transports     = Transport::all();
 
     $date = Carbon::now();
     $datenow = $date->format('Y-m-d');    
 
-    return view('admin.quotations.createquotation',compact('clients','vendors','datenow','transports'));
+    return view('admin.quotations.createquotation',compact('datenow','transports'));
 }
 
 public function createquotationclient($id_client)
@@ -56,23 +57,58 @@ public function createquotationclient($id_client)
     $client = null;
             
     if(isset($id_client)){
-        $client = client::find($id_client);
+        $client = Client::find($id_client);
     }
     if(isset($client)){
 
-        $vendors     = Vendor::all();
+       /* $vendors     = Vendor::all();*/
 
         $transports     = Transport::all();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        return view('admin.quotations.createquotation',compact('client','vendors','datenow','transports'));
+        return view('admin.quotations.createquotation',compact('client','datenow','transports'));
 
     }else{
         return redirect('/quotations')->withDanger('El Cliente no existe');
     } 
 }
+
+public function createquotationvendor($id_client,$id_vendor)
+   {
+    $client = null;
+            
+    if(isset($id_client)){
+        $client = Client::find($id_client);
+    }
+    if(isset($client)){
+
+        $vendor = null;
+            
+        if(isset($id_vendor)){
+            $vendor = Vendor::find($id_vendor);
+        }
+        if(isset($vendor)){
+
+            /* $vendors     = Vendor::all();*/
+
+            $transports     = Transport::all();
+
+            $date = Carbon::now();
+            $datenow = $date->format('Y-m-d');    
+
+            return view('admin.quotations.createquotation',compact('client','vendor','datenow','transports'));
+
+        }else{
+            return redirect('/quotations')->withDanger('El Vendedor no existe');
+        } 
+
+    }else{
+        return redirect('/quotations')->withDanger('El Cliente no existe');
+    } 
+}
+
 
 
    public function create($id_quotation)
@@ -84,10 +120,12 @@ public function createquotationclient($id_client)
         }
 
         if(isset($quotation)){
+            $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+           
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
     
-            return view('admin.quotations.create',compact('quotation','datenow'));
+            return view('admin.quotations.create',compact('quotation','product_quotations','datenow'));
         }else{
             return redirect('/quotations')->withDanger('La cotizacion no existe');
         } 
@@ -95,13 +133,52 @@ public function createquotationclient($id_client)
 
 
    }
-   public function createproduct($id_product)
+   public function createproduct($id_quotation,$id_product)
+   {
+    $quotation = null;
+            
+    if(isset($id_quotation)){
+        $quotation = Quotation::find($id_quotation);
+    }
+
+    if(isset($quotation)){
+        $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+            $product = null;
+            
+            if(isset($id_product)){
+                $product = Product::find($id_product);
+            }
+            if(isset($product)){
+
+                $date = Carbon::now();
+                $datenow = $date->format('Y-m-d');    
+
+                return view('admin.quotations.create',compact('quotation','product_quotations','product','datenow'));
+
+            }else{
+                return redirect('/quotations')->withDanger('El Producto no existe');
+            } 
+    }else{
+        return redirect('/quotations')->withDanger('La cotizacion no existe');
+    } 
+
+   }
+
+   public function selectproduct($id_quotation)
+   {
+        $products     = Product::all();
+      
+        return view('admin.quotations.selectproduct',compact('products','id_quotation'));
+   }
+
+
+   public function createvendor($id_product,$id_vendor)
    {
 
-        $product = null;
+        $vendor = null;
         
-        if(isset($id_product)){
-            $product = Product::find($id_product);
+        if(isset($id_vendor)){
+            $vendor = vendor::find($id_vendor);
         }
 
         $clients     = Client::all();
@@ -113,16 +190,24 @@ public function createquotationclient($id_client)
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        return view('admin.quotations.create',compact('clients','vendors','datenow','transports','product'));
+        return view('admin.quotations.create',compact('clients','vendors','datenow','transports','vendor'));
    }
 
-   public function selectproduct()
+   public function selectvendor($id_client)
    {
+        if($id_client != -1){
 
+            $vendors     = vendor::all();
 
-        $products     = Product::all();
+            
       
-        return view('admin.quotations.selectproduct',compact('products'));
+            return view('admin.quotations.selectvendor',compact('vendors','id_client'));
+
+        }else{
+            return redirect('/quotations/registerquotation')->withDanger('Seleccione un Cliente primero');
+        }
+
+       
    }
 
    public function selectclient()
@@ -176,6 +261,35 @@ public function createquotationclient($id_client)
     return redirect('quotations/register/'.$var->id.'');
     }
 
+
+    public function storeproduct(Request $request)
+    {
+   
+    $data = request()->validate([
+        
+       
+        'id_quotation'         =>'required',
+        'id_product'         =>'required',
+        'amount'         =>'required',
+        'discount'         =>'required',
+      
+       
+    ]);
+
+    $var = new QuotationProduct();
+
+    $var->id_quotation = request('id_quotation');
+    $var->id_product = request('id_product');
+    $var->amount = request('amount');
+
+    $var->discount = request('discount');
+    
+    $var->status =  1;
+  
+    $var->save();
+
+    return redirect('quotations/register/'.$var->id_quotation.'')->withSuccess('Producto agregado Exitosamente!');
+    }
    /**
     * Display the specified resource.
     *

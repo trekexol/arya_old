@@ -19,15 +19,17 @@
             </ul>
         </div>
     @endif
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card" style="width: 70rem;">
-                <div class="card-header">Registro de Cotización</div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('quotations.store') }}" enctype="multipart/form-data">
-                        @csrf
+
+
+<div class="container" >
+    <div class="row justify-content-center" >
+        <div class="col-md-12" >
+            <div class="card" style="width: 70rem;" >
+                <div class="card-header" >Registro de Cotización</div>
+
+                <div class="card-body" >
+                   
                        
                         <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
                        
@@ -114,28 +116,30 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="date" class="col-md-2 col-form-label text-md-right"><h6>Total de la Cotización</h6></label>
+                            <label for="date" class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización</h6></label>
                             <div class="col-md-2 col-form-label text-md-left">
-                                <label for="description" ><h6>200$</h6></label>
+                                <label for="description" id="total"><h3></h3></label>
                             </div>
                         </div>
                         
                         <br>
+                        <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data">
+                            @csrf
+                            <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
+                            <input id="id_product" type="hidden" class="form-control @error('id_product') is-invalid @enderror" name="id_product" value="{{ $product->id ?? -1 }}" readonly required autocomplete="id_product">
                        
-                                
                                 <div class="form-row col-md-12">
-                                    
                                     <div class="form-group col-md-1">
                                         <label for="description" >Código</label>
-                                        <input id="code" type="number" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $product->code_comercial ?? old('code') }}" required autocomplete="code" autofocus>
+                                        <input id="code" type="number" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $product->code_comercial ?? old('code') }}" readonly required autocomplete="code" autofocus>
                                     </div>
                                    
                                     <div class="form-group col-md-1">
-                                        <a href="{{ route('quotations.selectproduct') }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                        <a href="{{ route('quotations.selectproduct',$quotation->id) }}" title="Productos"><i class="fa fa-eye"></i></a>  
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="description" >Descripción</label>
-                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $product->description ?? old('description') }}" required autocomplete="description">
+                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $product->description ?? old('description') }}" readonly required autocomplete="description">
         
                                         @error('description')
                                             <span class="invalid-feedback" role="alert">
@@ -145,7 +149,7 @@
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="amount" >Cantidad</label>
-                                        <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount"  required autocomplete="amount">
+                                        <input id="amount" id="cantidadproducto" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount"  required autocomplete="amount">
         
                                         @error('amount')
                                             <span class="invalid-feedback" role="alert">
@@ -154,16 +158,29 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-md-1">
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="checkbox" id="gridCheck">
-                                          <label class="form-check-label" for="gridCheck">
-                                            Exento
-                                          </label>
-                                        </div>
+                                        @if (empty($product))
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                <label class="form-check-label" for="gridCheck">
+                                                    Exento
+                                                </label>
+                                            </div>
+                                        @else  
+                                            <div class="form-check">
+                                                @if($product->exento == 1)
+                                                    <input class="form-check-input" type="checkbox" disabled checked id="gridCheck">
+                                                @else
+                                                    <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                @endif
+                                                <label class="form-check-label" for="gridCheck">
+                                                    Exento
+                                                </label>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="cost" >Precio</label>
-                                        <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $product->price ?? old('cost') }}" required autocomplete="cost">
+                                        <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $product->price ?? old('cost') ?? '' }}" readonly required autocomplete="cost">
         
                                         @error('cost')
                                             <span class="invalid-feedback" role="alert">
@@ -183,13 +200,18 @@
                                     </div>
                                     <div class="form-group col-md-1" style="text-align: center">
                                         <label for="date" >Total</label>
-                                        <label for="description"  class="form-control">0$</label>
+                                        <label for="description" id="totalproducto" readonly class="form-control">0$</label>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <button type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
                                     </div>
                                 </div>    
                         </form>      
+
+
+
+
+
                                <div class="card-body">
                                 <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -199,7 +221,8 @@
                                         <th>Descripción</th>
                                         <th>Cantidad</th>
                                         <th>Precio</th>
-                                       
+                                        <th>Descuento</th>
+                                        <th>Sub Total</th>
                                         <th>Opciones</th>
                                       
                                     </tr>
@@ -208,133 +231,63 @@
                                     <tbody>
                                         @if (empty($product_quotations))
                                         @else
-                                           
+                                        <?php
+                                            $suma = 0;
+                                        ?>
                                             @foreach ($product_quotations as $key => $var)
-                                            <tr>
-                                           
-                                              
-                                            <td>{{$var->description}}</td>
-                        
-                                            <?php
-                                                $suma_debe += $var->debe;
-                                                $suma_haber += $var->haber;
-                                            ?>
-                                            <td>{{$var->amount}}</td>
-                                            <td>{{$var->cost}}</td>
+                                                <tr>
+                                                <td style="text-align: right">{{ $var->products['code_comercial']}}</td>
+                                                <td style="text-align: right">{{ $var->products['description']}}</td>
+                                                <td style="text-align: right">{{ $var->amount}}</td>
+                                                <td style="text-align: right">{{ $var->products['price']}}$</td>
+                                                <td style="text-align: right">{{ $var->discount}}$</td>
+                                                <td style="text-align: right">{{ ($var->products['price'] * $var->amount) - $var->discount}}$</td>
+                                                <?php
+                                                    $suma += ($var->products['price'] * $var->amount) - $var->discount;
+                                                ?>
+                                                    <td style="text-align: right">
+                                                    <a  title="Editar"><i class="fa fa-edit"></i></a>  
+                                                    </td>
                                             
-                                                <td>
-                                                <a href="{{route('product_quotations.edit',$var->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
-                                                </td>
-                                           
-                                            </tr>
+                                                </tr>
                                             @endforeach
                                             <tr>
+                                                <td style="text-align: right">-------------</td>
+                                                <td style="text-align: right">-------------</td>
+                                                <td style="text-align: right">-------------</td>
+                                                <td style="text-align: right">-------------</td>
+                                                <td style="text-align: right">Total de Cotización</td>
+                                                <td style="text-align: right">{{ $suma }}$</td>
                                                 
-                                                @if($suma_debe == $suma_haber)
-                                                    <td style="color: rgb(84, 196, 84)">El comprobante está cuadrado</td>
-                                                    <td>Total</td>
-                                                    <td>{{$suma_debe}}</td>
-                                                    <td>{{$suma_haber}}</td>
-                                                @else
-                                                    <td style="color: red">El comprobante está descuadrado</td>
-                                                    <td>Total</td>
-                                                    @if ($suma_debe > $suma_haber)
-                                                        <td>{{$suma_debe}}  <br><div style="color: red"> - {{$suma_debe - $suma_haber}}</div></td>
-                                                        <td>{{$suma_haber}}</td>
-                                                    @else
-                                                        <td>{{$suma_debe}}</td>
-                                                        <td>{{$suma_haber}} <br><div style="color: red"> - {{$suma_haber - $suma_debe}}</div></td>
-                                                    @endif
-                                                    
-                                                @endif
-                                                
-                            
-                                                
-                                                
-                                                    <td>
-                                                    <a href="{{route('detailvouchers.edit',$var->id ?? '') }}" title="Editar"><i class="fa fa-edit"></i></a>  
-                                                    </td>
-                                               
+                                                <td style="text-align: right">-------------</td>
+                                            
                                                 </tr>
                                         @endif
                                     </tbody>
                                 </table>
                                 </div>
                             </div>
-                   
+                            <a href="" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
+                            <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                     
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
-@section('validacion')
-    <script>    
-	$(function(){
-        soloAlfaNumerico('code_comercial');
-        soloAlfaNumerico('description');
-    });
-    </script>
-@endsection
 
 @section('javascript')
-    <script>
-            
-            $("#segment").on('change',function(){
-                var segment_id = $(this).val();
-                $("#subsegment").val("");
-               
-                // alert(segment_id);
-                getSubsegment(segment_id);
-            });
 
-        function getSubsegment(segment_id){
-            // alert(`../subsegment/list/${segment_id}`);
-            $.ajax({
-                url:`../subsegment/list/${segment_id}`,
-                beforSend:()=>{
-                    alert('consultando datos');
-                },
-                success:(response)=>{
-                    let subsegment = $("#subsegment");
-                    let htmlOptions = `<option value='' >Seleccione..</option>`;
-                    // console.clear();
-                    if(response.length > 0){
-                        response.forEach((item, index, object)=>{
-                            let {id,description} = item;
-                            htmlOptions += `<option value='${id}' {{ old('Subsegment') == '${id}' ? 'selected' : '' }}>${description}</option>`
+<script>
 
-                        });
-                    }
-                    //console.clear();
-                    // console.log(htmlOptions);
-                    subsegment.html('');
-                    subsegment.html(htmlOptions);
-                
-                    
-                
-                },
-                error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
-                }
-            })
-        }
-
-        $("#subsegment").on('change',function(){
-                var subsegment_id = $(this).val();
-                var segment_id    = document.getElementById("segment").value;
-                
-            });
-
-        
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
     
- 
+$('#dataTable').DataTable({
+    "order": []
+});
 
+document.querySelector('#total').innerText = {{ $suma }}+'$';
 
+</script> 
 
-    </script>
-@endsection
+@endsection         

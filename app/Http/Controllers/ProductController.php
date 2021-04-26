@@ -74,7 +74,7 @@ class ProductController extends Controller
         'money'         =>'required',
        
         'special_impuesto'         =>'required',
-        'status'         =>'required',
+        
        
     ]);
 
@@ -107,7 +107,7 @@ class ProductController extends Controller
     }
 
     $var->special_impuesto = request('special_impuesto');
-    $var->status =  request('status');
+    $var->status =  1;
   
     $var->save();
 

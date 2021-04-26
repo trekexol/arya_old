@@ -21,23 +21,20 @@ class CreateQuotationsTable extends Migration
             $table->unsignedBigInteger('id_user');
 
             $table->string('serie',30)->nullable();
-            $table->integer('serial_fiscal')->nullable();
+            
             $table->date('date_quotation');
-            $table->integer('orden')->nullable();
+            
             $table->date('date_billing')->nullable();
 
             $table->integer('credit_days')->nullable();
             $table->string('reference',40)->nullable();
 
-            $table->decimal('tax',16,2)->nullable();
-            $table->decimal('tax2',16,2)->nullable();
-            $table->decimal('discount',16,2)->nullable();
-            $table->decimal('discount2',16,2)->nullable();
-
+           
+            $table->integer('iva_percentage')->nullable();
             $table->string('observation',150)->nullable();
             $table->string('note',150)->nullable();
 
-            $table->integer('voucher')->nullable();
+           // $table->integer('voucher')->nullable();
 
             $table->string('status',1);
            

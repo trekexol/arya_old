@@ -104,26 +104,26 @@ $suma_haber = 0;
                                     
                                     <div class="form-group col-md-1">
                                         <label for="description" >Cuenta</label>
-                                        <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one" autofocus>
+                                        <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one" readonly autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two" autofocus>
+                                        <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two" readonly autofocus>
                                     </div> 
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                    <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three" autofocus>
+                                    <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three" readonly autofocus>
                                     </div>   
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four" autofocus>
+                                        <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four" readonly autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <a href="{{ route('detailvouchers.selectaccount',$header->id ?? -1) }}" title="Editar"><i class="fa fa-eye"></i></a>  
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="description" >Descripción</label>
-                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ session()->get('accountdetail')->description ?? $account->description ?? '' }}" required autocomplete="description">
+                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ session()->get('accountdetail')->description ?? $account->description ?? '' }}" readonly required autocomplete="description">
 
                                         @error('description')
                                             <span class="invalid-feedback" role="alert">
@@ -134,7 +134,7 @@ $suma_haber = 0;
                                    
                                     <div class="form-group col-md-2">
                                         <label for="debe" >Debe</label>
-                                        <input id="debe" type="text" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ session()->get('detail')->haber ?? '0.00' }}" required autocomplete="debe">
+                                        <input id="debe" type="text" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ session()->get('detail')->haber ?? '0.00' }}"  required autocomplete="debe">
 
                                         @error('debe')
                                             <span class="invalid-feedback" role="alert">
@@ -144,7 +144,7 @@ $suma_haber = 0;
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="haber" >Haber</label>
-                                        <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ session()->get('detail')->debe ?? '0.00' }}" required autocomplete="haber">
+                                        <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ session()->get('detail')->debe ?? '0.00' }}"  required autocomplete="haber">
 
                                         @error('haber')
                                             <span class="invalid-feedback" role="alert">
@@ -252,15 +252,31 @@ $suma_haber = 0;
 
 @section('javascript')
 
-
+@if($suma_debe != $suma_haber)
 <script>
-var botones = document.querySelectorAll('.btncontabilizar');
-botones.disabled = true;
+
+    btncontabilizar.style.pointerEvents = 'none';
+    btncontabilizar.style.color = '#bbb';
 
 $('#dataTable').DataTable({
     "order": []
 });
 
 </script> 
+
+@else
+<script>
+
+        btncontabilizar.style.pointerEvents = null;
+      
+
+
+$('#dataTable').DataTable({
+    "order": []
+});
+
+</script> 
+    
+@endif
 
 @endsection                      

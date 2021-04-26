@@ -397,9 +397,15 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::get('selectclient','QuotationController@selectclient')->name('quotations.selectclient');
     
     Route::get('registerquotation/{id_client}/{id_vendor}','QuotationController@createquotationvendor')->name('quotations.createquotationvendor');
-    Route::get('selectvendor','QuotationController@selectvendor')->name('quotations.selectvendor');
+    Route::get('selectvendor/{id_client}','QuotationController@selectvendor')->name('quotations.selectvendor');
 
 
-    Route::get('selectproduct','QuotationController@selectproduct')->name('quotations.selectproduct');
+    Route::get('selectproduct/{id_quotation}','QuotationController@selectproduct')->name('quotations.selectproduct');
     Route::get('register/{id_quotation}/{id_product}','QuotationController@createproduct')->name('quotations.createproduct');
+
+    
+    Route::post('storeproduct','QuotationController@storeproduct')->name('quotations.storeproduct');
+
+    Route::get('facturar/{id_quotation}','FacturarController@createfacturar')->name('quotations.createfacturar');
+
 });

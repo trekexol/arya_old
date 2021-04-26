@@ -30,6 +30,8 @@
                         @csrf
                        
                         <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required autocomplete="id_user">
+                        <input id="id_client" type="hidden" class="form-control @error('id_client') is-invalid @enderror" name="id_client" value="{{ $client->id ?? -1  }}" required autocomplete="id_client">
+                        <input id="id_vendor" type="hidden" class="form-control @error('id_vendor') is-invalid @enderror" name="id_vendor" value="{{ $vendor->id ?? -1  }}" required autocomplete="id_vendor">
                        
                         
                         <div class="form-group row">
@@ -59,8 +61,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <input id="id_client" type="hidden" class="form-control @error('id_client') is-invalid @enderror" name="id_client" value="{{ $client->id ?? '' }}" required autocomplete="id_client">
-                       
+                           
+                            
                             <label for="clients" class="col-md-2 col-form-label text-md-right">Cliente</label>
                             <div class="col-md-3">
                                 <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? '' }}" readonly required autocomplete="client">
@@ -91,7 +93,7 @@
                         <div class="form-group row">
                            <label for="vendors" class="col-md-2 col-form-label text-md-right">Vendedor</label>
                             <div class="col-md-3">
-                                <input id="id_vendor" type="text" class="form-control @error('id_vendor') is-invalid @enderror" name="id_vendor" value="" readonly required autocomplete="id_vendor">
+                                <input id="id_vendor" type="text" class="form-control @error('id_vendor') is-invalid @enderror" name="vendor" value="{{ $vendor->name ?? '' }}" readonly required autocomplete="id_vendor">
 
                                     @error('id_vendor')
                                         <span class="invalid-feedback" role="alert">
@@ -100,7 +102,7 @@
                                     @enderror
                             </div>
                             <div class="form-group col-md-1">
-                                <a href="{{ route('quotations.selectproduct') }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                <a href="{{ route('quotations.selectvendor',$client->id ?? -1) }}" title="Vendedor"><i class="fa fa-eye"></i></a>  
                             </div>
                            
                         </div>
