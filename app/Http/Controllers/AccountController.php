@@ -290,18 +290,7 @@ class AccountController extends Controller
             $var->level = request('level');
             $var->balance_previus = request('balance_previus');
             
-            if(request('debe') == null){
-                $var->debe = request('debe');
-            }
-            else{
-                $var->debe = 0; 
-            }
-            if(request('haber') == null){
-                $var->haber = request('haber');
-            }
-            else{
-                $var->haber = 0; 
-            }
+           
            
 
             $var->status =  "1";
@@ -355,10 +344,7 @@ class AccountController extends Controller
 
             $var->balance_previus = request('balance_previus');
 
-            $var->debe = 0;
-            $var->haber = 0;
-          
-          
+           
 
             $var->status =  "1";
         
@@ -420,8 +406,7 @@ class AccountController extends Controller
         'type'              =>'required',
         'level'             =>'required',
         'balance_previus'   =>'required',
-        'debe'              =>'required',
-        'haber'             =>'required',
+       
         
        
     ]);
@@ -433,8 +418,7 @@ class AccountController extends Controller
     $var->description = request('description');
     $var->level = request('level');
     $var->balance_previus = request('balance_previus');
-    $var->debe = request('debe');
-    $var->haber = request('haber');
+    
 
     if(request('status') == null){
         $var->status = $vars_status;

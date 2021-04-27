@@ -147,7 +147,7 @@
             </div>
         </div>
     </li>
-<!--
+
  <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransaccion"
             aria-expanded="true" aria-controls="collapseTransaccion">
@@ -158,11 +158,11 @@
             <div class="bg-white py-2 collapse-inner rounded">
              
             <a  class="collapse-header" href="buttons.html">Transacción</a>
-            <a  class="collapse-header" href="buttons.html">Bancos</a>
+            <a  class="collapse-item" href="{{ route('bankmovements') }}">Bancos</a>
                 <a class="collapse-item" href="buttons.html">Depósitos Bancarios</a>
                 <a class="collapse-item" href="buttons.html">Movimientos Bancarios</a>
                 <a class="collapse-item" href="buttons.html">Importar <br> Bancarios</a>
-            <a  class="collapse-header" href="buttons.html">Ventas</a>
+       <!--     <a  class="collapse-header" href="buttons.html">Ventas</a>
             <a  class="collapse-header" href="buttons.html">Gastos y Compras</a>
             <a  class="collapse-header" href="buttons.html">Plan de Cuentas</a>
             </div>

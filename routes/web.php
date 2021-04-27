@@ -409,3 +409,16 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::get('facturar/{id_quotation}','FacturarController@createfacturar')->name('quotations.createfacturar');
 
 });
+
+Route::group(["prefix"=>'bankmovements'],function(){
+    Route::get('/','BankMovementController@index')->name('bankmovements');
+    Route::post('store','BankMovementController@store')->name('bankmovements.store');
+    Route::get('{id}/edit','BankMovementController@edit')->name('bankmovements.edit');
+    Route::delete('{id}/delete','BankMovementController@destroy')->name('bankmovements.delete');
+    Route::patch('{id}/update','BankMovementController@update')->name('bankmovements.update');
+
+    Route::get('registerdeposit/{code_one}/{code_two}/{code_three}/{code_four}','BankMovementController@createdeposit')->name('bankmovements.createdeposit');
+    Route::get('registerretirement/{code_one}/{code_two}/{code_three}/{code_four}','BankMovementController@createretirement')->name('bankmovements.createretirement');
+
+    Route::get('list/{estado_id?}','BankMovementController@list')->name('bankmovements.list');
+});

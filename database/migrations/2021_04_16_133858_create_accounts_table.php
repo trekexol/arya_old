@@ -14,6 +14,7 @@ class CreateAccountsTable extends Migration
     public function up()
     {
         Schema::create('accounts', function (Blueprint $table) {
+            $table->bigIncrements('id');
              $table->integer('code_one');
              $table->integer('code_two');
              $table->integer('code_three');
@@ -23,12 +24,11 @@ class CreateAccountsTable extends Migration
              $table->string('type',10);
              $table->integer('level');
              $table->decimal('balance_previus',15,2);
-             $table->decimal('debe',15,2);
-             $table->decimal('haber',15,2);
-
+            
              $table->string('status',1);
 
-             $table->primary(['code_one', 'code_two', 'code_three', 'code_four', 'period']);
+             //poner mejor un unique
+            // $table->primary(['code_one', 'code_two', 'code_three', 'code_four', 'period']);
            
             $table->timestamps();
         });

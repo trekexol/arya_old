@@ -41,7 +41,7 @@
                                 @enderror
                             </div>
                             <label for="client" class="col-md-2 col-form-label text-md-right">N° de Control/Serie:</label>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $quotation->serie ?? '' }}" readonly required autocomplete="client">
                                 @error('client')
                                     <span class="invalid-feedback" role="alert">
@@ -63,7 +63,7 @@
                                 @enderror
                             </div>
                             <label for="base_imponible" class="col-md-2 col-form-label text-md-right">Base Imponible:</label>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ $quotation->base_imponible ?? 0 }}" readonly required autocomplete="base_imponible">
                                 @error('base_imponible')
                                     <span class="invalid-feedback" role="alert">
@@ -74,44 +74,42 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
-
-                            <div class="col-md-3">
-                                <input id="iva" type="text" class="form-control @error('iva') is-invalid @enderror" name="iva" value="16" readonly required autocomplete="iva">
-
-                                @error('iva')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="vendor" class="col-md-3 col-form-label text-md-right">Vendedor</label>
+                            <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
                             <div class="col-md-4">
-                                <input id="vendor" type="text" class="form-control @error('vendor') is-invalid @enderror" name="vendor" value="{{ $quotation->vendors['name'] ?? old('vendor') }}" readonly required autocomplete="vendor">
-                                @error('vendor')
+                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ $quotation->grand_total ?? old('grand_total') }}" readonly required autocomplete="grand_total"> 
+                           
+                                @error('grand_total')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
+                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <div class="col-md-2">
+                            <select class="form-control" name="iva" id="iva">
+                                <option value="16">16%</option>
+                                <option value="12">12%</option>
+                            </select>
+                            </div>
+                            
                         </div>
                         
                         
                         <div class="form-group row">
-                            <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte</label>
-                            <div class="col-md-4">
-                                <input id="transport" type="text" class="form-control @error('transport') is-invalid @enderror" name="transport" value="{{ $quotation->transports['placa'] ?? old('transport') }}" readonly required autocomplete="transport"> 
+                            <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
+                            <div class="col-md-2">
+                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ old('anticipo') }}" readonly required autocomplete="anticipo"> 
                            
-                                @error('transport')
+                                @error('anticipo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones</label>
+                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
-                            <div class="col-md-4">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $quotation->observation ?? old('observation') }}" readonly required autocomplete="observation">
+                            <div class="col-md-2">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">
@@ -119,13 +117,10 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
-                       
-                        <div class="form-group row">
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Nota Pie de Factura </label>
+                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
 
-                            <div class="col-md-4">
-                                <input id="note" type="number" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ $quotation->note ?? old('note') }}" readonly required autocomplete="note">
+                            <div class="col-md-2">
+                                <input id="note" type="number" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
 
                                 @error('note')
                                     <span class="invalid-feedback" role="alert">
@@ -133,16 +128,24 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="date" class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización</h6></label>
-                            <div class="col-md-2 col-form-label text-md-left">
-                                <label for="description" id="total"><h3></h3></label>
+                        </div>
+                       
+                       
+                        <br>
+                        <div class="form-group row">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-2">
+                                <a href="" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
+                            </div>
+                            <div class="col-md-4">
+                                <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
+                            </div>
+                            <div class="col-md-2">
+                                <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                         
-                        <br>
-                            <a href="" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
-                            <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
-                     
                 </div>
             </div>
         </div>

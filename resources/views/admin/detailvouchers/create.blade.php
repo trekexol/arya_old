@@ -79,18 +79,12 @@ $suma_haber = 0;
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-3 offset-md-4">
-                                    <button type="submit" class="btn btn-info btn-icon-split">
-                                      Guardar
-                                    </button>
-                                </div>
-                            </div>
+                            
                         </form>
-                            <label for="date" class="col-md-2 col-form-label text-md-right"><h5>Total</h5></label>
+                            <!--<label for="date" class="col-md-2 col-form-label text-md-right"><h5>Total</h5></label>
                             <div class="col-md-2 col-form-label text-md-left">
                                 <label for="description" ><h6>{{ $suma_debe - $suma_haber }}</h6></label>
-                            </div>
+                            </div>-->
                         </div>
                        
                       
