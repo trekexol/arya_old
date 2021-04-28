@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Position;
+use App\Segment;
+use App\Subsegment;
+use App\UnitOfMeasure;
 use Illuminate\Http\Request;
 
 class PositionsController extends Controller

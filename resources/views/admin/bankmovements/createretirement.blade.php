@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Depósitos Bancarios</div>
+                <div class="card-header">Retiros / Ordenes de Pago</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('bankmovements.store') }}" enctype="multipart/form-data">
@@ -34,7 +34,7 @@
                         
                        
                         <div class="form-group row">
-                            <label for="account" class="col-md-2 col-form-label text-md-right">Depositar en:</label>
+                            <label for="account" class="col-md-2 col-form-label text-md-right">Retirar Desde:</label>
 
                             <div class="col-md-4">
                                 <input id="account" type="text" class="form-control @error('account') is-invalid @enderror" name="account" value="{{ $account->description ?? old('account') }}" readonly required autocomplete="account" autofocus>
@@ -57,7 +57,7 @@
                                 @enderror
                             </div>
                         </div>
-
+                       
                        
                         <div class="form-group row">
                             
@@ -84,6 +84,41 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="form-group row">
+                                    
+                            <label for="beneficiario" class="col-md-2 col-form-label text-md-right">Beneficiario:</label>
+                        
+                            <div class="col-md-4">
+                            <select id="beneficiario"  name="beneficiario" class="form-control" required>
+                                <option value="">Seleccione un Beneficiario</option>
+                               
+                                    <option value="Cliente" {{ old('Beneficiario') == 'Cliente' ? 'selected' : '' }}>
+                                        Cliente
+                                    </option>
+                                    <option value="Vendedor" {{ old('Beneficiario') == 'Vendedor' ? 'selected' : '' }}>
+                                        Vendedor
+                                    </option>
+                                </select>
+
+                                @if ($errors->has('beneficiario_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('beneficiario_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                       
+                          <div class="col-md-4">
+                                <select  id="subbeneficiario"  name="Subbeneficiario" class="form-control" required>
+                                    <option value="">Seleccionar</option>
+                                </select>
+
+                                @if ($errors->has('subbeneficiario_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('subbeneficiario_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>  
                         <div class="form-group row">
                             
                             <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Depósito</label>
@@ -223,3 +258,66 @@ $(function(){
 
     </script>
 @endsection
+
+@section('javascript')
+    <script>
+            
+            $("#beneficiario").on('change',function(){
+                var beneficiario_id = $(this).val();
+                $("#subbeneficiario").val("");
+               
+                // alert(beneficiario_id);
+                getSubbeneficiario(beneficiario_id);
+            });
+
+        function getSubbeneficiario(beneficiario_id){
+            // alert(`../subbeneficiario/list/${beneficiario_id}`);
+            $.ajax({
+                url:`../../bankmovements/listbeneficiario/${beneficiario_id}`,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                    let subbeneficiario = $("#subbeneficiario");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${description}</option>`
+
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subbeneficiario.html('');
+                    subbeneficiario.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
+
+        $("#subbeneficiario").on('change',function(){
+                var subbeneficiario_id = $(this).val();
+                var beneficiario_id    = document.getElementById("beneficiario").value;
+                
+            });
+
+        
+	$(function(){
+        soloNumeros('xtelf_local');
+        soloNumeros('xtelf_cel');
+    });
+    
+ 
+
+
+
+    </script>
+@endsection
+

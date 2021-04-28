@@ -151,11 +151,9 @@ class DetailVoucherController extends Controller
                 
                 
 
-                'code_one'      =>'required',
-                'code_two'      =>'required',
-                'code_three'    =>'required',
-                'code_four'     =>'required',
-                'period'        =>'required',
+                
+                'id_account'     =>'required',
+               
                 'id_header_voucher'     =>'required',
                 'debe'                  =>'required',
                 'haber'                 =>'required',
@@ -166,11 +164,8 @@ class DetailVoucherController extends Controller
 
             $var = new DetailVoucher();
 
-            $var->code_one = request('code_one');
-            $var->code_two = request('code_two');
-            $var->code_three = request('code_three');
-            $var->code_four = request('code_four');
-            $var->period = request('period');
+            
+            $var->id_account = request('id_account');
             $var->id_header_voucher = request('id_header_voucher');
             $var->debe = request('debe');
             $var->haber = request('haber');

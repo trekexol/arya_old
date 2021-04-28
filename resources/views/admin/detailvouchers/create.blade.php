@@ -93,6 +93,7 @@ $suma_haber = 0;
                         
                         <input type="hidden" name="id_header_voucher" value="{{$header->id ?? ''}}" readonly>
                         <input type="hidden" name="period" value="{{$account->period ?? ''}}" readonly>
+                        <input type="hidden" name="id_account" value="{{$account->id ?? ''}}" readonly>
                        
                                 <div class="form-row">
                                     
@@ -175,12 +176,12 @@ $suma_haber = 0;
                                     <tr>
                                    
                                         @if($var->status == 'N')
-                                            <td><i class="fa fa-circle" style="color: rgb(252, 128, 128)"></i> {{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}</td>
+                                            <td><i class="fa fa-circle" style="color: rgb(252, 128, 128)"></i> {{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
                                         @else
-                                            <td><i class="fa fa-circle" style="color: rgb(84, 196, 84)"></i> {{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}</td>
+                                            <td><i class="fa fa-circle" style="color: rgb(84, 196, 84)"></i> {{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
                                         @endif
 
-                                    <td>{{$var->description}}</td>
+                                    <td>{{$var->accounts['description']}}</td>
                 
                                     <?php
                                         $suma_debe += $var->debe;

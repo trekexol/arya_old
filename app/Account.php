@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
-    protected $primaryKey = 'code_one';
+    
 }

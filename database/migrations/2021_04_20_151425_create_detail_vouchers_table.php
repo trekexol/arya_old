@@ -15,13 +15,8 @@ class CreateDetailVouchersTable extends Migration
     {
         Schema::create('detail_vouchers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('code_one')->unsigned();
-            $table->integer('code_two')->unsigned();
-            $table->integer('code_three')->unsigned();
-            $table->integer('code_four')->unsigned();
-            $table->integer('period')->unsigned();
-           
-            $table->unsignedInteger('id_header_voucher');
+            $table->unsignedBigInteger('id_account');
+            $table->unsignedBigInteger('id_header_voucher');
 
             $table->decimal('debe',16,2);
             $table->decimal('haber',16,2);
@@ -31,7 +26,8 @@ class CreateDetailVouchersTable extends Migration
 
 
             $table->string('status',1);
-
+            $table->foreign('id_account')->references('id')->on('accounts');
+            $table->foreign('id_header_voucher')->references('id')->on('header_vouchers');
             $table->timestamps();
         });
     }

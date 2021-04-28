@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 
 use App\Account;
-
+use App\Segment;
+use App\Subsegment;
+use App\UnitOfMeasure;
 use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
@@ -40,17 +42,14 @@ class BankMovementController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-   public function createdeposit($code_one,$code_two,$code_three,$code_four)
+   public function createdeposit($id)
    {
     
-        $account = DB::table('accounts')->where('code_one', $code_one)
-                                ->where('code_two', $code_two)
-                                ->where('code_three', $code_three)
-                                ->where('code_four', $code_four)
-                                ->first();
+   
+        $account = Account::find($id);
 
+      
         if(isset($account)){   
-
             
             $contrapartidas     = Account::where('code_one', '<>',0)
                                             ->where('code_two', '<>',0)
@@ -67,21 +66,21 @@ class BankMovementController extends Controller
        }
    }
 
-   public function createretirement($code_one,$code_two,$code_three,$code_four)
+   public function createretirement($id)
    {
-    
-        $account = DB::table('accounts')->where('code_one', $code_one)
-                                ->where('code_two', $code_two)
-                                ->where('code_three', $code_three)
-                                ->where('code_four', $code_four)
-                                ->first();
+        $account = Account::find($id);
 
         if(isset($account)){   
 
+            $contrapartidas     = Account::where('code_one', '<>',0)
+                                            ->where('code_two', '<>',0)
+                                            ->where('code_three', '<>',0)
+                                            ->where('code_four', '=',0)
+                                        ->orderBY('description','asc')->pluck('description','id')->toArray();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
 
-            return view('admin.bankmovements.createdeposit',compact('account','datenow'));
+            return view('admin.bankmovements.createretirement',compact('account','datenow','contrapartidas'));
 
         }else{
             return redirect('/bankmovements')->withDanger('No existe la Cuenta!');
@@ -96,29 +95,19 @@ class BankMovementController extends Controller
     */
    public function store(Request $request)
     {
+
    
     $data = request()->validate([
         
        
-        'account_code_one'         =>'required',
-        'account_code_two'         =>'required',
-        'account_code_three'         =>'required',
-        'account_code_four'         =>'required',
-        'account_period'         =>'required',
+        'id_account'         =>'required',
+        'Subcontrapartida'         =>'required',
 
-        'counterpart_code_one'         =>'required',
-        'counterpart_code_two'         =>'required',
-        'counterpart_code_three'         =>'required',
-        'counterpart_code_four'         =>'required',
-        'counterpart_period'         =>'required',
-
-        'id_header'         =>'required',
-        'id_client'         =>'required',
-        'id_vendor'         =>'required',
         'user_id'         =>'required',
 
         'description'         =>'required',
-        'type_movement'         =>'required',
+        'amount'         =>'required',
+        
         'date'         =>'required',
 
         'reference'         =>'required',
@@ -126,36 +115,43 @@ class BankMovementController extends Controller
        
     ]);
 
-    $var = new BankMovement();
+    $id_contrapartida = request('Subcontrapartida');
+    $amount = request('amount');
 
-    $var->account_code_one = request('account_code_one');
-    $var->account_code_two = request('account_code_two');
-    $var->account_code_three = request('account_code_three');
-    $var->account_code_four = request('account_code_four');
-    $var->account_period = request('account_period');
+    $check_amount = $this->check_amount($id_contrapartida);
 
-    $var->counterpart_code_one = request('counterpart_code_one');
-    $var->counterpart_code_two = request('counterpart_code_two');
-    $var->counterpart_code_three = request('counterpart_code_three');
-    $var->counterpart_code_four = request('counterpart_code_four');
-    $var->counterpart_period = request('counterpart_period');
+    if($check_amount->debe >= $amount){
+        $var = new BankMovement();
 
-    $var->id_header = request('id_header');
-    $var->id_client = request('id_client');
-    $var->id_vendor = request('id_vendor');
-    $var->user_id = request('user_id');
+        $var->id_account = request('id_account');
+       
+    
+    
+        $var->id_counterpart = $id_contrapartida;
+       
+        $var->id_client = request('id_client');
+        $var->id_vendor = request('id_vendor');
+        $var->id_user = request('user_id');
+    
+        $var->description = request('description');
+        $var->amount = $amount;
+        
+        $var->type_movement = request('type_movement');
+       
+        $var->date = request('date');
+        $var->reference = request('reference');
+    
+        $var->status =  1;
+      
+        $var->save();
+    
+        return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
 
-    $var->description = request('description');
-    $var->type_movement = request('type_movement');
-   
-    $var->date = request('date');
-    $var->reference = request('reference');
-
-    $var->status =  1;
-  
-    $var->save();
-
-    return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+    }else{
+        return redirect('/bankmovements/registerdeposit/'.request('id_account').'')->withDanger('El saldo de la Cuenta Contrapartida es menor al saldo debitado!');
+    }
+    
+    
     }
 
    /**
@@ -169,139 +165,514 @@ class BankMovementController extends Controller
        //
    }
    public function calculation()
-   {
-       
-     /*  $details = DetailVoucher::orderBy('code_one', 'asc')
-                        ->orderBy('code_two', 'asc')
-                        ->orderBy('code_three', 'asc')
-                        ->orderBy('code_four', 'asc')
-                        ->get();*/
+    {       $accounts = DB::table('accounts')->where('code_one', 1)
+            ->where('code_four','<>',0)
+            ->where('code_two', 1)
+            ->whereIn('code_three', [1,2])
+            ->get();
 
-      $accounts = DB::table('accounts')->where('code_one', 1)
-                         ->where('code_two', 1)
-                         ->where('code_four','<>',0)
-                         ->where('code_three', 1)
-                         ->orWhere('code_three', 2)
-                         ->get();
-
-        foreach ($accounts as $var) {
+                      
+       if(isset($accounts)) {
+           foreach ($accounts as $var) {
 
                    
-            if($var->code_one != 0){
-                
-                if($var->code_two != 0){
+               if($var->code_one != 0){
+                   
+                   if($var->code_two != 0){
+   
+   
+                       if($var->code_three != 0){
+   
+   
+                           if($var->code_four != 0){
+                             
+                            /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
+                            $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('accounts.code_four', $var->code_four)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                            $total_haber = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('accounts.code_four', $var->code_four)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');   
+                            /*---------------------------------------------------*/
 
+                            /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */                                 
+                            $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
 
-                    if($var->code_three != 0){
+                            $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                           /*---------------------------------------------------*/
 
+                            if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                                $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
 
-                        if($var->code_four != 0){
-                           $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                                   ->where('code_two', $var->code_two)
-                                                                   ->where('code_three', $var->code_three)
-                                                                   ->where('code_four', $var->code_four)
-                                                                   ->where('status', 'C')
-                                                                   ->sum('debe');
-
-                           $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                                       ->where('code_two', $var->code_two)
-                                                                       ->where('code_three', $var->code_three)
-                                                                       ->where('code_four', $var->code_four)
-                                                                       ->where('status', 'C')
-                                                                       ->sum('haber');      
-                                                                       
-                           $var->debe = $total_debe;
-
-                           $var->haber = $total_haber;
-
-                           /* $account = DB::table('accounts')->where('code_one', $var->code_one)
-                                                        ->where('code_two', $var->code_two)
-                                                        ->where('code_three', $var->code_three)
-                                                        ->where('code_four', $var->code_four)
-                                                        
-                                                        ->update(['debe' => $total_debe,'haber' => $total_haber]);*/
+                            }else if(isset($total_amount_bank)){
+                                $var->debe = $total_debe + $total_amount_bank;
+                            
+                            }else if(isset($total_amount_bank_counterpart)){
+                                $var->debe = $total_debe - $total_amount_bank_counterpart;
+                            }else{
+                                $var->debe = $total_debe;
+                            }                                     
+  
+                                $var->haber = $total_haber;
+  
+                            
+                                                          
+   
+                           }else{
+                              
+                             
                          
-                                                       
+                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
+                           $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                           $total_haber =  DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');      
+                        /*---------------------------------------------------*/                               
+  
+                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */    
+                        $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                      /*---------------------------------------------------*/     
 
+
+                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
+
+                        }else if(isset($total_amount_bank)){
+                            $var->debe = $total_debe + $total_amount_bank;
+                        
+                        }else if(isset($total_amount_bank_counterpart)){
+                            $var->debe = $total_debe - $total_amount_bank_counterpart;
                         }else{
+                            $var->debe = $total_debe;
+                        }                 
+                            
+                            
+                            $var->haber = $total_haber;       
+                                          
+                     
                            
-                          
-                       $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                        ->where('code_two', $var->code_two)
-                                                        ->where('code_three', $var->code_three)
-                                                        ->where('status', 'C')
-                                                        ->sum('debe');
+                   }
+                       }else{
+                           
+                      
+                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                   
+                           $total_debe = DB::table('accounts')
+                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                           ->where('accounts.code_one', $var->code_one)
+                                                           ->where('accounts.code_two', $var->code_two)
+                                                           ->where('detail_vouchers.status', 'C')
+                                                           ->sum('debe');
+   
+                         
+                           $total_haber = DB::table('accounts')
+                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                           ->where('accounts.code_one', $var->code_one)
+                                                           ->where('accounts.code_two', $var->code_two)
+                                                           ->where('detail_vouchers.status', 'C')
+                                                           ->sum('haber');
+                        /*---------------------------------------------------*/
+                                 
+                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */  
+                        $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        /*---------------------------------------------------*/
 
-                       $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                        ->where('code_two', $var->code_two)
-                                                        ->where('code_three', $var->code_three)
-                                                        ->where('status', 'C')
-                                                        ->sum('haber');     
 
-                       $var->debe = $total_debe;
-                       $var->haber = $total_haber;       
-                                       
-                   /* $account = DB::table('accounts')->where('code_one', $var->code_one)
-                                                        ->where('code_two', $var->code_two)
-                                                        ->where('code_three', $var->code_three)
-                                                        ->where('code_four', $var->code_four)
-                                                        
-                                                        ->update(['debe' => $total_debe,'haber' => $total_haber]); */
+                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
+
+                        }else if(isset($total_amount_bank)){
+                            $var->debe = $total_debe + $total_amount_bank;
                         
-                }
-                    }else{
-                        
-                    $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                        ->where('code_two', $var->code_two)
-                                                        ->where('status', 'C')
-                                                        ->sum('debe');
-
-                    $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                        ->where('code_two', $var->code_two)
-                                                        ->where('status', 'C')
-                                                        ->sum('haber'); 
-                                                        
-                       $var->debe = $total_debe;
-
-                       $var->haber = $total_haber;
-                   /* $account = DB::table('accounts')->where('code_one', $var->code_one)
-                                                        ->where('code_two', $var->code_two)
-                                                        ->where('code_three', $var->code_three)
-                                                        ->where('code_four', $var->code_four)
-                                                        
-                                                        ->update(['debe' => $total_debe,'haber' => $total_haber]); */
+                        }else if(isset($total_amount_bank_counterpart)){
+                            $var->debe = $total_debe - $total_amount_bank_counterpart;
+                        }else{
+                            $var->debe = $total_debe;
+                        }                           
+  
+                            $var->haber = $total_haber;
                     
-                    }
-                }else{
-                    //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
-                  
-                       $total_debe = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                                   ->where('status', 'C')
-                                                             ->sum('debe');
+                       
+                       }
+                   }else{
+                       //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
+                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
+                            $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                        
+                          
+                           $total_haber = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');
+                    /*---------------------------------------------------*/
 
-                       $total_haber = DB::table('detail_vouchers')->where('code_one', $var->code_one)
-                                                                   ->where('status', 'C')
-                                                                ->sum('haber');   
-                                                                
-                       $var->debe = $total_debe;
+                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */ 
+                            $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
 
-                       $var->haber = $total_haber;           
-                   /* $account = DB::table('accounts')->where('code_one', $var->code_one)
-                                                  ->where('code_two', $var->code_two)
-                                                  ->where('code_three', $var->code_three)
-                                                  ->where('code_four', $var->code_four)
-                                                  
-                                                  ->update(['debe' => $total_debe,'haber' => $total_haber]); */
+                            $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        /*---------------------------------------------------*/
 
-                }
-            }else{
-                return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
-            }
-        } 
+
+                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
+
+                        }else if(isset($total_amount_bank)){
+                            $var->debe = $total_debe + $total_amount_bank;
+                          
+                        }else if(isset($total_amount_bank_counterpart)){
+                            $var->debe = $total_debe - $total_amount_bank_counterpart;
+                        }else{
+                            $var->debe = $total_debe;
+                        }                                        
+                          
+  
+                          $var->haber = $total_haber;           
+                      
+   
+                   }
+               }else{
+                   return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+               }
+           } 
+       }  else{
+           return redirect('/accounts')->withDanger('No hay Cuentas');
+       }              
+
+      
        
         return $accounts;
     }
    
+
+    public function check_amount($id_account)
+    {       
+        
+        $var = Account::find($id_account);
+
+                      
+       if(isset($var)) {
+               
+               if($var->code_one != 0){
+                   
+                   if($var->code_two != 0){
+   
+   
+                       if($var->code_three != 0){
+   
+   
+                           if($var->code_four != 0){
+                             
+                            /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
+                            $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('accounts.code_four', $var->code_four)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                            $total_haber = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('accounts.code_four', $var->code_four)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');   
+                            /*---------------------------------------------------*/
+
+                            /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */                                 
+                            $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+
+                            $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                           /*---------------------------------------------------*/
+
+                            if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                                $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
+
+                            }else if(isset($total_amount_bank)){
+                                $var->debe = $total_debe + $total_amount_bank;
+                            
+                            }else if(isset($total_amount_bank_counterpart)){
+                                $var->debe = $total_debe - $total_amount_bank_counterpart;
+                            }else{
+                                $var->debe = $total_debe;
+                            }                                     
+  
+                                $var->haber = $total_haber;
+  
+                            
+                                                          
+   
+                           }else{
+                              
+                             
+                         
+                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
+                           $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                           $total_haber =  DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');      
+                        /*---------------------------------------------------*/                               
+  
+                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */    
+                        $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                      /*---------------------------------------------------*/     
+
+
+                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
+
+                        }else if(isset($total_amount_bank)){
+                            $var->debe = $total_debe + $total_amount_bank;
+                        
+                        }else if(isset($total_amount_bank_counterpart)){
+                            $var->debe = $total_debe - $total_amount_bank_counterpart;
+                        }else{
+                            $var->debe = $total_debe;
+                        }                 
+                            
+                            
+                            $var->haber = $total_haber;       
+                                          
+                     
+                           
+                   }
+                       }else{
+                           
+                      
+                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                   
+                           $total_debe = DB::table('accounts')
+                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                           ->where('accounts.code_one', $var->code_one)
+                                                           ->where('accounts.code_two', $var->code_two)
+                                                           ->where('detail_vouchers.status', 'C')
+                                                           ->sum('debe');
+   
+                         
+                           $total_haber = DB::table('accounts')
+                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                           ->where('accounts.code_one', $var->code_one)
+                                                           ->where('accounts.code_two', $var->code_two)
+                                                           ->where('detail_vouchers.status', 'C')
+                                                           ->sum('haber');
+                        /*---------------------------------------------------*/
+                                 
+                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */  
+                        $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        /*---------------------------------------------------*/
+
+
+                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
+
+                        }else if(isset($total_amount_bank)){
+                            $var->debe = $total_debe + $total_amount_bank;
+                        
+                        }else if(isset($total_amount_bank_counterpart)){
+                            $var->debe = $total_debe - $total_amount_bank_counterpart;
+                        }else{
+                            $var->debe = $total_debe;
+                        }                           
+  
+                            $var->haber = $total_haber;
+                    
+                       
+                       }
+                   }else{
+                       //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
+                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
+                            $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                        
+                          
+                           $total_haber = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');
+                    /*---------------------------------------------------*/
+
+                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */ 
+                            $total_amount_bank = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+
+                            $total_amount_bank_counterpart = DB::table('accounts')
+                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
+                                                ->where('accounts.code_one', $var->code_one)
+                                                ->where('accounts.code_two', $var->code_two)
+                                                ->where('accounts.code_three', $var->code_three)
+                                                ->where('accounts.code_four', $var->code_four)
+                                                ->sum('amount');
+                        /*---------------------------------------------------*/
+
+
+                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
+                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
+
+                        }else if(isset($total_amount_bank)){
+                            $var->debe = $total_debe + $total_amount_bank;
+                          
+                        }else if(isset($total_amount_bank_counterpart)){
+                            $var->debe = $total_debe - $total_amount_bank_counterpart;
+                        }else{
+                            $var->debe = $total_debe;
+                        }                                        
+                          
+  
+                          $var->haber = $total_haber;           
+                      
+   
+                   }
+               }else{
+                   return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+               }
+           } 
+       
+      
+       
+        return $var;
+    }
+   
+
+
+  
    /**
     * Show the form for editing the specified resource.
     *
@@ -410,10 +781,11 @@ class BankMovementController extends Controller
        //
    }
 
-   public function list(Request $request, $id_var = null){
+ public function list(Request $request, $id_var = null){
     //validar si la peticion es asincrona
     if($request->ajax()){
         try{
+            
             $account = Account::find($id_var);
             $subcontrapartidas = Account::select('id','description')->where('code_one',$account->code_one)
                                                                     ->where('code_two',$account->code_two)
@@ -427,6 +799,7 @@ class BankMovementController extends Controller
     }
     
 }
+
 
 
 }

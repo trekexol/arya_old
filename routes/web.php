@@ -417,8 +417,10 @@ Route::group(["prefix"=>'bankmovements'],function(){
     Route::delete('{id}/delete','BankMovementController@destroy')->name('bankmovements.delete');
     Route::patch('{id}/update','BankMovementController@update')->name('bankmovements.update');
 
-    Route::get('registerdeposit/{code_one}/{code_two}/{code_three}/{code_four}','BankMovementController@createdeposit')->name('bankmovements.createdeposit');
-    Route::get('registerretirement/{code_one}/{code_two}/{code_three}/{code_four}','BankMovementController@createretirement')->name('bankmovements.createretirement');
+    Route::get('registerdeposit/{id_account}','BankMovementController@createdeposit')->name('bankmovements.createdeposit');
+    Route::get('registerretirement/{id_account}','BankMovementController@createretirement')->name('bankmovements.createretirement');
 
-    Route::get('list/{estado_id?}','BankMovementController@list')->name('bankmovements.list');
+    Route::get('list/{contrapartida_id?}','BankMovementController@list')->name('bankmovements.list');
+    Route::get('listbeneficiario/{contrapartida_id?}','BankMovementController@listbeneficiario')->name('bankmovements.listbeneficiario');
+    
 });

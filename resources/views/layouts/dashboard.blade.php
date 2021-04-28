@@ -125,8 +125,12 @@
     @yield('javascript')  
   @yield('javascript_edit')
   @yield('js_charts')
+  
+  @yield('consultadeposito')  
 
   @yield('validacion_usuario')
+
+
 
   @yield('validacion')
   
