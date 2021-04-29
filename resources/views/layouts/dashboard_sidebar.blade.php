@@ -42,25 +42,25 @@
         <div class="bg-white py-2 collapse-inner rounded">
       
             
-            <a class="collapse-item" href="{{ route('users')}}">Usuarios</a>
-            <a class="collapse-item" href="{{ route('companies')}}">Compañias</a>
-            <a class="collapse-item" href="{{ route('branches')}}">Sucursales</a>
-            <a class="collapse-item" href="{{ route('positions')}}">Cargos</a>
-            <a class="collapse-item" href="{{ route('academiclevels')}}">Niveles Académicos</a>
-            <a class="collapse-item" href="{{ route('professions') }}">Profesiones</a>
-            <a class="collapse-item" href="{{ route('salarytypes') }}">Tipos de Salarios</a>
-            <a class="collapse-item" href="{{ route('nominatypes') }}">Tipos de Nóminas</a>
-            <a class="collapse-item" href="{{ route('comisiontypes') }}">Tipos de Comisión</a>
-            <a class="collapse-item" href="{{ route('paymenttypes') }}">Tipos de Pagos</a>
-            <a class="collapse-item" href="{{ route('segments') }}">Segmentos</a>
-            <a class="collapse-item" href="{{ route('subsegment') }}">Sub Segmentos</a>
-            <a class="collapse-item" href="{{ route('unitofmeasures') }}">Unidades de Medida</a>
-           <a class="collapse-item" href="{{ route('receiptvacations') }}">Recibo de Vacaciones</a>
-            <a class="collapse-item" href="{{ route('modelos') }}">Modelos</a>
-            <a class="collapse-item" href="{{ route('colors') }}">Colores</a>
-            <a class="collapse-item" href="{{ route('transports') }}">Transportes</a>
-            <a class="collapse-item" href="{{ route('historictransports') }}">Historial de Transporte</a>
-            <a class="collapse-item" href="{{ route('headervouchers') }}">Comprobante Cabecera</a>
+            <a class="collapse-item" href="{{ route('users')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Usuarios</strong></strong></a>
+            <a class="collapse-item" href="{{ route('companies')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-building fa-sm fa-fw mr-2 text-blue-400"></i><strong>Compañias</strong></a>
+            <a class="collapse-item" href="{{ route('branches')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-code-branch fa-sm fa-fw mr-2 text-blue-400"></i><strong>Sucursales</strong></a>
+            <a class="collapse-item" href="{{ route('positions')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-user-plus fa-sm fa-fw mr-2 text-blue-400"></i><strong>Cargos</strong></a>
+            <a class="collapse-item" href="{{ route('academiclevels')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-graduation-cap fa-sm fa-fw mr-2 text-blue-400"></i><strong>Niveles Académicos</strong></a>
+            <a class="collapse-item" href="{{ route('professions') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-user-tie fa-sm fa-fw mr-2 text-blue-400"></i><strong>Profesiones</strong></a>
+            <a class="collapse-item" href="{{ route('salarytypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-business-time fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Salarios</strong></a>
+            <a class="collapse-item" href="{{ route('nominatypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-book fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Nóminas</strong></a>
+            <a class="collapse-item" href="{{ route('comisiontypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-address-card fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Comisión</strong></a>
+            <a class="collapse-item" href="{{ route('paymenttypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-credit-card fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Pagos</strong></a>
+            <a class="collapse-item" href="{{ route('segments') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-cog fa-sm fa-fw mr-2 text-blue-400"></i><strong>Segmentos</strong></a>
+            <a class="collapse-item" href="{{ route('subsegment') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-cogs fa-sm fa-fw mr-2 text-blue-400"></i><strong>Sub Segmentos</strong></a>
+            <a class="collapse-item" href="{{ route('unitofmeasures') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-balance-scale fa-sm fa-fw mr-2 text-blue-400"></i><strong>Unidades de Medida</strong></a>
+           <a class="collapse-item" href="{{ route('receiptvacations') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-plane-departure fa-sm fa-fw mr-2 text-blue-400"></i><strong>Recibo de Vacaciones</strong></a>
+            <a class="collapse-item" href="{{ route('modelos') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-clipboard-list fa-sm fa-fw mr-2 text-blue-400"></i><strong>Modelos</strong></a>
+            <a class="collapse-item" href="{{ route('colors') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-palette fa-sm fa-fw mr-2 text-blue-400"></i><strong>Colores</strong></a>
+            <a class="collapse-item" href="{{ route('transports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-car-side fa-sm fa-fw mr-2 text-blue-400"></i><strong>Transportes</strong></a>
+            <a class="collapse-item" href="{{ route('historictransports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-archive fa-sm fa-fw mr-2 text-blue-400"></i><strong>Historial de<br> <div style="text-indent: 22px;">Transporte</div></strong></a>
+            <a class="collapse-item" href="{{ route('headervouchers') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-clipboard-check fa-sm fa-fw mr-2 text-blue-400"></i><strong>Comprobante<br> <div style="text-indent: 22px;">Cabecera</div></strong></a>
            
         </div>
     </div>
@@ -79,10 +79,10 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
            
-              <a  class="collapse-header" href="{{route('quotations')}}">Facturacion</a>
-                 <a class="collapse-item" href="{{route('clients')}}">Clientes</a>
-                <a class="collapse-item" href="{{route('vendors')}}">Vendedores</a>
-                <a  class="collapse-header" href="{{route('billings')}}">Ventas</a>
+                <a class="collapse-item" href="{{route('quotations')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Facturacion</strong></a>
+                <a class="collapse-item" href="{{route('clients')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Clientes</strong></a>
+                <a class="collapse-item" href="{{route('vendors')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Vendedores</strong></a>
+                <a class="collapse-item" href="{{route('billings')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Ventas</strong></a>
               <!--      <a class="collapse-item" href="buttons.html">Listar Factura</a>
                     <a class="collapse-item" href="buttons.html">Notas de Entrega</a>
                     <a class="collapse-item" href="buttons.html">Notas de Crédito</a>
@@ -112,7 +112,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
            
              <!-- <a  class="collapse-header" href="buttons.html">Gastos y Compras</a> -->
-                <a class="collapse-item" href="{{ route('providers')}}">Proveedores</a>
+                <a class="collapse-item" href="{{ route('providers')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-alt fa-sm fa-fw mr-2 text-black-400"></i><strong>Proveedores</strong></a>
                 
               <!--  <a  class="collapse-header" href="buttons.html">Compras</a>
                     <a class="collapse-item" href="buttons.html">Listar Compras</a>
@@ -125,7 +125,7 @@
                     <a class="collapse-item" href="buttons.html">Listar Pagos</a>
                     <a class="collapse-item" href="buttons.html">Ordenes de Pago</a>
                     <a class="collapse-item" href="buttons.html">Pagar Facturas de Compra</a>-->
-                <a class="collapse-header" href="{{ route('products')}}">Productos y Servicios</a> 
+                <a class="collapse-item" href="{{ route('products')}}" style="color: rgb(255, 81, 0)"><i class="fab fa-product-hunt fa-sm fa-fw mr-2 text-black-400"></i><strong>Productos y Servicios</strong></a> 
             </div>
         </div>
     </li>
@@ -140,10 +140,10 @@
             <div class="bg-white py-2 collapse-inner rounded">
              
               <!--<a  class="collapse-header" href="buttons.html">Nómina</a>-->
-                <a class="collapse-item" href="{{ route('employees') }}">Empleados</a>
+                <a class="collapse-item" href="{{ route('employees') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-users fa-sm fa-fw mr-2 text-black-400"></i><strong>Empleados</strong></a>
                <!-- <a class="collapse-item" href="buttons.html">Generar Nómina</a>
                 <a class="collapse-item" href="buttons.html">Prestaciones Sociales</a>-->
-                <a class="collapse-item" href="{{ route('indexbcvs') }}">Indices BCV</a>
+                <a class="collapse-item" href="{{ route('indexbcvs') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-money-bill fa-sm fa-fw mr-2 text-black-400"></i><strong>Indices BCV</strong></a>
             </div>
         </div>
     </li>
@@ -157,11 +157,10 @@
         <div id="collapseTransaccion" class="collapse" aria-labelledby="headingTransaccion" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
              
-            <a  class="collapse-header" href="buttons.html">Transacción</a>
-            <a  class="collapse-item" href="{{ route('bankmovements') }}">Bancos</a>
-                <a class="collapse-item" href="buttons.html">Depósitos Bancarios</a>
-                <a class="collapse-item" href="buttons.html">Movimientos Bancarios</a>
-                <a class="collapse-item" href="buttons.html">Importar <br> Bancarios</a>
+           
+            <a  class="collapse-item" href="{{ route('bankmovements') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Bancos</strong></a>
+            <a  class="collapse-item" href="{{ route('bankmovements.indexmovement') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-hand-holding-usd fa-sm fa-fw mr-2 text-black-400"></i><strong>Movimientos <br> <div style="text-indent: 22px;"> Bancarios</div></strong></a>
+               
        <!--     <a  class="collapse-header" href="buttons.html">Ventas</a>
             <a  class="collapse-header" href="buttons.html">Gastos y Compras</a>
             <a  class="collapse-header" href="buttons.html">Plan de Cuentas</a>
@@ -179,8 +178,8 @@
             <div class="bg-white py-2 collapse-inner rounded">
              
            <!-- <a  class="collapse-header" href="">Contabilidad</a>-->
-                <a class="collapse-item" href="{{ route('accounts')}}">Plan de Cuentas</a>
-                <a class="collapse-item" href="{{ route('detailvouchers.create')}}">Ajustes Contables</a>
+                <a class="collapse-item" href="{{ route('accounts')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Plan de Cuentas</strong></a>
+                <a class="collapse-item" href="{{ route('detailvouchers.create')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Ajustes Contables</strong></a>
                <!-- <a class="collapse-item" href="buttons.html">Balance General</a>
                 <a class="collapse-item" href="buttons.html">Ingresos y Egresos</a>
                 <a class="collapse-item" href="buttons.html">Listado Diario</a>

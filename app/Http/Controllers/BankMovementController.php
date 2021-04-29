@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 
 
 use App\Account;
+use App\Client;
 use App\Segment;
 use App\Subsegment;
 use App\UnitOfMeasure;
+use App\Vendor;
 use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
@@ -35,6 +37,21 @@ class BankMovementController extends Controller
        }
 
        return view('admin.bankmovements.index',compact('accounts'));
+   }
+
+   public function indexmovement()
+   {
+       $user       =   auth()->user();
+       $users_role =   $user->role_id;
+       if($users_role == '1'){
+        
+        $bankmovements = BankMovement::orderby('date','asc')->get();
+
+        }elseif($users_role == '2'){
+           return view('admin.index');
+       }
+
+       return view('admin.bankmovements.indexmovement',compact('bankmovements'));
    }
 
    /**
@@ -87,6 +104,27 @@ class BankMovementController extends Controller
        }
    }
 
+   public function createtransfer($id)
+   {
+        $account = Account::find($id);
+
+        if(isset($account)){   
+
+            $counterparts     = Account::where('code_one', 1)
+                                            ->where('code_two', 1)
+                                            ->whereIn('code_three', [1,2])
+                                            ->where('code_four','<>',0)
+                                        ->orderBY('description','asc')->get();
+            $date = Carbon::now();
+            $datenow = $date->format('Y-m-d');  
+
+            return view('admin.bankmovements.createtransfer',compact('account','datenow','counterparts'));
+
+        }else{
+            return redirect('/bankmovements')->withDanger('No existe la Cuenta!');
+       }
+   }
+
    /**
     * Store a newly created resource in storage.
     *
@@ -114,46 +152,197 @@ class BankMovementController extends Controller
        
        
     ]);
-
-    $id_contrapartida = request('Subcontrapartida');
-    $amount = request('amount');
-
-    $check_amount = $this->check_amount($id_contrapartida);
-
-    if($check_amount->debe >= $amount){
-        $var = new BankMovement();
-
-        $var->id_account = request('id_account');
-       
-    
-    
-        $var->id_counterpart = $id_contrapartida;
-       
-        $var->id_client = request('id_client');
-        $var->id_vendor = request('id_vendor');
-        $var->id_user = request('user_id');
-    
-        $var->description = request('description');
-        $var->amount = $amount;
-        
-        $var->type_movement = request('type_movement');
-       
-        $var->date = request('date');
-        $var->reference = request('reference');
-    
-        $var->status =  1;
       
-        $var->save();
-    
-        return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+    //EL DINERO SALE DE LA CUENTA CON ID ID_Contrrapartida
+      $id_account = request('id_account');
+      $id_contrapartida = request('Subcontrapartida');
+  
+      if($id_account != $id_contrapartida){
+
+            $id_contrapartida = request('Subcontrapartida');
+            $amount = request('amount');
+
+            //ME TRAE LA CUENTA CON SU SALDO CALCULADO POR EL DEBE
+            $check_amount = $this->check_amount($id_contrapartida);
+
+            //CHEQUEA QUE EL MONTO INGRESADO SEA MENOR O IGUAL AL SALDO DE LA CUENTA
+            if($check_amount->debe >= $amount){
+                $var = new BankMovement();
+
+                $var->id_account = $id_account;
+            
+            
+            
+                $var->id_counterpart = $id_contrapartida;
+            
+            
+                $var->id_user = request('user_id');
+            
+                $var->description = request('description');
+                $var->amount = $amount;
+                
+                $var->type_movement = request('type_movement');
+            
+                $var->date = request('date');
+                $var->reference = request('reference');
+            
+                $var->status =  1;
+            
+                $var->save();
+            
+                return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+
+            }else{
+                return redirect('/bankmovements/registerdeposit/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
+            }
+            
+        }else{
+            return redirect('/bankmovements/registerdeposit/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
+        }
+        
+    }
+
+
+    public function storeretirement(Request $request)
+    {
+
+   
+    $data = request()->validate([
+        
+       
+        'id_account'        =>'required',
+        'Subcontrapartida'  =>'required',
+
+        'beneficiario'      =>'required',
+        'Subbeneficiario'      =>'required',
+
+        'user_id'           =>'required',
+
+        'description'       =>'required',
+        'amount'            =>'required',
+        
+        'date'              =>'required',
+
+        'reference'         =>'required',
+       
+       
+    ]);
+    //EL DINERO SALE DE LA CUENTA CON ID ID_ACCOUNT
+    $id_account = request('id_account');
+    $id_contrapartida = request('Subcontrapartida');
+
+    if($id_account != $id_contrapartida){
+
+        $amount = request('amount');
+
+        $check_amount = $this->check_amount($id_account);
+
+        if($check_amount->debe >= $amount){
+            $var = new BankMovement();
+
+            //AQUI SE REGISTRA EN ID_ACCOUNT DONDE ENTRA LA PLATA Y EN ID_COUNTERPART DE DONDE SALE EL DINERO
+            $var->id_account = $id_contrapartida;
+        
+            $var->id_counterpart = $id_account;
+        
+            if(strcmp(request('beneficiario'), "Cliente") == 0){
+                $var->id_client = request('Subbeneficiario');
+                
+            }else{
+                $var->id_vendor = request('Subbeneficiario');
+            }
+
+
+            $var->id_user = request('user_id');
+        
+            $var->description = request('description');
+            $var->amount = $amount;
+            
+            $var->type_movement = request('type_movement');
+        
+            $var->date = request('date');
+            $var->reference = request('reference');
+        
+            $var->status =  1;
+        
+            $var->save();
+        
+            return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+
+        }else{
+            return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
+        }
 
     }else{
-        return redirect('/bankmovements/registerdeposit/'.request('id_account').'')->withDanger('El saldo de la Cuenta Contrapartida es menor al saldo debitado!');
+        return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
     }
-    
-    
-    }
+}
 
+
+
+public function storetransfer(Request $request)
+    {
+
+   
+    $data = request()->validate([
+        
+       
+        'id_account'        =>'required',
+        'id_counterpart'  =>'required',
+
+        
+        'user_id'           =>'required',
+
+        
+        'amount'            =>'required',
+        
+        'date'              =>'required',
+
+        'reference'         =>'required',
+       
+       
+    ]);
+    //EL DINERO SALE DE LA CUENTA CON ID id_account
+    $id_account = request('id_account');
+    $id_counterpart = request('id_counterpart');
+
+    if($id_account != $id_counterpart){
+
+        $amount = request('amount');
+
+        $check_amount = $this->check_amount($id_account);
+
+        if($check_amount->debe >= $amount){
+            $var = new BankMovement();
+
+            //AQUI SE REGISTRA EN ID_ACCOUNT DONDE ENTRA LA PLATA 
+            $var->id_account = $id_counterpart;
+        
+            $var->id_counterpart = $id_account;
+        
+            $var->id_user = request('user_id');
+        
+            $var->amount = $amount;
+            
+            $var->type_movement = request('type_movement');
+        
+            $var->date = request('date');
+            $var->reference = request('reference');
+        
+            $var->status =  1;
+        
+            $var->save();
+        
+            return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+
+        }else{
+            return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
+        }
+
+    }else{
+        return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
+    }
+}
    /**
     * Display the specified resource.
     *
@@ -781,6 +970,26 @@ class BankMovementController extends Controller
        //
    }
 
+   public function listbeneficiario(Request $request, $id_var = null){
+    //validar si la peticion es asincrona
+    if($request->ajax()){
+        try{
+            
+            if(strcmp($id_var, "Cliente") == 0){
+                $respuesta = Client::select('id','name')->orderBy('name','asc')->get();
+            }else{
+               $respuesta = Vendor::select('id','name')->orderBy('name','asc')->get();
+             }
+           
+            return response()->json($respuesta,200);
+        }catch(Throwable $th){
+            return response()->json(false,500);
+        }
+    }
+    
+}
+
+
  public function list(Request $request, $id_var = null){
     //validar si la peticion es asincrona
     if($request->ajax()){
@@ -799,6 +1008,7 @@ class BankMovementController extends Controller
     }
     
 }
+
 
 
 

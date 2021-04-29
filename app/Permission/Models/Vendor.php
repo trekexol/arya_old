@@ -17,6 +17,10 @@ class Vendor extends Model
         return $this->belongsToMany('App\Quotation')->withTimesTamps();
     }
 
+    public function bankmovements(){
+        return $this->belongsToMany('App\BankMovement')->withTimesTamps();
+    }
+    
     public function permissions(){
         return $this->belongsToMany('App\Permission\Models\Permission')->withTimesTamps();
     }

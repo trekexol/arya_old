@@ -421,6 +421,13 @@ Route::group(["prefix"=>'bankmovements'],function(){
     Route::get('registerretirement/{id_account}','BankMovementController@createretirement')->name('bankmovements.createretirement');
 
     Route::get('list/{contrapartida_id?}','BankMovementController@list')->name('bankmovements.list');
-    Route::get('listbeneficiario/{contrapartida_id?}','BankMovementController@listbeneficiario')->name('bankmovements.listbeneficiario');
+    Route::get('listbeneficiario/{beneficiario_id?}','BankMovementController@listbeneficiario')->name('bankmovements.listbeneficiario');
+    
+    Route::post('storeretirement','BankMovementController@storeretirement')->name('bankmovements.storeretirement');
+
+    Route::get('registertransfer/{id_account}','BankMovementController@createtransfer')->name('bankmovements.createtransfer');
+    Route::post('storetransfer','BankMovementController@storetransfer')->name('bankmovements.storetransfer');
+
+    Route::get('seemovements','BankMovementController@indexmovement')->name('bankmovements.indexmovement');
     
 });

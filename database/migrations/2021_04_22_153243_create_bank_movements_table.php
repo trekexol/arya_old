@@ -22,7 +22,7 @@ class CreateBankMovementsTable extends Migration
             $table->unsignedBigInteger('id_vendor')->nullable();
             $table->unsignedBigInteger('id_user');
 
-            $table->string('description',150);
+            $table->string('description',150)->nullable();
             $table->string('type_movement',2);
 
             $table->decimal('amount',16,2);

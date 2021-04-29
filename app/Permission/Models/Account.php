@@ -16,6 +16,11 @@ class Account extends Model
     public function detailvouchers(){
         return $this->belongsToMany('App\DetailVoucher')->withTimesTamps();
     }
+
+    public function bankmovements(){
+        return $this->belongsToMany('App\BankMovement')->withTimesTamps();
+    }
+
     public function permissions(){
         return $this->belongsToMany('App\Permission\Models\Permission')->withTimesTamps();
     }

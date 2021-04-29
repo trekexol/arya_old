@@ -26,11 +26,11 @@
                 <div class="card-header">Retiros / Ordenes de Pago</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('bankmovements.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('bankmovements.storeretirement') }}" enctype="multipart/form-data">
                         @csrf
                         <input id="id_account" type="hidden" class="form-control @error('id_account') is-invalid @enderror" name="id_account" value="{{ $account->id }}" required autocomplete="id_account" autofocus>
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
-                        <input id="type_movement" type="hidden" class="form-control @error('type_movement') is-invalid @enderror" name="type_movement" value="DE" required autocomplete="type_movement" autofocus>
+                        <input id="type_movement" type="hidden" class="form-control @error('type_movement') is-invalid @enderror" name="type_movement" value="RE" required autocomplete="type_movement" autofocus>
                         
                        
                         <div class="form-group row">
@@ -197,6 +197,68 @@ $(function(){
 </script>
 @endsection
 
+@section('javascript')
+<script>
+        
+        $("#beneficiario").on('change',function(){
+            var beneficiario_id = $(this).val();
+            $("#subbeneficiario").val("");
+           
+            // alert(beneficiario_id);
+            getSubbeneficiario(beneficiario_id);
+        });
+
+    function getSubbeneficiario(beneficiario_id){
+        // alert(`../subbeneficiario/list/${beneficiario_id}`);
+        $.ajax({
+            url:`../../bankmovements/listbeneficiario/${beneficiario_id}`,
+            beforSend:()=>{
+                alert('consultando datos');
+            },
+            success:(response)=>{
+                let subbeneficiario = $("#subbeneficiario");
+                let htmlOptions = `<option value='' >Seleccione..</option>`;
+                // console.clear();
+                if(response.length > 0){
+                    response.forEach((item, index, object)=>{
+                        let {id,name} = item;
+                        htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${name}</option>`
+
+                    });
+                }
+                //console.clear();
+                // console.log(htmlOptions);
+                subbeneficiario.html('');
+                subbeneficiario.html(htmlOptions);
+            
+                
+            
+            },
+            error:(xhr)=>{
+                alert('Presentamos inconvenientes al consultar los datos');
+            }
+        })
+    }
+
+    $("#subbeneficiario").on('change',function(){
+            var subbeneficiario_id = $(this).val();
+            var beneficiario_id    = document.getElementById("beneficiario").value;
+            
+        });
+
+    
+$(function(){
+    soloNumeros('xtelf_local');
+    soloNumeros('xtelf_cel');
+});
+
+
+
+
+
+</script>
+@endsection
+
 @section('consultadeposito')
     <script>
             
@@ -259,65 +321,4 @@ $(function(){
     </script>
 @endsection
 
-@section('javascript')
-    <script>
-            
-            $("#beneficiario").on('change',function(){
-                var beneficiario_id = $(this).val();
-                $("#subbeneficiario").val("");
-               
-                // alert(beneficiario_id);
-                getSubbeneficiario(beneficiario_id);
-            });
-
-        function getSubbeneficiario(beneficiario_id){
-            // alert(`../subbeneficiario/list/${beneficiario_id}`);
-            $.ajax({
-                url:`../../bankmovements/listbeneficiario/${beneficiario_id}`,
-                beforSend:()=>{
-                    alert('consultando datos');
-                },
-                success:(response)=>{
-                    let subbeneficiario = $("#subbeneficiario");
-                    let htmlOptions = `<option value='' >Seleccione..</option>`;
-                    // console.clear();
-                    if(response.length > 0){
-                        response.forEach((item, index, object)=>{
-                            let {id,description} = item;
-                            htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${description}</option>`
-
-                        });
-                    }
-                    //console.clear();
-                    // console.log(htmlOptions);
-                    subbeneficiario.html('');
-                    subbeneficiario.html(htmlOptions);
-                
-                    
-                
-                },
-                error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
-                }
-            })
-        }
-
-        $("#subbeneficiario").on('change',function(){
-                var subbeneficiario_id = $(this).val();
-                var beneficiario_id    = document.getElementById("beneficiario").value;
-                
-            });
-
-        
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
-
-    </script>
-@endsection
 
