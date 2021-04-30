@@ -431,3 +431,22 @@ Route::group(["prefix"=>'bankmovements'],function(){
     Route::get('seemovements','BankMovementController@indexmovement')->name('bankmovements.indexmovement');
     
 });
+
+Route::group(["prefix"=>'nominas'],function(){
+    Route::get('/','NominaController@index')->name('nominas');
+    Route::get('register','NominaController@create')->name('nominas.create');
+    Route::post('store','NominaController@store')->name('nominas.store');
+    Route::get('{id}/edit','NominaController@edit')->name('nominas.edit');
+    Route::delete('{id}/delete','NominaController@destroy')->name('nominas.delete');
+    Route::patch('{id}/update','NominaController@update')->name('nominas.update');
+});
+
+
+Route::group(["prefix"=>'nominaconcepts'],function(){
+    Route::get('/','NominaConceptController@index')->name('nominaconcepts');
+    Route::get('register','NominaConceptController@create')->name('nominaconcepts.create');
+    Route::post('store','NominaConceptController@store')->name('nominaconcepts.store');
+    Route::get('{id}/edit','NominaConceptController@edit')->name('nominaconcepts.edit');
+    Route::delete('{id}/delete','NominaConceptController@destroy')->name('nominaconcepts.delete');
+    Route::patch('{id}/update','NominaConceptController@update')->name('nominaconcepts.update');
+});

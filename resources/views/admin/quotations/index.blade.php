@@ -38,10 +38,10 @@
         @endif
         </div>
         <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" >
             <thead>
             <tr> 
-                <th>Seleccionar</th>
+                <th><i class="fas fa-cog"></i></th>
                 <th>Cliente</th>
                 <th>Vendedor</th>
                 <th>Transporte</th>
@@ -60,7 +60,7 @@
                 @else  
                     @foreach ($quotations as $quotation)
                         <tr>
-                            <td>
+                            <td >
                             <a href="quotations/register/{{$quotation->id}}" title="Editar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{ $quotation->clients['name']}}</td>

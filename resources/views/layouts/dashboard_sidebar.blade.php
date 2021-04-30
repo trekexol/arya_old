@@ -139,7 +139,9 @@
         <div id="collapseNomina" class="collapse" aria-labelledby="collapseNomina" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
              
-              <!--<a  class="collapse-header" href="buttons.html">Nómina</a>-->
+              <!--<a  class="collapse-header" href="buttons.html">Nómina</a>-->  
+                <a class="collapse-item" href="{{ route('nominas') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-book fa-sm fa-fw mr-2 text-black-400"></i><strong>Nóminas</strong></a>
+                <a class="collapse-item" href="{{ route('nominaconcepts') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-book fa-sm fa-fw mr-2 text-black-400"></i><strong>Concepto de Nóminas</strong></a>
                 <a class="collapse-item" href="{{ route('employees') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-users fa-sm fa-fw mr-2 text-black-400"></i><strong>Empleados</strong></a>
                <!-- <a class="collapse-item" href="buttons.html">Generar Nómina</a>
                 <a class="collapse-item" href="buttons.html">Prestaciones Sociales</a>-->

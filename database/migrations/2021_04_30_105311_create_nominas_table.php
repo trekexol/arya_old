@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProfessionsTable extends Migration
+class CreateNominasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,18 @@ class CreateProfessionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('professions', function (Blueprint $table) {
+        Schema::create('nominas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name',50);
-            $table->string('description',50);
+            $table->unsignedBigInteger('id_profession');
+
+            $table->string('description',60);
+            $table->string('type',20);
+            $table->date('date_begin');
+            $table->date('date_end')->nullable();
+
             $table->string('status',1);
+
+            $table->foreign('id_profession')->references('id')->on('professions');
             $table->timestamps();
         });
     }
@@ -29,6 +36,6 @@ class CreateProfessionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('professions');
+        Schema::dropIfExists('nominas');
     }
 }
