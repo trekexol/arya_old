@@ -84,7 +84,7 @@
                             <label for="code_employee" class="col-md-2 col-form-label text-md-right">Código de Empleado (Opcional)</label>
 
                             <div class="col-md-4">
-                                <input id="code_employee" type="text" class="form-control @error('code_employee') is-invalid @enderror" name="code_employee" value="{{ old('code_employee') }}" required autocomplete="code_employee">
+                                <input id="code_employee" type="text" class="form-control @error('code_employee') is-invalid @enderror" name="code_employee" value="{{ old('code_employee') }}" autocomplete="code_employee">
 
                                 @error('code_employee')
                                     <span class="invalid-feedback" role="alert">
@@ -153,7 +153,7 @@
                               
                             </select>
                             </div>
-                            <label for="profession" class="col-md-2 col-form-label text-md-right">Profesión</label>
+                            <label for="profession" class="col-md-2 col-form-label text-md-right">Tipo de Trabajador</label>
 
                             <div class="col-md-4">
                             <select class="form-control" id="profession_id" name="profession_id">
@@ -251,7 +251,7 @@
                             <label for="acumulado_prestaciones" class="col-md-2 col-form-label text-md-right">Acumulado Prestaciones</label>
 
                             <div class="col-md-4">
-                                <input id="acumulado_prestaciones" type="number" class="form-control @error('acumulado_prestaciones') is-invalid @enderror" name="acumulado_prestaciones" value="{{ old('acumulado_prestaciones') }}" required autocomplete="acumulado_prestaciones">
+                                <input id="acumulado_prestaciones" type="text" class="form-control @error('acumulado_prestaciones') is-invalid @enderror" name="acumulado_prestaciones" value="{{ old('acumulado_prestaciones') }}" required autocomplete="acumulado_prestaciones">
 
                                 @error('acumulado_prestaciones')
                                     <span class="invalid-feedback" role="alert">
@@ -262,7 +262,7 @@
                             <label for="acumulado_utilidades" class="col-md-2 col-form-label text-md-right">Acumulado Utilidades</label>
 
                             <div class="col-md-4">
-                                <input id="acumulado_utilidades" type="number" class="form-control @error('acumulado_utilidades') is-invalid @enderror" name="acumulado_utilidades" value="{{ old('acumulado_utilidades') }}" required autocomplete="acumulado_utilidades">
+                                <input id="acumulado_utilidades" type="text" class="form-control @error('acumulado_utilidades') is-invalid @enderror" name="acumulado_utilidades" value="{{ old('acumulado_utilidades') }}" required autocomplete="acumulado_utilidades">
 
                                 @error('acumulado_utilidades')
                                     <span class="invalid-feedback" role="alert">
@@ -309,17 +309,40 @@
 </div>
 @endsection
 @section('validacion')
+    <!-- Se encarga de los input number, el formato -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("#id_empleado").mask('000.000.000.000.000', { reverse: true });
+            
+        }); 
+        $(document).ready(function () {
+            $("#telefono1").mask('0000 000-0000', { reverse: true });
+            
+        }); 
+        $(document).ready(function () {
+            $("#acumulado_prestaciones").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#acumulado_utilidades").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+
+        
+        </script>
     <script>    
-	$(function(){
-        soloLetras('nombres');
-        soloLetras('apellidos');
-        soloNumeros('telefono1');
-        soloNumeros('telefono2');
-        soloAlfaNumerico('code_employee');
-        soloAlfaNumerico('direccion');
-    });
+        $(function(){
+            soloLetras('nombres');
+            soloLetras('apellidos');
+          
+            soloAlfaNumerico('code_employee');
+            soloAlfaNumerico('direccion');
+        });
     </script>
 @endsection
+
 @section('javascript')
     <script>
             

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Employee;
 use App\Nomina;
 use App\Profession;
 use Carbon\Carbon;
@@ -42,6 +43,21 @@ class NominaController extends Controller
         $datenow = $date->format('Y-m-d');
 
         return view('admin.nominas.create',compact('professions','datenow'));
+    }
+
+    public function selectemployee($id)
+    {
+
+        $var  = Nomina::find($id);
+
+        $employees = Employee::where('profession_id',$var->id_profession)->get();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+
+       // dd($var);
+        return view('admin.nominas.selectemployee',compact('var','employees','datenow'));
+        
     }
 
     public function store(Request $request)

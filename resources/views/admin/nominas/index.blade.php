@@ -61,11 +61,12 @@
                     <td>{{$nomina->type}}</td>
                     <td>{{$nomina->date_begin}}</td>
                     <td>{{$nomina->date_end}}</td>
-                    <td>{{$nomina->professions['description']}}</td>
+                    <td>{{$nomina->professions['name']}}</td>
                    
                     @if (Auth::user()->role_id  == '1')
                         <td>
-                        <a href="{{route('nominas.edit',$nomina->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                            <a href="{{route('nominas.selectemployee',$nomina->id) }}" title="Ver Detalles"><i class="fa fa-binoculars"></i></a>  
+                            <a href="{{route('nominas.edit',$nomina->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                         </td>
                     @endif
                     </tr>
@@ -76,5 +77,6 @@
         </div>
     </div>
 </div>
+
 
 @endsection

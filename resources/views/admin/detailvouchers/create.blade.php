@@ -99,19 +99,19 @@ $suma_haber = 0;
                                     
                                     <div class="form-group col-md-1">
                                         <label for="description" >Cuenta</label>
-                                        <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one" readonly autofocus>
+                                        <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two" readonly autofocus>
+                                        <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two"  autofocus>
                                     </div> 
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                    <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three" readonly autofocus>
+                                    <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three"  autofocus>
                                     </div>   
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four" readonly autofocus>
+                                        <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <a href="{{ route('detailvouchers.selectaccount',$header->id ?? -1) }}" title="Editar"><i class="fa fa-eye"></i></a>  
@@ -247,6 +247,10 @@ $suma_haber = 0;
 @endsection
 
 @section('validacion')
+ <!-- Se encarga de los input number, el formato -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
+
 <script>
 
 $(document).ready(function () {

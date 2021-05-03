@@ -40,7 +40,7 @@
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
-                
+                <th>Abreviatura</th>
                 <th>Descripción</th>
                 <th>Signo</th>
                 <th>Tipo de Nómina</th>
@@ -58,18 +58,28 @@
                 @else
                     @foreach ($nominaconcepts as $key => $nominaconcept)
                     <tr>
-                    
+
+                    <td>{{$nominaconcept->abbreviation}}</td>
                     <td>{{$nominaconcept->description}}</td>
-                    <td>{{$nominaconcept->sign}}</td>
+                    @if($nominaconcept->sign == "A")
+                        <td>Asignación</td>
+                    @else
+                        <td>Deducción</td>
+                    @endif
+                    
                     <td>{{$nominaconcept->type}}</td>
                     <td>{{$nominaconcept->formula_m}}</td>
                     <td>{{$nominaconcept->formula_s}}</td>
                     <td>{{$nominaconcept->formula_q}}</td>
                    
-                    <td>{{$nominaconcept->calculate}}</td>
+                    @if($nominaconcept->calculate == "S")
+                        <td>Si</td>
+                    @else
+                        <td>No</td>
+                    @endif
                     @if (Auth::user()->role_id  == '1')
                         <td>
-                        <a href="{{route('nominaconcepts.edit',$nominaconcept->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                            <a href="{{route('nominaconcepts.edit',$nominaconcept->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                         </td>
                     @endif
                     </tr>

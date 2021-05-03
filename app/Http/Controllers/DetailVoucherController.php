@@ -173,8 +173,13 @@ class DetailVoucherController extends Controller
             
             $var->id_account = request('id_account');
             $var->id_header_voucher = request('id_header_voucher');
-            $var->debe = request('debe');
-            $var->haber = request('haber');
+
+            $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', request('debe')));
+            $valor_sin_formato_haber = str_replace(',', '.', str_replace('.', '', request('haber')));
+
+
+            $var->debe = $valor_sin_formato_debe;
+            $var->haber = $valor_sin_formato_haber;
             $var->ref = request('ref');
           
             $var->status =  "N";

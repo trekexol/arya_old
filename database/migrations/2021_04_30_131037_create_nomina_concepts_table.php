@@ -15,6 +15,7 @@ class CreateNominaConceptsTable extends Migration
     {
         Schema::create('nomina_concepts', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('abbreviation',15);
             $table->integer('order');
             $table->string('description',60);
             $table->string('type',20);
@@ -27,6 +28,7 @@ class CreateNominaConceptsTable extends Migration
             $table->decimal('minimum',16,2)->nullable();
             $table->decimal('maximum',16,2)->nullable();
 
+            $table->string('status',1);
             $table->timestamps();
         });
     }

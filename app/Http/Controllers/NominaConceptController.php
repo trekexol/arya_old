@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Employee;
 use App\NominaConcept;
 use App\Profession;
 use Carbon\Carbon;
@@ -37,11 +38,11 @@ class NominaConceptController extends Controller
 
     public function create()
     {
-        $professions = Profession::orderBY('name','asc')->get();
+       
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
 
-        return view('admin.nominaconcepts.create',compact('professions','datenow'));
+        return view('admin.nominaconcepts.create',compact('datenow'));
     }
 
     public function store(Request $request)
@@ -50,6 +51,7 @@ class NominaConceptController extends Controller
         $data = request()->validate([
            
             'order'         =>'required',
+            'abbreviation'  =>'required',
             'description'   =>'required|max:60',
             'type'          =>'required',
             'sign'          =>'required',
@@ -67,6 +69,7 @@ class NominaConceptController extends Controller
         $users = new NominaConcept();
 
         $users->order = request('order');
+        $users->abbreviation = request('abbreviation');
         $users->description = request('description');
         $users->type = request('type');
        
@@ -77,8 +80,12 @@ class NominaConceptController extends Controller
         $users->formula_s = request('formula_s');
         $users->formula_q = request('formula_q');
 
-        $users->minium = request('minium');
-        $users->maximum = request('maximum');
+        $valor_sin_formato_minimum = str_replace(',', '.', str_replace('.', '', request('minimum')));
+        $valor_sin_formato_maximum = str_replace(',', '.', str_replace('.', '', request('maximum')));
+
+
+        $users->minimum = $valor_sin_formato_minimum;
+        $users->maximum = $valor_sin_formato_maximum;
 
 
         $users->status =  "1";
@@ -97,16 +104,17 @@ class NominaConceptController extends Controller
 
         $var  = NominaConcept::find($id);
 
-        $professions = Profession::orderBY('name','asc')->get();
+        
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
 
-        
-        return view('admin.nominaconcepts.edit',compact('var','professions','datenow'));
+       // dd($var);
+        return view('admin.nominaconcepts.edit',compact('var','datenow'));
         
     }
 
    
+
 
 
     public function update(Request $request,$id)
@@ -118,22 +126,42 @@ class NominaConceptController extends Controller
 
         $data = request()->validate([
            
-            'id_profession'         =>'required',
-            'description'         =>'required|max:255',
-            'type'         =>'required',
-            'date_begin'         =>'required|max:255',
+            'order'         =>'required',
+            'abbreviation'         =>'required',
+            'description'   =>'required|max:60',
+            'type'          =>'required',
+            'sign'          =>'required',
+
+            'calculate'     =>'required',
+           
+
+            'minimum'     =>'required',
+            'maximum'     =>'required',
             
             
            
         ]);
 
-        $var          = NominaConcept::findOrFail($id);
+        $var = NominaConcept::findOrFail($id);
 
-        $var->id_profession = request('id_profession');
+        $var->order = request('order');
+        $var->abbreviation = request('abbreviation');
         $var->description = request('description');
         $var->type = request('type');
-        $var->date_begin = request('date_begin');
-        $var->date_end = request('date_end');
+       
+        $var->sign = request('sign');
+        
+        $var->calculate = request('calculate');
+        $var->formula_m = request('formula_m');
+        $var->formula_s = request('formula_s');
+        $var->formula_q = request('formula_q');
+
+        $valor_sin_formato_minimum = str_replace(',', '.', str_replace('.', '', request('minimum')));
+        $valor_sin_formato_maximum = str_replace(',', '.', str_replace('.', '', request('maximum')));
+
+
+        $var->minimum = $valor_sin_formato_minimum;
+        $var->maximum = $valor_sin_formato_maximum;
        
         if(request('status') == null){
             $var->status = $var_status;

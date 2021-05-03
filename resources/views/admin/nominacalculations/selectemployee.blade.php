@@ -7,10 +7,10 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-      <div class="col-md-6">
-          <h2>Empleados</h2>
+      <div class="col-md-8">
+          <h4>Empleados Registrados en la Nómina: {{ $var->description }}</h4>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <a href="{{ route('employees.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>
       </div>
     </div>
@@ -23,9 +23,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Empleado</h6>
-    </div>
+    
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -73,8 +71,7 @@
                             
                            
                             <td>
-                                <a href="employees/{{$employee->id }}/edit" title="Editar"><i class="fa fa-edit"></i></a>
-                                <a href="#" data-toggle="modal" data-target="#deleteModal" data-employeeid="{{$employee->id }}"><i class="fa fa-trash-alt"></i></a>
+                                <a href="{{route('nominas.indexcalculate',$nomina->id) }}" title="Ver Detalles"><i class="fa fa-binoculars"></i></a>  
                             </td>
                         </tr>     
                     @endforeach   

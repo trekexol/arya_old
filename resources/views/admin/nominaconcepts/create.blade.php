@@ -11,7 +11,19 @@
                     <form method="POST" action="{{ route('nominaconcepts.store') }}">
                         @csrf
 
-                       
+                        <div class="form-group row">
+                            <label for="abbreviation" class="col-md-2 col-form-label text-md-right">Concepto Abreviado</label>
+
+                            <div class="col-md-3">
+                                <input id="abbreviation" type="text" class="form-control @error('abbreviation') is-invalid @enderror" name="abbreviation" value="{{ old('abbreviation') }}" maxlength="60" required autocomplete="abbreviation">
+
+                                @error('abbreviation')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label for="description" class="col-md-2 col-form-label text-md-right">Descripción</label>
 
@@ -61,6 +73,7 @@
                                     <option value="Semanal">Semanal</option>
                                     <option value="Mensual">Mensual</option>
                                     <option value="Especial">Especial</option>
+                                    <option value="Quincenal">Quincenal</option>
                                 </select>
                             </div>
                         </div>
@@ -76,6 +89,7 @@
                                     </span>
                                 @enderror
                             </div>
+                            <label for="formula_q" class="col-md-2 col-form-label text-md-right">(30 dias)</label>
                         </div>
                         <div class="form-group row">
                             <label for="formula_s" class="col-md-2 col-form-label text-md-right">Fórmula Semanal:</label>
@@ -89,6 +103,7 @@
                                     </span>
                                 @enderror
                             </div>
+                            <label for="formula_q" class="col-md-2 col-form-label text-md-right">(4 Semanas)</label>
                         </div>
                         <div class="form-group row">
                             <label for="formula_q" class="col-md-2 col-form-label text-md-right">Fórmula Quincenal:</label>
@@ -102,12 +117,13 @@
                                     </span>
                                 @enderror
                             </div>
+                            <label for="formula_q" class="col-md-2 col-form-label text-md-right">(15 dias)</label>
                         </div>
                         <div class="form-group row">
                             <label for="minimum" class="col-md-2 col-form-label text-md-right">Mínimo:</label>
 
                             <div class="col-md-4">
-                                <input id="minimum" type="text" class="form-control @error('minimum') is-invalid @enderror" name="minimum"  value="0.00" maxlength="60" required autocomplete="minimum">
+                                <input id="minimum" type="text" class="form-control @error('minimum') is-invalid @enderror" name="minimum"  value="0.00" maxlength="60" required autocomplete="off" placeholder='0,00'>
 
                                 @error('minimum')
                                     <span class="invalid-feedback" role="alert">
@@ -120,7 +136,7 @@
                             <label for="maximum" class="col-md-2 col-form-label text-md-right">Máximo:</label>
 
                             <div class="col-md-4">
-                                <input id="maximum" type="text" class="form-control @error('maximum') is-invalid @enderror" name="maximum"  value="9999999999.99" maxlength="60" required autocomplete="maximum">
+                                <input id="maximum" type="text" class="form-control @error('maximum') is-invalid @enderror" name="maximum"  value="9999999999.99" maxlength="60" required autocomplete="off" placeholder='0,00'>
 
                                 @error('maximum')
                                     <span class="invalid-feedback" role="alert">
@@ -145,7 +161,18 @@
 </div>
 @endsection
 @section('validacion')
+<!-- Se encarga de los input number, el formato -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
+
     <script>    
+     $(document).ready(function () {
+        $("#minimum").mask('000.000.000.000.000,00', { reverse: true });
+    });
+    $(document).ready(function () {
+        $("#maximum").mask('000.000.000.000.000,00', { reverse: true });
+    });
+
 	$(function(){
         soloAlfaNumerico('description');
        

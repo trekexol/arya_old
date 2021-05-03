@@ -10,12 +10,12 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
         <div class="col-md-6">
-            <h2>Profesiones</h2>
+            <h2>Nómina: {{ $nomina->description }} {{ $nomina->date_begin}}</h2>
         </div>
        
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
         <div class="col-md-6">
-            <a href="{{ route('professions.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar una Profesión</a>
+            <a href="{{ route('nominacalculations.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar una Nómina</a>
          
         </div>
         @endif
@@ -33,42 +33,44 @@
 {{-- VALIDACIONES-RESPUESTA --}}
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Listado de Profesiones</h6>
-    </div>
+   
    
     <div class="card-body">
         <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Status</th>
-                <th>Opciones</th>
+                
+                <th>Abreviatura</th>
+                <th>Concepto</th>
+                <th>Dias</th>
+                <th>Horas</th>
+                <th>Cantidad</th>
+                <th>Asignación</th>
+                <th>Deducción</th>
+               <th>Opciones</th>
               
             </tr>
             </thead>
             
             <tbody>
-                @if (empty($professions))
+                @if (empty($nominacalculations))
                 @else
-                    @foreach ($professions as $key => $var)
+                    @foreach ($nominacalculations as $key => $nominacalculation)
                     <tr>
-                    <td>{{$var->id}}</td>
-                    <td>{!!$var->name!!}</td>
-                    <td>{{$var->description}}</td>
-                   
+                    
+                    <td></td>
+                    <td></td>
+                    <td>{{$nominacalculation->days}}</td>
+                    <td>{{$nominacalculation->hours}}</td>
+                    <td>{{$nominacalculation->cantidad}}</td>
+                    <td></td>
+                    <td></td>
                    
                     @if (Auth::user()->role_id  == '1')
-                        @if($var->status == 1)
-                            <td>Activo</td>
-                        @else
-                            <td>Inactivo</td>
-                        @endif
                         <td>
-                        <a href="{{route('professions.edit',$var->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                            <a href="{{route('nominacalculations.selectemployee',$nominacalculation->id) }}" title="Ver Detalles"><i class="fa fa-binoculars"></i></a>  
+                            <a href="{{route('nominacalculations.edit',$nominacalculation->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                         </td>
                     @endif
                     </tr>
@@ -79,5 +81,6 @@
         </div>
     </div>
 </div>
+
 
 @endsection
