@@ -29,7 +29,19 @@
                     <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
                         @csrf
                        
-                        
+                        <div class="form-group row">
+                            <label for="prueba" class="col-md-2 col-form-label text-md-right">Prueba</label>
+
+                            <div class="col-md-4">
+                                <input id="prueba" type="text" class="form-control @error('prueba') is-invalid @enderror" name="prueba" value="{{ old('prueba') }}" required autocomplete="prueba">
+
+                                @error('prueba')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group row">
                                     
                             <label for="segment" class="col-md-2 col-form-label text-md-right">Segmento</label>
@@ -198,7 +210,7 @@
                             
                             
                         </div>
-                        
+                        <p id="valueInput"></p> 
                         <br>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -284,3 +296,68 @@
 
     </script>
 @endsection
+
+@section('consulta')
+    <script>
+            
+            $("#prueba").on('keyup',function(){
+               /* let inputValue = document.getElementById("prueba").value; 
+                document.getElementById("valueInput").innerHTML = inputValue; */
+                var segment_id = $(this).val();
+                $("#subsegment").val("");
+               
+                // alert(segment_id);
+                getSubsegment(segment_id);
+            });
+
+        function getSubsegment(segment_id){
+            // alert(`../subsegment/list/${segment_id}`);
+            $.ajax({
+                url:`../subsegment/list/${segment_id}`,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                    let subsegment = $("#subsegment");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subsegment') == '${id}' ? 'selected' : '' }}>${description}</option>`
+
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subsegment.html('');
+                    subsegment.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
+
+        $("#subsegment").on('change',function(){s
+                var subsegment_id = $(this).val();
+                var segment_id    = document.getElementById("prueba").value;
+                
+            });
+
+        
+	$(function(){
+        soloNumeros('xtelf_local');
+        soloNumeros('xtelf_cel');
+    });
+    
+ 
+
+
+
+    </script>
+@endsection
+

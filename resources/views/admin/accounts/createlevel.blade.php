@@ -88,7 +88,7 @@
                             <label for="balance_previus" class="col-md-2 col-form-label text-md-right">Balance Previo</label>
 
                             <div class="col-md-4">
-                                <input id="balance_previus" type="number" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ old('balance_previus') }}" required autocomplete="balance_previus">
+                                <input id="balance_previus" type="text" autocomplete="off" placeholder='0,00' value="0,00" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ old('balance_previus') }}"  required >
 
                                 @error('balance_previus')
                                     <span class="invalid-feedback" role="alert">
@@ -98,7 +98,6 @@
                             </div>
                             
                         </div>
-
                         
                         <br>
                         <div class="form-group row mb-0">
@@ -119,8 +118,14 @@
 </div>
 @endsection
 @section('validacion_usuario')
+
 <script>
-    
+
+$(document).ready(function () {
+    $("#balance_previus").mask('000.000.000.000.000,00', { reverse: true });
+});
+
+
 $(function(){
     soloNumeroPunto('code');
     soloAlfaNumerico('description');

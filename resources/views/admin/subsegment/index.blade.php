@@ -15,7 +15,7 @@
        
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
         <div class="col-md-4">
-            <a href="{{ route('subsegment.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Cargo</a>
+            <a href="{{ route('subsegment.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Sub Segmento</a>
          
         </div>
         @endif

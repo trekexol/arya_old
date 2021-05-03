@@ -47,12 +47,18 @@ class DetailVoucherController extends Controller
    public function createselect($id_header)
    {
         $header = HeaderVoucher::find($id_header); 
-        $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');    
 
-        $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
-
-        return view('admin.detailvouchers.create',compact('header','datenow','detailvouchers'));
+        if(isset($header)){
+            $date = Carbon::now();
+            $datenow = $date->format('Y-m-d');    
+    
+            $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
+    
+            return view('admin.detailvouchers.create',compact('header','datenow','detailvouchers'));
+        }else{
+            return redirect('/detailvouchers/register')->withDanger('No existe el Header!');
+        }
+        
    }
 
    public function createselectaccount($id_header,$code_one,$code_two,$code_three,$code_four,$period)
@@ -282,4 +288,19 @@ class DetailVoucherController extends Controller
    {
        //
    }
+
+
+   public function listheader(Request $request, $var = null){
+    //validar si la peticion es asincrona
+    if($request->ajax()){
+        try{
+            
+            $respuesta = HeaderVoucher::select('id','description','date')->where('reference',$var)->orderBy('description','asc')->get();
+            return response()->json($respuesta,200);
+        }catch(Throwable $th){
+            return response()->json(false,500);
+        }
+    }
+    
+}
 }

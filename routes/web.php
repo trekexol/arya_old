@@ -381,6 +381,7 @@ Route::group(["prefix"=>'detailvouchers'],function(){
 
     Route::get('contabilizar/{id_header}','DetailVoucherController@contabilizar')->name('detailvouchers.contabilizar');
     
+    Route::get('listheader/{var?}','DetailVoucherController@listheader')->name('detailvouchers.listheader');
 });
 
 Route::group(["prefix"=>'quotations'],function(){

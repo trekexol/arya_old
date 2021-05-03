@@ -121,11 +121,16 @@
     <!-- END SCRIPTS FOR TABLES -->
 
         <script src="{{asset('js/formulario.js')}}"></script>
+
+        <!-- Se encarga de los input number, el formato -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
+
     
     @yield('javascript')  
   @yield('javascript_edit')
   @yield('js_charts')
-  
+  @yield('consulta')  
   @yield('consultadeposito')  
 
   @yield('validacion_usuario')

@@ -18,6 +18,7 @@ class SubsegmentController extends Controller
         //validar si la peticion es asincrona
         if($request->ajax()){
             try{
+                
                 $subsegment = Subsegment::select('id','description')->where('segment_id',$id_segment)->orderBy('description','asc')->get();
                 return response()->json($subsegment,200);
             }catch(Throwable $th){

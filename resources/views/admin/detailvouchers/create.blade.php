@@ -58,7 +58,7 @@ $suma_haber = 0;
                             <label for="description" class="col-md-2 col-form-label text-md-right">Descripción</label>
 
                             <div class="col-md-4">
-                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $header->description ?? old('description') }}" required autocomplete="description" >
+                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $header->description ?? old('description') }}" readonly required autocomplete="description" >
                             @error('description')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -71,7 +71,7 @@ $suma_haber = 0;
                             <label for="date" class="col-md-2 col-form-label text-md-right">Fecha del Comprobante</label>
 
                             <div class="col-md-4">
-                                <input id="date_begin" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="{{ $header->date ?? $datenow }}" required autocomplete="date">
+                                <input id="date_begin" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="{{ $header->date ?? '' }}" readonly required autocomplete="date">
 
                                 @error('date')
                                     <span class="invalid-feedback" role="alert">
@@ -129,8 +129,9 @@ $suma_haber = 0;
                                    
                                     <div class="form-group col-md-2">
                                         <label for="debe" >Debe</label>
-                                        <input id="debe" type="text" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ session()->get('detail')->haber ?? '0.00' }}"  required autocomplete="debe">
+                                        <input id="debe" type="text" autocomplete="off" placeholder='0,00' value="0,00" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ session()->get('detail')->haber ?? '0,00' }}"  required>
 
+                               
                                         @error('debe')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -139,7 +140,7 @@ $suma_haber = 0;
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="haber" >Haber</label>
-                                        <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ session()->get('detail')->debe ?? '0.00' }}"  required autocomplete="haber">
+                                        <input id="haber" type="text" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ session()->get('detail')->debe ?? '0,00' }}"  required autocomplete="haber">
 
                                         @error('haber')
                                             <span class="invalid-feedback" role="alert">
@@ -245,33 +246,116 @@ $suma_haber = 0;
 
 @endsection
 
+@section('validacion')
+<script>
+
+$(document).ready(function () {
+    $("#debe").mask('000.000.000.000.000,00', { reverse: true });
+    
+});
+
+</script>
+@endsection 
+
 @section('javascript')
 
-@if($suma_debe != $suma_haber)
-<script>
+    @if($suma_debe != $suma_haber)
+    <script>
 
-    btncontabilizar.style.pointerEvents = 'none';
-    btncontabilizar.style.color = '#bbb';
+        btncontabilizar.style.pointerEvents = 'none';
+        btncontabilizar.style.color = '#bbb';
 
-$('#dataTable').DataTable({
-    "order": []
-});
+    $('#dataTable').DataTable({
+        "order": []
+    });
 
-</script> 
+    </script> 
 
-@else
-<script>
+    @else
+    <script>
 
-        btncontabilizar.style.pointerEvents = null;
-      
+            btncontabilizar.style.pointerEvents = null;
+        
 
 
-$('#dataTable').DataTable({
-    "order": []
-});
+    $('#dataTable').DataTable({
+        "order": []
+    });
 
-</script> 
-    
-@endif
+    </script> 
+        
+    @endif
 
 @endsection                      
+
+@section('consulta')
+    <script>
+            
+            $("#reference").on('keyup',function(){
+               /* let inputValue = document.getElementById("reference").value; 
+                document.getElementById("valueInput").innerHTML = inputValue; */
+                var reference_id = $(this).val();
+                $("#description").val("");
+                $("#date_begin").val("");
+               
+                // alert(segment_id);
+                getSubsegment(reference_id);
+            });
+
+        function getSubsegment(reference_id){
+            // alert(`../subsegment/list/${reference_id}`);
+            $.ajax({
+                url:`../detailvouchers/listheader/${reference_id}`,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                 /*   let subsegment = $("#subsegment");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;*/
+                    var inputDescription = document.getElementById("description");
+                    var inputDate = document.getElementById("date_begin");
+                   
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description,date} = item;
+                           // htmlOptions += `<option value='${id}' {{ old('Subsegment') == '${id}' ? 'selected' : '' }}>${description}</option>`
+                          // history.pushState(null, "", `register/${reference_id}`);
+                           window.location = `register/${id}`;
+                           inputDescription.value = description;
+                           inputDate.value = date;
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subsegment.html('');
+                    subsegment.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
+
+        $("#subsegment").on('change',function(){s
+                var subsegment_id = $(this).val();
+                var segment_id    = document.getElementById("prueba").value;
+                
+            });
+
+        
+	$(function(){
+        soloNumeros('xtelf_local');
+        soloNumeros('xtelf_cel');
+    });
+    
+ 
+
+
+
+    </script>
+@endsection
+

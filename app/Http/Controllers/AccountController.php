@@ -436,6 +436,7 @@ class AccountController extends Controller
     public function storeNewLevel(Request $request)
     {
 
+       
         $exist = DB::table('accounts')->where('code_one', request('code_one'))
                                 ->where('code_two', request('code_two'))
                                 ->where('code_three', request('code_three'))
@@ -470,7 +471,9 @@ class AccountController extends Controller
             $var->level = request('level');
             $var->balance_previus = 0; 
 
-            $var->balance_previus = request('balance_previus');
+            $valor_sin_formato = str_replace(',', '.', str_replace('.', '', request('balance_previus')));
+
+            $var->balance_previus =$valor_sin_formato;
 
            
 

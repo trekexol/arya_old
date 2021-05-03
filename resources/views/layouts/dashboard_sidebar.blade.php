@@ -55,12 +55,11 @@
             <a class="collapse-item" href="{{ route('segments') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-cog fa-sm fa-fw mr-2 text-blue-400"></i><strong>Segmentos</strong></a>
             <a class="collapse-item" href="{{ route('subsegment') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-cogs fa-sm fa-fw mr-2 text-blue-400"></i><strong>Sub Segmentos</strong></a>
             <a class="collapse-item" href="{{ route('unitofmeasures') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-balance-scale fa-sm fa-fw mr-2 text-blue-400"></i><strong>Unidades de Medida</strong></a>
-           <a class="collapse-item" href="{{ route('receiptvacations') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-plane-departure fa-sm fa-fw mr-2 text-blue-400"></i><strong>Recibo de Vacaciones</strong></a>
+            <a class="collapse-item" href="{{ route('receiptvacations') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-plane-departure fa-sm fa-fw mr-2 text-blue-400"></i><strong>Recibo de Vacaciones</strong></a>
             <a class="collapse-item" href="{{ route('modelos') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-clipboard-list fa-sm fa-fw mr-2 text-blue-400"></i><strong>Modelos</strong></a>
             <a class="collapse-item" href="{{ route('colors') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-palette fa-sm fa-fw mr-2 text-blue-400"></i><strong>Colores</strong></a>
             <a class="collapse-item" href="{{ route('transports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-car-side fa-sm fa-fw mr-2 text-blue-400"></i><strong>Transportes</strong></a>
             <a class="collapse-item" href="{{ route('historictransports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-archive fa-sm fa-fw mr-2 text-blue-400"></i><strong>Historial de<br> <div style="text-indent: 22px;">Transporte</div></strong></a>
-            <a class="collapse-item" href="{{ route('headervouchers') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-clipboard-check fa-sm fa-fw mr-2 text-blue-400"></i><strong>Comprobante<br> <div style="text-indent: 22px;">Cabecera</div></strong></a>
            
         </div>
     </div>
@@ -182,6 +181,8 @@
            <!-- <a  class="collapse-header" href="">Contabilidad</a>-->
                 <a class="collapse-item" href="{{ route('accounts')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Plan de Cuentas</strong></a>
                 <a class="collapse-item" href="{{ route('detailvouchers.create')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Ajustes Contables</strong></a>
+                <a class="collapse-item" href="{{ route('headervouchers') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-clipboard-check fa-sm fa-fw mr-2 text-blue-400"></i><strong>Comprobante<br> <div style="text-indent: 22px;">Cabecera</div></strong></a>
+           
                <!-- <a class="collapse-item" href="buttons.html">Balance General</a>
                 <a class="collapse-item" href="buttons.html">Ingresos y Egresos</a>
                 <a class="collapse-item" href="buttons.html">Listado Diario</a>
