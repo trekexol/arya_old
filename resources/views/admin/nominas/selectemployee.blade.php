@@ -8,7 +8,7 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
       <div class="col-md-8">
-          <h4>Empleados Registrados en la Nómina: {{ $var->description }}</h4>
+          <h4>Empleados Registrados en la Nómina: {{ $var->description }}  <br>Tipo de Empleados: {{ $var->professions['name'] }}</h4>
       </div>
       <div class="col-md-4">
         <a href="{{ route('employees.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Employee;
 use App\Nomina;
 use App\NominaCalculation;
+use App\NominaConcept;
 use App\Profession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,14 +33,17 @@ class NominaCalculationController extends Controller
             if(isset($nomina)){
                 if(isset($employee)){
 
-                    $nominacalculations      =   NominaCalculation::where('id_nomina', $id_nomina)
+                        $nominacalculations   =   NominaCalculation::where('id_nomina', $id_nomina)
                                                                     ->where('id_employee', $id_employee)
+                                                                    ->orderby('id','desc')
                                                                     ->get();
 
                         $new_format = Carbon::parse($nomina->date_begin);
                         
                         
-                        $nomina->date_begin = $new_format->format('M d Y');                                           
+                        $nomina->date_format = $new_format->format('M Y');    
+                        
+                        $nomina->date_begin = $new_format->format('d-m-Y');   
 
                     return view('admin.nominacalculations.index',compact('nominacalculations','nomina','employee'));
 
@@ -61,13 +65,24 @@ class NominaCalculationController extends Controller
 
     
 
-    public function create()
+    public function create($id_nomina,$id_employee)
     {
-        $professions = Profession::orderBY('name','asc')->get();
-        $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');
+        $nomina      =   Nomina::find($id_nomina);
+        $employee    =   Employee::find($id_employee);
 
-        return view('admin.nominacalculations.create',compact('professions','datenow'));
+        if(isset($nomina)){
+            if(isset($employee)){
+
+                $nominaconcepts   =   NominaConcept::orderBy('description','asc')->get();
+               
+                return view('admin.nominacalculations.create',compact('nominaconcepts','nomina','employee'));
+
+            }else{
+                return redirect('/nominacalculations')->withDanger('No se encuentra al Empleado!');
+            }
+        }else{
+            return redirect('/nominacalculations')->withDanger('No se encuentra la Nomina!');
+        }
     }
 
     public function selectemployee($id)
@@ -87,21 +102,20 @@ class NominaCalculationController extends Controller
 
     public function store(Request $request)
     {
+       // dd($request);
        
         $data = request()->validate([
            
             'id_nomina'     =>'required',
             'id_nomina_concept'       =>'required|max:60',
             'id_employee'              =>'required',
-            'number_receipt'        =>'required',
             
-            'type'     =>'required',
             'amount'       =>'required|max:60',
             'hours'              =>'required',
             'days'        =>'required',
             
             'cantidad'              =>'required',
-            'voucher'        =>'required',
+            
             
            
         ]);
@@ -112,15 +126,18 @@ class NominaCalculationController extends Controller
         $users->id_nomina_concept = request('id_nomina_concept');
         $users->id_employee = request('id_employee');
        
-        $users->number_receipt = request('number_receipt');
+        $users->number_receipt = 0;
         
-        $users->type = request('type');
-        $users->amount = request('amount');
+        $users->type = 'No';
+
+        $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+        $users->amount = $valor_sin_formato_amount;
+
         $users->hours = request('hours');
         $users->days = request('days');
 
         $users->cantidad = request('cantidad');
-        $users->voucher = request('voucher');
+        $users->voucher = 0;
 
 
         $users->status =  "1";
@@ -129,7 +146,7 @@ class NominaCalculationController extends Controller
 
         $users->save();
 
-        return redirect('/nominacalculations')->withSuccess('Registro Exitoso!');
+        return redirect('/nominacalculations/'.$users->id_nomina.'/'.$users->id_employee.'')->withSuccess('Registro Exitoso!');
     }
 
 

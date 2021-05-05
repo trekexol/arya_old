@@ -27,6 +27,7 @@ class CreateNominaCalculationsTable extends Migration
             $table->integer('cantidad');
             $table->integer('voucher');
            
+            $table->string('status',1);
             $table->foreign('id_nomina')->references('id')->on('nominas');
             $table->foreign('id_nomina_concept')->references('id')->on('nomina_concepts');
             $table->foreign('id_employee')->references('id')->on('employees');

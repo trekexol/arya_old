@@ -51,7 +51,7 @@
                 <th>Costo</th>
                
                
-                <th>Tools</th>
+                <th></th>
             </tr>
             </thead>
             

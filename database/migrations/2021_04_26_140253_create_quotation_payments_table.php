@@ -16,10 +16,18 @@ class CreateQuotationPaymentsTable extends Migration
         Schema::create('quotation_payments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_quotation');
-            $table->unsignedBigInteger('id_payment');
-          
+            $table->unsignedBigInteger('id_account')->nullable();
+
+
+            $table->integer('payment_type');
+            $table->decimal('amount',16,2);
+            $table->integer('credit_days')->nullable();
+            $table->integer('reference')->nullable();
+
+            $table->string('status',1);
+
             $table->foreign('id_quotation')->references('id')->on('quotations');
-            $table->foreign('id_payment')->references('id')->on('payment_types');
+            $table->foreign('id_account')->references('id')->on('accounts');
             $table->timestamps();
         });
     }

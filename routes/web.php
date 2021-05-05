@@ -409,6 +409,9 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::get('facturar/{id_quotation}','FacturarController@createfacturar')->name('quotations.createfacturar');
 
+    Route::post('storefactura','FacturarController@storefactura')->name('quotations.storefactura');
+    Route::get('facturado/{id_quotation}','FacturarController@createfacturado')->name('quotations.createfacturado');
+
 });
 
 Route::group(["prefix"=>'bankmovements'],function(){
@@ -458,7 +461,7 @@ Route::group(["prefix"=>'nominaconcepts'],function(){
 
 Route::group(["prefix"=>'nominacalculations'],function(){
     Route::get('{id_nomina}/{id_employee}','NominaCalculationController@index')->name('nominacalculations');
-    Route::get('register','NominaCalculationController@create')->name('nominacalculations.create');
+    Route::get('register/{id_nomina}/{id_employee}','NominaCalculationController@create')->name('nominacalculations.create');
     Route::post('store','NominaCalculationController@store')->name('nominacalculations.store');
     Route::get('{id}/edit','NominaCalculationController@edit')->name('nominacalculations.edit');
     Route::delete('{id}/delete','NominaCalculationController@destroy')->name('nominacalculations.delete');

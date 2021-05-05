@@ -10,6 +10,7 @@
       <div class="col-md-8">
           <h4>Empleados Registrados en la Nómina: {{ $var->description }}</h4>
       </div>
+      
       <div class="col-md-4">
         <a href="{{ route('employees.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>
       </div>
@@ -71,7 +72,7 @@
                             
                            
                             <td>
-                                <a href="{{route('nominas.indexcalculate',$nomina->id) }}" title="Ver Detalles"><i class="fa fa-binoculars"></i></a>  
+                                <a href="{{route('nominacalculations',[$nomina->id,$employee->id]) }}" title="Ver Detalles"><i class="fa fa-binoculars"></i></a>  
                             </td>
                         </tr>     
                     @endforeach   

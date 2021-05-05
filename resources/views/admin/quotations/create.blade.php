@@ -2,7 +2,19 @@
 
 @section('content')
 
+@section('header')
 
+
+<!-- CSS media query within a style sheet -->
+<style>
+
+  body {
+   
+    zoom: 90%;
+  }
+
+</style>
+@endsection
 
     {{-- VALIDACIONES-RESPUESTA--}}
     @include('admin.layouts.success')   {{-- SAVE --}}
@@ -223,7 +235,7 @@
                                         <th>Precio</th>
                                         <th>Descuento</th>
                                         <th>Sub Total</th>
-                                        <th>Opciones</th>
+                                        <th><i class="fas fa-cog"></i></th>
                                       
                                     </tr>
                                     </thead>

@@ -302,13 +302,9 @@
                         
                         <br>
                         <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary">
-                                    Guardar Factura
-                                 </button>
                             </div>
+                           
                             <div class="col-md-2">
                                 <a href="" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
