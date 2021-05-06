@@ -26,11 +26,12 @@ class CreateQuotationsTable extends Migration
             
             $table->date('date_billing')->nullable();
 
-            $table->integer('credit_days')->nullable();
-            $table->string('reference',40)->nullable();
+            $table->decimal('anticipo',16,2);
 
-           
+           /* $table->integer('credit_days')->nullable();
+            $table->string('reference',40)->nullable();*/
             $table->integer('iva_percentage')->nullable();
+
             $table->string('observation',150)->nullable();
             $table->string('note',150)->nullable();
 

@@ -120,7 +120,7 @@
                             <label for="note" class="col-md-2 col-form-label text-md-right">Nota Pie de Factura </label>
 
                             <div class="col-md-4">
-                                <input id="note" type="number" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ $quotation->note ?? old('note') }}" readonly required autocomplete="note">
+                                <input id="note" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ $quotation->note ?? old('note') }}" readonly required autocomplete="note">
 
                                 @error('note')
                                     <span class="invalid-feedback" role="alert">
@@ -279,9 +279,9 @@
                                 </table>
                                 </div>
                             </div>
-                            <a href="" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
-                            <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
-                     
+                            <div class="col-md-6">
+                                <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                            </div>
                 </div>
             </div>
         </div>

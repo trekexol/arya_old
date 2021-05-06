@@ -226,9 +226,7 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-1">
-                                    <button id="btn_agregar" type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
-                                </div>
+                               
                         </div>
                         <div id="formulario2" class="form-group row">
                                 <label for="amount_pay2s" class="col-md-2 col-form-label text-md-right">Forma de Pago:</label>
@@ -407,7 +405,7 @@ $('#dataTable').DataTable({
     var number_form = 1; 
 
     //AGREGAR FORMULARIOS
-    $("#btn_agregar").on('click',function(){
+    function addForm() {
         if(number_form < 7){
             number_form += 1; 
         }
@@ -416,9 +414,9 @@ $('#dataTable').DataTable({
            
         }
             
-       
-        
-    });
+    }
+    
+    
     $("#payment_type2").on('change',function(){
         let inputPayment = document.getElementById("payment_type2").value; 
 

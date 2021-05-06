@@ -469,3 +469,12 @@ Route::group(["prefix"=>'nominacalculations'],function(){
 
    
 });
+
+Route::group(["prefix"=>'invoices'],function(){
+    Route::get('/','InvoiceController@index')->name('invoices');
+    Route::get('register','InvoiceController@create')->name('invoices.create');
+    Route::post('store','InvoiceController@store')->name('invoices.store');
+    Route::get('{id}/edit','InvoiceController@edit')->name('invoices.edit');
+    Route::delete('{id}/delete','InvoiceController@destroy')->name('invoices.delete');
+    Route::patch('{id}/update','InvoiceController@update')->name('invoices.update');
+ });

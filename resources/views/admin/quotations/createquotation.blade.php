@@ -111,7 +111,7 @@
                             <label for="note" class="col-md-2 col-form-label text-md-right">Nota Pie de Factura </label>
 
                             <div class="col-md-4">
-                                <input id="note" type="number" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" required autocomplete="note">
+                                <input id="note" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}"  autocomplete="note">
 
                                 @error('note')
                                     <span class="invalid-feedback" role="alert">
@@ -126,7 +126,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones</label>
 
                             <div class="col-md-4">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" required autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">

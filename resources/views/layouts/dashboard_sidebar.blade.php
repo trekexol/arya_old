@@ -6,7 +6,7 @@
             
             </div>
             <div class="sidebar-brand-text mx-3">
-                <img src="{{asset('vendor/sb-admin/img/arya-logo.png')}}" style="width: 160px;height:80px;" alt="Google">
+                <img src="{{asset('img/logo.png')}}" style="width: 160px;height:80px;" alt="Google">
                 
             </div>
         
@@ -78,7 +78,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
            
-                <a class="collapse-item" href="{{route('quotations')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Facturacion</strong></a>
+                <a class="collapse-item" href="{{route('quotations')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Cotizaciones</strong></a>
+                <a class="collapse-item" href="{{route('invoices')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Facturas</strong></a>
                 <a class="collapse-item" href="{{route('clients')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Clientes</strong></a>
                 <a class="collapse-item" href="{{route('vendors')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Vendedores</strong></a>
                 <a class="collapse-item" href="{{route('billings')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Ventas</strong></a>
