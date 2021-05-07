@@ -39,8 +39,8 @@ $suma_haber = 0;
                         <div class="form-group row">
                             <label for="reference" class="col-md-2 col-form-label text-md-right">Referencia</label>
 
-                            <div class="col-md-4">
-                                <input id="reference" type="number" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ $header->reference ?? old('reference') }}" required autocomplete="reference">
+                            <div class="col-md-3">
+                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ $header->reference ?? old('reference') }}" required autocomplete="reference">
 
                                 @error('reference')
                                     <span class="invalid-feedback" role="alert">
@@ -53,6 +53,9 @@ $suma_haber = 0;
                                 <a href="" title="Editar"><i class="fa fa-trash-alt"></i></a>  
                            
                             </div>
+
+                            <a id="btn_search_reference" class="btn btn-info " onclick="searchReference()" title="Buscar Referencia">Buscar</a>  
+                               
                         </div>
                         <div class="form-group row">
                             <label for="description" class="col-md-2 col-form-label text-md-right">Descripción</label>
@@ -258,6 +261,12 @@ $(document).ready(function () {
     
 });
 
+$(document).ready(function () {
+    $("#reference").mask('000000000000000', { reverse: true });
+    
+});
+
+
 </script>
 @endsection 
 
@@ -295,21 +304,19 @@ $(document).ready(function () {
 @section('consulta')
     <script>
             
-            $("#reference").on('keyup',function(){
-               /* let inputValue = document.getElementById("reference").value; 
-                document.getElementById("valueInput").innerHTML = inputValue; */
-                var reference_id = $(this).val();
+        function searchReference(){
+            
+            let reference_id = document.getElementById("reference").value; 
+            //var reference_id = $(this).val();
                 $("#description").val("");
                 $("#date_begin").val("");
                
-                // alert(segment_id);
-                getSubsegment(reference_id);
-            });
-
-        function getSubsegment(reference_id){
-            // alert(`../subsegment/list/${reference_id}`);
+               
+               // getSubsegment(reference_id);
+           
             $.ajax({
-                url:`../detailvouchers/listheader/${reference_id}`,
+               // url:`../detailvouchers/listheader/${reference_id}`,
+                url:"{{ route('detailvouchers.listheader') }}" + '/' + reference_id,
                 beforSend:()=>{
                     alert('consultando datos');
                 },
@@ -323,42 +330,27 @@ $(document).ready(function () {
                     if(response.length > 0){
                         response.forEach((item, index, object)=>{
                             let {id,description,date} = item;
-                           // htmlOptions += `<option value='${id}' {{ old('Subsegment') == '${id}' ? 'selected' : '' }}>${description}</option>`
-                          // history.pushState(null, "", `register/${reference_id}`);
-                           window.location = `register/${id}`;
-                           inputDescription.value = description;
-                           inputDate.value = date;
+                          
+                           window.location = "{{route('detailvouchers.createselect', '')}}"+"/"+id;
+                           //inputDescription.value = description;
+                           //inputDate.value = date;
                         });
+                    }else{
+                        alert('No se Encontro este numero de Referencia');
                     }
                     //console.clear();
                     // console.log(htmlOptions);
                     subsegment.html('');
                     subsegment.html(htmlOptions);
                 
-                    
+                   
                 
                 },
                 error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
+                    alert('Presentamos Inconvenientes');
                 }
             })
         }
-
-        $("#subsegment").on('change',function(){s
-                var subsegment_id = $(this).val();
-                var segment_id    = document.getElementById("prueba").value;
-                
-            });
-
-        
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
 
     </script>
 @endsection

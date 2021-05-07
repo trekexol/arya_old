@@ -135,20 +135,25 @@
                         </div>
                         
                         <br>
-                        <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
                             @csrf
                             <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
                             <input id="id_product" type="hidden" class="form-control @error('id_product') is-invalid @enderror" name="id_product" value="{{ $product->id ?? -1 }}" readonly required autocomplete="id_product">
                        
                                 <div class="form-row col-md-12">
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group col-md-2">
                                         <label for="description" >Código</label>
-                                        <input id="code" type="number" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $product->code_comercial ?? old('code') }}" readonly required autocomplete="code" autofocus>
+                                        <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $product->code_comercial ?? old('code') }}" required autocomplete="code" autofocus>
                                     </div>
                                    
                                     <div class="form-group col-md-1">
-                                        <a href="{{ route('quotations.selectproduct',$quotation->id) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                                        
+                                        <a href="" title="Buscar Producto Por Codigo" onclick="searchCode()"><i class="fa fa-search"></i></a>  
+                                    
+                                            <a href="{{ route('quotations.selectproduct',$quotation->id) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                                        
                                     </div>
+                                    
                                     <div class="form-group col-md-3">
                                         <label for="description" >Descripción</label>
                                         <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $product->description ?? old('description') }}" readonly required autocomplete="description">
@@ -161,7 +166,7 @@
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="amount" >Cantidad</label>
-                                        <input id="amount" id="cantidadproducto" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount"  required autocomplete="amount">
+                                        <input id="amount_product"  type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="0" required autocomplete="amount">
         
                                         @error('amount')
                                             <span class="invalid-feedback" role="alert">
@@ -202,7 +207,7 @@
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="discount" >Descuento</label>
-                                        <input id="discount" type="text" class="form-control @error('discount') is-invalid @enderror" name="discount" value="0.00" required autocomplete="discount">
+                                        <input id="discount_product" type="text" class="form-control  @error('discount') is-invalid @enderror" name="discount" value="0" required autocomplete="discount">
         
                                         @error('discount')
                                             <span class="invalid-feedback" role="alert">
@@ -210,10 +215,7 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    <div class="form-group col-md-1" style="text-align: center">
-                                        <label for="date" >Total</label>
-                                        <label for="description" id="totalproducto" readonly class="form-control">0$</label>
-                                    </div>
+                                   
                                     <div class="form-group col-md-1">
                                         <button type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
                                     </div>
@@ -247,15 +249,21 @@
                                             $suma = 0;
                                         ?>
                                             @foreach ($product_quotations as $key => $var)
+
+                                            <?php
+                                            $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+
+                                            $total_less_percentage = ($var->products['price'] * $var->amount) - $percentage;
+                                            ?>
                                                 <tr>
                                                 <td style="text-align: right">{{ $var->products['code_comercial']}}</td>
                                                 <td style="text-align: right">{{ $var->products['description']}}</td>
                                                 <td style="text-align: right">{{ $var->amount}}</td>
-                                                <td style="text-align: right">{{ $var->products['price']}}$</td>
-                                                <td style="text-align: right">{{ $var->discount}}$</td>
-                                                <td style="text-align: right">{{ ($var->products['price'] * $var->amount) - $var->discount}}$</td>
+                                                <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
+                                                <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>
+                                                <td style="text-align: right">{{number_format($total_less_percentage, 2, ',', '.')}}</td>
                                                 <?php
-                                                    $suma += ($var->products['price'] * $var->amount) - $var->discount;
+                                                    $suma += $total_less_percentage;
                                                 ?>
                                                     <td style="text-align: right">
                                                     <a  title="Editar"><i class="fa fa-edit"></i></a>  
@@ -268,8 +276,8 @@
                                                 <td style="text-align: right">-------------</td>
                                                 <td style="text-align: right">-------------</td>
                                                 <td style="text-align: right">-------------</td>
-                                                <td style="text-align: right">Total de Cotización</td>
-                                                <td style="text-align: right">{{ $suma }}$</td>
+                                                <td style="text-align: right">Total</td>
+                                                <td style="text-align: right">{{number_format($suma, 2, ',', '.')}}</td>
                                                 
                                                 <td style="text-align: right">-------------</td>
                                             
@@ -293,13 +301,100 @@
 
 <script>
 
+$(document).ready(function () {
+    $("#discount_product").mask('000', { reverse: true });
     
+});
+$(document).ready(function () {
+    $("#amount_product").mask('00000', { reverse: true });
+    
+});
+
+
 $('#dataTable').DataTable({
     "order": []
 });
 
-document.querySelector('#total').innerText = {{ $suma }}+'$';
+document.querySelector('#total').innerText = {{number_format($suma, 2, ',', '.')}};
+
+
+
 
 </script> 
 
 @endsection         
+
+@section('validacion')
+
+<script>
+function validacion() {
+
+    let amount = document.getElementById("amount_product").value; 
+
+    if (amount < 1) {
+      
+      alert('La cantidad del Producto debe ser mayor a 1');
+      return false;
+    }
+    else {
+        return true;
+    }
+   
+   
+    
+  }
+</script> 
+
+@endsection    
+
+@section('consulta')
+    <script>
+
+
+            
+        function searchCode(){
+            
+            let reference_id = document.getElementById("code").value; 
+            
+           
+            $.ajax({
+               // url:`../detailvouchers/listheader/${reference_id}`,
+                url:"{{ route('quotations.listproduct') }}" + '/' + reference_id,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                 /*   let subsegment = $("#subsegment");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;*/
+                    var inputDescription = document.getElementById("description");
+                    var inputDate = document.getElementById("date_begin");
+                   
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description,date} = item;
+                          
+                           window.location = "{{route('quotations.createproduct', [$quotation->id,''])}}"+"/"+id;
+                           //inputDescription.value = description;
+                           //inputDate.value = date;
+                        });
+                    }else{
+                        alert('No se Encontro este numero de Referencia');
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subsegment.html('');
+                    subsegment.html(htmlOptions);
+                
+                   
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos Inconvenientes');
+                }
+            })
+        }
+
+    </script>
+@endsection
+

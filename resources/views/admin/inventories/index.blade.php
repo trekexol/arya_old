@@ -1,20 +1,52 @@
 @extends('layouts.dashboard')
 
 @section('content')
-
-<!-- container-fluid -->
 <div class="container-fluid">
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-      <div class="col-md-6">
-          <h2>Inventario</h2>
-      </div>
-      <div class="col-md-6">
-        <a href="{{ route('inventories.select')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Inventario</a>
-      </div>
+       
+       
+        <div class="col-md-2 dropdown mb-4">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                Imprimir
+            </button>
+            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                
+                <a class="dropdown-item" href="" style="color: rgb(4, 119, 252)"> <i class="fas fa-download fa-sm fa-fw mr-2 text-blue-400"></i><strong>Imprimir Inventario Actual</strong></a>
+                <br>
+                <a class="dropdown-item" href="" style="color: rgb(4, 119, 252)"> <i class="fas fa-file-export fa-sm fa-fw mr-2 text-blue-400"></i><strong>Imprimir Historial del Inventario</strong></a>
+                
+            </div>
+        </div>
+     
+        <div class="col-md-3 dropdown mb-4">
+            <button class="btn btn-primary dropdown-toggle" type="button"
+                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                Modificar Inventario
+            </button>
+            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                
+                <a class="dropdown-item" href="{{ route('products.create') }}" style="color: rgb(252, 124, 4)"> <i class="fas fa-plus-circle fa-sm fa-fw mr-2 text-blue-400"></i><strong>Añadir Nuevo Producto</strong></a>
+                <br>
+                <a class="dropdown-item" href="{{ route('inventories.create_increase_inventory') }}" style="color: rgb(252, 124, 4)"> <i class="fas fa-plus fa-sm fa-fw mr-2 text-blue-400"></i><strong>Sumar Cantidad de un Producto</strong></a>
+                <br>
+                <a class="dropdown-item" href="" style="color: rgb(252, 124, 4)"> <i class="fas fa-minus fa-sm fa-fw mr-2 text-blue-400"></i><strong>Restar Cantidad de un Producto</strong></a>
+                
+            </div>
+        </div>
+        
+        
+       
+         
+            <div class="col-md-6">
+                <a href="{{ route('inventories.select')}}" class="btn btn-success  float-md-right " role="button" aria-pressed="true">Registrar un Inventario</a>
+              </div>
     </div>
   </div>
+
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
   @include('admin.layouts.success')   {{-- SAVE --}}
@@ -41,20 +73,16 @@
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-                <th>Código</th>
+                <th>SKU</th>
                 <th>Descripción</th>
                 <th>Cantidad</th>
-                <th>Código Comercial</th>
-                <th>Tipo</th>
+                <th>Costo</th>
                 
-                <th>Precio</th>
-               
                 <th>Foto del Producto</th>
                 <th>Moneda</th>
               
-                <th>Status</th>
-               
-                <th>Tools</th>
+                
+                <th></th>
             </tr>
             </thead>
             
@@ -65,11 +93,11 @@
                         <tr>
                             <td>{{ $var->code }}</td>
                             <td>{{ $var->products['description']}}</td>
-                            <td>{{ $var->amount }}</td> 
-
-                            <td>{{ $var->products['code_comercial']}}</td>
-                            <td>{{ $var->products['type']}}</td>
-                            <td>{{ $var->products['price']}}</td>
+                            <td style="text-align: right">{{ $var->amount }}</td> 
+                            <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
+                            
+                            
+                            
                             <td>{{ $var->products['photo_product']}}</td> 
                             
                             @if($var->products['money'] == "D")
@@ -78,12 +106,7 @@
                             <td>Bolívar</td>
                             @endif
 
-                            @if($var->status == 1)
-                                <td>Activo</td>
-                            @else
-                                <td>Inactivo</td>
-                            @endif
-                            
+                           
                             <td>
                                 <a href="inventories/{{$var->id }}/edit" title="Editar"><i class="fa fa-edit"></i></a>
                              </td>

@@ -297,6 +297,11 @@ Route::group(["prefix"=>'inventories'],function(){
     Route::patch('{id}/update','InventoryController@update')->name('inventories.update');
 
     Route::get('{id}/create','InventoryController@create')->name('inventories.create');
+
+    Route::post('storeincreaseinventory','InventoryController@store_increase_inventory')->name('inventories.store_increase_inventory');
+    Route::get('createincreaseinventory','InventoryController@create_increase_inventory')->name('inventories.create_increase_inventory');
+    Route::get('createincreaseinventory/{id}','InventoryController@create_increase_inventory_with_product')->name('inventories.create_increase_inventory_with_product');
+
 });
 
 Route::group(["prefix"=>'modelos'],function(){
@@ -411,6 +416,8 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::post('storefactura','FacturarController@storefactura')->name('quotations.storefactura');
     Route::get('facturado/{id_quotation}','FacturarController@createfacturado')->name('quotations.createfacturado');
+
+    Route::get('listproduct/{var?}','QuotationController@listproduct')->name('quotations.listproduct');
 
 });
 

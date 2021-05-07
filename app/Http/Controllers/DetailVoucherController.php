@@ -300,7 +300,7 @@ class DetailVoucherController extends Controller
     if($request->ajax()){
         try{
             
-            $respuesta = HeaderVoucher::select('id','description','date')->where('reference',$var)->orderBy('description','asc')->get();
+            $respuesta = HeaderVoucher::select('id','description','amount')->where('reference',$var)->orderBy('description','asc')->get();
             return response()->json($respuesta,200);
         }catch(Throwable $th){
             return response()->json(false,500);
@@ -308,4 +308,7 @@ class DetailVoucherController extends Controller
     }
     
 }
+
+
+
 }

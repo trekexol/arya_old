@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Inventory;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
@@ -49,6 +50,36 @@ class InventoryController extends Controller
         $product = Product::find($id);
 
         return view('admin.inventories.create',compact('product'));
+   }
+
+   public function create_increase_inventory()
+   {
+
+       
+        $products = Inventory::orderBY('description','desc')->get();
+
+        //dd($products);
+
+        return view('admin.inventories.create_increase_inventory',compact('products'));
+   }
+
+   public function create_increase_inventory_with_product($id_inventory)
+   {
+
+       
+       // $products = Inventory::orderBY('description','desc')->get();
+
+        $inventories = DB::table('inventories')
+                        ->join('products', 'products.id', '=', 'inventories.product_id')
+                        ->orderBy('products.description', 'desc')
+                        ->select('products.*')
+                        ->get();
+
+        
+        $inventory = Inventory::find($id_inventory);
+
+      
+        return view('admin.inventories.create_increase_inventory',compact('inventories','inventory'));
    }
 
    /**

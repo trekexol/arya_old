@@ -415,4 +415,24 @@ public function createquotationvendor($id_client,$id_vendor)
    {
        //
    }
+
+
+   public function listproduct(Request $request, $var = null){
+    //validar si la peticion es asincrona
+    if($request->ajax()){
+        try{
+            
+            $respuesta = Product::select('id')->where('code_comercial',$var)->orderBy('description','asc')->get();
+            return response()->json($respuesta,200);
+
+        }catch(Throwable $th){
+            return response()->json(false,500);
+        }
+    }
+    
+}
+
+
+
+
 }

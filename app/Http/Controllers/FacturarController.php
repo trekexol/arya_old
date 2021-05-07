@@ -40,10 +40,16 @@ class FacturarController extends Controller
              $total= 0;
              $base_imponible= 0;
              foreach($product_quotations as $var){
-                $total += ($var->products['price'] * $var->amount) - $var->discount;
+                $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+
+                $total += ($var->products['price'] * $var->amount) - $percentage; 
 
                 if($var->products['exento'] == 1){
-                    $base_imponible= ($var->products['price'] * $var->amount) - $var->discount;
+
+                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+
+                    $base_imponible= ($var->products['price'] * $var->amount) - $percentage; 
+
                 }
              }
 
