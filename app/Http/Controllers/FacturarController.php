@@ -914,33 +914,38 @@ class FacturarController extends Controller
          $quotation = null;
              
          if(isset($id_quotation)){
-             $quotation = Quotation::find($id_quotation);
+             $quotation = Quotation::where('date_billing', '<>', null)->find($id_quotation);
+          /* $quotation = DB::table('clients')
+                                    ->join('quotations', 'quotations.id_client', '=', 'clients.id')
+                                    ->where('quotations.id', '=',$id_quotation)
+                                    ->where('date_billing', '<>', null)
+                                    ->select('quotations.*','clients.cedula_rif as cedula_client')
+                                   
+                                   ->first();
+
+                                   dd($quotation);*/
+                                 
          }
  
          if(isset($quotation)){
              $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
              $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
 
-             $accounts_bank = DB::table('accounts')->where('code_one', 1)
-                                            ->where('code_two', 1)
-                                            ->where('code_three', 2)
-                                            ->where('code_four', '<>',0)
-                                            ->get();
-             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
-                                            ->where('code_two', 1)
-                                            ->where('code_three', 1)
-                                            ->where('code_four', '<>',0)
-                                            ->get();
-             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
-                                            ->get();
+           
 
              $total= 0;
              $base_imponible= 0;
              foreach($product_quotations as $var){
-                $total += ($var->products['price'] * $var->amount) - $var->discount;
+                $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+
+                $total += ($var->products['price'] * $var->amount) - $percentage; 
 
                 if($var->products['exento'] == 1){
-                    $base_imponible= ($var->products['price'] * $var->amount) - $var->discount;
+
+                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+
+                    $base_imponible= ($var->products['price'] * $var->amount) - $percentage; 
+
                 }
              }
 
@@ -950,9 +955,9 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
      
-             return view('admin.quotations.createfacturado',compact('quotation','product_quotations','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow'));
-         }else{
-             return redirect('/quotations')->withDanger('La cotizacion no existe');
+             return view('admin.quotations.createfacturado',compact('quotation','product_quotations','payment_quotations', 'datenow'));
+            }else{
+             return redirect('/invoices')->withDanger('La factura no existe');
          } 
          
     }

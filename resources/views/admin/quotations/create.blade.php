@@ -257,7 +257,12 @@
                                             ?>
                                                 <tr>
                                                 <td style="text-align: right">{{ $var->products['code_comercial']}}</td>
-                                                <td style="text-align: right">{{ $var->products['description']}}</td>
+                                                @if($var->products['exento'] == 1)
+                                                    <td style="text-align: right">{{ $var->products['description']}} (E)</td>
+                                                @else
+                                                    <td style="text-align: right">{{ $var->products['description']}}</td>
+                                                @endif
+                                                
                                                 <td style="text-align: right">{{ $var->amount}}</td>
                                                 <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
                                                 <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>

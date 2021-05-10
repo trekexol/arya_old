@@ -58,7 +58,7 @@
                     @foreach ($quotations as $quotation)
                         <tr>
                             <td >
-                            <a href="" title="Editar"><i class="fa fa-check"></i></a>
+                            <a href="{{ route('quotations.createfacturado',$quotation->id) }}" title="Editar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{ $quotation->clients['name']}}</td>
                             <td>{{ $quotation->vendors['name']}}</td>
