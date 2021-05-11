@@ -304,77 +304,71 @@
 
 @section('javascript')
 
-<script>
+    <script>
 
-$(document).ready(function () {
-    $("#discount_product").mask('000', { reverse: true });
-    
-});
-$(document).ready(function () {
-    $("#amount_product").mask('00000', { reverse: true });
-    
-});
-
-
-$('#dataTable').DataTable({
-    "order": []
-});
-
-document.querySelector('#total').innerText = {{number_format($suma, 2, ',', '.')}};
+        $(document).ready(function () {
+            $("#discount_product").mask('000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#amount_product").mask('00000', { reverse: true });
+            
+        });
 
 
+        $('#dataTable').DataTable({
+            "order": []
+        });
+
+        document.querySelector('#total').innerText = {{number_format($suma, 2, ',', '.')}};
 
 
-</script> 
+
+
+    </script> 
 
 @endsection         
 
 @section('validacion')
 
-<script>
-function validacion() {
+    <script>
+    function validacion() {
 
-    let amount = document.getElementById("amount_product").value; 
+        let amount = document.getElementById("amount_product").value; 
 
-    if (amount < 1) {
-      
-      alert('La cantidad del Producto debe ser mayor a 1');
-      return false;
-    }
-    else {
-        return true;
-    }
-   
-   
+        if (amount < 1) {
+        
+        alert('La cantidad del Producto debe ser mayor a 1');
+        return false;
+        }
+        else {
+            return true;
+        }
     
-  }
-</script> 
+    
+        
+    }
+    </script> 
 
 @endsection    
 
 @section('consulta')
     <script>
 
-
-            
         function searchCode(){
             
             let reference_id = document.getElementById("code").value; 
             
-           
+            
             $.ajax({
-               // url:`../detailvouchers/listheader/${reference_id}`,
+              
                 url:"{{ route('quotations.listproduct') }}" + '/' + reference_id,
                 beforSend:()=>{
                     alert('consultando datos');
                 },
                 success:(response)=>{
-                 /*   let subsegment = $("#subsegment");
-                    let htmlOptions = `<option value='' >Seleccione..</option>`;*/
-                    var inputDescription = document.getElementById("description");
-                    var inputDate = document.getElementById("date_begin");
-                   
-                    // console.clear();
+                 
+                    
                     if(response.length > 0){
                         response.forEach((item, index, object)=>{
                             let {id,description,date} = item;
@@ -388,9 +382,7 @@ function validacion() {
                     }
                     //console.clear();
                     // console.log(htmlOptions);
-                    subsegment.html('');
-                    subsegment.html(htmlOptions);
-                
+                   
                    
                 
                 },

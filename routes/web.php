@@ -486,3 +486,15 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::get('/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
     
  });
+
+
+ Route::group(["prefix"=>'tasas'],function(){
+    Route::get('/','TasaController@index')->name('tasas');
+    Route::get('register','TasaController@create')->name('tasas.create');
+    Route::post('store', 'tasaController@store')->name('tasas.store');
+   
+    Route::get('{id}/edit','TasaController@edit')->name('tasas.edit');
+    Route::delete('{id}/delete','TasaController@destroy')->name('tasas.delete');
+    Route::patch('{id}/update','TasaController@update')->name('tasas.update');
+
+});

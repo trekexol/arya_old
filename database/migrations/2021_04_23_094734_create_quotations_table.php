@@ -28,15 +28,13 @@ class CreateQuotationsTable extends Migration
 
             $table->decimal('anticipo',16,2);
 
-           /* $table->integer('credit_days')->nullable();
-            $table->string('reference',40)->nullable();*/
+          
             $table->integer('iva_percentage')->nullable();
 
             $table->string('observation',150)->nullable();
             $table->string('note',150)->nullable();
 
-           // $table->integer('voucher')->nullable();
-
+           
             $table->string('status',1);
            
             $table->foreign('id_client')->references('id')->on('clients');

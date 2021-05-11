@@ -710,21 +710,23 @@
 
 
     <script type="text/javascript">
-                
-                
+
+            calculate();
+
+            function calculate() {
                 let inputIva = document.getElementById("iva").value; 
 
                 let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
 
                 let totalFactura = "<?php echo $quotation->total_factura ?>";       
-                
+
                 //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
                 let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
 
                 let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
 
-                
-                var total_iva_exento = parseFloat(totalIva) - parseFloat(totalIvaMenos);
+
+                var total_iva_exento =  parseFloat(totalIvaMenos);
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -733,59 +735,10 @@
                 document.getElementById("iva_amount").value = ivaformat;
 
 
-               // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
-                var grand_total = parseFloat(totalFactura) + total_iva_exento;
-
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
-
-
-                document.getElementById("grand_total").value = grand_totalformat;
-               
-                let inputAnticipo = document.getElementById("anticipo").value;  
-
-                var montoFormat = inputAnticipo.replace(/[$.]/g,'');
-
-                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');               
-
-                var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
-
-
-                var total_payformat = total_pay.toLocaleString('de-DE');
-
-                document.getElementById("total_pay").value =  total_payformat;
-                
-                document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
-
-                document.getElementById("iva_form").value =  inputIva;
-                
-                document.getElementById("anticipo_form").value =  inputAnticipo;
-       
-            $("#iva").on('change',function(){
-                let inputIva = document.getElementById("iva").value; 
-
-                let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
-
-                let totalFactura = "<?php echo $quotation->total_factura ?>";       
-
-                //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-                let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
-
-                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
-
-
-                var total_iva_exento = parseFloat(totalIva) - parseFloat(totalIvaMenos);
-
-                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
-                //------------------------------
-
-                var ivaformat = total_iva_exento.toLocaleString('de-DE');
-                document.getElementById("iva_amount").value = ivaformat;
-
-
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + total_iva_exento;
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toFixed(2).toLocaleString('de-DE');
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -799,7 +752,7 @@
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toFixed(2).toLocaleString('de-DE');
 
                 document.getElementById("total_pay").value =  total_payformat;
 
@@ -808,56 +761,16 @@
                 document.getElementById("iva_form").value =  inputIva;
 
                 document.getElementById("anticipo_form").value =  inputAnticipo;
+            }        
+                
+              
+       
+            $("#iva").on('change',function(){
+                calculate();
             });
 
             $("#anticipo").on('keyup',function(){
-                let inputIva = document.getElementById("iva").value; 
-
-                let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
-
-                let totalFactura = "<?php echo $quotation->total_factura ?>";       
-
-                //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-                let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
-
-                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
-
-
-                var total_iva_exento = parseFloat(totalIva) - parseFloat(totalIvaMenos);
-
-                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
-                //------------------------------
-
-                var ivaformat = total_iva_exento.toLocaleString('de-DE');
-                document.getElementById("iva_amount").value = ivaformat;
-
-
-                // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
-                var grand_total = parseFloat(totalFactura) + total_iva_exento;
-
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
-
-
-                document.getElementById("grand_total").value = grand_totalformat;
-
-                let inputAnticipo = document.getElementById("anticipo").value;  
-
-                var montoFormat = inputAnticipo.replace(/[$.]/g,'');
-
-                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');               
-
-                var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
-
-
-                var total_payformat = total_pay.toLocaleString('de-DE');
-
-                document.getElementById("total_pay").value =  total_payformat;
-
-                document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
-
-                document.getElementById("iva_form").value =  inputIva;
-
-                document.getElementById("anticipo_form").value =  inputAnticipo;
+                calculate();
             });
 
        

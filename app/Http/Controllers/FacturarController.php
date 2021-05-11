@@ -40,15 +40,17 @@ class FacturarController extends Controller
              $total= 0;
              $base_imponible= 0;
              foreach($product_quotations as $var){
-                $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+                 //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
 
-                $total += ($var->products['price'] * $var->amount) - $percentage; 
+                    $total += ($var->products['price'] * $var->amount) - $percentage;
+                //----------------------------- 
 
-                if($var->products['exento'] == 1){
+                if($var->products['exento'] == 0){
 
                     $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
 
-                    $base_imponible= ($var->products['price'] * $var->amount) - $percentage; 
+                    $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
 
                 }
              }
@@ -940,11 +942,11 @@ class FacturarController extends Controller
 
                 $total += ($var->products['price'] * $var->amount) - $percentage; 
 
-                if($var->products['exento'] == 1){
+                if($var->products['exento'] == 0){
 
                     $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
 
-                    $base_imponible= ($var->products['price'] * $var->amount) - $percentage; 
+                    $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
 
                 }
              }

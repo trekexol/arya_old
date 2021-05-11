@@ -266,7 +266,7 @@ public function createquotationvendor($id_client,$id_vendor)
 
     public function storeproduct(Request $request)
     {
-   
+  
     $data = request()->validate([
         
        
@@ -281,10 +281,18 @@ public function createquotationvendor($id_client,$id_vendor)
     $var = new QuotationProduct();
 
     $var->id_quotation = request('id_quotation');
+    
     $var->id_product = request('id_product');
+    if($var->id_product == -1){
+        return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
+    }
     $var->amount = request('amount');
 
     $var->discount = request('discount');
+
+    if(($var->discount < 0) || ($var->discount > 100)){
+        return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('El descuento debe estar entre 0% y 100%!');
+    }
     
     $var->status =  1;
   

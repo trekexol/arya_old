@@ -31,8 +31,7 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr> 
-                    <th>Código Cliente</th>
-                    <th>Razón Social</th>
+                   
                     <th>Nombre</th>
                     <th>Cedula o Rif</th>
                     <th>Dirección</th>
@@ -40,15 +39,12 @@
                     <th>Pais</th>
                     <th>Telefono</th>
                     <th>Telefono 2</th>
-                    <th>Tiene Crédito</th>
+                  
                     <th>Dias de Crédito</th>
-                    <th>Monto Máximo de Crédito</th>
-                    <th>Saldo</th>
-                    <th>Retención de Iva</th>
-                    <th>Retención de ISLR</th>
+                   
                     <th>Vendedor</th>
-                    <th>Status</th>
-                    <th>Tools</th>
+                    
+                    <th></th>
                 </tr>
                 </thead>
                 
@@ -57,26 +53,24 @@
                     @else  
                         @foreach ($clients as $client)
                             <tr>
-                                <td>{{$client->code_client}}</td>
-                                <td>{{$client->razon_social}}</td>
+                               
                                 <td>{{$client->name}}</td>
-                                <td>{{$client->cedula_rif}}</td>
+                                <td>{{$client->type_code}} {{$client->cedula_rif}}</td>
                                 <td>{{$client->direction}}</td>
                                 <td>{{$client->city}}</td>
                                 <td>{{$client->country}}</td>
                                 <td>{{$client->phone1}}</td>
                                 <td>{{$client->phone2}}</td>
-                                
-                                <td>{{$client->has_credit}}</td>
                                 <td>{{$client->days_credit}}</td>
+                               
 
-                                <td>{{$client->amount_max_credit}}</td>
-                                <td>{{$client->balance}}</td>
-                                <td>{{$client->retencion_iva}}</td>
-                                <td>{{$client->retencion_islr}}</td>
-                                <td>{{$client->seller}}</td>
+                                @if (isset($client->vendors['name']))
+                                    <td>{{$client->vendors['name']}}</td>
+                                @else
+                                    <td></td>
+                                @endif
+                                
 
-                                <td>{{$client->status}}</td>
                                 
                                 <td>
                                     <a href="clients/{{$client->id }}/edit" title="Editar"><i class="fa fa-edit"></i></a>

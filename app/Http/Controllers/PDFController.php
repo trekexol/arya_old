@@ -38,22 +38,31 @@ class PDFController extends Controller
     
                  $total= 0;
                  $base_imponible= 0;
+                 $ventas_exentas= 0;
                  foreach($product_quotations as $var){
                     $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
 
                     $total += ($var->products['price'] * $var->amount) - $percentage; 
     
+                    if($var->products['exento'] == 0){
+    
+                        $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+    
+                        $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
+    
+                    }
                     if($var->products['exento'] == 1){
     
                         $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
     
-                        $base_imponible= ($var->products['price'] * $var->amount) - $percentage; 
+                        $ventas_exentas += ($var->products['price'] * $var->amount) - $percentage; 
     
                     }
                  }
     
-                 $quotation->total_factura = $total;
+                 $quotation->sub_total_factura = $total;
                  $quotation->base_imponible = $base_imponible;
+                 $quotation->ventas_exentas = $ventas_exentas;
 
                 
                  $pdf = $pdf->loadView('pdf.factura',compact('quotation','product_quotations','payment_quotations'));

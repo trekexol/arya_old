@@ -110,10 +110,15 @@
     <th style="text-align: center; ">Dias de Credito</th>
     <th style="text-align: center; ">Monto</th>
   </tr>
+
   @foreach ($payment_quotations as $var)
   <tr>
     <th style="text-align: center; font-weight: normal;">{{ $var->payment_type }}</th>
-    <th style="text-align: center; font-weight: normal;">{{ $var->accounts['description'] }}</th>
+    @if (isset($var->accounts['description']))
+      <th style="text-align: center; font-weight: normal;">{{ $var->accounts['description'] }}</th>
+    @else    
+      <th style="text-align: center; font-weight: normal;"></th>
+    @endif
     <th style="text-align: center; font-weight: normal;">{{ $var->reference }}</th>
     <th style="text-align: center; font-weight: normal;">{{ $var->credit_days }}</th>
     <th style="text-align: center; font-weight: normal;">{{ $var->amount }}</th>
@@ -154,12 +159,18 @@
 </table>
 
 
+<?php
+  $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
 
+  $total = $quotation->sub_total_factura + $iva;
+
+  $total_petro = $total / 159765192.04;
+?>
 
 <table style="width: 100%;">
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Sub Total</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->total_factura, 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->sub_total_factura, 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Base Imponible</th>
@@ -167,23 +178,23 @@
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Ventas Exentas</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">90.720.000,00</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->ventas_exentas, 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.16,00%</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">7.257.600,00</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
   </tr> 
   <tr>
-    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL Bs.S</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">97.977.600,00</th>
+    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total, 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white; font-size: small;">MONTO TOTAL Petro</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">0,00095814</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_petro, 6, ',', '.') }}</th>
   </tr> 
   <tr>
-    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); font-size: small;"><pre>ESTA FACTURA VA SIN TACHADURAS NI ENMIENDAS        </pre></th>
-    <th style="text-align: right; font-weight: normal; width: 21%;"></th>
+    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"><pre>ESTA FACTURA VA SIN TACHADURAS NI ENMIENDAS        </pre></th>
+    <th style="text-align: right; font-weight: normal; width: 21%; "></th>
   </tr> 
   
   

@@ -17,24 +17,27 @@ class CreateClientsTable extends Migration
         
         Schema::create('clients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code_client',20);
-            $table->string('razon_social',80);
+            $table->unsignedBigInteger('id_vendor')->nullable();
+
+            $table->string('type_code',2);
+           
             $table->string('name',80);
             $table->string('cedula_rif',20);
             $table->string('direction',100);
             $table->string('city',20);
             $table->string('country',20);
             $table->string('phone1',20);
-            $table->string('phone2',20);
-            $table->boolean('has_credit');
+            $table->string('phone2',20)->nullable();
             $table->integer('days_credit');
-            $table->double('amount_max_credit', 12, 2);
-            $table->double('balance', 16, 2);
-            $table->double('retencion_iva', 6, 2);
-            $table->double('retencion_islr', 6, 2);
-            $table->integer('select_balance');
-            $table->string('seller',25);
+            $table->decimal('amount_max_credit', 16, 2)->nullable();
+           
+            $table->decimal('percentage_retencion_iva', 5, 2)->nullable();
+            $table->decimal('percentage_retencion_islr', 5, 2)->nullable();
+           
+            
             $table->string('status',1);
+
+            $table->foreign('id_vendor')->references('id')->on('vendors');
             $table->timestamps();
         });
     }

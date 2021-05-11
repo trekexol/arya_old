@@ -60,6 +60,7 @@
             <a class="collapse-item" href="{{ route('colors') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-palette fa-sm fa-fw mr-2 text-blue-400"></i><strong>Colores</strong></a>
             <a class="collapse-item" href="{{ route('transports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-car-side fa-sm fa-fw mr-2 text-blue-400"></i><strong>Transportes</strong></a>
             <a class="collapse-item" href="{{ route('historictransports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-archive fa-sm fa-fw mr-2 text-blue-400"></i><strong>Historial de<br> <div style="text-indent: 22px;">Transporte</div></strong></a>
+            <a class="collapse-item" href="{{ route('tasas') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tasa del Día</strong></a>
            
         </div>
     </div>

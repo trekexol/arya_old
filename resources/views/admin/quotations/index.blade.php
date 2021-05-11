@@ -48,7 +48,7 @@
                 <th>Transporte</th>
                 <th>Fecha de Cotización</th>
               
-                <th><i class="fas fa-cog"></i></th>
+               
             </tr>
             </thead>
             
@@ -65,11 +65,6 @@
                             <td>{{ $quotation->vendors['name']}}</td>
                             <td>{{ $quotation->transports['placa']}}</td>
                             <td>{{$quotation->date_quotation}}</td>
-                            
-                           
-                            <td>
-                                <a href="quotations/{{$quotation->id }}/edit" title="Editar"><i class="fa fa-edit"></i></a>
-                             </td>
                         </tr>     
                     @endforeach   
                 @endif

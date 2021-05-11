@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Empleados</div>
+                <div class="card-header">Registro de Vendedores</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('vendors.store') }}" enctype="multipart/form-data">
