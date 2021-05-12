@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  
-<title>Documento sin título</title>
+<title></title>
 <style>
   table, td, th {
     border: 1px solid black;
@@ -40,7 +40,7 @@
   </tr>
   <tr>
     <td style="width: 40%;">Fecha de Emisión:</td>
-    <td>{{ $quotation->date_billing }}</td>
+    <td>{{ $quotation->date_delivery_note }}</td>
     
   </tr>
   
@@ -72,7 +72,7 @@
     <th style="text-align: center;">Teléfono</th>
     <th style="text-align: center;">RIF/CI</th>
     <th style="text-align: center;">N° Control / Serie</th>
-    <th style="text-align: center;">Nota de Entrega</th>
+    <th style="text-align: center;">Condición de Pago</th>
     <th style="text-align: center;">Transporte</th>
    
   </tr>
@@ -80,7 +80,7 @@
     <td style="text-align: center;">{{ $quotation->clients['phone1'] }}</td>
     <td style="text-align: center;">{{ $quotation->clients['cedula_rif'] }}</td>
     <td style="text-align: center;">{{ $quotation->serie }}</td>
-    <td style="text-align: center;">{{ $quotation->note }}</td>
+    <td style="text-align: center;">Nota de Entrega</td>
     <td style="text-align: center;">{{ $quotation->transports['placa'] }}</td>
     
     
@@ -95,38 +95,6 @@
   
 </table>
 
-<br>
-<table style="width: 100%;">
-  <tr>
-    <th style="text-align: center; width: 100%;">Condiciones de Pago</th>
-  </tr> 
-</table>
-
-<table style="width: 100%;">
-  <tr>
-    <th style="text-align: center; ">Tipo de Pago</th>
-    <th style="text-align: center; ">Cuenta</th>
-    <th style="text-align: center; ">Referencia</th>
-    <th style="text-align: center; ">Dias de Credito</th>
-    <th style="text-align: center; ">Monto</th>
-  </tr>
-
-  @foreach ($payment_quotations as $var)
-  <tr>
-    <th style="text-align: center; font-weight: normal;">{{ $var->payment_type }}</th>
-    @if (isset($var->accounts['description']))
-      <th style="text-align: center; font-weight: normal;">{{ $var->accounts['description'] }}</th>
-    @else    
-      <th style="text-align: center; font-weight: normal;"></th>
-    @endif
-    <th style="text-align: center; font-weight: normal;">{{ $var->reference }}</th>
-    <th style="text-align: center; font-weight: normal;">{{ $var->credit_days }}</th>
-    <th style="text-align: center; font-weight: normal;">{{ $var->amount }}</th>
-  </tr> 
-  @endforeach 
-  
-</table>
-<br>
 <table style="width: 100%;">
   <tr>
     <th style="text-align: center; width: 100%;">Productos</th>

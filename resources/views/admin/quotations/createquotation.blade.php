@@ -74,7 +74,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-1">
-                                <a href="{{ route('quotations.selectclient') }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                <a href="{{ route('quotations.selectclient') }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
                             </div>
                             <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte</label>
 
@@ -102,7 +102,7 @@
                                     @enderror
                             </div>
                             <div class="form-group col-md-1">
-                                <a href="{{ route('quotations.selectvendor',$client->id ?? -1) }}" title="Vendedor"><i class="fa fa-eye"></i></a>  
+                                <a href="{{ route('quotations.selectvendor',$client->id ?? -1) }}" title="Seleccionar Vendedor"><i class="fa fa-eye"></i></a>  
                             </div>
                            
                         </div>

@@ -132,8 +132,19 @@
                             <div class="col-md-2 col-form-label text-md-left">
                                 <label for="description" id="total"><h3></h3></label>
                             </div>
+
                         </div>
-                        
+                        <div class="form-group row" id="formcoin">
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda</label>
+
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="Bolivares">Bolívares</option>
+                                    <option value="Dolares">Dolares</option>
+                                    
+                                </select>
+                            </div>
+                        </div>
                         <br>
                         <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
                             @csrf
@@ -292,9 +303,18 @@
                                 </table>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                            <div class="form-group row mb-0">
+                                
+                                <div class="col-md-4">
+                                    <a onclick="deliveryNote()" id="btnNote" name="btnfacturar" class="btn btn-info" title="facturar">Procesar como Nota de Entrega</a>  
+                                    <a onclick="deliveryNoteSend()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                                </div>
+                               
                             </div>
+                            
                 </div>
             </div>
         </div>
@@ -332,6 +352,21 @@
 @section('validacion')
 
     <script>
+    var coin = "Bolivares";
+
+    $("#coin").on('change',function(){
+        
+         coin = $(this).val();
+       
+    });
+
+    function deliveryNoteSend() {
+       
+        window.location = "{{route('quotations.createdeliverynote', [$quotation->id,''])}}"+"/"+coin;
+                          
+    }
+
+
     function validacion() {
 
         let amount = document.getElementById("amount_product").value; 
@@ -354,6 +389,14 @@
 
 @section('consulta')
     <script>
+        $("#formcoin").hide();
+        $("#btnSendNote").hide();
+
+        function deliveryNote(){
+            $("#formcoin").show();
+            $("#btnSendNote").show();
+            $("#btnNote").hide();
+        }
 
         function searchCode(){
             

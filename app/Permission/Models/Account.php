@@ -25,6 +25,10 @@ class Account extends Model
         return $this->belongsToMany('App\QuotationPayment')->withTimesTamps();
     }
 
+    public function anticipos(){
+        return $this->belongsToMany('App\Anticipo')->withTimesTamps();
+    }
+
     public function permissions(){
         return $this->belongsToMany('App\Permission\Models\Permission')->withTimesTamps();
     }

@@ -57,7 +57,7 @@
                     @foreach ($vendors as $vendor)
                         <tr>
                             <td>
-                                <a href="{{ route('quotations.createquotationvendor',[$id_client ?? '-1',$vendor->id ?? '-1']) }}"  title="Editar"><i class="fa fa-plus"></i></a>
+                                <a href="{{ route('quotations.createquotationvendor',[$id_client ?? '-1',$vendor->id ?? '-1']) }}"  title="Editar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{$vendor->parroquias['descripcion']}}</td>
                             <td>{{$vendor->comisions['description']}}</td>

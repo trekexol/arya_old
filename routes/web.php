@@ -419,6 +419,11 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::get('listproduct/{var?}','QuotationController@listproduct')->name('quotations.listproduct');
 
+
+    Route::get('notadeentrega/{id_quotation}/{coin}','DeliveryNoteController@createdeliverynote')->name('quotations.createdeliverynote');
+
+    Route::get('indexnotasdeentrega/','DeliveryNoteController@index')->name('quotations.indexdeliverynote');
+
 });
 
 Route::group(["prefix"=>'bankmovements'],function(){
@@ -484,7 +489,7 @@ Route::group(["prefix"=>'invoices'],function(){
 
  Route::group(["prefix"=>'pdf'],function(){
     Route::get('/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
-    
+    Route::get('deliverynote/{id_quotation}/{iva}','PDFController@deliverynote')->name('pdf.deliverynote');
  });
 
 
@@ -497,4 +502,22 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::delete('{id}/delete','TasaController@destroy')->name('tasas.delete');
     Route::patch('{id}/update','TasaController@update')->name('tasas.update');
 
+});
+
+
+
+Route::group(["prefix"=>'anticipos'],function(){
+    Route::get('/','AnticipoController@index')->name('anticipos');
+    Route::get('register','AnticipoController@create')->name('anticipos.create');
+    Route::post('store', 'anticipoController@store')->name('anticipos.store');
+   
+    Route::get('{id}/edit','AnticipoController@edit')->name('anticipos.edit');
+    Route::delete('{id}/delete','AnticipoController@destroy')->name('anticipos.delete');
+    Route::patch('{id}/update','AnticipoController@update')->name('anticipos.update');
+
+    Route::get('register/{id_client}','AnticipoController@createclient')->name('anticipos.createclient');
+    Route::get('selectclient','AnticipoController@selectclient')->name('anticipos.selectclient');
+
+    Route::get('historic','AnticipoController@indexhistoric')->name('anticipos.historic');
+    
 });

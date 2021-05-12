@@ -109,16 +109,30 @@
                         
                         
                         <div class="form-group row">
+
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
-                            <div class="col-md-2">
-                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="0,00" required autocomplete="anticipo"> 
-                           
-                                @error('anticipo')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                            @if (empty($anticipos))
+                                <div class="col-md-2">
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="0,00" required autocomplete="anticipo"> 
+                            
+                                    @error('anticipo')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            @else
+                                <div class="col-md-2">
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="0,00" required autocomplete="anticipo"> 
+                            
+                                    @error('anticipo')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            @endif
+                            
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
                             <div class="col-md-2">
@@ -673,21 +687,15 @@
                         </div>
                         <br>
                         <div class="form-group row">
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary">
                                     Guardar Factura
                                  </button>
                             </div>
-                            <div class="col-md-2">
-                                <a href="" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
-                            </div>
-                            <div class="col-md-4">
-                                <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
-                            </div>
-                            <div class="col-md-2">
-                                <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                          <div class="col-md-2">
+                                <a href="{{ route('quotations.create',$quotation->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                         

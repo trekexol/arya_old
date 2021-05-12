@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Anticipo;
 use Illuminate\Http\Request;
 
 use App\Quotation;
@@ -23,6 +24,8 @@ class FacturarController extends Controller
          if(isset($quotation)){
              $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
              $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+
+             $anticipos = Anticipo::where('status',1)->where('id_client',$quotation->id_client)->get();
 
              $accounts_bank = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
@@ -60,8 +63,10 @@ class FacturarController extends Controller
             
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
+
+             
      
-             return view('admin.quotations.createfacturar',compact('quotation','product_quotations','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow'));
+             return view('admin.quotations.createfacturar',compact('quotation','product_quotations','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 

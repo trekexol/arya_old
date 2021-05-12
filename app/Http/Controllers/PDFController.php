@@ -8,6 +8,7 @@ use App;
 use App\Quotation;
 use App\QuotationPayment;
 use App\QuotationProduct;
+use Carbon\Carbon;
 
 class PDFController extends Controller
 {
@@ -66,6 +67,77 @@ class PDFController extends Controller
 
                 
                  $pdf = $pdf->loadView('pdf.factura',compact('quotation','product_quotations','payment_quotations'));
+                 return $pdf->stream();
+         
+                }else{
+                 return redirect('/invoices')->withDanger('La factura no existe');
+             } 
+             
+        
+
+        
+    }
+
+
+    function deliverynote($id_quotation,$iva){
+      
+
+        $pdf = App::make('dompdf.wrapper');
+
+      //  $id_quotation = request('id_quotation');
+        
+             $quotation = null;
+                 
+             if(isset($id_quotation)){
+                 $quotation = Quotation::findOrFail($id_quotation);
+
+                 $date = Carbon::now();
+                 $datenow = $date->format('Y-m-d');   
+
+                 $quotation->iva_percentage = $iva;
+
+                 $quotation->date_delivery_note = $datenow;
+
+                 $quotation->save();
+                                     
+             }else{
+                return redirect('/quotations')->withDanger('No llega el numero de la cotizacion');
+                } 
+     
+             if(isset($quotation)){
+                 $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+               
+                
+                 $total= 0;
+                 $base_imponible= 0;
+                 $ventas_exentas= 0;
+                 foreach($product_quotations as $var){
+                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+
+                    $total += ($var->products['price'] * $var->amount) - $percentage; 
+    
+                    if($var->products['exento'] == 0){
+    
+                        $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+    
+                        $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
+    
+                    }
+                    if($var->products['exento'] == 1){
+    
+                        $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+    
+                        $ventas_exentas += ($var->products['price'] * $var->amount) - $percentage; 
+    
+                    }
+                 }
+    
+                 $quotation->sub_total_factura = $total;
+                 $quotation->base_imponible = $base_imponible;
+                 $quotation->ventas_exentas = $ventas_exentas;
+
+                
+                 $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','product_quotations'));
                  return $pdf->stream();
          
                 }else{

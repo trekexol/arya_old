@@ -12,7 +12,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Clientes</h6>
+        <h2 class="m-0 font-weight-bold text-primary">Clientes</h2>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -38,7 +38,7 @@
                         @foreach ($clients as $client)
                             <tr>
                                 <td>
-                                    <a href="{{ route('quotations.createquotationclient',$client->id) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
+                                    <a href="{{ route('anticipos.createclient',$client->id) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
                                </td>
                                 <td>{{$client->name}}</td>
                                 <td>{{$client->cedula_rif}}</td>
