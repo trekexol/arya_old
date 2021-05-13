@@ -23,9 +23,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Productos</h6>
-    </div>
+   
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -42,23 +40,14 @@
             <thead>
             <tr> 
                
-                <th>Segmento</th>
-                <th>Sub Segmento</th>
-                <th>Unidad de Medida</th>
+            
                 <th>Código Comercial</th>
-                <th>Tipo</th>
                 <th>Descripción</th>
+                <th>Tipo</th>
                 <th>Precio</th>
-                <th>Precio de Compra</th>
-                <th>Costo Promedio</th>
                 <th>Foto del Producto</th>
-                <th>Moneda</th>
-                <th>Exento</th>
-                <th>ISLR</th>
-                <th>Impuesto Especial</th>
-                <th>Status</th>
-               
-                <th>Tools</th>
+              
+                <th></th>
             </tr>
             </thead>
             
@@ -67,44 +56,16 @@
                 @else  
                     @foreach ($products as $product)
                         <tr>
-                            <td>{{$product->segments['description']}}</td>
-                            <td>{{$product->subsegments['description']}}</td> 
-                            <td>{{$product->unitofmeasures['description']}}</td> 
-                            <td>{{$product->code_comercial}}</td>
-                            <td>{{$product->type}}</td>
-                            <td>{{$product->description}}</td>
-                            <td>{{$product->price}}</td>
-                            <td>{{$product->price_buy}}</td>
-                            <td>{{$product->cost_average}}</td>
-                            <td><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
-
-                            @if($product->money == "D")
-                                <td>Dolar</td>
-                            @else
-                                <td>Bolívar</td>
-                            @endif
-                            @if($product->exento == "1")
-                                <td>Si</td>
-                            @else
-                                <td>No</td>
-                            @endif
-                            @if($product->islr == "1")
-                                <td>Si</td>
-                            @else
-                                <td>No</td>
-                            @endif
-                            
-                            <td>{{$product->special_impuesto}}</td>
                            
+                            <td>{{$product->code_comercial}}</td>
+                            <td>{{$product->description}}</td>
+                            <td>{{$product->type}}</td>
+                            <td style="text-align: right">{{number_format($product->price, 2, ',', '.')}}</td>
                             
-                            @if($product->status == 1)
-                                <td>Activo</td>
-                            @else
-                                <td>Inactivo</td>
-                            @endif
-                            
+                            <td style="text-align: center"><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
+
                             <td>
-                                <a href="products/{{$product->id }}/edit" title="Editar"><i class="fa fa-edit"></i></a>
+                                <a href="{{ route('products.edit',$product->id) }}"  title="Editar"><i class="fa fa-edit"></i></a>
                              </td>
                         </tr>     
                     @endforeach   

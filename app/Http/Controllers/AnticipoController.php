@@ -36,7 +36,7 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::where('status','H')->orderBy('id','desc')->get();
+        $anticipos = Anticipo::where('status','C')->orderBy('id','desc')->get();
         }elseif($users_role == '2'){
            return view('admin.index');
        }

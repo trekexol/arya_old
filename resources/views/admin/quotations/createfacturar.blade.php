@@ -76,7 +76,7 @@
                         <div class="form-group row">
                             <label for="iva_amounts" class="col-md-2 col-form-label text-md-right">Monto de Iva</label>
                             <div class="col-md-4">
-                                <input id="iva_amount" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount" value="{{ number_format($quotation->iva_amount, 2, ',', '.') ?? old('iva_amount') }}" readonly required autocomplete="iva_amount"> 
+                                <input id="iva_amounts" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount"  readonly required autocomplete="iva_amount"> 
                                 
                                 @error('iva_amount')
                                     <span class="invalid-feedback" role="alert">
@@ -96,7 +96,7 @@
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
                             <div class="col-md-4">
-                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ number_format($quotation->iva_amount, 2, ',', '.') ?? old('grand_total') }}" readonly required autocomplete="grand_total"> 
+                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total"  readonly required autocomplete="grand_total"> 
                            
                                 @error('grand_total')
                                     <span class="invalid-feedback" role="alert">
@@ -111,7 +111,7 @@
                         <div class="form-group row">
 
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
-                            @if (empty($anticipos))
+                            @if (empty($anticipos_sum))
                                 <div class="col-md-2">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="0,00" required autocomplete="anticipo"> 
                             
@@ -123,7 +123,7 @@
                                 </div>
                             @else
                                 <div class="col-md-2">
-                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="0,00" required autocomplete="anticipo"> 
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum, 2, ',', '.') }}" required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
                                         <span class="invalid-feedback" role="alert">
@@ -709,7 +709,7 @@
 @section('javascript')
 
 
-    <script src="{{asset('js/facturar.js')}}"></script>
+    <script src="{{asset('js/facturar.js')}}"></script> 
 
 @endsection   
 
@@ -724,7 +724,7 @@
             function calculate() {
                 let inputIva = document.getElementById("iva").value; 
 
-                let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
+                //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
 
                 let totalFactura = "<?php echo $quotation->total_factura ?>";       
 
@@ -733,20 +733,25 @@
 
                 let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
 
+               
+
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
+
+                var iva_format = total_iva_exento.toLocaleString('de-DE');
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
 
-                var ivaformat = total_iva_exento.toFixed(2).toLocaleString('de-DE');
-                document.getElementById("iva_amount").value = ivaformat;
+               
+
+                document.getElementById("iva_amounts").value = iva_format;
 
 
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
-                var grand_total = parseFloat(totalFactura) + total_iva_exento;
+                var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toFixed(2).toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE');
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -755,12 +760,13 @@
 
                 var montoFormat = inputAnticipo.replace(/[$.]/g,'');
 
-                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');               
+                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');             
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
+               // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
 
-                var total_payformat = total_pay.toFixed(2).toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE');
 
                 document.getElementById("total_pay").value =  total_payformat;
 
@@ -774,11 +780,119 @@
               
        
             $("#iva").on('change',function(){
-                calculate();
+                //calculate();
+
+
+                let inputIva = document.getElementById("iva").value; 
+
+                //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
+
+                let totalFactura = "<?php echo $quotation->total_factura ?>";       
+
+                //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
+                let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
+
+                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
+
+
+
+
+                var total_iva_exento =  parseFloat(totalIvaMenos);
+
+                var iva_format = total_iva_exento.toLocaleString('de-DE');
+
+                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
+                //------------------------------
+
+
+
+                document.getElementById("iva_amounts").value = iva_format;
+
+
+                // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
+                var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
+
+                var grand_totalformat = grand_total.toLocaleString('de-DE');
+
+
+                document.getElementById("grand_total").value = grand_totalformat;
+
+                let inputAnticipo = document.getElementById("anticipo").value;  
+
+                var montoFormat = inputAnticipo.replace(/[$.]/g,'');
+
+                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');             
+
+                var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
+
+                var total_payformat = total_pay.toLocaleString('de-DE');
+
+                document.getElementById("total_pay").value =  total_payformat;
+
+                document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
+
+                document.getElementById("iva_form").value =  inputIva;
+
+                document.getElementById("anticipo_form").value =  inputAnticipo;
+               
             });
 
             $("#anticipo").on('keyup',function(){
-                calculate();
+                //calculate();
+
+
+
+                let inputIva = document.getElementById("iva").value; 
+
+                //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
+
+                let totalFactura = "<?php echo $quotation->total_factura ?>";       
+
+                //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
+                let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
+
+                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
+
+
+
+
+                var total_iva_exento =  parseFloat(totalIvaMenos);
+
+                var iva_format = total_iva_exento.toLocaleString('de-DE');
+
+                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
+                //------------------------------
+
+
+
+                document.getElementById("iva_amounts").value = iva_format;
+
+
+                // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
+                var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
+
+                var grand_totalformat = grand_total.toLocaleString('de-DE');
+
+
+                document.getElementById("grand_total").value = grand_totalformat;
+
+                let inputAnticipo = document.getElementById("anticipo").value;  
+
+                var montoFormat = inputAnticipo.replace(/[$.]/g,'');
+
+                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');             
+
+                var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
+
+                var total_payformat = total_pay.toLocaleString('de-DE');
+
+                document.getElementById("total_pay").value =  total_payformat;
+
+                document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
+
+                document.getElementById("iva_form").value =  inputIva;
+
+                document.getElementById("anticipo_form").value =  inputAnticipo;
             });
 
        

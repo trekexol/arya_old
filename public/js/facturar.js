@@ -605,12 +605,6 @@ $(document).ready(function () {
     $("#credit_days7").mask('00000000', { reverse: true });
 });
 
-/*$(document).ready(function () {
-    $("#base_imponible").mask('000.000.000.000.000,00', { reverse: true });
-});*/
-$(document).ready(function () {
-    $("#iva_amount").mask('000.000.000.000.000,00', { reverse: true });
-});
 
 
 

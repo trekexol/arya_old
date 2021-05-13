@@ -6,6 +6,9 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
        
+        <div class="col-md-3">
+            <a href="{{ route('products.create')}}" class="btn btn-warning  float-md-right " role="button" aria-pressed="true">Registrar un Producto Nuevo</a>
+          </div>
        
         <div class="col-md-2 dropdown mb-4">
             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
@@ -14,29 +17,14 @@
             </button>
             <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
                 
-                <a class="dropdown-item" href="" style="color: rgb(4, 119, 252)"> <i class="fas fa-download fa-sm fa-fw mr-2 text-blue-400"></i><strong>Imprimir Inventario Actual</strong></a>
+                <a class="dropdown-item" onclick="pdfinventory();" style="color: rgb(4, 119, 252)"> <i class="fas fa-download fa-sm fa-fw mr-2 text-blue-400"></i><strong>Imprimir Inventario Actual</strong></a>
                 <br>
                 <a class="dropdown-item" href="" style="color: rgb(4, 119, 252)"> <i class="fas fa-file-export fa-sm fa-fw mr-2 text-blue-400"></i><strong>Imprimir Historial del Inventario</strong></a>
                 
             </div>
         </div>
      
-        <div class="col-md-3 dropdown mb-4">
-            <button class="btn btn-primary dropdown-toggle" type="button"
-                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                Modificar Inventario
-            </button>
-            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                
-                <a class="dropdown-item" href="{{ route('products.create') }}" style="color: rgb(252, 124, 4)"> <i class="fas fa-plus-circle fa-sm fa-fw mr-2 text-blue-400"></i><strong>Añadir Nuevo Producto</strong></a>
-                <br>
-                <a class="dropdown-item" href="{{ route('inventories.create_increase_inventory') }}" style="color: rgb(252, 124, 4)"> <i class="fas fa-plus fa-sm fa-fw mr-2 text-blue-400"></i><strong>Sumar Cantidad de un Producto</strong></a>
-                <br>
-                <a class="dropdown-item" href="" style="color: rgb(252, 124, 4)"> <i class="fas fa-minus fa-sm fa-fw mr-2 text-blue-400"></i><strong>Restar Cantidad de un Producto</strong></a>
-                
-            </div>
-        </div>
+    
         
         
        
@@ -108,8 +96,9 @@
 
                            
                             <td>
-                                <a href="inventories/{{$var->id }}/edit" title="Editar"><i class="fa fa-edit"></i></a>
-                             </td>
+                                <a href="{{ route('inventories.create_increase_inventory',$var->id) }}" style="color: blue;" title="Aumentar Inventario"><i class="fa fa-plus"></i></a>
+                                <a href="{{ route('inventories.create_decrease_inventory',$var->id) }}" style="color: rgb(248, 62, 62);" title="Disminuir Inventario"><i class="fa fa-minus"></i></a>
+                            </td>
                         </tr>     
                     @endforeach   
                 @endif
@@ -119,4 +108,15 @@
     </div>
 </div>
   
+@endsection
+
+@section('javascript')
+
+    <script type="text/javascript">
+            function pdfinventory() {
+                
+                var nuevaVentanainventory = window.open("{{ route('pdf.inventory')}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+        
+            }
+    </script>
 @endsection

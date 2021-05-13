@@ -299,9 +299,11 @@ Route::group(["prefix"=>'inventories'],function(){
     Route::get('{id}/create','InventoryController@create')->name('inventories.create');
 
     Route::post('storeincreaseinventory','InventoryController@store_increase_inventory')->name('inventories.store_increase_inventory');
-    Route::get('createincreaseinventory','InventoryController@create_increase_inventory')->name('inventories.create_increase_inventory');
-    Route::get('createincreaseinventory/{id}','InventoryController@create_increase_inventory_with_product')->name('inventories.create_increase_inventory_with_product');
-
+    Route::get('createincreaseinventory/{id_inventario}','InventoryController@create_increase_inventory')->name('inventories.create_increase_inventory');
+   
+    Route::post('storedecreaseinventory','InventoryController@store_decrease_inventory')->name('inventories.store_decrease_inventory');
+    Route::get('createdecreaseinventory/{id_inventario}','InventoryController@create_decrease_inventory')->name('inventories.create_decrease_inventory');
+   
 });
 
 Route::group(["prefix"=>'modelos'],function(){
@@ -488,8 +490,9 @@ Route::group(["prefix"=>'invoices'],function(){
  });
 
  Route::group(["prefix"=>'pdf'],function(){
-    Route::get('/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
+    Route::get('factura/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
     Route::get('deliverynote/{id_quotation}/{iva}','PDFController@deliverynote')->name('pdf.deliverynote');
+    Route::get('inventory','PDFController@imprimirinventory')->name('pdf.inventory');
  });
 
 

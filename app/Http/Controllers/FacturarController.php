@@ -25,7 +25,7 @@ class FacturarController extends Controller
              $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
              $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
 
-             $anticipos = Anticipo::where('status',1)->where('id_client',$quotation->id_client)->get();
+             $anticipos_sum = Anticipo::where('status',1)->where('id_client',$quotation->id_client)->sum('amount');
 
              $accounts_bank = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
@@ -66,7 +66,7 @@ class FacturarController extends Controller
 
              
      
-             return view('admin.quotations.createfacturar',compact('quotation','product_quotations','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos'));
+             return view('admin.quotations.createfacturar',compact('quotation','product_quotations','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -105,6 +105,8 @@ class FacturarController extends Controller
         //-----------------------
 
         $quotation = Quotation::findOrFail(request('id_quotation'));
+
+     
 
      if($come_pay >= 1){
 
@@ -888,7 +890,19 @@ class FacturarController extends Controller
             
 
             $quotation->save();
+
+            
         /*---------------------- */
+
+           /*Verificamos si el cliente tiene anticipos activos */
+
+           DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+           ->where('status', '=', 1)
+           ->update(array('status' => 'C'));
+
+
+
+            /*------------------------------------------------- */
 
     }else{
         return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('La suma de los pagos es diferente al monto Total a Pagar!');

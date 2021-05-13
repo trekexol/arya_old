@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App;
+use App\Inventory;
 use App\Quotation;
 use App\QuotationPayment;
 use App\QuotationProduct;
@@ -186,5 +187,25 @@ class PDFController extends Controller
             return "Transferencia";
         }
     }
+
+
+
+    
+    function imprimirinventory(){
+      
+        
+
+        $pdf_inventory = App::make('dompdf.wrapper');
+
+        $inventories = Inventory::orderBy('id','desc')->get();
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d'); 
+
+        $pdf_inventory = $pdf_inventory->loadView('pdf.inventory',compact('inventories','datenow'));
+        return $pdf_inventory->stream();
+                 
+    }
+
+
 
 }

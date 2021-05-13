@@ -23,7 +23,7 @@
 <div class="container">
     <div class="row py-lg-2 justify-content-center">
         <div class="col-md-6">
-            <h2>Aumentar el Inventario de un Producto</h2>
+            <h2>Disminuir el Inventario de un Producto</h2>
         </div>
       </div>
     <div class="row justify-content-center">
@@ -32,7 +32,7 @@
                 <div class="card-header"></div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('inventories.store_increase_inventory') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('inventories.store_decrease_inventory') }}" enctype="multipart/form-data">
                         @csrf
 
                         <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id }}" readonly required autocomplete="id_inventory">
@@ -52,7 +52,23 @@
                                     </span>
                                 @enderror
                             </div>
+                            
                         </div>
+                        <div class="form-group row">
+                            <label for="name_product" class="col-md-2 col-form-label text-md-right"></label>
+
+                            
+                            <div class="col-md-6">
+                                <select  id="account_contrapart"  name="account_contrapart" class="form-control">
+                                    <option selected value="0">Seleccione una Contrapartida</option>
+                                    @foreach($accounts_contrapart as $account)
+                                            <option  value="{{$account->id}}">{{ $account->description }}</option>
+                                       @endforeach
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <br>
                         <div class="form-group row">
                             <label for="code" class="col-md-2 col-form-label text-md-right">Código</label>
 
@@ -144,6 +160,6 @@
 @section('javascript')
     <script>
             
-          
+           
 </script>
 @endsection

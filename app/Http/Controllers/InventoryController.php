@@ -52,34 +52,31 @@ class InventoryController extends Controller
         return view('admin.inventories.create',compact('product'));
    }
 
-   public function create_increase_inventory()
+   public function create_increase_inventory($id_inventory)
    {
 
        
-        $products = Inventory::orderBY('description','desc')->get();
-
-        //dd($products);
-
-        return view('admin.inventories.create_increase_inventory',compact('products'));
-   }
-
-   public function create_increase_inventory_with_product($id_inventory)
-   {
-
-       
-       // $products = Inventory::orderBY('description','desc')->get();
-
-        $inventories = DB::table('inventories')
-                        ->join('products', 'products.id', '=', 'inventories.product_id')
-                        ->orderBy('products.description', 'desc')
-                        ->select('products.*')
-                        ->get();
-
-        
         $inventory = Inventory::find($id_inventory);
 
-      
-        return view('admin.inventories.create_increase_inventory',compact('inventories','inventory'));
+       
+
+        return view('admin.inventories.create_increase_inventory',compact('inventory'));
+   }
+
+   public function create_decrease_inventory($id_inventory)
+   {
+
+       
+        $inventory = Inventory::find($id_inventory);
+
+        $accounts_contrapart = DB::table('accounts')->where('code_one', 6)
+                                            ->where('code_two', 1)
+                                            ->where('code_three', 5)
+                                            ->where('code_four', '<>',0)
+                                            ->get();
+       
+
+        return view('admin.inventories.create_decrease_inventory',compact('inventory','accounts_contrapart'));
    }
 
    /**
@@ -88,31 +85,87 @@ class InventoryController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
-   public function store(Request $request)
+   public function store_increase_inventory(Request $request)
     {
    
     $data = request()->validate([
         
-        'product_id'    =>'required',
+        'id_inventory'    =>'required',
         'code'          =>'required',
         'amount'        =>'required',
-        'status'        =>'required',
-       
+        
     ]);
 
-    $var = new Inventory();
+    $amount_old = request('amount_old');
 
-    $var->product_id = request('product_id');
+    $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
 
-    $var->code = request('code');
-   
-    $var->amount = request('amount');
+    $id_inventory = request('id_inventory');
+
+    if($amount_old <  $valor_sin_formato_amount){
+
+        
+
+        $var = Inventory::findOrFail($id_inventory);
     
-    $var->status =  request('status');
-  
-    $var->save();
+        $var->code = request('code');
+        
+        $var->amount = $valor_sin_formato_amount;
+        
+       
+      
+        $var->save();
+    
+        return redirect('/inventories')->withSuccess('Actualizado el inventario del producto: '.$var->products['description'].' Exitosamente!');
+   
+    }else{
+        return redirect('/inventories/createincreaseinventory/'.$id_inventory.'')->withDanger('La cantidad nueva debe ser mayor a la cantidad antigua');
 
-    return redirect('/inventories')->withSuccess('Registro Exitoso!');
+    }
+
+    
+    }
+
+
+
+    public function store_decrease_inventory(Request $request)
+    {
+   
+    $data = request()->validate([
+        
+        'id_inventory'    =>'required',
+        'code'          =>'required',
+        'amount'        =>'required',
+        
+    ]);
+
+    $amount_old = request('amount_old');
+
+    $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+
+    $id_inventory = request('id_inventory');
+
+    if($amount_old >  $valor_sin_formato_amount){
+
+        
+
+        $var = Inventory::findOrFail($id_inventory);
+    
+        $var->code = request('code');
+        
+        $var->amount = $valor_sin_formato_amount;
+        
+       
+      
+        $var->save();
+    
+        return redirect('/inventories')->withSuccess('Actualizado el inventario del producto: '.$var->products['description'].' Exitosamente!');
+    }else{
+        return redirect('/inventories/createdecreaseinventory/'.$id_inventory.'')->withDanger('La cantidad nueva debe ser menor a la cantidad antigua');
+
+    }
+
+    
     }
 
    /**
