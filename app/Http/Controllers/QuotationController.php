@@ -26,6 +26,7 @@ class QuotationController extends Controller
        if($users_role == '1'){
         $quotations = Quotation::orderBy('id' ,'DESC')
                                 ->where('date_billing','=',null)
+                                ->where('date_delivery_note','=',null)
                                 ->get();
         }elseif($users_role == '2'){
            return view('admin.index');

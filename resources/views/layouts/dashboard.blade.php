@@ -20,6 +20,9 @@
         rel="stylesheet">
     <link href="{{asset('vendor/sb-admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
     <!--End INDEX--> 
+
+    <link href="{{asset('vendor/sb-admin/css/carlos.css')}}" rel="stylesheet">
+    
    
     <link href="{{asset('css/watch.css')}}" rel="stylesheet">
       <!-- Custom fonts for this template TABLES-->   

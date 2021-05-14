@@ -21,13 +21,13 @@
     @endif
     
 <div class="container">
-    <div class="row py-lg-2">
+    <div class="row py-lg-2 justify-content-center">
         <div class="col-md-6">
-            <h2>Aumentar Inventario de un Producto</h2>
+            <h2>Aumentar el Inventario de un Producto</h2>
         </div>
       </div>
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header"></div>
 
@@ -35,41 +35,29 @@
                     <form method="POST" action="{{ route('inventories.store_increase_inventory') }}" enctype="multipart/form-data">
                         @csrf
 
-                        @if (empty($inventary))
-                        <div class="form-group row">
-                                <label for="inventaries" class="col-md-2 col-form-label text-md-right">Inventario</label>
+                        <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id }}" readonly required autocomplete="id_inventory">
+                       
+                        <input id="amount_old" type="hidden" class="form-control @error('amount_old') is-invalid @enderror" name="amount_old" value="{{ $inventory->amount }}" readonly required autocomplete="amount_old">
+                       
 
-                                <div class="col-md-4">
-                                    <select class="form-control" id="inventaries" name="inventaries">
-                                        <option value="-1">Seleccione un Inventario</option>
-                                        @foreach($inventaries as $var)
-                                            <option value="{{ $var->id }}">{{ $var->description }}</option>
-                                        @endforeach
-                                    
-                                    </select>
-                                </div>
+                        <div class="form-group row">
+                            <label for="name_product" class="col-md-2 col-form-label text-md-right">Nombre del Producto</label>
+
+                            <div class="col-md-9">
+                                <input id="name_product" type="text" class="form-control @error('name_product') is-invalid @enderror" name="name_product" value="{{ $inventory->products['description'] }}" readonly required autocomplete="name_product">
+
+                                @error('name_product')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                        @else
-                            <div class="form-group row">
-                                <label for="products" class="col-md-2 col-form-label text-md-right">Productos</label>
-                                    <div class="col-md-4">
-                                        <select id="products"  name="products" class="form-control">
-                                                <option selected style="backgroud-color:blue;" value="{{$product->id}}"><strong>{{ $product->description }}</strong></option>
-                                            
-                                            <option class="hidden" disabled data-color="#A0522D" value="-1">------------------</option>
-                                            @foreach($products as $var)
-                                                <option value="{{ $var->id }}" > {{ $var->description }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div> 
-                            </div>
-                        @endif
+                        </div>
                         <div class="form-group row">
                             <label for="code" class="col-md-2 col-form-label text-md-right">Código</label>
 
                             <div class="col-md-4">
-                                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $product->code_comercial ?? ''}}" required autocomplete="code">
+                                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $inventory->code }}" required readonly autocomplete="code">
 
                                 @error('code')
                                     <span class="invalid-feedback" role="alert">
@@ -78,7 +66,7 @@
                                 @enderror
                             </div> <label for="cantidad" class="col-md-2 col-form-label text-md-right">Cantidad</label>
                             <div class="col-md-3">
-                                <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ $inventory->amount }}" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -95,7 +83,7 @@
                             <label for="price" class="col-md-2 col-form-label text-md-right">Precio</label>
 
                             <div class="col-md-4">
-                                <input id="price" type="text" readonly class="form-control @error('price') is-invalid @enderror" name="price" value="{{number_format($product->price ?? 0, 2, ',', '.')}} " required autocomplete="price">
+                                <input id="price" type="text" readonly class="form-control @error('price') is-invalid @enderror" value="{{ number_format($inventory->products['price'], 2, ',', '.')}}" name="price" required autocomplete="price">
 
                                 @error('price')
                                     <span class="invalid-feedback" role="alert">
@@ -105,9 +93,9 @@
                             </div>
                             <label for="money" class="col-md-2 col-form-label text-md-right">Moneda</label>
 
-                            @if (!empty($product))
+                            @if (!empty($inventory))
                             <div class="col-md-3">
-                                @if($product->money == "D")
+                                @if($inventory->products['money'] == "D")
                                     <input id="money" type="text" readonly class="form-control @error('money') is-invalid @enderror" name="money" value="Dolar" required autocomplete="money">
                                 @else
                                     <input id="money" type="text" readonly class="form-control @error('money') is-invalid @enderror" name="money" value="Bolívares" required autocomplete="money">
@@ -120,16 +108,19 @@
                             </div>
                             @endif
                         </div>
-
-                        
-                     
-                        
                         <br>
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                   Actualizar Inventario
-                                </button>
+                            <div class="form-group row">
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Actualizar Inventario
+                                     </button>  
+                                </div>
+                               
+                                <div class="col-md-2">
+                                    <a href="{{ route('inventories') }}" id="btnreturn" name="btnreturn" class="btn btn-danger" title="facturar">Regresar</a>  
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -141,23 +132,18 @@
 @endsection
 @section('validacion')
     <script>    
-	$(function(){
-        soloAlfaNumerico('code');
-       
-    });
+	 $(document).ready(function () {
+            $("#amount").mask('000.000.000', { reverse: true });
+            
+        });
+        
+
     </script>
 @endsection
 
 @section('javascript')
     <script>
             
-            $("#products").on('change',function(){
-                var producto_id = $(this).val();
-
-                //document.getElementById("code").value = producto_id; 
-                
-                window.location = "{{route('inventories.create_increase_inventory_with_product', '')}}"+"/"+producto_id;
-                          
-            });
+          
 </script>
 @endsection

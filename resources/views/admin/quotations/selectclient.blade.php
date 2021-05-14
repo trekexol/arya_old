@@ -2,6 +2,16 @@
 
 @section('content')
 
+<div class="container-fluid">
+    <div class="row py-lg-2">
+       
+        <div class="col-md-6">
+            <h2>Seleccione un Cliente</h2>
+        </div>
+        
+    
+    </div>
+</div>
 
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
@@ -11,16 +21,14 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Clientes</h6>
-    </div>
+   
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr> 
-                    <th>Código Cliente</th>
-                    <th>Razón Social</th>
+                    <th></th>
+                   
                     <th>Nombre</th>
                     <th>Cedula o Rif</th>
                     <th>Dirección</th>
@@ -37,18 +45,16 @@
                     @else  
                         @foreach ($clients as $client)
                             <tr>
-                                <td>
-                                    <a href="{{ route('quotations.createquotationclient',$client->id) }}" title="Editar" style="color: black">{{$client->code_client}}</a>
-                                </td>
-                               
-                                <td>{{$client->razon_social}}</td>
-                                <td>{{$client->name}}</td>
-                                <td>{{$client->cedula_rif}}</td>
-                                <td>{{$client->direction}}</td>
-                                <td>{{$client->city}}</td>
-                                <td>{{$client->country}}</td>
-                                <td>{{$client->phone1}}</td>
-                                <td>{{$client->phone2}}</td>
+                                <td >
+                                    <a href="{{ route('quotations.createquotationclient',$client->id) }}"  title="Seleccionar"><i class="fa fa-check" style="color: orange"></i></a>
+                               </td>
+                                <td >{{$client->name}}</td>
+                                <td >{{$client->cedula_rif}}</td>
+                                <td >{{$client->direction}}</td>
+                                <td >{{$client->city}}</td>
+                                <td >{{$client->country}}</td>
+                                <td >{{$client->phone1}}</td>
+                                <td >{{$client->phone2}}</td>
                                 
                             </tr>     
                         @endforeach   

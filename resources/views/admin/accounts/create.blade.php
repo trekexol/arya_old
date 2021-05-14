@@ -34,7 +34,7 @@
                             <label for="code_one" class="col-md-2 col-form-label text-md-right">Código</label>
 
                             <div class="col-md-1">
-                                <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ old('code_one') }}" required autocomplete="code_one" autofocus>
+                                <input id="code_one" type="text" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ old('code_one') }}" required autocomplete="code_one" autofocus>
 
                                 @error('code_one')
                                     <span class="invalid-feedback" role="alert">
@@ -44,7 +44,7 @@
                             </div>
                             
                            <div class="col-md-1">
-                                <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ old('code_two') }}" required autocomplete="code_two" autofocus>
+                                <input id="code_two" type="text" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ old('code_two') }}" required autocomplete="code_two" autofocus>
 
                                 @error('code_two')
                                     <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-1">
-                                <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ old('code_three') }}" required autocomplete="code_three" autofocus>
+                                <input id="code_three" type="text" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ old('code_three') }}" required autocomplete="code_three" autofocus>
 
                                 @error('code_three')
                                     <span class="invalid-feedback" role="alert">
@@ -62,7 +62,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-1">
-                                <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ old('code_four') }}" required autocomplete="code_four" autofocus>
+                                <input id="code_four" type="text" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ old('code_four') }}" required autocomplete="code_four" autofocus>
 
                                 @error('code_four')
                                     <span class="invalid-feedback" role="alert">
@@ -171,6 +171,31 @@
     </div>
 </div>
 @endsection
+
+@section('validacion')
+    <script>    
+	 $(document).ready(function () {
+            $("#code_one").mask('000', { reverse: true });
+            
+    });
+    $(document).ready(function () {
+            $("#code_two").mask('000', { reverse: true });
+            
+    });
+    $(document).ready(function () {
+            $("#code_three").mask('000', { reverse: true });
+            
+    });
+    $(document).ready(function () {
+            $("#code_four").mask('000', { reverse: true });
+            
+    });
+        
+
+    </script>
+@endsection
+
+
 @section('validacion_usuario')
 <script>
     

@@ -1,7 +1,7 @@
-<ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" style="background-color: black;" href="index.html">
              <div class="sidebar-brand-icon">
             
             </div>
@@ -35,7 +35,7 @@
 <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdminitracion"
         aria-expanded="true" aria-controls="collapseAdminitracion">
-        <i class="fas fa-fw fa-user"></i>
+        <i class="fas fa-fw fa-user" style="color: rgb(250, 119, 58);"></i>
         <span>Administración</span>
     </a>
     <div id="collapseAdminitracion" class="collapse" aria-labelledby="headingAdminitracion" data-parent="#accordionSidebar">
@@ -73,7 +73,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-user"></i>
+            <i class="fas fa-fw fa-file-alt" style="color: rgb(250, 119, 58);"></i>
             <span>Facturación</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -81,9 +81,11 @@
            
                 <a class="collapse-item" href="{{route('quotations')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Cotizaciones</strong></a>
                 <a class="collapse-item" href="{{route('invoices')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Facturas</strong></a>
+                <a class="collapse-item" href="{{route('quotations.indexdeliverynote')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-sort-amount-up-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Notas de Entrega</strong></a>
                 <a class="collapse-item" href="{{route('clients')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Clientes</strong></a>
                 <a class="collapse-item" href="{{route('vendors')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Vendedores</strong></a>
                 <a class="collapse-item" href="{{route('billings')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Ventas</strong></a>
+                <a class="collapse-item" href="{{route('anticipos')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-hand-holding-usd fa-sm fa-fw mr-2 text-blue-400"></i><strong>Anticipos Clientes</strong></a>
               <!--      <a class="collapse-item" href="buttons.html">Listar Factura</a>
                     <a class="collapse-item" href="buttons.html">Notas de Entrega</a>
                     <a class="collapse-item" href="buttons.html">Notas de Crédito</a>
@@ -106,7 +108,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseGastos"
             aria-expanded="true" aria-controls="collapseGastos">
-            <i class="fas fa-fw fa-address-book"></i>
+            <i class="fas fa-fw fa-address-book" style="color: rgb(250, 119, 58);"></i>
             <span>Gastos y Compras</span>
         </a>
         <div id="collapseGastos" class="collapse" aria-labelledby="headingGastos" data-parent="#accordionSidebar">
@@ -134,7 +136,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNomina"
             aria-expanded="true" aria-controls="collapseNomina">
-            <i class="fas fa-fw fa-user-check"></i>
+            <i class="fas fa-fw fa-user-check" style="color: rgb(250, 119, 58)"></i>
             <span>Nómina</span>
         </a>
         <div id="collapseNomina" class="collapse" aria-labelledby="collapseNomina" data-parent="#accordionSidebar">
@@ -154,7 +156,7 @@
  <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransaccion"
             aria-expanded="true" aria-controls="collapseTransaccion">
-            <i class="fas fa-fw fa-credit-card"></i>
+            <i class="fas fa-fw fa-credit-card" style="color: rgb(250, 119, 58)"></i>
             <span>Transacción</span>
         </a>
         <div id="collapseTransaccion" class="collapse" aria-labelledby="headingTransaccion" data-parent="#accordionSidebar">
@@ -174,7 +176,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseContabilidad"
             aria-expanded="true" aria-controls="collapseContabilidad">
-            <i class="fas fa-fw fa-book"></i>
+            <i class="fas fa-fw fa-book" style="color: rgb(250, 119, 58)"></i>
             <span>Contabilidad</span>
         </a>
         <div id="collapseContabilidad" class="collapse" aria-labelledby="headingContabilidad" data-parent="#accordionSidebar">
@@ -197,7 +199,7 @@
 
     <li class="nav-item">
         <a class="nav-link" href="{{ route('inventories')}}">
-            <i class="fas fa-fw fa-boxes"></i>
+            <i class="fas fa-fw fa-boxes" style="color: rgb(250, 119, 58)"></i>
             <span>Inventario</span></a>
     </li>
    <!-- <li class="nav-item">
@@ -260,7 +262,7 @@
     -->
     <li class="nav-item">
         <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="fas fa-fw fa-sign-out-alt"></i>
+            <i class="fas fa-fw fa-sign-out-alt" style="color: rgb(250, 119, 58)"></i>
             <span>Salir</span>
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

@@ -34,7 +34,6 @@ $suma_haber = 0;
                     <form method="POST" action="{{ route('headervouchers.store') }}" enctype="multipart/form-data">
                         @csrf
 
-                        
                        
                         <div class="form-group row">
                             <label for="reference" class="col-md-2 col-form-label text-md-right">Referencia</label>
@@ -97,6 +96,8 @@ $suma_haber = 0;
                         <input type="hidden" name="id_header_voucher" value="{{$header->id ?? ''}}" readonly>
                         <input type="hidden" name="period" value="{{$account->period ?? ''}}" readonly>
                         <input type="hidden" name="id_account" value="{{$account->id ?? ''}}" readonly>
+                        <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
+                       
                        
                                 <div class="form-row">
                                     
@@ -159,7 +160,7 @@ $suma_haber = 0;
                         </form>      
                        <div class="card-body">
                         <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
                                 <th>Cuenta</th>

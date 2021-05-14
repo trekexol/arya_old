@@ -86,9 +86,17 @@ class ProductController extends Controller
     $var->code_comercial = request('code_comercial');
     $var->type = request('type');
     $var->description = request('description');
-    $var->price = request('price');
-    $var->price_buy = request('price_buy');
-    $var->cost_average = request('cost_average');
+
+    $valor_sin_formato_price = str_replace(',', '.', str_replace('.', '',request('price')));
+    $valor_sin_formato_price_buy = str_replace(',', '.', str_replace('.', '',request('price_buy')));
+    $valor_sin_formato_cost_average = str_replace(',', '.', str_replace('.', '',request('cost_average')));
+    $valor_sin_formato_special_impuesto = str_replace(',', '.', str_replace('.', '',request('special_impuesto')));
+       
+
+
+    $var->price = $valor_sin_formato_price;
+    $var->price_buy = $valor_sin_formato_price_buy;
+    $var->cost_average = $valor_sin_formato_cost_average;
     $var->money = request('money');
     $var->photo_product = request('photo_product');
 
@@ -106,7 +114,7 @@ class ProductController extends Controller
         $var->islr = true;
     }
 
-    $var->special_impuesto = request('special_impuesto');
+    $var->special_impuesto = $valor_sin_formato_special_impuesto;
     $var->status =  1;
   
     $var->save();

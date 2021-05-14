@@ -15,7 +15,7 @@ class CreateHeaderVouchersTable extends Migration
     {
         Schema::create('header_vouchers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('reference');
+            $table->integer('reference')->nullable();
             $table->string('description',150);
             $table->date('date');
 

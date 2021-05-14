@@ -11,7 +11,7 @@
           <h2>Cotizaciones</h2>
       </div>
       <div class="col-md-6">
-        <a href="{{ route('quotations.createquotation')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar una Cotización</a>
+        <a href="{{ route('quotations.createquotation')}}" class="btn btn-primary  float-md-right" role="button" aria-pressed="true">Registrar una Cotización</a>
       </div>
     </div>
   </div>
@@ -23,9 +23,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Cotizaciones</h6>
-    </div>
+    
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -38,15 +36,15 @@
         @endif
         </div>
         <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" >
+        <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0" >
             <thead>
             <tr> 
-                <th></th>
-                <th>N° de Control/Serie</th>
-                <th>Cliente</th>
-                <th>Vendedor</th>
-                <th>Transporte</th>
-                <th>Fecha de Cotización</th>
+                <th ></th>
+                <th >N° de Control/Serie</th>
+                <th >Cliente</th>
+                <th >Vendedor</th>
+                <th >Transporte</th>
+                <th >Fecha de Cotización</th>
               
                
             </tr>
@@ -57,8 +55,8 @@
                 @else  
                     @foreach ($quotations as $quotation)
                         <tr>
-                            <td >
-                            <a href="quotations/register/{{$quotation->id}}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                            <td>
+                            <a href="{{ route('quotations.create',$quotation->id) }}" title="Seleccionar"><i class="fa fa-check" style="color: orange;"></i></a>
                             </td>
                             <td>{{$quotation->serie}}</td>
                             <td>{{ $quotation->clients['name']}}</td>
@@ -74,4 +72,14 @@
     </div>
 </div>
   
+@endsection
+
+@section('javascript')
+
+<script>
+    $('#dataTable').dataTable( {
+  "ordering": false
+} );
+</script>
+    
 @endsection

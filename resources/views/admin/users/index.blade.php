@@ -39,7 +39,7 @@
    
     <div class="card-body">
         <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
                 <th>Id</th>
@@ -55,21 +55,7 @@
                 @endif
             </tr>
             </thead>
-            <tfoot>
-            <tr>
-                <th>Id</th>
-                <th>Usuario</th>
-                <th>Email</th>
-              
-                @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2'  )
-                    <th>Rol</th>
-                    <th>Status</th>
-                @endif
-                @if (Auth::user()->role_id  == '1')
-                    <th>Tools</th>
-                @endif
-            </tr>
-            </tfoot>
+            
             <tbody>
                 @if (empty($users))
                 @else

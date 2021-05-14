@@ -22,7 +22,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card" style="width: 70rem;">
+            <div class="card" >
                 <div class="card-header">Registro de Cotización</div>
 
                 <div class="card-body">
@@ -74,7 +74,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-1">
-                                <a href="{{ route('quotations.selectclient') }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                <a href="{{ route('quotations.selectclient') }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
                             </div>
                             <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte</label>
 
@@ -102,7 +102,7 @@
                                     @enderror
                             </div>
                             <div class="form-group col-md-1">
-                                <a href="{{ route('quotations.selectvendor',$client->id ?? -1) }}" title="Vendedor"><i class="fa fa-eye"></i></a>  
+                                <a href="{{ route('quotations.selectvendor',$client->id ?? -1) }}" title="Seleccionar Vendedor"><i class="fa fa-eye"></i></a>  
                             </div>
                            
                         </div>
@@ -141,6 +141,7 @@
                         <div class="form-group">
                             <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-info">
+                                   
                                   Crear Cotización
                                 </button>
                             </div>

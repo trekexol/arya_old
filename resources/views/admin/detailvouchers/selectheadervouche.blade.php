@@ -2,7 +2,16 @@
 
 @section('content')
 
-   
+<div class="container-fluid">
+    <div class="row py-lg-2">
+       
+        <div class="col-md-6">
+            <h2>Seleccione un Comprobante Cabecera</h2>
+        </div>
+        
+    
+    </div>
+</div>
 
    
 
@@ -16,13 +25,9 @@
 <div class="container-fluid">
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Seleccione un Comprobante Cabecera</h6>
-    </div>
-   
     <div class="card-body">
         <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
                 <th>Fecha</th>

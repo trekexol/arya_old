@@ -299,9 +299,11 @@ Route::group(["prefix"=>'inventories'],function(){
     Route::get('{id}/create','InventoryController@create')->name('inventories.create');
 
     Route::post('storeincreaseinventory','InventoryController@store_increase_inventory')->name('inventories.store_increase_inventory');
-    Route::get('createincreaseinventory','InventoryController@create_increase_inventory')->name('inventories.create_increase_inventory');
-    Route::get('createincreaseinventory/{id}','InventoryController@create_increase_inventory_with_product')->name('inventories.create_increase_inventory_with_product');
-
+    Route::get('createincreaseinventory/{id_inventario}','InventoryController@create_increase_inventory')->name('inventories.create_increase_inventory');
+   
+    Route::post('storedecreaseinventory','InventoryController@store_decrease_inventory')->name('inventories.store_decrease_inventory');
+    Route::get('createdecreaseinventory/{id_inventario}','InventoryController@create_decrease_inventory')->name('inventories.create_decrease_inventory');
+   
 });
 
 Route::group(["prefix"=>'modelos'],function(){
@@ -419,6 +421,11 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::get('listproduct/{var?}','QuotationController@listproduct')->name('quotations.listproduct');
 
+
+    Route::get('notadeentrega/{id_quotation}/{coin}','DeliveryNoteController@createdeliverynote')->name('quotations.createdeliverynote');
+
+    Route::get('indexnotasdeentrega/','DeliveryNoteController@index')->name('quotations.indexdeliverynote');
+
 });
 
 Route::group(["prefix"=>'bankmovements'],function(){
@@ -483,8 +490,9 @@ Route::group(["prefix"=>'invoices'],function(){
  });
 
  Route::group(["prefix"=>'pdf'],function(){
-    Route::get('/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
-    
+    Route::get('factura/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
+    Route::get('deliverynote/{id_quotation}/{iva}','PDFController@deliverynote')->name('pdf.deliverynote');
+    Route::get('inventory','PDFController@imprimirinventory')->name('pdf.inventory');
  });
 
 
@@ -497,4 +505,22 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::delete('{id}/delete','TasaController@destroy')->name('tasas.delete');
     Route::patch('{id}/update','TasaController@update')->name('tasas.update');
 
+});
+
+
+
+Route::group(["prefix"=>'anticipos'],function(){
+    Route::get('/','AnticipoController@index')->name('anticipos');
+    Route::get('register','AnticipoController@create')->name('anticipos.create');
+    Route::post('store', 'anticipoController@store')->name('anticipos.store');
+   
+    Route::get('{id}/edit','AnticipoController@edit')->name('anticipos.edit');
+    Route::delete('{id}/delete','AnticipoController@destroy')->name('anticipos.delete');
+    Route::patch('{id}/update','AnticipoController@update')->name('anticipos.update');
+
+    Route::get('register/{id_client}','AnticipoController@createclient')->name('anticipos.createclient');
+    Route::get('selectclient','AnticipoController@selectclient')->name('anticipos.selectclient');
+
+    Route::get('historic','AnticipoController@indexhistoric')->name('anticipos.historic');
+    
 });
