@@ -71,9 +71,9 @@
                <br>
               
                   <div class="row justify-content-center">
-                      <div class="card shadow mb-2">
-                        <div class="card-header py-2">
-                            <h6 class="m-0 font-weight-bold text-primary">Ingresos Correspondientes al periodo 2021</h6>
+                      <div class="card shadow mb-2"  style="background-color: white">
+                        <div class="card-header py-2" style="background-color: rgb(255, 185, 81)">
+                            <h6 class="m-0 font-weight-bold text-center">Ingresos Correspondientes al periodo 2021</h6>
                         </div>
                         <div class="card-body">
                             <div class="chart-bar">
@@ -85,10 +85,10 @@
                         </div>
                       </div>
                       <div class="col-3" >
-                          <div class="card shadow" >
+                          <div class="card shadow" style="background-color: white">
                             <!-- Card Header - Dropdown -->
-                            <div class="card-header"  >
-                                <h6 class="m-0 font-weight-bold text-primary">Reporte de Ingresos,<br> Egresos y Gastos</h6>
+                            <div class="card-header"  style="background-color: rgb(255, 185, 81)">
+                                <h6 class="m-0 font-weight-bold text-center">Reporte de Ingresos,<br> Egresos y Gastos</h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body" >

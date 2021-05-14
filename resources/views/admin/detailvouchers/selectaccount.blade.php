@@ -1,7 +1,16 @@
 @extends('layouts.dashboard')
 
 @section('content')
-
+<div class="container-fluid">
+    <div class="row py-lg-2">
+       
+        <div class="col-md-6">
+            <h2>Seleccione una Cuenta</h2>
+        </div>
+        
+    
+    </div>
+</div>
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
   @include('admin.layouts.success')   {{-- SAVE --}}
@@ -12,9 +21,7 @@
 <!-- container-fluid -->
 <div class="container-fluid">
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Seleccione una Cuenta</h6>
-    </div>
+    
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -27,7 +34,7 @@
         @endif
         </div>
         <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
                

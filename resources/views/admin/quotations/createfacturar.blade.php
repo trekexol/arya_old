@@ -113,7 +113,7 @@
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
                                 <div class="col-md-2">
-                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="0,00" required autocomplete="anticipo"> 
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
                                         <span class="invalid-feedback" role="alert">
@@ -191,7 +191,7 @@
                         <div class="form-group row">
                             <label for="amount_pays" class="col-md-2 col-form-label text-md-right">Forma de Pago:</label>
                             <div class="col-md-3">
-                                <input id="amount_pay" type="text" class="form-control @error('amount_pay') is-invalid @enderror" value="0,00" name="amount_pay" placeholder="Monto del Pago" required autocomplete="amount_pay"> 
+                                <input id="amount_pay" type="text" class="form-control @error('amount_pay') is-invalid @enderror"  name="amount_pay" placeholder="0,00" required autocomplete="amount_pay"> 
                            
                                 @error('amount_pay')
                                     <span class="invalid-feedback" role="alert">
@@ -689,7 +689,7 @@
                         <div class="form-group row">
                             <div class="col-md-2">
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <button type="submit" class="btn btn-primary">
                                     Guardar Factura
                                  </button>

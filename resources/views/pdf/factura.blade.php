@@ -121,7 +121,7 @@
     @endif
     <th style="text-align: center; font-weight: normal;">{{ $var->reference }}</th>
     <th style="text-align: center; font-weight: normal;">{{ $var->credit_days }}</th>
-    <th style="text-align: center; font-weight: normal;">{{ $var->amount }}</th>
+    <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount, 2, ',', '.')}}</th>
   </tr> 
   @endforeach 
   
@@ -164,7 +164,7 @@
 
   $total = $quotation->sub_total_factura + $iva;
 
-  $total_petro = $total / 159765192.04;
+  $total_petro = ($total - $quotation->anticipo)/ 159765192.04;
 ?>
 
 <table style="width: 100%;">
@@ -185,8 +185,12 @@
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
   </tr> 
   <tr>
+    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Anticipo</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->anticipo, 2, ',', '.') }}</th>
+  </tr> 
+  <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total, 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total - $quotation->anticipo, 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white; font-size: small;">MONTO TOTAL Petro</th>

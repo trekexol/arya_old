@@ -26,7 +26,7 @@
 <body>
 
 
-  <br><br><br><br><br><br><br><br><br>
+ <br><br>
   <h4 style="color: black">Empresa: *por hacer*</h4>
   <br>
   <h4 style="color: black">Rif: *por hacer*</h4>

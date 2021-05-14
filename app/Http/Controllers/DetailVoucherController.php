@@ -153,6 +153,8 @@ class DetailVoucherController extends Controller
    public function store(Request $request)
     {
        
+
+
          $data = request()->validate([
                 
                 
@@ -173,6 +175,7 @@ class DetailVoucherController extends Controller
             
             $var->id_account = request('id_account');
             $var->id_header_voucher = request('id_header_voucher');
+            $var->user_id = request('id_user');
 
             $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', request('debe')));
             $valor_sin_formato_haber = str_replace(',', '.', str_replace('.', '', request('haber')));
@@ -180,7 +183,7 @@ class DetailVoucherController extends Controller
 
             $var->debe = $valor_sin_formato_debe;
             $var->haber = $valor_sin_formato_haber;
-            $var->ref = request('ref');
+           
           
             $var->status =  "N";
         

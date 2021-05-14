@@ -160,7 +160,7 @@
                             <div class="col-md-1">
                             </div>
                           
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <a onclick="pdf();" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
                             <div class="col-md-4">

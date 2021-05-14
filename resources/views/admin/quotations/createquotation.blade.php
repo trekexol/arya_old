@@ -22,7 +22,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card" style="width: 70rem;">
+            <div class="card" >
                 <div class="card-header">Registro de Cotización</div>
 
                 <div class="card-body">
@@ -141,6 +141,7 @@
                         <div class="form-group">
                             <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-info">
+                                   
                                   Crear Cotización
                                 </button>
                             </div>

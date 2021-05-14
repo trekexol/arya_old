@@ -47,7 +47,7 @@
                        
                         
                         <div class="form-group row">
-                            <label for="date_quotation" class="col-md-2 col-form-label text-md-right">Fecha de Cotización</label>
+                            <label for="date_quotation" class="col-md-2 col-form-label text-md-right">Fecha de Cotización:</label>
                             <div class="col-md-4">
                                 <input id="date_quotation" type="date" class="form-control @error('date_quotation') is-invalid @enderror" name="date_quotation" value="{{ $quotation->date_quotation ?? $datenow }}" readonly required autocomplete="date_quotation">
     
@@ -57,7 +57,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="client" class="col-md-2 col-form-label text-md-right">Cliente</label>
+                            <label for="client" class="col-md-2 col-form-label text-md-right">Cliente:</label>
                             <div class="col-md-4">
                                 <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $quotation->clients['name'] ?? $datenow }}" readonly required autocomplete="client">
                                 @error('client')
@@ -80,7 +80,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="vendor" class="col-md-3 col-form-label text-md-right">Vendedor</label>
+                            <label for="vendor" class="col-md-3 col-form-label text-md-right">Vendedor:</label>
                             <div class="col-md-4">
                                 <input id="vendor" type="text" class="form-control @error('vendor') is-invalid @enderror" name="vendor" value="{{ $quotation->vendors['name'] ?? old('vendor') }}" readonly required autocomplete="vendor">
                                 @error('vendor')
@@ -93,7 +93,7 @@
                         
                         
                         <div class="form-group row">
-                            <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte</label>
+                            <label for="transports" class="col-md-2 col-form-label text-md-right">Transporte:</label>
                             <div class="col-md-4">
                                 <input id="transport" type="text" class="form-control @error('transport') is-invalid @enderror" name="transport" value="{{ $quotation->transports['placa'] ?? old('transport') }}" readonly required autocomplete="transport"> 
                            
@@ -103,7 +103,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones</label>
+                            <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones:</label>
 
                             <div class="col-md-4">
                                 <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $quotation->observation ?? old('observation') }}" readonly required autocomplete="observation">
@@ -117,7 +117,7 @@
                         </div>
                        
                         <div class="form-group row">
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Nota Pie de Factura </label>
+                            <label for="note" class="col-md-2 col-form-label text-md-right">Nota Pie de Factura:</label>
 
                             <div class="col-md-4">
                                 <input id="note" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ $quotation->note ?? old('note') }}" readonly required autocomplete="note">
@@ -128,14 +128,14 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="date" class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización</h6></label>
+                            <label for="date" class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización:</h6></label>
                             <div class="col-md-2 col-form-label text-md-left">
                                 <label for="description" id="total"><h3></h3></label>
                             </div>
 
                         </div>
                         <div class="form-group row" id="formcoin">
-                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda</label>
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
 
                             <div class="col-md-2">
                                 <select class="form-control" name="coin" id="coin">
@@ -239,7 +239,7 @@
 
                                <div class="card-body">
                                 <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
                                         <th>Código</th>
