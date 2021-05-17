@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Anticipo;
+use App\DetailVoucher;
+use App\HeaderVoucher;
 use Illuminate\Http\Request;
 
 use App\Quotation;
@@ -92,6 +95,9 @@ class FacturarController extends Controller
 
         //Saber cuantos pagos vienen
         $come_pay = request('amount_of_payments');
+
+
+        $user_id = request('user_id');
 
         /*Validar cuales son los pagos a guardar */
             $validate_boolean1 = false;
@@ -845,8 +851,27 @@ class FacturarController extends Controller
     //VALIDA QUE LA SUMA MONTOS INGRESADOS SEAN IGUALES AL MONTO TOTAL DEL PAGO
     if($total_pay == $total_pay_form){
 
+            $header_voucher  = new HeaderVoucher();
+
+
+            $header_voucher->description = "Cobro de Bienes o servicios.";
+            $header_voucher->date = $datenow;
+            
+           
+            $header_voucher->status =  "1";
+        
+            $header_voucher->save();
+
+        /*TERMINAR ESTO */
         if($validate_boolean1 == true){
             $var->save();
+            //Cuentas por Cobrar Clientes
+
+            $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
+        
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$var->amount,0);
+            }
         }
         
         if($validate_boolean2 == true){
@@ -868,13 +893,15 @@ class FacturarController extends Controller
         if($validate_boolean7 == true){
             $var7->save();
         }
+
+        $iva_percentage = request('iva_form');
        
         /*Modifica la cotizacion */
             $quotation->date_billing = $datenow;
 
             $quotation->date_billing = $datenow;
 
-            $quotation->iva_percentage = request('iva_form');
+            $quotation->iva_percentage = $iva_percentage;
 
             $anticipo = request('anticipo_form');
 
@@ -891,15 +918,91 @@ class FacturarController extends Controller
 
             $quotation->save();
 
-            
         /*---------------------- */
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');   
+
+        $sub_total = request('sub_total_form');
+
+        $base_imponible = request('base_imponible_form');
+
+
+        /*Aplicamos los movimientos Contables */
+
+            $header_voucher  = new HeaderVoucher();
+
+
+            $header_voucher->description = "Ventas de Bienes o servicios.";
+            $header_voucher->date = $datenow;
+            
+           
+            $header_voucher->status =  "1";
+        
+            $header_voucher->save();
+
+            /*Busqueda de Cuentas*/
+
+            //Cuentas por Cobrar Clientes
+
+            $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
+        
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$total_pay_form,0);
+            }
+
+            //Ingresos por SubSegmento de Bienes
+
+            $account_subsegmento = Account::where('description', 'like', 'Ingresos por SubSegmento de Bienes')->first();
+
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
+            }
+
+            //Debito Fiscal IVA por Pagar
+
+            $account_debito_iva_fiscal = Account::where('description', 'like', 'Debito Fiscal IVA por Pagar')->first();
+            
+            if($base_imponible != 0){
+                $total_iva = ($base_imponible * $iva_percentage)/100;
+
+                if(isset($account_cuentas_por_cobrar)){
+                    $this->add_movement($header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$total_iva);
+                }
+            }
+            
+            //Mercancia para la Venta
+            
+            $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
+
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$sub_total);
+            }
+
+            //Costo de Mercancia
+
+            $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancia')->first();
+
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sub_total,0);
+            }
+            /*----------- */
+
+
+           
+
+        /*------------------------------------------------- */
 
            /*Verificamos si el cliente tiene anticipos activos */
 
-           DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
-           ->where('status', '=', 1)
-           ->update(array('status' => 'C'));
+           if($anticipo != 0){
+                DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+                ->where('status', '=', 1)
+                ->update(array('status' => 'C'));
+    
+           }
 
+           
 
 
             /*------------------------------------------------- */
@@ -917,7 +1020,29 @@ class FacturarController extends Controller
 
 
 
+    public function add_movement($id_header,$id_account,$id_invoice,$id_user,$debe,$haber){
 
+        $detail = new DetailVoucher();
+
+        $detail->id_account = $id_account;
+        $detail->id_header_voucher = $id_header;
+        $detail->user_id = $id_user;
+
+        $detail->id_invoice = $id_invoice;
+
+      /*  $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', $debe));
+        $valor_sin_formato_haber = str_replace(',', '.', str_replace('.', '', $haber));*/
+
+
+        $detail->debe = $debe;
+        $detail->haber = $haber;
+       
+      
+        $detail->status =  "C";
+    
+        $detail->save();
+
+    }
 
 
 

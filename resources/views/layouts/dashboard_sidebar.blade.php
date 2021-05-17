@@ -1,5 +1,5 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+<ul  class="navbar-nav  bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!--style="width:200px !important;"-->
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" style="background-color: black;" href="index.html">
              <div class="sidebar-brand-icon">
@@ -283,5 +283,7 @@
 
     <!-- Sidebar Message -->
 
+    <!-- Saltos de linea para que al hacer zoom, el navbar no quede pequeno -->
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 </ul>

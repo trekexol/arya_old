@@ -37,7 +37,7 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-               
+                <th></th>
                 <th>Código</th>
                 <th>Descripción</th>
                 <th>Nivel</th>
@@ -48,7 +48,7 @@
                 <th>Haber</th>
                 <th>Saldo Actual</th>
                
-                <th>Tools</th>
+                
             </tr>
             </thead>
             
@@ -63,6 +63,9 @@
                         <tr>
                         @if($intercalar)
                         <?php $intercalar = false;?>
+                        <td style="text-align:right; color:black;">  
+                            <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                        </td>
                             <td style="text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
                             <td style="text-align:right; color:black;">{{$account->description}}</td>
                             <td style="text-align:right; color:black;">{{$account->level}}</td>
@@ -76,14 +79,14 @@
                             <td style="text-align:right; color:black;">{{$account->balance_previus+$account->debe-$account->haber}}</td>
                             
                             
-                            <td style="text-align:right; color:black;">  
-                                <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-plus"></i></a>
-                            </td>
+                            
                         </tr>   
 
                         @else
                             <?php $intercalar = true; ?>
-
+                            <td style="background: #E0D7CD; text-align:right; color:black;">
+                                <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                             </td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->description}}</td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->level}}</td>
@@ -95,9 +98,7 @@
 
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->balance_previus+$account->debe-$account->haber}}</td>
                             
-                                <td style="background: #E0D7CD; text-align:right; color:black;">
-                                <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-plus"></i></a>
-                             </td>
+                               
                         </tr>   
                         @endif  
                     @endforeach   

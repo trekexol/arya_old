@@ -3,8 +3,6 @@
 @section('content')
 
 @section('header')
-
-
 <!-- CSS media query within a style sheet -->
 <style>
 
@@ -20,7 +18,7 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-        <div class="col-md-2 dropdown mb-4">
+        <div class="col dropdown mb-4">
             <button class="btn btn-light2 dropdown-toggle" type="button"
                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
@@ -35,7 +33,7 @@
                 <a class="dropdown-item" href="#">Todos</a>
             </div>
         </div>
-        <div class="col-md-2 dropdown mb-4">
+        <div class="col dropdown mb-4">
             <button class="btn btn-light2 dropdown-toggle" type="button"
                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
@@ -50,17 +48,17 @@
                 <a class="dropdown-item" href="#">Subir Cuentas</a>
             </div>
         </div> 
-        <div class="col-md-3">
+        <div class="col">
             <a href="#" class="btn btn-light2"><i class="fas fa-eye" ></i>
                 &nbsp Ver Ejercicio Anterior
             </a>
         </div>
-            <div class="col-md-2">
+            <div class="col">
                 <a href="#" class="btn btn-light2"><i class="fas fa-times" ></i>
                     &nbsp Cierre de Ejercicio
                 </a>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <a href="{{ route('accounts.create')}}" class="btn btn-light2" role="button" aria-pressed="true">
                     <i class="fas fa-pencil-alt" ></i>
                     &nbsp Registrar una Cuenta
@@ -126,8 +124,19 @@
                             <td style="text-align:right; color:black; ">{{$account->type}}</td>
                             
                             <td style="text-align:right; color:black; ">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
-                            <td style="text-align:right; color:black; ">{{number_format($account->debe, 2, ',', '.')}}</td>
-                            <td style="text-align:right; color:black; ">{{number_format($account->haber, 2, ',', '.')}}</td>
+                           @if ($account->status == "M")
+                            <td style="text-align:right; color:black; ">
+                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
+                       
+                            </td>
+                            <td style="text-align:right; color:black; ">
+                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                            </td>
+                           @else
+                            <td style="text-align:right; color:black;">{{number_format($account->debe, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black;">{{number_format($account->haber, 2, ',', '.')}}</td>
+                           @endif
+                            
 
                             
                             <td style="text-align:right; color:black; ">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
@@ -147,8 +156,18 @@
                             <td style="text-align:right; color:black;">{{$account->type}}</td>
                             
                             <td style="text-align:right; color:black;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
-                            <td style="text-align:right; color:black;">{{number_format($account->debe, 2, ',', '.')}}</td>
-                            <td style="text-align:right; color:black;">{{number_format($account->haber, 2, ',', '.')}}</td>
+                            @if ($account->status == "M")
+                                <td style="text-align:right; color:black; ">
+                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
+                        
+                                </td>
+                                <td style="text-align:right; color:black; ">
+                                    <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                                </td>
+                            @else
+                                <td style="text-align:right; color:black;">{{number_format($account->debe, 2, ',', '.')}}</td>
+                                <td style="text-align:right; color:black;">{{number_format($account->haber, 2, ',', '.')}}</td>
+                            @endif
 
                             <td style="text-align:right; color:black;">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
                             

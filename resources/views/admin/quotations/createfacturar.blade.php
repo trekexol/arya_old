@@ -113,7 +113,7 @@
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
                                 <div class="col-md-2">
-                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" required autocomplete="anticipo"> 
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
                                         <span class="invalid-feedback" role="alert">
@@ -123,7 +123,7 @@
                                 </div>
                             @else
                                 <div class="col-md-2">
-                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum, 2, ',', '.') }}" required autocomplete="anticipo"> 
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum, 2, ',', '.') ?? 0.00 }}" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
                                         <span class="invalid-feedback" role="alert">
@@ -180,12 +180,21 @@
                         <!--Total del pago que se va a realizar-->
                         <input type="hidden" id="total_pay_form" name="total_pay_form"  readonly>
 
+                        <!--Total del pago que se va a realizar-->
+                        <input type="hidden" id="base_imponible_form" name="base_imponible_form"  readonly>
+
+                        <!--Total del pago que se va a realizar-->
+                        <input type="hidden" id="sub_total_form" name="sub_total_form"  readonly>
+
+
                         <!--Porcentaje de iva aplicado que se va a realizar-->
                         <input type="hidden" id="iva_form" name="iva_form"  readonly>
 
                         <!--Anticipo aplicado que se va a realizar-->
                         <input type="hidden" id="anticipo_form" name="anticipo_form"  readonly>
 
+                        <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
+                       
 
                         
                         <div class="form-group row">
@@ -733,7 +742,30 @@
 
                 let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
 
-               
+
+
+
+                /*Toma la Base y la envia por form*/
+                let base_imponible_form = document.getElementById("base_imponible").value; 
+
+                var montoFormat = base_imponible_form.replace(/[$.]/g,'');
+
+                var montoFormat_base_imponible_form = montoFormat.replace(/[,]/g,'.');    
+
+                document.getElementById("base_imponible_form").value =  montoFormat_base_imponible_form;
+                /*-----------------------------------*/
+                /*Toma la Base y la envia por form*/
+                let sub_total_form = document.getElementById("total_factura").value; 
+
+                var montoFormat = sub_total_form.replace(/[$.]/g,'');
+
+                var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
+
+                document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+                /*-----------------------------------*/
+
+
+
 
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
@@ -756,11 +788,20 @@
 
                 document.getElementById("grand_total").value = grand_totalformat;
 
+
                 let inputAnticipo = document.getElementById("anticipo").value;  
 
                 var montoFormat = inputAnticipo.replace(/[$.]/g,'');
 
-                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');             
+                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');
+
+                if(inputAnticipo){
+                    
+                    document.getElementById("anticipo_form").value =  montoFormat_anticipo;
+                }else{
+                    document.getElementById("anticipo_form").value = 0;
+                }
+
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
@@ -774,7 +815,7 @@
 
                 document.getElementById("iva_form").value =  inputIva;
 
-                document.getElementById("anticipo_form").value =  inputAnticipo;
+                
             }        
                 
               
@@ -795,6 +836,24 @@
                 let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
 
 
+                /*Toma la Base y la envia por form*/
+                let base_imponible_form = document.getElementById("base_imponible").value; 
+
+                var montoFormat = base_imponible_form.replace(/[$.]/g,'');
+
+                var montoFormat_base_imponible_form = montoFormat.replace(/[,]/g,'.');    
+
+                document.getElementById("base_imponible_form").value =  montoFormat_base_imponible_form;
+                /*-----------------------------------*/
+                /*Toma la Base y la envia por form*/
+                let sub_total_form = document.getElementById("total_factura").value; 
+
+                var montoFormat = sub_total_form.replace(/[$.]/g,'');
+
+                var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
+
+                document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+                /*-----------------------------------*/
 
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
@@ -814,14 +873,24 @@
 
                 var grand_totalformat = grand_total.toLocaleString('de-DE');
 
-
                 document.getElementById("grand_total").value = grand_totalformat;
+
+
 
                 let inputAnticipo = document.getElementById("anticipo").value;  
 
                 var montoFormat = inputAnticipo.replace(/[$.]/g,'');
 
-                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');             
+                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');
+
+                if(inputAnticipo){
+                    
+                    document.getElementById("anticipo_form").value =  montoFormat_anticipo;
+                }else{
+                    document.getElementById("anticipo_form").value = 0;
+                }        
+
+
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
@@ -832,8 +901,7 @@
                 document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
 
                 document.getElementById("iva_form").value =  inputIva;
-
-                document.getElementById("anticipo_form").value =  inputAnticipo;
+              
                
             });
 
@@ -856,6 +924,29 @@
 
 
 
+                /*Toma la Base y la envia por form*/
+                let base_imponible_form = document.getElementById("base_imponible").value; 
+
+                var montoFormat = base_imponible_form.replace(/[$.]/g,'');
+
+                var montoFormat_base_imponible_form = montoFormat.replace(/[,]/g,'.');    
+
+                document.getElementById("base_imponible_form").value =  montoFormat_base_imponible_form;
+                /*-----------------------------------*/
+                /*Toma la Base y la envia por form*/
+                let sub_total_form = document.getElementById("total_factura").value; 
+
+                var montoFormat = sub_total_form.replace(/[$.]/g,'');
+
+                var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
+
+                document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+                /*-----------------------------------*/
+
+
+
+
+
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
                 var iva_format = total_iva_exento.toLocaleString('de-DE');
@@ -876,11 +967,21 @@
 
                 document.getElementById("grand_total").value = grand_totalformat;
 
+
+
                 let inputAnticipo = document.getElementById("anticipo").value;  
 
                 var montoFormat = inputAnticipo.replace(/[$.]/g,'');
 
-                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');             
+                var montoFormat_anticipo = montoFormat.replace(/[,]/g,'.');
+
+                if(inputAnticipo){
+                    
+                    document.getElementById("anticipo_form").value =  montoFormat_anticipo;
+                }else{
+                    document.getElementById("anticipo_form").value = 0;
+                }
+
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
@@ -892,7 +993,7 @@
 
                 document.getElementById("iva_form").value =  inputIva;
 
-                document.getElementById("anticipo_form").value =  inputAnticipo;
+                
             });
 
        

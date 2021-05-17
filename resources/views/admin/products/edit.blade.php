@@ -274,12 +274,29 @@
                     </div>
  @endsection
  @section('validacion')
- <script>    
- $(function(){
-     soloAlfaNumerico('code_comercial');
-     soloAlfaNumerico('description');
- });
- </script>
+    <script>    
+        $(document).ready(function () {
+            $("#price").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#price_buy").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#cost_average").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#special_impuesto").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+
+	$(function(){
+        soloAlfaNumerico('code_comercial');
+        soloAlfaNumerico('description');
+    });
+    </script>
 @endsection
 
 @section('javascript_edit')

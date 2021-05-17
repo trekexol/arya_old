@@ -29,7 +29,14 @@
    
     <link href="{{asset('vendor/sb-admin/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
     <!--End TABLES-->   
+    <style>
 
+        body {
+         
+          zoom: 80%;
+        }
+      
+      </style>
 </head>
 
 <body id="page-top">

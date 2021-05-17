@@ -357,7 +357,7 @@ Route::group(["prefix"=>'accounts'],function(){
 
     Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}/{period}','AccountController@createlevel')->name('accounts.createlevel');
     
-
+    Route::get('movementaccount/{id_account}','AccountController@movements')->name('accounts.movements');
 });
 
 Route::group(["prefix"=>'headervouchers'],function(){
@@ -486,7 +486,10 @@ Route::group(["prefix"=>'nominacalculations'],function(){
 
 Route::group(["prefix"=>'invoices'],function(){
     Route::get('/','InvoiceController@index')->name('invoices');
+
+    Route::get('movementinvoice/{id_invoice}','InvoiceController@movementsinvoice')->name('invoices.movement');
     
+   
  });
 
  Route::group(["prefix"=>'pdf'],function(){

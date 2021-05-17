@@ -77,8 +77,10 @@
                                 <select class="form-control" id="status" name="status" title="status">
                                     @if($var->status == 1)
                                         <option value="1">Activo</option>
-                                    @else
+                                    @elseif($var->status == 0)
                                         <option value="0">Inactivo</option>
+
+                                    
                                     @endif
                                     <option value="nulo">----------------</option>
                                     

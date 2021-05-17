@@ -43,12 +43,8 @@
                 <th>Transporte</th>
                 <th>Fecha de Cotización</th>
                 <th>Fecha de Facturación</th>
-                <th>Dias de Crédito</th>
-                <th>Moneda</th>
-                <th>Costo</th>
                
                
-                <th></th>
             </tr>
             </thead>
             
@@ -65,17 +61,21 @@
                             <td>{{ $quotation->transports['placa']}}</td>
                             <td>{{$quotation->date_quotation}}</td>
                             <td>{{$quotation->date_billing}}</td>
-                            <td>{{$quotation->credit_days}}</td>
-                            <td>{{$quotation->coin}}</td>
-                            <td>{{$quotation->cost}}</td>
                            
-                            <td>
-                             </td>
+                           
+                            
                         </tr>     
                     @endforeach   
                 @endif
             </tbody>
         </table>
+
+        <br>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
+            </div>
+        </div>
         </div>
     </div>
 </div>

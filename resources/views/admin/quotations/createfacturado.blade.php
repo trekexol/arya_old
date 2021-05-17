@@ -157,14 +157,15 @@
            
                         <br>
                         <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
-                          
+                           
                             <div class="col-md-3">
                                 <a onclick="pdf();" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
                             <div class="col-md-4">
                                 <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{ route('invoices.movement',$quotation->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
                             <div class="col-md-2">
                                 <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  

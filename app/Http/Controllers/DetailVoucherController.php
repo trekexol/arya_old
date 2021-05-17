@@ -109,7 +109,7 @@ class DetailVoucherController extends Controller
    
    public function selectheader()
    {
-        $headervouchers = HeaderVoucher::All();
+        $headervouchers = HeaderVoucher::where('status','LIKE','U')->get();
         
 
         return view('admin.detailvouchers.selectheadervouche',compact('headervouchers'));
@@ -130,8 +130,21 @@ class DetailVoucherController extends Controller
 
             $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
 
+           
+             /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
+             foreach($detailvouchers as $var){
+                 
+                $account = Account::findOrFail($var->id_account);
+
+                if($account->status != "M"){
+                    $account->status = "M";
+                    $account->save();
+                }
+             }
             
-              
+             /*----------------------------- */
+
+
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');    
                                 

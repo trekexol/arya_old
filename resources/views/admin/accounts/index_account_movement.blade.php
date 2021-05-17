@@ -9,18 +9,14 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
         <div class="col-md-8">
-            <h2>Listado de Comprobantes Contables detallados</h2>
+            <h2>Listado de Comprobantes Contables detallados de la cuenta: Nº {{ $account->code_one }}.{{ $account->code_two }}.{{ $account->code_three }}.{{ $account->code_four }} / {{ $account->description }}</h2>
         </div>
         <div class="col-md-2">
             <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-eye" ></i>
                 &nbsp Plan de Cuentas
             </a>
         </div>
-        <div class="col-md-2">
-            <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
-                &nbsp Volver a la Factura
-            </a>
-        </div>
+       
     </div>
     <!-- Page Heading -->
    
@@ -61,9 +57,18 @@
                     <td>{{$var->headers['date']}}</td>
                     <td>{{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
                     <td>{{$var->id_header_voucher}}</td>
+                  
+                    @if (isset($var->id_invoice))
+
                     <td>{{$var->id_invoice}}</td>
                     <td>{{$var->headers['description']}} fact({{ $var->id_invoice }}) / {{$var->accounts['description']}}</td>
 
+                    @else
+                    <td></td>
+                    <td>{{$var->headers['description']}}</td>
+
+                    @endif
+                   
                     <td>{{$var->debe}}</td>
                     <td>{{$var->haber}}</td>
 
