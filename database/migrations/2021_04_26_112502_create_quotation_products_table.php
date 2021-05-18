@@ -16,7 +16,7 @@ class CreateQuotationProductsTable extends Migration
         Schema::create('quotation_products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_quotation');
-            $table->unsignedBigInteger('id_product');
+            $table->unsignedBigInteger('id_inventory');
 
             $table->integer('amount');
             $table->decimal('discount',16,2);
@@ -24,7 +24,7 @@ class CreateQuotationProductsTable extends Migration
             $table->string('status',1);
 
             $table->foreign('id_quotation')->references('id')->on('quotations');
-            $table->foreign('id_product')->references('id')->on('products');
+            $table->foreign('id_inventory')->references('id')->on('inventories');
             $table->timestamps();
         });
     }

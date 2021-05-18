@@ -149,12 +149,12 @@
                         <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
                             @csrf
                             <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
-                            <input id="id_product" type="hidden" class="form-control @error('id_product') is-invalid @enderror" name="id_product" value="{{ $product->id ?? -1 }}" readonly required autocomplete="id_product">
+                            <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
                        
                                 <div class="form-row col-md-12">
                                     <div class="form-group col-md-2">
                                         <label for="description" >Código</label>
-                                        <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $product->code_comercial ?? old('code') }}" required autocomplete="code" autofocus>
+                                        <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $inventory->code ?? old('code') }}" required autocomplete="code" autofocus>
                                     </div>
                                    
                                     <div class="form-group col-md-1">
@@ -167,7 +167,7 @@
                                     
                                     <div class="form-group col-md-3">
                                         <label for="description" >Descripción</label>
-                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $product->description ?? old('description') }}" readonly required autocomplete="description">
+                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $inventory->products['description'] ?? old('description') }}" readonly required autocomplete="description">
         
                                         @error('description')
                                             <span class="invalid-feedback" role="alert">
@@ -186,7 +186,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-md-1">
-                                        @if (empty($product))
+                                        @if (empty($inventory))
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" disabled id="gridCheck">
                                                 <label class="form-check-label" for="gridCheck">
@@ -195,7 +195,7 @@
                                             </div>
                                         @else  
                                             <div class="form-check">
-                                                @if($product->exento == 1)
+                                                @if($inventory->products['exento'] == 1)
                                                     <input class="form-check-input" type="checkbox" disabled checked id="gridCheck">
                                                 @else
                                                     <input class="form-check-input" type="checkbox" disabled id="gridCheck">
@@ -208,7 +208,7 @@
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="cost" >Precio</label>
-                                        <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $product->price ?? old('cost') ?? '' }}" readonly required autocomplete="cost">
+                                        <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price']  ?? '' }}" readonly required autocomplete="cost">
         
                                         @error('cost')
                                             <span class="invalid-feedback" role="alert">
@@ -254,35 +254,35 @@
                                     </thead>
                                     
                                     <tbody>
-                                        @if (empty($product_quotations))
+                                        @if (empty($inventories_quotations))
                                         @else
                                         <?php
                                             $suma = 0;
                                         ?>
-                                            @foreach ($product_quotations as $key => $var)
+                                            @foreach ($inventories_quotations as $var)
 
                                             <?php
-                                            $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+                                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                                            $total_less_percentage = ($var->products['price'] * $var->amount) - $percentage;
+                                            $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
                                             ?>
                                                 <tr>
-                                                <td style="text-align: right">{{ $var->products['code_comercial']}}</td>
-                                                @if($var->products['exento'] == 1)
-                                                    <td style="text-align: right">{{ $var->products['description']}} (E)</td>
+                                                <td style="text-align: right">{{ $var->code}}</td>
+                                                @if($var->exento == 1)
+                                                    <td style="text-align: right">{{ $var->description}} (E)</td>
                                                 @else
-                                                    <td style="text-align: right">{{ $var->products['description']}}</td>
+                                                    <td style="text-align: right">{{ $var->description}}</td>
                                                 @endif
                                                 
-                                                <td style="text-align: right">{{ $var->amount}}</td>
-                                                <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
+                                                <td style="text-align: right">{{ $var->amount_quotation}}</td>
+                                                <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td>
                                                 <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>
                                                 <td style="text-align: right">{{number_format($total_less_percentage, 2, ',', '.')}}</td>
                                                 <?php
                                                     $suma += $total_less_percentage;
                                                 ?>
                                                     <td style="text-align: right">
-                                                    <a  title="Editar"><i class="fa fa-edit"></i></a>  
+                                                    <a href="{{ route('quotations.productedit',$var->quotation_products_id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -340,7 +340,7 @@
             "order": []
         });
 
-        document.querySelector('#total').innerText = {{number_format($suma, 2, ',', '.')}};
+        document.querySelector('#total').innerText = {{number_format($suma ?? 0, 2, ',', '.')}};
 
 
 
@@ -404,8 +404,8 @@
             
             
             $.ajax({
-              
-                url:"{{ route('quotations.listproduct') }}" + '/' + reference_id,
+                
+                url:"{{ route('quotations.listinventory') }}" + '/' + reference_id,
                 beforSend:()=>{
                     alert('consultando datos');
                 },

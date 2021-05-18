@@ -6,6 +6,7 @@ use App\Account;
 use App\Anticipo;
 use App\DetailVoucher;
 use App\HeaderVoucher;
+use App\Inventory;
 use Illuminate\Http\Request;
 
 use App\Quotation;
@@ -25,7 +26,9 @@ class FacturarController extends Controller
          }
  
          if(isset($quotation)){
-             $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+             //$product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+             
+                                                            
              $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
 
              $anticipos_sum = Anticipo::where('status',1)->where('id_client',$quotation->id_client)->sum('amount');
@@ -43,20 +46,28 @@ class FacturarController extends Controller
              $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
                                             ->get();
 
+            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            'quotation_products.amount as amount_quotation')
+                                                            ->get(); 
+
              $total= 0;
              $base_imponible= 0;
-             foreach($product_quotations as $var){
-                 //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
 
-                    $total += ($var->products['price'] * $var->amount) - $percentage;
+             foreach($inventories_quotations as $var){
+                 //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
                 //----------------------------- 
 
-                if($var->products['exento'] == 0){
+                if($var->exento == 0){
 
-                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                    $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
+                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
 
                 }
              }
@@ -69,11 +80,30 @@ class FacturarController extends Controller
 
              
      
-             return view('admin.quotations.createfacturar',compact('quotation','product_quotations','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum'));
+             return view('admin.quotations.createfacturar',compact('quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
          
+    }
+    public function storefacturacredit(Request $request)
+    {
+        $id_quotation = request('id_quotation');
+
+        $quotation = Quotation::findOrFail($id_quotation);
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d'); 
+
+        $quotation->date_billing = $datenow;
+
+        $credit = request('credit');
+
+        $quotation->credit_days = $credit;
+
+        $quotation->save();
+
+        return redirect('quotations/facturado/'.$quotation->id.'')->withSuccess('Factura Guardada con Exito!');
     }
 
     public function storefactura(Request $request)
@@ -167,7 +197,7 @@ class FacturarController extends Controller
                       //DIAS DE CREDITO
                       if(isset($credit_days)){
   
-                          $var->credit_days = $credit_days;
+                        $var->credit_days = $credit_days;
   
                       }else{
                           return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar los Dias de Credito!');
@@ -851,6 +881,15 @@ class FacturarController extends Controller
     //VALIDA QUE LA SUMA MONTOS INGRESADOS SEAN IGUALES AL MONTO TOTAL DEL PAGO
     if($total_pay == $total_pay_form){
 
+        /*descontamos el inventario*/
+        $retorno = $this->discount_inventory($quotation->id);
+
+        if($retorno != "exito"){
+            return redirect('quotations/facturar/'.$quotation->id.'');
+        }
+      
+        /*---------------- */
+
             $header_voucher  = new HeaderVoucher();
 
 
@@ -865,12 +904,18 @@ class FacturarController extends Controller
         /*TERMINAR ESTO */
         if($validate_boolean1 == true){
             $var->save();
+
             //Cuentas por Cobrar Clientes
 
-            $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
+            //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
+            if(isset($var->id_account)){
+                $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
+            } 
+
+            $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
         
             if(isset($account_cuentas_por_cobrar)){
-                $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$var->amount,0);
+                $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
             }
         }
         
@@ -993,6 +1038,8 @@ class FacturarController extends Controller
 
         /*------------------------------------------------- */
 
+        
+
            /*Verificamos si el cliente tiene anticipos activos */
 
            if($anticipo != 0){
@@ -1039,6 +1086,16 @@ class FacturarController extends Controller
        
       
         $detail->status =  "C";
+
+         /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
+         
+            $account = Account::findOrFail($detail->id_account);
+
+            if($account->status != "M"){
+                $account->status = "M";
+                $account->save();
+            }
+         
     
         $detail->save();
 
@@ -1046,7 +1103,56 @@ class FacturarController extends Controller
 
 
 
+    public function discount_inventory($id_quotation){
+        /*Primero Revisa que todos los productos tengan inventario suficiente*/
+        $no_hay_cantidad_suficiente = DB::table('inventories')
+                                ->join('quotation_products', 'quotation_products.id_inventory','=','inventories.id')
+                                ->where('quotation_products.id_quotation','=',$id_quotation)
+                                ->where('quotation_products.amount','<','inventories.amount')
+                                ->select('inventories.code as code','quotation_products.id_quotation as id_quotation','quotation_products.discount as discount',
+                                'quotation_products.amount as amount_quotation')
+                                ->first(); 
+       
+        if(isset($no_hay_cantidad_suficiente)){
+            return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('En el Inventario de Codigo: '.$no_hay_cantidad_suficiente->code.' no hay Cantidad suficiente!');
+        }
 
+    /*Luego, descuenta del Inventario*/
+        $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+        ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+        ->where('quotation_products.id_quotation',$id_quotation)
+        ->select('products.*','quotation_products.id as id_quotation','quotation_products.discount as discount',
+        'quotation_products.amount as amount_quotation')
+        ->get(); 
+
+            foreach($inventories_quotations as $inventories_quotation){
+
+                $quotation_product = QuotationProduct::findOrFail($inventories_quotation->id_quotation);
+
+                if(isset($quotation_product)){
+                $inventory = Inventory::findOrFail($quotation_product->id_inventory);
+
+                    if(isset($inventory)){
+                        if($inventory->amount >= $quotation_product->amount){
+                            $inventory->amount -= $quotation_product->amount;
+                            $inventory->save();
+
+                        }else{
+                            return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de Codigo: '.$inventory->code.' no tiene Cantidad suficiente!');
+                        }
+                        
+                    }else{
+                        return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario no existe!');
+                    }
+                }else{
+                return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de la cotizacion no existe!');
+                }
+
+            }
+
+            return "exito";
+
+    }
 
 
 
@@ -1074,26 +1180,36 @@ class FacturarController extends Controller
          }
  
          if(isset($quotation)){
-             $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
-             $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+                // $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+                $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
 
            
+                $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                                ->join('quotation_products', 'inventories.product_id', '=', 'quotation_products.id_inventory')
+                                                                ->where('quotation_products.id_quotation',$quotation->id)
+                                                                ->select('products.*','quotation_products.discount as discount',
+                                                                'quotation_products.amount as amount_quotation')
+                                                                ->get(); 
 
-             $total= 0;
-             $base_imponible= 0;
-             foreach($product_quotations as $var){
-                $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+                $total= 0;
+                $base_imponible= 0;
 
-                $total += ($var->products['price'] * $var->amount) - $percentage; 
+                foreach($inventories_quotations as $var){
+                    //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                if($var->products['exento'] == 0){
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
+                    //----------------------------- 
 
-                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+                    if($var->exento == 0){
 
-                    $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
+                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+
+                    }
                 }
-             }
+
 
              $quotation->total_factura = $total;
              $quotation->base_imponible = $base_imponible;
@@ -1101,7 +1217,7 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
      
-             return view('admin.quotations.createfacturado',compact('quotation','product_quotations','payment_quotations', 'datenow'));
+             return view('admin.quotations.createfacturado',compact('quotation','payment_quotations', 'datenow'));
             }else{
              return redirect('/invoices')->withDanger('La factura no existe');
          } 

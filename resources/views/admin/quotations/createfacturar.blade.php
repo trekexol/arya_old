@@ -26,7 +26,7 @@
     <div class="row justify-content-center" >
         
             <div class="card" style="width: 70rem;" >
-                <div class="card-header" >Facturar</div>
+                <div class="card-header" ><h3>Facturar</h3></div>
                 
                 <div class="card-body" >
                         <div class="form-group row">
@@ -156,6 +156,10 @@
                                 @enderror
                             </div>
                         </div>
+            <form method="POST" action="{{ route('quotations.storefacturacredit') }}" enctype="multipart/form-data">
+                @csrf  
+                        <input type="hidden" name="id_quotation" value="{{$quotation->id}}" readonly>
+
                         <div class="form-group row">
                             <label for="total_pays" class="col-md-2 col-form-label text-md-right">Total a Pagar</label>
                             <div class="col-md-4">
@@ -167,8 +171,32 @@
                                     </span>
                                 @enderror
                             </div>
-                            
+                            <div class="col-md-2">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitches">
+                                    <label class="custom-control-label" for="customSwitches">Tiene Crédito</label>
+                                  </div>
+                            </div>
+                            <div class="col-md-2">
+                                <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" placeholder="Dias de Crédito" autocomplete="credit"> 
+                            </div>
                         </div>
+                        <br>
+                        <div class="form-group row" id="formenviarcredito">
+                            
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary">
+                                    Guardar Factura
+                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('quotations.create',$quotation->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                            </div>
+                        </div>
+                        
+            </form>           
             <form method="POST" action="{{ route('quotations.storefactura') }}" enctype="multipart/form-data">
                 @csrf   
 
@@ -195,9 +223,9 @@
 
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                        
-
+                       
                         
-                        <div class="form-group row">
+                        <div class="form-group row" id="formulario1" >
                             <label for="amount_pays" class="col-md-2 col-form-label text-md-right">Forma de Pago:</label>
                             <div class="col-md-3">
                                 <input id="amount_pay" type="text" class="form-control @error('amount_pay') is-invalid @enderror"  name="amount_pay" placeholder="0,00" required autocomplete="amount_pay"> 
@@ -695,7 +723,7 @@
                             
                         </div>
                         <br>
-                        <div class="form-group row">
+                        <div class="form-group row" id="enviarpagos">
                             <div class="col-md-2">
                             </div>
                             <div class="col-md-3">
@@ -724,8 +752,34 @@
 
 
 @section('consulta')
+    <script>
+        $("#credit").hide();
+        $("#formenviarcredito").hide();
+        var switchStatus = false;
+        $("#customSwitches").on('change', function() {
+            if ($(this).is(':checked')) {
+                switchStatus = $(this).is(':checked');
+                $("#credit").show();
+                $("#formulario1").hide();
+                $("#formenviarcredito").show();
+                $("#enviarpagos").hide();
+                
+            }
+            else {
+            switchStatus = $(this).is(':checked');
+                $("#credit").hide();
+                $("#formulario1").show();
+                $("#formenviarcredito").hide();
+                $("#enviarpagos").show();
+            }
+        });
 
 
+        $(document).ready(function () {
+            $("#credit").mask('0000', { reverse: true });
+            
+        });
+    </script>
     <script type="text/javascript">
 
             calculate();

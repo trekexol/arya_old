@@ -36,6 +36,8 @@ class CreateQuotationsTable extends Migration
             $table->string('observation',150)->nullable();
             $table->string('note',150)->nullable();
 
+            $table->integer('credit_days')->nullable();
+
             $table->string('coin',15)->nullable();
            
             $table->string('status',1);

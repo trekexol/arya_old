@@ -419,13 +419,18 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::post('storefactura','FacturarController@storefactura')->name('quotations.storefactura');
     Route::get('facturado/{id_quotation}','FacturarController@createfacturado')->name('quotations.createfacturado');
 
-    Route::get('listproduct/{var?}','QuotationController@listproduct')->name('quotations.listproduct');
+    Route::get('listinventory/{var?}','QuotationController@listinventory')->name('quotations.listinventory');
 
 
     Route::get('notadeentrega/{id_quotation}/{coin}','DeliveryNoteController@createdeliverynote')->name('quotations.createdeliverynote');
 
     Route::get('indexnotasdeentrega/','DeliveryNoteController@index')->name('quotations.indexdeliverynote');
 
+    Route::get('quotationproduct/{id}/edit','QuotationController@editquotationproduct')->name('quotations.productedit');
+    Route::patch('quotationproduct/{id}/update','QuotationController@updatequotationproduct')->name('quotations.productupdate');
+
+    Route::post('storefacturacredit','FacturarController@storefacturacredit')->name('quotations.storefacturacredit');
+   
 });
 
 Route::group(["prefix"=>'bankmovements'],function(){

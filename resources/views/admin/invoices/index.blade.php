@@ -70,12 +70,7 @@
             </tbody>
         </table>
 
-        <br>
-        <div class="form-group row">
-            <div class="col-md-2">
-                <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
-            </div>
-        </div>
+      
         </div>
     </div>
 </div>
