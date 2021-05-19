@@ -142,11 +142,11 @@ class ProductController extends Controller
    public function edit($id)
    {
         $product = Product::find($id);
+        $segments     = Segment::orderBY('description','asc')->get();
        
-        $segments    = Segment::all();
-        $subsegments  = Subsegment::all();
+        $subsegments  = Subsegment::orderBY('description','asc')->get();
      
-        $unitofmeasures   = UnitOfMeasure::all();
+        $unitofmeasures   = UnitOfMeasure::orderBY('description','asc')->get();
        
         return view('admin.products.edit',compact('product','segments','subsegments','unitofmeasures'));
   
@@ -171,8 +171,8 @@ class ProductController extends Controller
     $data = request()->validate([
         
        
-        'segment_id'         =>'required',
-        'sub_segment_id'         =>'required',
+        'segment'         =>'required',
+        'Subsegment'         =>'required',
         'unit_of_measure_id'         =>'required',
 
 
@@ -192,24 +192,31 @@ class ProductController extends Controller
 
     $var = Product::findOrFail($id);
 
-    $var->segment_id = request('segment_id');
-    $var->subsegment_id= request('sub_segment_id');
+    $var->segment_id = request('segment');
+    $var->subsegment_id= request('Subsegment');
     $var->unit_of_measure_id = request('unit_of_measure_id');
 
     $var->code_comercial = request('code_comercial');
     $var->type = request('type');
     $var->description = request('description');
+
+    $valor_sin_formato_price = str_replace(',', '.', str_replace('.', '',request('price')));
+    $valor_sin_formato_price_buy = str_replace(',', '.', str_replace('.', '',request('price_buy')));
+    $valor_sin_formato_cost_average = str_replace(',', '.', str_replace('.', '',request('cost_average')));
+    $valor_sin_formato_special_impuesto = str_replace(',', '.', str_replace('.', '',request('special_impuesto')));
+       
+
+
+    $var->price = $valor_sin_formato_price;
+    $var->price_buy = $valor_sin_formato_price_buy;
+    $var->cost_average = $valor_sin_formato_cost_average;
     
-    $var->price = request('price');
-    $var->price_buy = request('price_buy');
-   
-    $var->cost_average = request('cost_average');
     $var->photo_product = request('photo_product');
 
     $var->money = request('money');
 
 
-    $var->special_impuesto = request('special_impuesto');
+    $var->special_impuesto = $valor_sin_formato_special_impuesto;
 
     if(request('exento') == null){
         $var->exento = "0";

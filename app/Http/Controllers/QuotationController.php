@@ -128,7 +128,7 @@ public function createquotationvendor($id_client,$id_vendor)
             //$inventories_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
             $inventories_quotations = DB::table('products')
                             ->join('inventories', 'products.id', '=', 'inventories.product_id')
-                            ->join('quotation_products', 'inventories.product_id', '=', 'quotation_products.id_inventory')
+                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                             ->where('quotation_products.id_quotation',$id_quotation)
                             ->select('products.*','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
                             'quotation_products.amount as amount_quotation')
@@ -159,7 +159,7 @@ public function createquotationvendor($id_client,$id_vendor)
             $product = null;
             $inventories_quotations = DB::table('products')
                             ->join('inventories', 'products.id', '=', 'inventories.product_id')
-                            ->join('quotation_products', 'inventories.product_id', '=', 'quotation_products.id_inventory')
+                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                             ->where('quotation_products.id_quotation',$id_quotation)
                             ->select('products.*','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
                             'quotation_products.amount as amount_quotation')

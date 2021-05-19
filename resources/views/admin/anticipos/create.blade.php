@@ -59,7 +59,7 @@
                             <label for="amount" class="col-md-3 col-form-label text-md-right">Monto</label>
 
                             <div class="col-md-6">
-                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="0,00" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" placeholder="0,00" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">

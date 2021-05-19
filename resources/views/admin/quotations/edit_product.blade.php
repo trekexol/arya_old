@@ -23,10 +23,10 @@
                 @csrf()
                     <div class="form-group row">
                         <label for="description" class="col-md-2 col-form-label text-md-right">Código</label>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $quotation_product->inventories['code'] ?? old('code') }}" readonly required autocomplete="code" autofocus>
                         </div>
-                        <label for="description"  class="col-md-2 col-form-label text-md-right">Descripción</label>
+                        <label for="description"  class="col-md-3 col-form-label text-md-right">Descripción</label>
                         <div class="col-md-3">
                             <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $inventory->products['description'] ?? old('description') }}" readonly required autocomplete="description">
                         </div>
@@ -34,25 +34,20 @@
                    
                     <div class="form-group row">
                         <label for="cost" class="col-md-2 col-form-label text-md-right">Precio</label>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price'] }}" readonly required autocomplete="cost">
                         </div>  
-                        <label for="exento" class="col-md-2 col-form-label text-md-right">Exento</label>
+                        <label for="amount" class="col-md-3 col-form-label text-md-right">Cantidad En Inventario</label>
                         <div class="col-md-3">
-                            @if($inventory->products['exento'] == 1)
-                                <input id="exento" type="text" class="form-control @error('exento') is-invalid @enderror" name="exento" value="Si" readonly required autocomplete="exento">
-                       
-                            @else
-                                <input id="exento" type="text" class="form-control @error('exento') is-invalid @enderror" name="exento" value="No" readonly required autocomplete="exento">
-                            @endif
-                         </div>  
+                            <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ $inventory->amount }}" readonly required autocomplete="amount">
+                        </div> 
                     </div>
                     
                     
                                 <div class="form-group row">
                                     <label for="amount" class="col-md-2 col-form-label text-md-right">Cantidad</label>
         
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ number_format($quotation_product->amount, 0, ',', '.') }}" required autocomplete="amount">
         
                                         @error('amount')
@@ -61,25 +56,38 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    <label for="discount" class="col-md-2 col-form-label text-md-right">Descuento</label>
-        
-                                    <div class="col-md-3">
-                                        <input id="discount" type="text" class="form-control @error('discount') is-invalid @enderror" name="discount" value="{{ number_format($quotation_product->discount, 0, ',', '.') }}" required autocomplete="discount">
-        
-                                        @error('discount')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                                    <label for="exento" class="col-md-2 col-form-label text-md-right">Exento</label>
+                                    <div class="col-md-1">
+                                        @if($inventory->products['exento'] == 1)
+                                            <input id="exento" type="text" class="form-control @error('exento') is-invalid @enderror" name="exento" value="Si" readonly required autocomplete="exento">
+                                   
+                                        @else
+                                            <input id="exento" type="text" class="form-control @error('exento') is-invalid @enderror" name="exento" value="No" readonly required autocomplete="exento">
+                                        @endif
+                                     </div>  
+                                     
+                                     <label for="discount" class="col-md-2 col-form-label text-md-right">Descuento</label>
+                    
+                                     <div class="col-md-1">
+                                         <input id="discount" type="text" class="form-control @error('discount') is-invalid @enderror" name="discount" value="{{ number_format($quotation_product->discount, 0, ',', '.') }}" required autocomplete="discount">
+            
+                                         @error('discount')
+                                             <span class="invalid-feedback" role="alert">
+                                                 <strong>{{ $message }}</strong>
+                                             </span>
+                                         @enderror
+                                     </div>
                                 </div>
                                
                                 <br>
                                 <div class="form-group row mb-0">
-                                    <div class="col-md-6 offset-md-4">
+                                    <div class="col-md-3 offset-md-4">
                                         <button type="submit" class="btn btn-info">
                                            Actualizar Producto Cotizado
                                         </button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="{{ route('quotations.create',$quotation_product->id_quotation) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                                     </div>
                                 </div>
                             </form>

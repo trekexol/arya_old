@@ -80,27 +80,27 @@ function addForm() {
     }
     if(number_form == 2){
         $('#formulario2').show()
-        document.getElementById("amount_pay2").value = "0,00";
+        document.getElementById("amount_pay2").value = "";
     }
     if(number_form == 3){
         $('#formulario3').show()
-        document.getElementById("amount_pay3").value = "0,00";
+        document.getElementById("amount_pay3").value = "";
     }
     if(number_form == 4){
         $('#formulario4').show()
-        document.getElementById("amount_pay4").value = "0,00";
+        document.getElementById("amount_pay4").value = "";
     }
     if(number_form == 5){
         $('#formulario5').show()
-        document.getElementById("amount_pay5").value = "0,00";
+        document.getElementById("amount_pay5").value = "";
     }
     if(number_form == 6){
         $('#formulario6').show()
-        document.getElementById("amount_pay6").value = "0,00";
+        document.getElementById("amount_pay6").value = "";
     }
     if(number_form == 7){
         $('#formulario7').show()
-        document.getElementById("amount_pay7").value = "0,00";
+        document.getElementById("amount_pay7").value = "";
     }
         
     document.getElementById("amount_of_payments").value = number_form;
@@ -115,27 +115,27 @@ function deleteForm() {
     }
     if(number_form == 1){
         $('#formulario2').hide()
-        document.getElementById("amount_pay2").value = "0,00";
+        document.getElementById("amount_pay2").value = "";
     }
     if(number_form == 2){
         $('#formulario3').hide()
-        document.getElementById("amount_pay3").value = "0,00";
+        document.getElementById("amount_pay3").value = "";
         
     }if(number_form == 3){
         $('#formulario4').hide()
-        document.getElementById("amount_pay4").value = "0,00";
+        document.getElementById("amount_pay4").value = "";
         
     }if(number_form == 4){
         $('#formulario5').hide()
-        document.getElementById("amount_pay5").value = "0,00";
+        document.getElementById("amount_pay5").value = "";
         
     }if(number_form == 5){
         $('#formulario6').hide()
-        document.getElementById("amount_pay6").value = "0,00";
+        document.getElementById("amount_pay6").value = "";
         
     }if(number_form == 6){
         $('#formulario7').hide()
-        document.getElementById("amount_pay7").value = "0,00";
+        document.getElementById("amount_pay7").value = "";
         
     }
     document.getElementById("amount_of_payments").value = number_form;

@@ -128,7 +128,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="date" class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización:</h6></label>
+                            <label  class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización:</h6></label>
                             <div class="col-md-2 col-form-label text-md-left">
                                 <label for="description" id="total"><h3></h3></label>
                             </div>
@@ -139,8 +139,9 @@
 
                             <div class="col-md-2">
                                 <select class="form-control" name="coin" id="coin">
-                                    <option value="Bolivares">Bolívares</option>
                                     <option value="Dolares">Dolares</option>
+                                    <option value="Bolivares">Bolívares</option>
+                                    
                                     
                                 </select>
                             </div>
@@ -257,7 +258,7 @@
                                         @if (empty($inventories_quotations))
                                         @else
                                         <?php
-                                            $suma = 0;
+                                            $suma = 0.00;
                                         ?>
                                             @foreach ($inventories_quotations as $var)
 
@@ -330,6 +331,7 @@
             $("#discount_product").mask('000', { reverse: true });
             
         });
+        
         $(document).ready(function () {
             $("#amount_product").mask('00000', { reverse: true });
             
@@ -340,10 +342,14 @@
             "order": []
         });
 
-        document.querySelector('#total').innerText = {{number_format($suma ?? 0, 2, ',', '.')}};
+       // document.querySelector('#total').innerText = {{number_format($suma, 2, ',', '.')}};
+       
+        document.querySelector('#total').innerText = {{$suma * 100}};
 
-
-
+        $(document).ready(function () {
+            $("#total").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
 
     </script> 
 
@@ -362,7 +368,7 @@
 
     function deliveryNoteSend() {
        
-        window.location = "{{route('quotations.createdeliverynote', [$quotation->id,''])}}"+"/"+coin;
+       window.location = "{{route('quotations.createdeliverynote', [$quotation->id,''])}}"+"/"+coin;
                           
     }
 

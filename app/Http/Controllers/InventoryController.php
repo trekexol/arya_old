@@ -38,7 +38,7 @@ class InventoryController extends Controller
     public function selectproduct()
     {
  
-         $products    = Product::all();
+         $products    = Product::orderBy('description','asc')->get();
  
          return view('admin.inventories.selectproduct',compact('products'));
     }
@@ -85,6 +85,39 @@ class InventoryController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
+
+    public function store(Request $request)
+    {
+   
+    $data = request()->validate([
+        
+        'product_id'    =>'required',
+        'code'          =>'required',
+        'amount'        =>'required',
+        
+    ]);
+    $var = new Inventory;
+    
+    $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+
+    $var->amount = $valor_sin_formato_amount;
+
+    $var->product_id = request('product_id');
+
+    $var->code = request('code');
+
+    $var->status = "1";
+       
+    $var->save();
+    
+    return redirect('/inventories')->withSuccess('El inventario del producto: '.$var->products['description'].' fue registrado Exitosamente!');
+   
+
+    
+    }
+
+
+
    public function store_increase_inventory(Request $request)
     {
    

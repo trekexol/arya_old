@@ -21,7 +21,7 @@ class CreateAnticiposTable extends Migration
 
             $table->date('date');
             $table->decimal('amount',16,2);
-            $table->integer('reference')->nullable();
+            $table->string('reference',20)->nullable();
             
            
             $table->string('status',1);

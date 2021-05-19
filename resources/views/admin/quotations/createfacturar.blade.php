@@ -27,23 +27,25 @@
         
             <div class="card" style="width: 70rem;" >
                 <div class="card-header" ><h3>Facturar</h3></div>
-                
+                <form method="POST" action="{{ route('quotations.storefacturacredit') }}" enctype="multipart/form-data">
+                    @csrf   
                 <div class="card-body" >
-                        <div class="form-group row">
-                            <label for="date_quotation" class="col-md-2 col-form-label text-md-right">CI/Rif Cliente:</label>
-                            <div class="col-md-4">
-                                <input id="date_quotation" type="text" class="form-control @error('date_quotation') is-invalid @enderror" name="date_quotation" value="{{ number_format($quotation->clients['cedula_rif'], 0, ',', '.')  ?? '' }}" readonly required autocomplete="date_quotation">
 
-                                @error('date_quotation')
+                        <div class="form-group row">
+                            <label for="cedula_rif" class="col-md-2 col-form-label text-md-right">CI/Rif Cliente:</label>
+                            <div class="col-md-4">
+                                <input id="cedula_rif" type="text" class="form-control @error('cedula_rif') is-invalid @enderror" name="cedula_rif" value="{{ number_format($quotation->clients['cedula_rif'], 0, ',', '.')  ?? '' }}" readonly required autocomplete="cedula_rif">
+
+                                @error('cedula_rif')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <label for="client" class="col-md-2 col-form-label text-md-right">N° de Control/Serie:</label>
+                            <label for="serie" class="col-md-2 col-form-label text-md-right">N° de Control/Serie:</label>
                             <div class="col-md-3">
-                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $quotation->serie ?? '' }}" readonly required autocomplete="client">
-                                @error('client')
+                                <input id="serie" type="text" class="form-control @error('serie') is-invalid @enderror" name="serie" value="{{ $quotation->serie ?? '' }}" readonly required autocomplete="serie">
+                                @error('serie')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -74,9 +76,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="iva_amounts" class="col-md-2 col-form-label text-md-right">Monto de Iva</label>
+                            <label for="iva_amount" class="col-md-2 col-form-label text-md-right">Monto de Iva</label>
                             <div class="col-md-4">
-                                <input id="iva_amounts" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount"  readonly required autocomplete="iva_amount"> 
+                                <input id="iva_amount" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount"  readonly required autocomplete="iva_amount"> 
                                 
                                 @error('iva_amount')
                                     <span class="invalid-feedback" role="alert">
@@ -156,8 +158,7 @@
                                 @enderror
                             </div>
                         </div>
-            <form method="POST" action="{{ route('quotations.storefacturacredit') }}" enctype="multipart/form-data">
-                @csrf  
+             
                         <input type="hidden" name="id_quotation" value="{{$quotation->id}}" readonly>
 
                         <div class="form-group row">
@@ -212,11 +213,13 @@
                         <input type="hidden" id="base_imponible_form" name="base_imponible_form"  readonly>
 
                         <!--Total del pago que se va a realizar-->
-                        <input type="hidden" id="sub_total_form" name="sub_total_form"  readonly>
+                        <input type="hidden" id="sub_total_form" name="sub_total_form" value="{{ $quotation->total_factura }}" readonly>
 
+                      
 
                         <!--Porcentaje de iva aplicado que se va a realizar-->
                         <input type="hidden" id="iva_form" name="iva_form"  readonly>
+                        <input type="hidden" id="iva_amount_form" name="iva_amount_form"  readonly>
 
                         <!--Anticipo aplicado que se va a realizar-->
                         <input type="hidden" id="anticipo_form" name="anticipo_form"  readonly>
@@ -243,7 +246,7 @@
                                         <option value="1">Cheque</option>
                                         <option value="2">Contado</option>
                                         <option value="3">Contra Anticipo</option>
-                                        <option value="4">Crédito</option>
+                                        
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
@@ -295,10 +298,10 @@
                                     <a id="btn_agregar" class="btn btn-info btn-circle" onclick="addForm()" title="Agregar"><i class="fa fa-plus"></i></a>  
                                 </div>
                         </div>
-                        <div id="formulario2" class="form-group row">
+                        <div id="formulario2" class="form-group row" style="display:none;">
                                 <label for="amount_pay2s" class="col-md-2 col-form-label text-md-right">Forma de Pago 2:</label>
                                 <div class="col-md-3">
-                                    <input id="amount_pay2" type="text" class="form-control @error('amount_pay2') is-invalid @enderror" value="0,00" name="amount_pay2" placeholder="Monto del Pago"  autocomplete="amount_pay2"> 
+                                    <input id="amount_pay2" type="text" class="form-control @error('amount_pay2') is-invalid @enderror" placeholder="0,00" name="amount_pay2"   autocomplete="amount_pay2"> 
                             
                                     @error('amount_pay2')
                                         <span class="invalid-feedback" role="alert">
@@ -313,7 +316,7 @@
                                         <option value="1">Cheque</option>
                                         <option value="2">Contado</option>
                                         <option value="3">Contra Anticipo</option>
-                                        <option value="4">Crédito</option>
+                                        
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
@@ -367,10 +370,10 @@
                                 
                         </div>
                        
-                        <div id="formulario3" class="form-group row">
+                        <div id="formulario3" class="form-group row" style="display:none;">
                             <label for="amount_pay3s" class="col-md-2 col-form-label text-md-right">Forma de Pago 3:</label>
                             <div class="col-md-3">
-                                <input id="amount_pay3" type="text" class="form-control @error('amount_pay3') is-invalid @enderror" value="0,00" name="amount_pay3" placeholder="Monto del Pago"  autocomplete="amount_pay3"> 
+                                <input id="amount_pay3" type="text" class="form-control @error('amount_pay3') is-invalid @enderror" placeholder="0,00" name="amount_pay3" placeholder="Monto del Pago"  autocomplete="amount_pay3"> 
                         
                                 @error('amount_pay3')
                                     <span class="invalid-feedback" role="alert">
@@ -385,7 +388,7 @@
                                     <option value="1">Cheque</option>
                                     <option value="2">Contado</option>
                                     <option value="3">Contra Anticipo</option>
-                                    <option value="4">Crédito</option>
+                                    
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
@@ -438,10 +441,10 @@
                             </div>
                             
                         </div>
-                        <div id="formulario4" class="form-group row">
+                        <div id="formulario4" class="form-group row" style="display:none;">
                             <label for="amount_pay4s" class="col-md-2 col-form-label text-md-right">Forma de Pago 4:</label>
                             <div class="col-md-3">
-                                <input id="amount_pay4" type="text" class="form-control @error('amount_pay4') is-invalid @enderror" value="0,00" name="amount_pay4" placeholder="Monto del Pago"  autocomplete="amount_pay4"> 
+                                <input id="amount_pay4" type="text" class="form-control @error('amount_pay4') is-invalid @enderror" placeholder="0,00" name="amount_pay4" placeholder="Monto del Pago"  autocomplete="amount_pay4"> 
                         
                                 @error('amount_pay4')
                                     <span class="invalid-feedback" role="alert">
@@ -456,7 +459,7 @@
                                     <option value="1">Cheque</option>
                                     <option value="2">Contado</option>
                                     <option value="3">Contra Anticipo</option>
-                                    <option value="4">Crédito</option>
+                                    
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
@@ -509,10 +512,10 @@
                             </div>
                             
                         </div>
-                        <div id="formulario5" class="form-group row">
+                        <div id="formulario5" class="form-group row" style="display:none;">
                             <label for="amount_pay5s" class="col-md-2 col-form-label text-md-right">Forma de Pago 5:</label>
                             <div class="col-md-3">
-                                <input id="amount_pay5" type="text" class="form-control @error('amount_pay5') is-invalid @enderror" value="0,00" name="amount_pay5" placeholder="Monto del Pago"  autocomplete="amount_pay5"> 
+                                <input id="amount_pay5" type="text" class="form-control @error('amount_pay5') is-invalid @enderror" placeholder="0,00" name="amount_pay5" placeholder="Monto del Pago"  autocomplete="amount_pay5"> 
                         
                                 @error('amount_pay5')
                                     <span class="invalid-feedback" role="alert">
@@ -527,7 +530,7 @@
                                     <option value="1">Cheque</option>
                                     <option value="2">Contado</option>
                                     <option value="3">Contra Anticipo</option>
-                                    <option value="4">Crédito</option>
+                                    
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
@@ -580,10 +583,10 @@
                             </div>
                             
                         </div>
-                        <div id="formulario6" class="form-group row">
+                        <div id="formulario6" class="form-group row" style="display:none;">
                             <label for="amount_pay6s" class="col-md-2 col-form-label text-md-right">Forma de Pago 6:</label>
                             <div class="col-md-3">
-                                <input id="amount_pay6" type="text" class="form-control @error('amount_pay6') is-invalid @enderror" value="0,00" name="amount_pay6" placeholder="Monto del Pago"  autocomplete="amount_pay6"> 
+                                <input id="amount_pay6" type="text" class="form-control @error('amount_pay6') is-invalid @enderror" placeholder="0,00" name="amount_pay6" placeholder="Monto del Pago"  autocomplete="amount_pay6"> 
                         
                                 @error('amount_pay6')
                                     <span class="invalid-feedback" role="alert">
@@ -598,7 +601,7 @@
                                     <option value="1">Cheque</option>
                                     <option value="2">Contado</option>
                                     <option value="3">Contra Anticipo</option>
-                                    <option value="4">Crédito</option>
+                                    
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
@@ -651,10 +654,10 @@
                             </div>
                             
                         </div>
-                        <div id="formulario7" class="form-group row">
+                        <div id="formulario7" class="form-group row" style="display:none;">
                             <label for="amount_pay7s" class="col-md-2 col-form-label text-md-right">Forma de Pago 7:</label>
                             <div class="col-md-3">
-                                <input id="amount_pay7" type="text" class="form-control @error('amount_pay7') is-invalid @enderror" value="0,00" name="amount_pay7" placeholder="Monto del Pago"  autocomplete="amount_pay7"> 
+                                <input id="amount_pay7" type="text" class="form-control @error('amount_pay7') is-invalid @enderror" placeholder="0,00" name="amount_pay7" placeholder="Monto del Pago"  autocomplete="amount_pay7"> 
                         
                                 @error('amount_pay7')
                                     <span class="invalid-feedback" role="alert">
@@ -669,7 +672,7 @@
                                     <option value="1">Cheque</option>
                                     <option value="2">Contado</option>
                                     <option value="3">Contra Anticipo</option>
-                                    <option value="4">Crédito</option>
+                                    
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
@@ -731,7 +734,7 @@
                                     Guardar Factura
                                  </button>
                             </div>
-                          <div class="col-md-2">
+                            <div class="col-md-2">
                                 <a href="{{ route('quotations.create',$quotation->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
@@ -761,9 +764,15 @@
                 switchStatus = $(this).is(':checked');
                 $("#credit").show();
                 $("#formulario1").hide();
+                $("#formulario2").hide();
+                $("#formulario3").hide();
+                $("#formulario4").hide();
+                $("#formulario5").hide();
+                $("#formulario6").hide();
+                $("#formulario7").hide();
                 $("#formenviarcredito").show();
                 $("#enviarpagos").hide();
-                
+                number_form = 1; 
             }
             else {
             switchStatus = $(this).is(':checked');
@@ -815,7 +824,7 @@
 
                 var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
 
-                document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+                //document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
                 /*-----------------------------------*/
 
 
@@ -831,7 +840,7 @@
 
                
 
-                document.getElementById("iva_amounts").value = iva_format;
+                document.getElementById("iva_amount").value = iva_format;
 
 
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
@@ -869,6 +878,8 @@
 
                 document.getElementById("iva_form").value =  inputIva;
 
+                document.getElementById("iva_amount_form").value = document.getElementById("iva_amount").value;
+               
                 
             }        
                 
@@ -906,7 +917,7 @@
 
                 var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
 
-                document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+                //document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
                 /*-----------------------------------*/
 
 
@@ -919,7 +930,7 @@
 
 
 
-                document.getElementById("iva_amounts").value = iva_format;
+                document.getElementById("iva_amount").value = iva_format;
 
 
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
@@ -956,6 +967,7 @@
 
                 document.getElementById("iva_form").value =  inputIva;
               
+                document.getElementById("iva_amount_form").value = document.getElementById("iva_amount").value;
                
             });
 
@@ -994,7 +1006,7 @@
 
                 var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
 
-                document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+                //document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
                 /*-----------------------------------*/
 
 
@@ -1010,7 +1022,7 @@
 
 
 
-                document.getElementById("iva_amounts").value = iva_format;
+                document.getElementById("iva_amount").value = iva_format;
 
 
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
@@ -1046,6 +1058,9 @@
                 document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
 
                 document.getElementById("iva_form").value =  inputIva;
+
+                document.getElementById("iva_amount_form").value = document.getElementById("iva_amount").value;
+               
 
                 
             });

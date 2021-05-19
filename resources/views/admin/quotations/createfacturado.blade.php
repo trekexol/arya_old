@@ -152,6 +152,12 @@
                                     </span>
                                 @enderror
                             </div>
+                            @if (isset($quotation->credit_days))
+                                <label for="total_pays" class="col-md-2 col-form-label text-md-right">Dias de Crédito</label>
+                                <div class="col-md-1">
+                                    <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" value="{{ $quotation->credit_days ?? '' }}" readonly autocomplete="credit"> 
+                                </div>
+                            @endif
                             
                         </div>
            
@@ -164,9 +170,11 @@
                             <div class="col-md-4">
                                 <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
                             </div>
+                            @if ($quotation->status == "C")
                             <div class="col-md-3">
                                 <a href="{{ route('invoices.movement',$quotation->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
+                            @endif
                             <div class="col-md-2">
                                 <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
                             </div>

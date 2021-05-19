@@ -37,14 +37,13 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0" >
             <thead>
             <tr> 
-                <th><i class="fas fa-cog"></i></th>
+                <th>Fecha</th>
+                <th>Nº</th>
                 <th>Cliente</th>
-                <th>Vendedor</th>
-                <th>Transporte</th>
-                <th>Fecha de Cotización</th>
-                <th>Fecha de Facturación</th>
-               
-               
+                <th>Monto</th>
+                <th>Iva</th>
+                <th>Monto Con Iva</th>
+                <th></th>
             </tr>
             </thead>
             
@@ -53,16 +52,21 @@
                 @else  
                     @foreach ($quotations as $quotation)
                         <tr>
-                            <td >
-                            <a href="{{ route('quotations.createfacturado',$quotation->id) }}" title="Editar"><i class="fa fa-check"></i></a>
+                            <td>{{$quotation->date_billing}}</td>
+                            <td class="text-center">
+                                <a href="{{ route('quotations.createfacturado',$quotation->id) }}" title="Ver Factura" class="font-weight-bold text-dark">{{ $quotation->id }}</a>
                             </td>
                             <td>{{ $quotation->clients['name']}}</td>
-                            <td>{{ $quotation->vendors['name']}}</td>
-                            <td>{{ $quotation->transports['placa']}}</td>
-                            <td>{{$quotation->date_quotation}}</td>
-                            <td>{{$quotation->date_billing}}</td>
-                           
-                           
+                            <td class="text-right">{{ $quotation->amount}}</td>
+                            <td class="text-right">{{ $quotation->amount_iva}}</td>
+                            <td class="text-right">{{ $quotation->amount_with_iva}}</td>
+                            @if ($quotation->status == "C")
+                                <td class="text-center text-success font-weight-bold">Cobrado</td>
+                            @else
+                            <td class="text-center">
+                                <a href="{{ route('quotations.createfacturar',$quotation->id) }}" title="Ver Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
+                            </td>
+                            @endif
                             
                         </tr>     
                     @endforeach   
@@ -75,4 +79,13 @@
     </div>
 </div>
   
+@endsection
+@section('javascript')
+
+<script>
+    $('#dataTable').dataTable( {
+  "ordering": false
+} );
+</script>
+    
 @endsection
