@@ -164,139 +164,139 @@ class FacturarController extends Controller
         $quotation = Quotation::findOrFail(request('id_quotation'));
 
      
+        $payment_type = request('payment_type');
+        if($come_pay >= 1){
 
-     if($come_pay >= 1){
+            /*-------------PAGO NUMERO 1----------------------*/
 
-          /*-------------PAGO NUMERO 1----------------------*/
+            $var = new QuotationPayment();
 
-          $var = new QuotationPayment();
-
-          $amount_pay = request('amount_pay');
-  
-          if(isset($amount_pay)){
-              
-              $valor_sin_formato_amount_pay = str_replace(',', '.', str_replace('.', '', $amount_pay));
-          }else{
-              return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar un monto de pago 1!');
-          }
-              
-  
-          $account_bank = request('account_bank');
-          $account_efectivo = request('account_efectivo');
-          $account_punto_de_venta = request('account_punto_de_venta');
-  
-          $credit_days = request('credit_days');
-  
-          $payment_type = request('payment_type');
-  
-          $reference = request('reference');
-  
-          if($valor_sin_formato_amount_pay != 0){
-  
-              if($payment_type != 0){
-  
-                  $var->id_quotation = request('id_quotation');
-  
-                  //SELECCIONA LA CUENTA QUE SE REGISTRA EN EL TIPO DE PAGO
-                  if($payment_type == 1 || $payment_type == 11 || $payment_type == 5 ){
-                      //CUENTAS BANCARIAS
-                      if(($account_bank != 0)){
-                          if(isset($reference)){
-  
-                              $var->id_account = $account_bank;
-  
-                              $var->reference = $reference;
-  
-                          }else{
-                              return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar una Referencia Bancaria!');
-                          }
-                      }else{
-                          return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar una Cuenta Bancaria!');
-                      }
-                  }
-                  if($payment_type == 4){
-                      //DIAS DE CREDITO
-                      if(isset($credit_days)){
-  
-                        $var->credit_days = $credit_days;
-  
-                      }else{
-                          return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar los Dias de Credito!');
-                      }
-                  }
-  
-                  if($payment_type == 6){
-                      //DIAS DE CREDITO
-                      if(($account_efectivo != 0)){
-  
-                          $var->id_account = $account_efectivo;
-  
-                      }else{
-                          return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar una Cuenta de Efectivo!');
-                      }
-                  }
-  
-                  if($payment_type == 9 || $payment_type == 10){
-                       //CUENTAS PUNTO DE VENTA
-                      if(($account_punto_de_venta != 0)){
-                          $var->id_account = $account_punto_de_venta;
-                      }else{
-                          return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar una Cuenta de Punto de Venta!');
-                      }
-                  }
-  
-                      
-             
-  
-                      $var->payment_type = request('payment_type');
-                      $var->amount = $valor_sin_formato_amount_pay;
-                      
-                      
-                      $var->status =  1;
-                  
-                      $total_pay += $valor_sin_formato_amount_pay;
-  
-                      $validate_boolean1 = true;
-  
-                  
-              }else{
-                  return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar un Tipo de Pago 1!');
-              }
-  
-             
-          }else{
-                  return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('El pago debe ser distinto de Cero!');
-              }
-      /*--------------------------------------------*/
-     }   
-
+            $amount_pay = request('amount_pay');
+    
+            if(isset($amount_pay)){
+                
+                $valor_sin_formato_amount_pay = str_replace(',', '.', str_replace('.', '', $amount_pay));
+            }else{
+                return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar un monto de pago 1!');
+            }
+                
+    
+            $account_bank = request('account_bank');
+            $account_efectivo = request('account_efectivo');
+            $account_punto_de_venta = request('account_punto_de_venta');
+    
+            $credit_days = request('credit_days');
+    
+            
+    
+            $reference = request('reference');
+    
+            if($valor_sin_formato_amount_pay != 0){
+    
+                if($payment_type != 0){
+    
+                    $var->id_quotation = request('id_quotation');
+    
+                    //SELECCIONA LA CUENTA QUE SE REGISTRA EN EL TIPO DE PAGO
+                    if($payment_type == 1 || $payment_type == 11 || $payment_type == 5 ){
+                        //CUENTAS BANCARIAS
+                        if(($account_bank != 0)){
+                            if(isset($reference)){
+    
+                                $var->id_account = $account_bank;
+    
+                                $var->reference = $reference;
+    
+                            }else{
+                                return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar una Referencia Bancaria!');
+                            }
+                        }else{
+                            return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar una Cuenta Bancaria!');
+                        }
+                    }
+                    if($payment_type == 4){
+                        //DIAS DE CREDITO
+                        if(isset($credit_days)){
+    
+                            $var->credit_days = $credit_days;
+    
+                        }else{
+                            return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar los Dias de Credito!');
+                        }
+                    }
+    
+                    if($payment_type == 6){
+                        //DIAS DE CREDITO
+                        if(($account_efectivo != 0)){
+    
+                            $var->id_account = $account_efectivo;
+    
+                        }else{
+                            return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar una Cuenta de Efectivo!');
+                        }
+                    }
+    
+                    if($payment_type == 9 || $payment_type == 10){
+                        //CUENTAS PUNTO DE VENTA
+                        if(($account_punto_de_venta != 0)){
+                            $var->id_account = $account_punto_de_venta;
+                        }else{
+                            return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar una Cuenta de Punto de Venta!');
+                        }
+                    }
+    
+                        
+                
+    
+                        $var->payment_type = request('payment_type');
+                        $var->amount = $valor_sin_formato_amount_pay;
+                        
+                        
+                        $var->status =  1;
+                    
+                        $total_pay += $valor_sin_formato_amount_pay;
+    
+                        $validate_boolean1 = true;
+    
+                    
+                }else{
+                    return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe seleccionar un Tipo de Pago 1!');
+                }
+    
+                
+            }else{
+                    return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('El pago debe ser distinto de Cero!');
+                }
+            /*--------------------------------------------*/
+        }   
+        $payment_type2 = request('payment_type2');
         if($come_pay >= 2){
 
-        /*-------------PAGO NUMERO 2----------------------*/
+            /*-------------PAGO NUMERO 2----------------------*/
 
-        $var2 = new QuotationPayment();
+            $var2 = new QuotationPayment();
 
-        $amount_pay2 = request('amount_pay2');
+            $amount_pay2 = request('amount_pay2');
 
-        if(isset($amount_pay2)){
+            if(isset($amount_pay2)){
+                
+                $valor_sin_formato_amount_pay2 = str_replace(',', '.', str_replace('.', '', $amount_pay2));
+            }else{
+                return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar un monto de pago 2!');
+            }
+                
+
+            $account_bank2 = request('account_bank2');
+            $account_efectivo2 = request('account_efectivo2');
+            $account_punto_de_venta2 = request('account_punto_de_venta2');
+
+            $credit_days2 = request('credit_days2');
+
             
-            $valor_sin_formato_amount_pay2 = str_replace(',', '.', str_replace('.', '', $amount_pay2));
-        }else{
-            return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Debe ingresar un monto de pago 2!');
-        }
-            
 
-        $account_bank2 = request('account_bank2');
-        $account_efectivo2 = request('account_efectivo2');
-        $account_punto_de_venta2 = request('account_punto_de_venta2');
+            $reference2 = request('reference2');
 
-        $credit_days2 = request('credit_days2');
-
-        $payment_type2 = request('payment_type2');
-
-        $reference2 = request('reference2');
-
-        if($valor_sin_formato_amount_pay2 != 0){
+            if($valor_sin_formato_amount_pay2 != 0){
 
             if($payment_type2 != 0){
 
@@ -369,12 +369,12 @@ class FacturarController extends Controller
             }
 
             
-        }else{
+            }else{
                 return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('El pago 2 debe ser distinto de Cero!');
             }
             /*--------------------------------------------*/
         } 
-            
+        $payment_type3 = request('payment_type3');   
         if($come_pay >= 3){
 
                 /*-------------PAGO NUMERO 3----------------------*/
@@ -397,7 +397,7 @@ class FacturarController extends Controller
 
                 $credit_days3 = request('credit_days3');
 
-                $payment_type3 = request('payment_type3');
+               
 
                 $reference3 = request('reference3');
 
@@ -479,7 +479,7 @@ class FacturarController extends Controller
                     }
                 /*--------------------------------------------*/
         }
-            
+        $payment_type4 = request('payment_type4');
         if($come_pay >= 4){
 
                 /*-------------PAGO NUMERO 4----------------------*/
@@ -502,7 +502,7 @@ class FacturarController extends Controller
 
                 $credit_days4 = request('credit_days4');
 
-                $payment_type4 = request('payment_type4');
+               
 
                 $reference4 = request('reference4');
 
@@ -584,6 +584,7 @@ class FacturarController extends Controller
                     }
                 /*--------------------------------------------*/
         } 
+        $payment_type5 = request('payment_type5');
         if($come_pay >= 5){
 
             /*-------------PAGO NUMERO 5----------------------*/
@@ -606,7 +607,7 @@ class FacturarController extends Controller
 
             $credit_days5 = request('credit_days5');
 
-            $payment_type5 = request('payment_type5');
+           
 
             $reference5 = request('reference5');
 
@@ -688,6 +689,7 @@ class FacturarController extends Controller
                 }
             /*--------------------------------------------*/
         } 
+        $payment_type6 = request('payment_type6');
         if($come_pay >= 6){
 
             /*-------------PAGO NUMERO 6----------------------*/
@@ -710,7 +712,7 @@ class FacturarController extends Controller
 
             $credit_days6 = request('credit_days6');
 
-            $payment_type6 = request('payment_type6');
+            
 
             $reference6 = request('reference6');
 
@@ -792,6 +794,7 @@ class FacturarController extends Controller
                 }
             /*--------------------------------------------*/
         } 
+        $payment_type7 = request('payment_type7');
         if($come_pay >= 7){
 
             /*-------------PAGO NUMERO 7----------------------*/
@@ -814,7 +817,7 @@ class FacturarController extends Controller
 
             $credit_days7 = request('credit_days7');
 
-            $payment_type7 = request('payment_type7');
+            
 
             $reference7 = request('reference7');
 
@@ -926,18 +929,9 @@ class FacturarController extends Controller
             if($validate_boolean1 == true){
                 $var->save();
 
-                //Cuentas por Cobrar Clientes
-
-                //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
-                if(isset($var->id_account)){
-                    $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
-                } 
-
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
-            
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
-                }
+              
+                    $this->add_pay_movement($payment_type,$header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
+                
 
                 //LE PONEMOS STATUS C, DE COBRADO
                 $quotation->status = "C";
@@ -945,91 +939,49 @@ class FacturarController extends Controller
             
             if($validate_boolean2 == true){
                 $var2->save();
-
-                 //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
-                 if(isset($var->id_account)){
-                    $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
-                } 
-
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
-            
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
-                }
+               
+                $this->add_pay_movement($payment_type2,$header_voucher->id,$var2->id_account,$quotation->id,$user_id,$var2->amount,0);
+                
             }
             
             if($validate_boolean3 == true){
                 $var3->save();
 
-                 //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
-                 if(isset($var->id_account)){
-                    $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
-                } 
-
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
+                $this->add_pay_movement($payment_type3,$header_voucher->id,$var3->id_account,$quotation->id,$user_id,$var3->amount,0);
             
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
-                }
+                
             }
             if($validate_boolean4 == true){
                 $var4->save();
 
-                 //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
-                 if(isset($var->id_account)){
-                    $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
-                } 
-
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
+                $this->add_pay_movement($payment_type4,$header_voucher->id,$var4->id_account,$quotation->id,$user_id,$var4->amount,0);
             
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
-                }
             }
             if($validate_boolean5 == true){
                 $var5->save();
 
-                 //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
-                 if(isset($var->id_account)){
-                    $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
-                } 
-
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
-            
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
-                }
+                $this->add_pay_movement($payment_type5,$header_voucher->id,$var5->id_account,$quotation->id,$user_id,$var5->amount,0);
+             
             }
             if($validate_boolean6 == true){
                 $var6->save();
 
-                 //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
-                 if(isset($var->id_account)){
-                    $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
-                } 
-
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
+                $this->add_pay_movement($payment_type6,$header_voucher->id,$var6->id_account,$quotation->id,$user_id,$var6->amount,0);
             
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
-                }
             }
             if($validate_boolean7 == true){
                 $var7->save();
 
-                 //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
-                 if(isset($var->id_account)){
-                    $this->add_movement($header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
-                } 
-
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
+                $this->add_pay_movement($payment_type7,$header_voucher->id,$var7->id_account,$quotation->id,$user_id,$var7->amount,0);
             
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$var->amount);
-                }
             }
 
-
+            //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
+            $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
+            
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$total_pay_form);
+            }
             
 
             $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible_form')));
@@ -1265,6 +1217,51 @@ class FacturarController extends Controller
 
 
 
+    public function add_pay_movement($payment_type,$header_voucher,$id_account,$quotation_id,$user_id,$amount_debe,$amount_haber){
+
+
+            //Cuentas por Cobrar Clientes
+
+                //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
+                if(isset($id_account)){
+                    $this->add_movement($header_voucher,$id_account,$quotation_id,$user_id,$amount_debe,0);
+                
+                }//SIN DETERMINAR
+                else if($payment_type == 7){
+                    
+                    $account_sin_determinar = Account::where('description', 'like', 'Sin determinar')->first(); 
+            
+                    if(isset($account_sin_determinar)){
+                        $this->add_movement($header_voucher,$account_sin_determinar->id,$quotation_id,$user_id,$amount_debe,0);
+                    }
+                }//PAGO DE CONTADO
+                else if($payment_type == 2){
+                    
+                    $account_contado = Account::where('description', 'like', 'Caja Chica')->first(); 
+            
+                    if(isset($account_contado)){
+                        $this->add_movement($header_voucher,$account_contado->id,$quotation_id,$user_id,$amount_debe,0);
+                    }
+                }//CONTRA ANTICIPO
+                else if($payment_type == 2){
+                    
+                    $account_contra_anticipo = Account::where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
+            
+                    if(isset($account_contra_anticipo)){
+                        $this->add_movement($header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
+                    }
+                } 
+                //Tarjeta Corporativa 
+                else if($payment_type == 8){
+                    
+                    $account_contra_anticipo = Account::where('description', 'like', 'Tarjeta Corporativa')->first(); 
+            
+                    if(isset($account_contra_anticipo)){
+                        $this->add_movement($header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
+                    }
+                } 
+
+    }
 
 
 
@@ -1331,4 +1328,74 @@ class FacturarController extends Controller
          } 
          
     }
+
+
+    public function createfacturar_after($id_quotation)
+    {
+         $quotation = null;
+             
+         if(isset($id_quotation)){
+             $quotation = Quotation::find($id_quotation);
+         }
+ 
+         if(isset($quotation)){
+                                                                       
+             $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+
+             $anticipos_sum = Anticipo::where('status',1)->where('id_client',$quotation->id_client)->sum('amount');
+
+             $accounts_bank = DB::table('accounts')->where('code_one', 1)
+                                            ->where('code_two', 1)
+                                            ->where('code_three', 2)
+                                            ->where('code_four', '<>',0)
+                                            ->get();
+             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+                                            ->where('code_two', 1)
+                                            ->where('code_three', 1)
+                                            ->where('code_four', '<>',0)
+                                            ->get();
+             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+                                            ->get();
+
+            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            'quotation_products.amount as amount_quotation')
+                                                            ->get(); 
+
+             $total= 0;
+             $base_imponible= 0;
+
+             foreach($inventories_quotations as $var){
+                 //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
+                //----------------------------- 
+
+                if($var->exento == 0){
+
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+
+                }
+             }
+
+             $quotation->total_factura = $total;
+             $quotation->base_imponible = $base_imponible;
+            
+             $date = Carbon::now();
+             $datenow = $date->format('Y-m-d');    
+
+             
+     
+             return view('admin.quotations.createfacturar_after',compact('quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum'));
+         }else{
+             return redirect('/quotations')->withDanger('La cotizacion no existe');
+         } 
+         
+    }
+   
 }

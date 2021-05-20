@@ -2,6 +2,33 @@
 
 @section('content')
 
+
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link  font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('quotations') }}" role="tab" aria-controls="home" aria-selected="true">Cotizaciones</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('invoices') }}" role="tab" aria-controls="profile" aria-selected="false">Facturas</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('quotations.indexdeliverynote') }}" role="tab" aria-controls="contact" aria-selected="false">Notas De Entrega</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('sales') }}" role="tab" aria-controls="profile" aria-selected="false">Ventas</a>
+      </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('anticipos') }}" role="tab" aria-controls="contact" aria-selected="false">Anticipos Clientes</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('clients') }}" role="tab" aria-controls="profile" aria-selected="false">Clientes</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('vendors') }}" role="tab" aria-controls="contact" aria-selected="false">Vendedores</a>
+    </li>
+  </ul>
+
+
+
 <!-- container-fluid -->
 <div class="container-fluid">
 
@@ -39,26 +66,13 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-                <th>Parroquia</th>
-                <th>Comisión</th>
-                <th>Empleado</th>
-                <th>Usuario</th>
-                <th>Código</th>
-                <th>Cédula o Rif</th>
+             
                 <th>Nombres</th>
                 <th>Apellidos</th>
+                <th>Cédula o Rif</th>
                 <th>Correo Electrónico</th>
                 <th>Teléfono</th>
-                <th>Teléfono 2</th>
-                <th>Comisión</th>
-                <th>Instagram</th>
-                <th>Facebook</th>
-                <th>Twitter</th>
-                <th>Especificación</th>
-                <th>Observación</th>
-                <th>Status</th>
-               
-                <th>Tools</th>
+                <th></th>
             </tr>
             </thead>
             
@@ -68,31 +82,13 @@
                     @foreach ($vendors as $vendor)
                         <tr>
                             
-                            <td>{{$vendor->parroquias['descripcion']}}</td>
-                            <td>{{$vendor->comisions['description']}}</td>
-                            <td>{{$vendor->employees['nombres']}}</td>
-                            <td>{{$vendor->users['name']}}</td>
-                            <td>{{$vendor->code}}</td>
-                            <td>{{$vendor->cedula_rif}}</td>
                             <td>{{$vendor->name}}</td>
                             <td>{{$vendor->surname}}</td>
+                            <td>{{$vendor->cedula_rif}}</td>
                             <td>{{$vendor->email}}</td>
                             <td>{{$vendor->phone}}</td>
-                            <td>{{$vendor->phone2}}</td>
-                            <td>{{$vendor->comision}}</td>
-                            <td>{{$vendor->instagram}}</td>
-                            <td>{{$vendor->facebook}}</td>
-                            <td>{{$vendor->twitter}}</td>
-                            <td>{{$vendor->especification}}</td>
-                            <td>{{$vendor->observation}}</td>
                            
-                            
-                            @if($vendor->status == 1)
-                                <td>Activo</td>
-                            @else
-                                <td>Inactivo</td>
-                            @endif
-                            
+                         
                             <td>
                                 <a href="vendors/{{$vendor->id }}/edit" title="Editar"><i class="fa fa-edit"></i></a>
                              </td>

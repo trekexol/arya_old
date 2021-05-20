@@ -123,57 +123,63 @@
                             <td style="text-align:right; color:black; ">{{$account->level}}</td>
                             <td style="text-align:right; color:black; ">{{$account->type}}</td>
                             
-                            <td style="text-align:right; color:black; ">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
                            @if ($account->status == "M")
-                            <td style="text-align:right; color:black; ">
-                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
+                            <td style="text-align:right; color:black; font-weight: bold;">
+                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
                        
                             </td>
                             <td style="text-align:right; color:black; ">
-                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
                             </td>
                            @else
-                            <td style="text-align:right; color:black;">{{number_format($account->debe, 2, ',', '.')}}</td>
-                            <td style="text-align:right; color:black;">{{number_format($account->haber, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->haber, 2, ',', '.')}}</td>
                            @endif
                             
 
                             
-                            <td style="text-align:right; color:black; ">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
                             
                             
-                            <td style="text-align:right; color:black; ">  
-                                <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus"></i></a>
-                            </td>
+                                <td style="text-align:right; color:black; ">  
+                                    @if($account->code_four == 0)
+                                    <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
+                                    @endif
+                                </td>
                         </tr>   
 
                         @else
                             <?php $intercalar = true; ?>
 
                             <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
-                            <td style="text-align:right; color:black;">{{$account->description}}</td>
-                            <td style="text-align:right; color:black;">{{$account->level}}</td>
-                            <td style="text-align:right; color:black;">{{$account->type}}</td>
+                            <td style="text-align:right; color:black; ">{{$account->description}}</td>
+                            <td style="text-align:right; color:black; ">{{$account->level}}</td>
+                            <td style="text-align:right; color:black; ">{{$account->type}}</td>
                             
-                            <td style="text-align:right; color:black;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
                             @if ($account->status == "M")
-                                <td style="text-align:right; color:black; ">
-                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
+                                <td style="text-align:right; color:black; font-weight: bold;">
+                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;   " title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
                         
                                 </td>
                                 <td style="text-align:right; color:black; ">
-                                    <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                                    <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;   " title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
                                 </td>
                             @else
-                                <td style="text-align:right; color:black;">{{number_format($account->debe, 2, ',', '.')}}</td>
-                                <td style="text-align:right; color:black;">{{number_format($account->haber, 2, ',', '.')}}</td>
+                                <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}}</td>
+                                <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->haber, 2, ',', '.')}}</td>
                             @endif
 
                             <td style="text-align:right; color:black;">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
                             
+                            
                                 <td style="text-align:right; color:black;">
-                                <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus"></i></a>
-                             </td>
+                                    @if($account->code_four == 0)
+                                    <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
+                                    @endif
+                                </td>
+                           
                         </tr>   
                         @endif  
                     @endforeach   

@@ -38,7 +38,7 @@
     <div class="row justify-content-center" >
         <div class="col-md-12" >
             <div class="card" style="width: 70rem;" >
-                <div class="card-header" >Registro de Cotización</div>
+                <div class="card-header" ><h3>Registro de Cotización</h3></div>
 
                 <div class="card-body" >
                    

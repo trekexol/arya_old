@@ -2,6 +2,32 @@
 
 @section('content')
 
+
+
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link  font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('quotations') }}" role="tab" aria-controls="home" aria-selected="true">Cotizaciones</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link  font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('invoices') }}" role="tab" aria-controls="profile" aria-selected="false">Facturas</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('quotations.indexdeliverynote') }}" role="tab" aria-controls="contact" aria-selected="false">Notas De Entrega</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('sales') }}" role="tab" aria-controls="profile" aria-selected="false">Ventas</a>
+      </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('anticipos') }}" role="tab" aria-controls="contact" aria-selected="false">Anticipos Clientes</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('clients') }}" role="tab" aria-controls="profile" aria-selected="false">Clientes</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('vendors') }}" role="tab" aria-controls="contact" aria-selected="false">Vendedores</a>
+    </li>
+  </ul>
+
 <!-- container-fluid -->
 <div class="container-fluid">
 
@@ -23,9 +49,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Clientes</h6>
-    </div>
+   
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">

@@ -168,7 +168,7 @@
                                 <a onclick="pdf();" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
                             <div class="col-md-4">
-                                <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
+                                <a onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
                             </div>
                             @if ($quotation->status == "C")
                             <div class="col-md-3">
@@ -196,6 +196,11 @@
             function pdf() {
                 
                 var nuevaVentana= window.open("{{ route('pdf',$quotation->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+        
+            }
+            function pdf_media() {
+                
+                var nuevaVentana2= window.open("{{ route('pdf.media',$quotation->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
            

@@ -3,18 +3,18 @@
 @section('content')
 
 
-  <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <a class="nav-link active font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('quotations') }}" role="tab" aria-controls="home" aria-selected="true">Cotizaciones</a>
+      <a class="nav-link  font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('quotations') }}" role="tab" aria-controls="home" aria-selected="true">Cotizaciones</a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('invoices') }}" role="tab" aria-controls="profile" aria-selected="false">Facturas</a>
+      <a class="nav-link  font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('invoices') }}" role="tab" aria-controls="profile" aria-selected="false">Facturas</a>
     </li>
     <li class="nav-item" role="presentation">
       <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('quotations.indexdeliverynote') }}" role="tab" aria-controls="contact" aria-selected="false">Notas De Entrega</a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('sales') }}" role="tab" aria-controls="profile" aria-selected="false">Ventas</a>
+        <a class="nav-link active font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('sales') }}" role="tab" aria-controls="profile" aria-selected="false">Ventas</a>
       </li>
     <li class="nav-item" role="presentation">
         <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('anticipos') }}" role="tab" aria-controls="contact" aria-selected="false">Anticipos Clientes</a>
@@ -26,18 +26,19 @@
         <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('vendors') }}" role="tab" aria-controls="contact" aria-selected="false">Vendedores</a>
     </li>
   </ul>
-  
+
+
+
+
 <!-- container-fluid -->
 <div class="container-fluid">
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
       <div class="col-md-6">
-          <h2>Cotizaciones</h2>
+          <h2>Ventas</h2>
       </div>
-      <div class="col-md-6">
-        <a href="{{ route('quotations.createquotation')}}" class="btn btn-primary  float-md-right" role="button" aria-pressed="true">Registrar una Cotización</a>
-      </div>
+      
     </div>
   </div>
   <!-- /.container-fluid -->
@@ -64,41 +65,39 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0" >
             <thead>
             <tr> 
-                <th ></th>
-                <th >N° de Control/Serie</th>
-                <th >Cliente</th>
-                <th >Vendedor</th>
-                <th >Transporte</th>
-                <th >Fecha de Cotización</th>
-              
+                <th class="text-center">Código</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Monto</th>
                
             </tr>
             </thead>
             
             <tbody>
-                @if (empty($quotations))
+                @if (empty($inventories_quotations))
                 @else  
-                    @foreach ($quotations as $quotation)
+                    @foreach ($inventories_quotations as $var)
                         <tr>
-                            <td>
-                            <a href="{{ route('quotations.create',$quotation->id) }}" title="Seleccionar"><i class="fa fa-check" style="color: orange;"></i></a>
-                            </td>
-                            <td>{{$quotation->serie}}</td>
-                            <td>{{ $quotation->clients['name']}}</td>
-                            <td>{{ $quotation->vendors['name']}}</td>
-                            <td>{{ $quotation->transports['placa']}}</td>
-                            <td>{{$quotation->date_quotation}}</td>
+                            <td class="text-center font-weight-bold">{{$var->code}}</td>
+                            <td class="text-center font-weight-bold">{{$var->description}}</td>
+                            <td class="text-center font-weight-bold">{{$var->type}}</td>
+                            <td class="text-right font-weight-bold">{{number_format($var->amount_sales, 2, ',', '.')}}</td>
+                            <td class="text-right font-weight-bold">{{number_format($var->amount_sales * $var->amount, 2, ',', '.')}}</td>
+                            
+                            
                         </tr>     
                     @endforeach   
                 @endif
             </tbody>
         </table>
+
+      
         </div>
     </div>
 </div>
   
 @endsection
-
 @section('javascript')
 
 <script>

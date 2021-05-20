@@ -10,6 +10,7 @@ use App\Quotation;
 use App\QuotationPayment;
 use App\QuotationProduct;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PDFController extends Controller
 {
@@ -31,43 +32,56 @@ class PDFController extends Controller
                 } 
      
              if(isset($quotation)){
-                 $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+
                  $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
 
                  foreach($payment_quotations as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
                  }
-    
-                 $total= 0;
-                 $base_imponible= 0;
-                 $ventas_exentas= 0;
-                 foreach($product_quotations as $var){
-                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
 
-                    $total += ($var->products['price'] * $var->amount) - $percentage; 
+
+                 $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            'quotation_products.amount as amount_quotation')
+                                                            ->get(); 
+
+            
+                $total= 0;
+                $base_imponible= 0;
+                $ventas_exentas= 0;
+                foreach($inventories_quotations as $var){
+                    //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
+                    //----------------------------- 
+
+                    if($var->exento == 0){
+
+                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                        $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+
+                    }
+                    if($var->exento == 1){
     
-                    if($var->products['exento'] == 0){
+                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
     
-                        $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
-    
-                        $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
+                        $ventas_exentas += ($var->price * $var->amount_quotation) - $percentage; 
     
                     }
-                    if($var->products['exento'] == 1){
+                }
     
-                        $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
-    
-                        $ventas_exentas += ($var->products['price'] * $var->amount) - $percentage; 
-    
-                    }
-                 }
+               
     
                  $quotation->sub_total_factura = $total;
                  $quotation->base_imponible = $base_imponible;
                  $quotation->ventas_exentas = $ventas_exentas;
 
                 
-                 $pdf = $pdf->loadView('pdf.factura',compact('quotation','product_quotations','payment_quotations'));
+                 $pdf = $pdf->loadView('pdf.factura',compact('quotation','inventories_quotations','payment_quotations'));
                  return $pdf->stream();
          
                 }else{
@@ -106,39 +120,49 @@ class PDFController extends Controller
                 } 
      
              if(isset($quotation)){
-                 $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
                
-                
-                 $total= 0;
-                 $base_imponible= 0;
-                 $ventas_exentas= 0;
-                 foreach($product_quotations as $var){
-                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+                            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                                            ->select('products.*','quotation_products.discount as discount',
+                                                                            'quotation_products.amount as amount_quotation')
+                                                                            ->get(); 
 
-                    $total += ($var->products['price'] * $var->amount) - $percentage; 
-    
-                    if($var->products['exento'] == 0){
-    
-                        $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
-    
-                        $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
-    
-                    }
-                    if($var->products['exento'] == 1){
-    
-                        $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
-    
-                        $ventas_exentas += ($var->products['price'] * $var->amount) - $percentage; 
-    
-                    }
-                 }
-    
-                 $quotation->sub_total_factura = $total;
-                 $quotation->base_imponible = $base_imponible;
-                 $quotation->ventas_exentas = $ventas_exentas;
+
+                            $total= 0;
+                            $base_imponible= 0;
+                            $ventas_exentas= 0;
+                            foreach($inventories_quotations as $var){
+                            //Se calcula restandole el porcentaje de descuento (discount)
+                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                            $total += ($var->price * $var->amount_quotation) - $percentage;
+                            //----------------------------- 
+
+                            if($var->exento == 0){
+
+                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                            $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+
+                            }
+                            if($var->exento == 1){
+
+                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                            $ventas_exentas += ($var->price * $var->amount_quotation) - $percentage; 
+
+                            }
+                            }
+
+
+
+                            $quotation->sub_total_factura = $total;
+                            $quotation->base_imponible = $base_imponible;
+                            $quotation->ventas_exentas = $ventas_exentas;
 
                 
-                 $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','product_quotations'));
+                 $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','inventories_quotations'));
                  return $pdf->stream();
          
                 }else{
@@ -207,5 +231,82 @@ class PDFController extends Controller
     }
 
 
+    function imprimirFactura_media($id_quotation){
+      
+
+        $pdf = App::make('dompdf.wrapper');
+
+        
+             $quotation = null;
+                 
+             if(isset($id_quotation)){
+                 $quotation = Quotation::where('date_billing', '<>', null)->find($id_quotation);
+              
+                                     
+             }else{
+                return redirect('/invoices')->withDanger('No llega el numero de la factura');
+                } 
+     
+             if(isset($quotation)){
+
+                 $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+
+                 foreach($payment_quotations as $var){
+                    $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                 }
+
+
+                 $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            'quotation_products.amount as amount_quotation')
+                                                            ->get(); 
+
+            
+                $total= 0;
+                $base_imponible= 0;
+                $ventas_exentas= 0;
+                foreach($inventories_quotations as $var){
+                    //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
+                    //----------------------------- 
+
+                    if($var->exento == 0){
+
+                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                        $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+
+                    }
+                    if($var->exento == 1){
+    
+                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+    
+                        $ventas_exentas += ($var->price * $var->amount_quotation) - $percentage; 
+    
+                    }
+                }
+    
+               
+    
+                 $quotation->sub_total_factura = $total;
+                 $quotation->base_imponible = $base_imponible;
+                 $quotation->ventas_exentas = $ventas_exentas;
+
+                
+                 $pdf = $pdf->loadView('pdf.factura_media',compact('quotation','inventories_quotations','payment_quotations'));
+                 return $pdf->stream();
+         
+                }else{
+                 return redirect('/invoices')->withDanger('La factura no existe');
+             } 
+             
+        
+
+        
+    }
 
 }

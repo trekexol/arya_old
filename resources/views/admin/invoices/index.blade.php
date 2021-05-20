@@ -2,6 +2,34 @@
 
 @section('content')
 
+
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link  font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('quotations') }}" role="tab" aria-controls="home" aria-selected="true">Cotizaciones</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('invoices') }}" role="tab" aria-controls="profile" aria-selected="false">Facturas</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('quotations.indexdeliverynote') }}" role="tab" aria-controls="contact" aria-selected="false">Notas De Entrega</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('sales') }}" role="tab" aria-controls="profile" aria-selected="false">Ventas</a>
+      </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('anticipos') }}" role="tab" aria-controls="contact" aria-selected="false">Anticipos Clientes</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('clients') }}" role="tab" aria-controls="profile" aria-selected="false">Clientes</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('vendors') }}" role="tab" aria-controls="contact" aria-selected="false">Vendedores</a>
+    </li>
+  </ul>
+
+
+
+
 <!-- container-fluid -->
 <div class="container-fluid">
 
@@ -52,19 +80,21 @@
                 @else  
                     @foreach ($quotations as $quotation)
                         <tr>
-                            <td>{{$quotation->date_billing}}</td>
-                            <td class="text-center">
+                            <td class="font-weight-bold">{{$quotation->date_billing}}</td>
+                            <td class="text-center font-weight-bold">
                                 <a href="{{ route('quotations.createfacturado',$quotation->id) }}" title="Ver Factura" class="font-weight-bold text-dark">{{ $quotation->id }}</a>
                             </td>
-                            <td>{{ $quotation->clients['name']}}</td>
-                            <td class="text-right">{{ $quotation->amount}}</td>
-                            <td class="text-right">{{ $quotation->amount_iva}}</td>
-                            <td class="text-right">{{ $quotation->amount_with_iva}}</td>
+                            <td class="font-weight-bold">{{ $quotation->clients['name']}}</td>
+                            <td class="text-right font-weight-bold">{{number_format($quotation->amount, 2, ',', '.')}}</td>
+                            <td class="text-right font-weight-bold">{{number_format($quotation->amount_iva, 2, ',', '.')}}</td>
+                            <td class="text-right font-weight-bold">{{number_format($quotation->amount_with_iva, 2, ',', '.')}}</td>
                             @if ($quotation->status == "C")
-                                <td class="text-center text-success font-weight-bold">Cobrado</td>
+                            <td class="text-center font-weight-bold">
+                                <a href="{{ route('quotations.createfacturado',$quotation->id) }}" title="Ver Factura" class="text-center text-success font-weight-bold">Cobrado</a>
+                            </td>
                             @else
-                            <td class="text-center">
-                                <a href="{{ route('quotations.createfacturar',$quotation->id) }}" title="Ver Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
+                            <td class="text-center font-weight-bold">
+                                <a href="{{ route('quotations.createfacturar_after',$quotation->id) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
                             </td>
                             @endif
                             

@@ -39,8 +39,14 @@
    
   </tr>
   <tr>
-    <td style="width: 40%;">Fecha de Emisión:</td>
-    <td>{{ $quotation->date_billing }}</td>
+    @if (isset($quotation->credit_days))
+      <td style="width: 40%;">Fecha de Emisión:</td>
+      <td>{{ $quotation->date_billing }} | Dias de Crédito: {{ $quotation->credit_days }}</td>
+    
+    @else
+      <td style="width: 40%;">Fecha de Emisión:</td>
+      <td>{{ $quotation->date_billing }}</td>
+    @endif
     
   </tr>
   
@@ -94,38 +100,41 @@
 </tr>
   
 </table>
+  @if (empty($payment_quotations))
+      
 
-<br>
-<table style="width: 100%;">
-  <tr>
-    <th style="text-align: center; width: 100%;">Condiciones de Pago</th>
-  </tr> 
-</table>
+      <br>
+      <table style="width: 100%;">
+        <tr>
+          <th style="text-align: center; width: 100%;">Condiciones de Pago</th>
+        </tr> 
+      </table>
 
-<table style="width: 100%;">
-  <tr>
-    <th style="text-align: center; ">Tipo de Pago</th>
-    <th style="text-align: center; ">Cuenta</th>
-    <th style="text-align: center; ">Referencia</th>
-    <th style="text-align: center; ">Dias de Credito</th>
-    <th style="text-align: center; ">Monto</th>
-  </tr>
+      <table style="width: 100%;">
+        <tr>
+          <th style="text-align: center; ">Tipo de Pago</th>
+          <th style="text-align: center; ">Cuenta</th>
+          <th style="text-align: center; ">Referencia</th>
+          <th style="text-align: center; ">Dias de Credito</th>
+          <th style="text-align: center; ">Monto</th>
+        </tr>
 
-  @foreach ($payment_quotations as $var)
-  <tr>
-    <th style="text-align: center; font-weight: normal;">{{ $var->payment_type }}</th>
-    @if (isset($var->accounts['description']))
-      <th style="text-align: center; font-weight: normal;">{{ $var->accounts['description'] }}</th>
-    @else    
-      <th style="text-align: center; font-weight: normal;"></th>
-    @endif
-    <th style="text-align: center; font-weight: normal;">{{ $var->reference }}</th>
-    <th style="text-align: center; font-weight: normal;">{{ $var->credit_days }}</th>
-    <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount, 2, ',', '.')}}</th>
-  </tr> 
-  @endforeach 
-  
-</table>
+        @foreach ($payment_quotations as $var)
+        <tr>
+          <th style="text-align: center; font-weight: normal;">{{ $var->payment_type }}</th>
+          @if (isset($var->accounts['description']))
+            <th style="text-align: center; font-weight: normal;">{{ $var->accounts['description'] }}</th>
+          @else    
+            <th style="text-align: center; font-weight: normal;"></th>
+          @endif
+          <th style="text-align: center; font-weight: normal;">{{ $var->reference }}</th>
+          <th style="text-align: center; font-weight: normal;">{{ $var->credit_days }}</th>
+          <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount, 2, ',', '.')}}</th>
+        </tr> 
+        @endforeach 
+        
+      </table>
+  @endif
 <br>
 <table style="width: 100%;">
   <tr>
@@ -141,17 +150,17 @@
     <th style="text-align: center; ">Desc</th>
     <th style="text-align: center; ">Total</th>
   </tr> 
-  @foreach ($product_quotations as $var)
+  @foreach ($inventories_quotations as $var)
       <?php
-      $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+      $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-      $total_less_percentage = ($var->products['price'] * $var->amount) - $percentage;
+      $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
       ?>
     <tr>
-      <th style="text-align: center; font-weight: normal;">{{ $var->products['code_comercial'] }}</th>
-      <th style="text-align: center; font-weight: normal;">{{ $var->products['description'] }}</th>
-      <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount, 0, '', '.') }}</th>
-      <th style="text-align: center; font-weight: normal;">{{ number_format($var->products['price'], 2, ',', '.')  }}</th>
+      <th style="text-align: center; font-weight: normal;">{{ $var->code_comercial }}</th>
+      <th style="text-align: center; font-weight: normal;">{{ $var->description }}</th>
+      <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount_quotation, 0, '', '.') }}</th>
+      <th style="text-align: center; font-weight: normal;">{{ number_format($var->price, 2, ',', '.')  }}</th>
       <th style="text-align: center; font-weight: normal;">{{ $var->discount }}%</th>
       <th style="text-align: right; font-weight: normal;">{{ number_format($total_less_percentage, 2, ',', '.') }}</th>
     </tr> 
