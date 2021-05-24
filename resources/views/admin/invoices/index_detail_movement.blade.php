@@ -17,7 +17,7 @@
             </a>
         </div>
         <div class="col-md-2">
-            <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
+            <a href="{{ route('quotations.createfacturado',$quotation->id) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
                 &nbsp Volver a la Factura
             </a>
         </div>

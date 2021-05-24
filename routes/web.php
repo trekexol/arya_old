@@ -550,3 +550,21 @@ Route::group(["prefix"=>'sales'],function(){
     Route::patch('{id}/update','SaleController@update')->name('sales.update');*/
 
 });
+
+
+Route::group(["prefix"=>'expensesandpurchases'],function(){
+    Route::get('/','ExpensesAndPurchaseController@index')->name('expensesandpurchases');
+    Route::get('registerexpense/{id_provider?}','ExpensesAndPurchaseController@create_expense')->name('expensesandpurchases.create');
+    Route::post('store', 'ExpensesAndPurchaseController@store')->name('expensesandpurchases.store');
+   
+    Route::get('{id}/edit','ExpensesAndPurchaseController@edit')->name('expensesandpurchases.edit');
+    Route::delete('{id}/delete','ExpensesAndPurchaseController@destroy')->name('expensesandpurchases.delete');
+    Route::patch('{id}/update','ExpensesAndPurchaseController@update')->name('expensesandpurchases.update');
+
+
+    Route::get('selectprovider','ExpensesAndPurchaseController@selectprovider')->name('expensesandpurchases.selectprovider');
+
+    Route::get('register/{id_provider?}','ExpensesAndPurchaseController@create_expense_detail')->name('expensesandpurchases.create_detail');
+    
+    Route::get('listaccount/{type_var?}','ExpensesAndPurchaseController@listaccount')->name('expensesandpurchases.listaccount');
+});

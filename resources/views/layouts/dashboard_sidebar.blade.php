@@ -115,7 +115,8 @@
             <div class="bg-white py-2 collapse-inner rounded">
            
              <!-- <a  class="collapse-header" href="buttons.html">Gastos y Compras</a> -->
-                <a class="collapse-item" href="{{ route('providers')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-alt fa-sm fa-fw mr-2 text-black-400"></i><strong>Proveedores</strong></a>
+                <a class="collapse-item" href="{{ route('expensesandpurchases')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-invoice-dollar fa-sm fa-fw mr-2 text-black-400"></i><strong>Gastos y Compras</strong></a>
+                <a class="collapse-item" href="{{ route('providers')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-user fa-sm fa-fw mr-2 text-black-400"></i><strong>Proveedores</strong></a>
                 
               <!--  <a  class="collapse-header" href="buttons.html">Compras</a>
                     <a class="collapse-item" href="buttons.html">Listar Compras</a>
