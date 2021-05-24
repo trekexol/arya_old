@@ -1243,7 +1243,7 @@ class FacturarController extends Controller
                         $this->add_movement($header_voucher,$account_contado->id,$quotation_id,$user_id,$amount_debe,0);
                     }
                 }//CONTRA ANTICIPO
-                else if($payment_type == 2){
+                else if($payment_type == 3){
                     
                     $account_contra_anticipo = Account::where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
             

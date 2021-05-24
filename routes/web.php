@@ -432,7 +432,7 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::post('storefacturacredit','FacturarController@storefacturacredit')->name('quotations.storefacturacredit');
 
 
-    Route::get('facturar/{id_quotation}','FacturarController@createfacturar_after')->name('quotations.createfacturar_after');
+    Route::get('facturarafter/{id_quotation}','FacturarController@createfacturar_after')->name('quotations.createfacturar_after');
 
    
 });
