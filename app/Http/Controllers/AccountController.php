@@ -36,6 +36,23 @@ class AccountController extends Controller
        return view('admin.accounts.index',compact('accounts'));
    }
 
+
+   public function movements($id_account)
+    {
+        
+
+        $user       =   auth()->user();
+        $users_role =   $user->role_id;
+        if($users_role == '1'){
+         $detailvouchers = DetailVoucher::where('id_account',$id_account)->get();
+         $account = Account::find($id_account);
+         }elseif($users_role == '2'){
+            return view('admin.index');
+        }
+        
+        return view('admin.accounts.index_account_movement',compact('detailvouchers','account'));
+    }
+ 
    /**
     * Show the form for creating a new resource.
     *

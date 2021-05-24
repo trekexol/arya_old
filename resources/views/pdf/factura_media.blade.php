@@ -5,10 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  
-<title></title>
+<title>Documento sin título</title>
 <style>
   table, td, th {
     border: 1px solid black;
+    font-size: x-small;
   }
   
   table {
@@ -17,7 +18,7 @@
   }
   
   th {
-    
+   
     text-align: left;
   }
   </style>
@@ -27,7 +28,7 @@
 
 
   <br><br><br><br><br><br><br><br><br>
-  <h4 style="color: black">FACTURA NRO: {{ str_pad($quotation->id, 6, "0", STR_PAD_LEFT)}}</h4>
+  <h6 style="color: black">FACTURA NRO: {{ str_pad($quotation->id, 6, "0", STR_PAD_LEFT)}}</h6>
 
  
    
@@ -35,12 +36,18 @@
 <table>
   <tr>
     <th style="font-weight: normal; width: 40%;">Concesión Postal:</th>
-    <th style="font-weight: normal;">N 10-000</th>
+    <th style="">N 10-000</th>
    
   </tr>
   <tr>
-    <td style="width: 40%;">Fecha de Emisión:</td>
-    <td>{{ $quotation->date_delivery_note }}</td>
+    @if (isset($quotation->credit_days))
+      <td style="width: 40%;">Fecha de Emisión:</td>
+      <td style="">{{ $quotation->date_billing }} | Dias de Crédito: {{ $quotation->credit_days }}</td>
+    
+    @else
+      <td style="width: 40%;">Fecha de Emisión:</td>
+      <td style="">{{ $quotation->date_billing }}</td>
+    @endif
     
   </tr>
   
@@ -51,15 +58,10 @@
 
 <table style="width: 100%;">
   <tr>
-    <th style="font-weight: normal; font-size: medium;">Nombre / Razón Social: &nbsp;  {{ $quotation->clients['name'] }}</th>
-    
-   
+    <th style="font-weight: normal; ">Nombre / Razón Social: &nbsp;  {{ $quotation->clients['name'] }}</th>
   </tr>
   <tr>
-    <td>Domicilio Fiscal: &nbsp;  {{ $quotation->clients['direction'] }}
-    </td>
-    
-    
+    <td >Domicilio Fiscal: &nbsp;  {{ $quotation->clients['direction'] }}</td>
   </tr>
   
 </table>
@@ -69,19 +71,19 @@
 
 <table style="width: 100%;">
   <tr>
-    <th style="text-align: center;">Teléfono</th>
-    <th style="text-align: center;">RIF/CI</th>
-    <th style="text-align: center;">N° Control / Serie</th>
-    <th style="text-align: center;">Condición de Pago</th>
-    <th style="text-align: center;">Transporte</th>
+    <th style="text-align: center; " >Teléfono</th>
+    <th style="text-align: center; ">RIF/CI</th>
+    <th style="text-align: center; ">N° Control / Serie</th>
+    <th style="text-align: center; ">Nota de Entrega</th>
+    <th style="text-align: center; ">Transporte</th>
    
   </tr>
   <tr>
-    <td style="text-align: center;">{{ $quotation->clients['phone1'] }}</td>
-    <td style="text-align: center;">{{ $quotation->clients['cedula_rif'] }}</td>
-    <td style="text-align: center;">{{ $quotation->serie }}</td>
-    <td style="text-align: center;">Nota de Entrega</td>
-    <td style="text-align: center;">{{ $quotation->transports['placa'] }}</td>
+    <td style="text-align: center; ">{{ $quotation->clients['phone1'] }}</td>
+    <td style="text-align: center; ">{{ $quotation->clients['cedula_rif'] }}</td>
+    <td style="text-align: center; ">{{ $quotation->serie }}</td>
+    <td style="text-align: center; ">{{ $quotation->note }}</td>
+    <td style="text-align: center; ">{{ $quotation->transports['placa'] }}</td>
     
     
   </tr>
@@ -90,11 +92,46 @@
 
 <table style="width: 100%;">
   <tr>
-  <th style="font-weight: normal; font-size: medium;">Observaciones: &nbsp; {{ $quotation->observation }} </th>
+  <th style="font-weight: normal; ">Observaciones: &nbsp; {{ $quotation->observation }} </th>
 </tr>
   
 </table>
+  @if (empty($payment_quotations))
+      
 
+      <br>
+      <table style="width: 100%;">
+        <tr>
+          <th style="text-align: center; width: 100%;">Condiciones de Pago</th>
+        </tr> 
+      </table>
+
+      <table style="width: 100%;">
+        <tr>
+          <th style="text-align: center; ">Tipo de Pago</th>
+          <th style="text-align: center; ">Cuenta</th>
+          <th style="text-align: center; ">Referencia</th>
+          <th style="text-align: center; ">Dias de Credito</th>
+          <th style="text-align: center; ">Monto</th>
+        </tr>
+
+        @foreach ($payment_quotations as $var)
+        <tr>
+          <th style="text-align: center; font-weight: normal;">{{ $var->payment_type }}</th>
+          @if (isset($var->accounts['description']))
+            <th style="text-align: center; font-weight: normal;">{{ $var->accounts['description'] }}</th>
+          @else    
+            <th style="text-align: center; font-weight: normal;"></th>
+          @endif
+          <th style="text-align: center; font-weight: normal;">{{ $var->reference }}</th>
+          <th style="text-align: center; font-weight: normal;">{{ $var->credit_days }}</th>
+          <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount, 2, ',', '.')}}</th>
+        </tr> 
+        @endforeach 
+        
+      </table>
+  @endif
+<br>
 <table style="width: 100%;">
   <tr>
     <th style="text-align: center; width: 100%;">Productos</th>
@@ -132,7 +169,7 @@
 
   $total = $quotation->sub_total_factura + $iva;
 
-  $total_petro = $total / 159765192.04;
+  $total_petro = ($total - $quotation->anticipo)/ 159765192.04;
 ?>
 
 <table style="width: 100%;">
@@ -152,16 +189,23 @@
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
   </tr> 
+  @if ($quotation->anticipo != 0)
+  <tr>
+    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Anticipo</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->anticipo, 2, ',', '.') }}</th>
+  </tr> 
+  @endif
+ 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total, 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total - $quotation->anticipo, 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white; font-size: small;">MONTO TOTAL Petro</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_petro, 6, ',', '.') }}</th>
   </tr> 
   <tr>
-    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"><pre>ESTA FACTURA VA SIN TACHADURAS NI ENMIENDAS        </pre></th>
+    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; "><pre>ESTA FACTURA VA SIN TACHADURAS NI ENMIENDAS        </pre></th>
     <th style="text-align: right; font-weight: normal; width: 21%; "></th>
   </tr> 
   

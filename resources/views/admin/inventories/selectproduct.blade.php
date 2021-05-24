@@ -37,24 +37,22 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-                <th>Seleccionar</th>
+                <th></th>
+                <th>Descripción</th>
+                <th>Código Comercial</th>
+                <th>Precio</th>
+                <th>Foto del Producto</th>
+                <th>Tipo</th>
+                <th>Precio de Compra</th>
+                <th>Costo Promedio</th>
                 <th>Segmento</th>
                 <th>Sub Segmento</th>
                 <th>Unidad de Medida</th>
-                <th>Código Comercial</th>
-                <th>Tipo</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Precio de Compra</th>
-                <th>Costo Promedio</th>
-                <th>Foto del Producto</th>
                 <th>Moneda</th>
                 <th>Exento</th>
                 <th>ISLR</th>
                 <th>Impuesto Especial</th>
-                <th>Status</th>
-               
-                <th>Tools</th>
+                
             </tr>
             </thead>
             
@@ -64,19 +62,19 @@
                     @foreach ($products as $product)
                         <tr>
                             <td>
-                            <a href="{{$product->id}}/create" title="Editar"><i class="fa fa-edit"></i></a>
+                            <a href="{{$product->id}}/create" title="Seleccionar Producto"><i class="fa fa-check" style="color: orange"></i></a>
                             </td>
+                            <td>{{$product->description}}</td>
+                            <td>{{$product->code_comercial}}</td>
+                            <td>{{$product->price}}</td>
+                            <td><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
+                            <td>{{$product->type}}</td>
+                            <td>{{$product->price_buy}}</td>
+                            <td>{{$product->cost_average}}</td>
                             <td>{{$product->segments['description']}}</td>
                             <td>{{$product->subsegments['description']}}</td> 
                             <td>{{$product->unitofmeasures['description']}}</td> 
-                            <td>{{$product->code_comercial}}</td>
-                            <td>{{$product->type}}</td>
-                            <td>{{$product->description}}</td>
-                            <td>{{$product->price}}</td>
-                            <td>{{$product->price_buy}}</td>
-                            <td>{{$product->cost_average}}</td>
-                            <td><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
-
+                           
                             @if($product->money == "D")
                                 <td>Dolar</td>
                             @else
@@ -95,16 +93,7 @@
                             
                             <td>{{$product->special_impuesto}}</td>
                            
-                            
-                            @if($product->status == 1)
-                                <td>Activo</td>
-                            @else
-                                <td>Inactivo</td>
-                            @endif
-                            
-                            <td>
-                                <a href="{{$product->id}}/create" title="Editar"><i class="fa fa-edit"></i></a>
-                            </td>
+                         
                         </tr>     
                     @endforeach   
                 @endif
@@ -114,4 +103,15 @@
     </div>
 </div>
   
+@endsection
+@section('javascript')
+
+    
+     <script>
+        $('#dataTable').DataTable({
+            "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+        });
+        </script> 
 @endsection

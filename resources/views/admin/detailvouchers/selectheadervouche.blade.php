@@ -30,11 +30,12 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
+                <th></th>
                 <th>Fecha</th>
                 <th>Referencia</th>
                 <th>Descripción</th>
                 
-                <th>Opciones</th>
+                
               
             </tr>
             </thead>
@@ -44,15 +45,13 @@
                 @else
                     @foreach ($headervouchers as $key => $var)
                     <tr>
+                        <td>
+                            <a href="{{route('detailvouchers.createselect',$var->id) }}" title="Seleccionar"><i class="fa fa-check"></i></a>  
+                            </td>
                     <td>{{$var->date}}</td>
                     <td><a href="{{route('detailvouchers.createselect',$var->id) }}" title="Seleccionar">{{$var->reference}}</a></td>
                     <td>{{$var->description}}</td>
                     
-                   
-                        <td>
-                        <a href="{{route('detailvouchers.createselect',$var->id) }}" title="Seleccionar"><i class="fa fa-check"></i></a>  
-                        </td>
-                   
                     </tr>
                     @endforeach
                 @endif

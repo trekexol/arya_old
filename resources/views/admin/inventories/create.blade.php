@@ -23,13 +23,13 @@
 <div class="container">
     <div class="row py-lg-2">
         <div class="col-md-6">
-            <h2>Producto {{ $product->description }}</h2>
+            <h2>Producto: {{ $product->description }}</h2>
         </div>
       </div>
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Inventario</div>
+                <div class="card-header font-weight-bold">Registro de Inventario</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('inventories.store') }}" enctype="multipart/form-data">
@@ -52,7 +52,7 @@
                                 @enderror
                             </div> <label for="cantidad" class="col-md-2 col-form-label text-md-right">Cantidad</label>
                             <div class="col-md-4">
-                                <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -69,7 +69,7 @@
                             <label for="price" class="col-md-2 col-form-label text-md-right">Precio</label>
 
                             <div class="col-md-4">
-                                <input id="price" type="number" readonly class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $product->price }}" required autocomplete="price">
+                                <input id="price" type="text" readonly class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $product->price }}" required autocomplete="price">
 
                                 @error('price')
                                     <span class="invalid-feedback" role="alert">
@@ -94,19 +94,6 @@
                         </div>
 
                         
-                     
-                        <div class="form-group row">
-                           
-                            <label for="rol" class="col-md-2 col-form-label text-md-right">Status</label>
-
-                            <div class="col-md-4">
-                            <select class="form-control" name="status" id="status">
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                            </div>
-                        </div>
-                        
                         <br>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -124,6 +111,18 @@
 @endsection
 @section('validacion')
     <script>    
+        $(document).ready(function () {
+            $("#price").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#amount").mask('00000000000', { reverse: true });
+            
+        });
+       
+
+
+
 	$(function(){
         soloAlfaNumerico('code');
        

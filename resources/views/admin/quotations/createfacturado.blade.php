@@ -152,20 +152,29 @@
                                     </span>
                                 @enderror
                             </div>
+                            @if (isset($quotation->credit_days))
+                                <label for="total_pays" class="col-md-2 col-form-label text-md-right">Dias de Crédito</label>
+                                <div class="col-md-1">
+                                    <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" value="{{ $quotation->credit_days ?? '' }}" readonly autocomplete="credit"> 
+                                </div>
+                            @endif
                             
                         </div>
            
                         <br>
                         <div class="form-group row">
-                            <div class="col-md-1">
-                            </div>
-                          
+                           
                             <div class="col-md-3">
                                 <a onclick="pdf();" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
                             <div class="col-md-4">
-                                <a href="" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
+                                <a onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
                             </div>
+                            @if ($quotation->status == "C")
+                            <div class="col-md-3">
+                                <a href="{{ route('invoices.movement',$quotation->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
+                            </div>
+                            @endif
                             <div class="col-md-2">
                                 <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
                             </div>
@@ -187,6 +196,11 @@
             function pdf() {
                 
                 var nuevaVentana= window.open("{{ route('pdf',$quotation->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+        
+            }
+            function pdf_media() {
+                
+                var nuevaVentana2= window.open("{{ route('pdf.media',$quotation->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
            

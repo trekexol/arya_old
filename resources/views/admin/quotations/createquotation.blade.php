@@ -22,7 +22,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card" >
+            <div class="card">
                 <div class="card-header">Registro de Cotización</div>
 
                 <div class="card-body">
@@ -31,7 +31,7 @@
                        
                         <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required autocomplete="id_user">
                         <input id="id_client" type="hidden" class="form-control @error('id_client') is-invalid @enderror" name="id_client" value="{{ $client->id ?? -1  }}" required autocomplete="id_client">
-                        <input id="id_vendor" type="hidden" class="form-control @error('id_vendor') is-invalid @enderror" name="id_vendor" value="{{ $vendor->id ?? -1  }}" required autocomplete="id_vendor">
+                        <input id="id_vendor" type="hidden" class="form-control @error('id_vendor') is-invalid @enderror" name="id_vendor" value="{{ $vendor->id ?? $client->id_vendor ?? -1  }}" required autocomplete="id_vendor">
                        
                         
                         <div class="form-group row">
@@ -93,7 +93,7 @@
                         <div class="form-group row">
                            <label for="vendors" class="col-md-2 col-form-label text-md-right">Vendedor</label>
                             <div class="col-md-3">
-                                <input id="id_vendor" type="text" class="form-control @error('id_vendor') is-invalid @enderror" name="vendor" value="{{ $vendor->name ?? '' }}" readonly required autocomplete="id_vendor">
+                                <input id="id_vendor" type="text" class="form-control @error('id_vendor') is-invalid @enderror" name="vendor" value="{{ $vendor->name ?? $client->vendors['name'] ?? '' }}" readonly required autocomplete="id_vendor">
 
                                     @error('id_vendor')
                                         <span class="invalid-feedback" role="alert">

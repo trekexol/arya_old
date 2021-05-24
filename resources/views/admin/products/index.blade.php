@@ -77,3 +77,13 @@
 </div>
   
 @endsection
+@section('javascript')
+
+    <script>
+    $('#dataTable').DataTable({
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
+@endsection

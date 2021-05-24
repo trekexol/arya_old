@@ -15,7 +15,7 @@
                
                 <div class="card-body">
   
-
+       
              
                  
                   <!--  <div class="list-group">
@@ -52,8 +52,8 @@
                         <div class="col-2">
                           <div class="list-group" id="list-tab" role="tablist">
                             <li class="list-group-item list-group-item-action list-group-item-info text-center" style="padding: 0;" id="list-home-list" data-bs-toggle="list" role="tab" aria-controls="home"><font size="-1">Saldos Pendientes</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Cuentas por Cobrar -500,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 2% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Cuentas por Pagar -2.552.873,40</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Cuentas por Cobrar <br>-500,00</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 2% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Cuentas por Pagar <br>-2.552.873,40</font></li>
                             <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Préstamos Bancarios<br> 0,00</font></li>
                           </div>
                         </div>

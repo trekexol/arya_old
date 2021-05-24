@@ -170,6 +170,14 @@ class BankMovementController extends Controller
                 $var = new BankMovement();
 
                 $var->id_account = $id_account;
+
+                /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
+                $account = Account::findOrFail($id_account);
+
+                if($account->status != "M"){
+                    $account->status = "M";
+                    $account->save();
+                }
             
             
             

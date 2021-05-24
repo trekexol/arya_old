@@ -357,7 +357,7 @@ Route::group(["prefix"=>'accounts'],function(){
 
     Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}/{period}','AccountController@createlevel')->name('accounts.createlevel');
     
-
+    Route::get('movementaccount/{id_account}','AccountController@movements')->name('accounts.movements');
 });
 
 Route::group(["prefix"=>'headervouchers'],function(){
@@ -419,13 +419,22 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::post('storefactura','FacturarController@storefactura')->name('quotations.storefactura');
     Route::get('facturado/{id_quotation}','FacturarController@createfacturado')->name('quotations.createfacturado');
 
-    Route::get('listproduct/{var?}','QuotationController@listproduct')->name('quotations.listproduct');
+    Route::get('listinventory/{var?}','QuotationController@listinventory')->name('quotations.listinventory');
 
 
     Route::get('notadeentrega/{id_quotation}/{coin}','DeliveryNoteController@createdeliverynote')->name('quotations.createdeliverynote');
 
     Route::get('indexnotasdeentrega/','DeliveryNoteController@index')->name('quotations.indexdeliverynote');
 
+    Route::get('quotationproduct/{id}/edit','QuotationController@editquotationproduct')->name('quotations.productedit');
+    Route::patch('quotationproduct/{id}/update','QuotationController@updatequotationproduct')->name('quotations.productupdate');
+
+    Route::post('storefacturacredit','FacturarController@storefacturacredit')->name('quotations.storefacturacredit');
+
+
+    Route::get('facturar/{id_quotation}','FacturarController@createfacturar_after')->name('quotations.createfacturar_after');
+
+   
 });
 
 Route::group(["prefix"=>'bankmovements'],function(){
@@ -486,13 +495,18 @@ Route::group(["prefix"=>'nominacalculations'],function(){
 
 Route::group(["prefix"=>'invoices'],function(){
     Route::get('/','InvoiceController@index')->name('invoices');
+
+    Route::get('movementinvoice/{id_invoice}','InvoiceController@movementsinvoice')->name('invoices.movement');
     
+   
  });
 
  Route::group(["prefix"=>'pdf'],function(){
     Route::get('factura/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
     Route::get('deliverynote/{id_quotation}/{iva}','PDFController@deliverynote')->name('pdf.deliverynote');
     Route::get('inventory','PDFController@imprimirinventory')->name('pdf.inventory');
+
+    Route::get('facturamedia/{id_quotation}','PDFController@imprimirfactura_media')->name('pdf.media');
  });
 
 
@@ -523,4 +537,16 @@ Route::group(["prefix"=>'anticipos'],function(){
 
     Route::get('historic','AnticipoController@indexhistoric')->name('anticipos.historic');
     
+});
+
+
+Route::group(["prefix"=>'sales'],function(){
+    Route::get('/','SaleController@index')->name('sales');
+    /*Route::get('register','SaleController@create')->name('sales.create');
+    Route::post('store', 'saleController@store')->name('sales.store');
+   
+    Route::get('{id}/edit','SaleController@edit')->name('sales.edit');
+    Route::delete('{id}/delete','SaleController@destroy')->name('sales.delete');
+    Route::patch('{id}/update','SaleController@update')->name('sales.update');*/
+
 });

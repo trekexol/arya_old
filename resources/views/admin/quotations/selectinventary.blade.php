@@ -1,39 +1,18 @@
 @extends('layouts.dashboard')
 
 @section('content')
-<div class="container-fluid">
 
-    <!-- Page Heading -->
+<div class="container-fluid">
     <div class="row py-lg-2">
        
-        <div class="col-md-3">
-            <a href="{{ route('products.create')}}" class="btn btn-warning  float-md-right " role="button" aria-pressed="true">Registrar un Producto Nuevo</a>
-          </div>
-       
-        <div class="col-md-2 dropdown mb-4">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                Imprimir
-            </button>
-            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                
-                <a class="dropdown-item" onclick="pdfinventory();" style="color: rgb(4, 119, 252)"> <i class="fas fa-download fa-sm fa-fw mr-2 text-blue-400"></i><strong>Imprimir Inventario Actual</strong></a>
-                <br>
-                <a class="dropdown-item" href="" style="color: rgb(4, 119, 252)"> <i class="fas fa-file-export fa-sm fa-fw mr-2 text-blue-400"></i><strong>Imprimir Historial del Inventario</strong></a>
-                
-            </div>
+        <div class="col-md-6">
+            <h2>Seleccione un Producto del Inventario</h2>
         </div>
-     
+        
     
-        
-        
-       
-         
-            <div class="col-md-6">
-                <a href="{{ route('inventories.select')}}" class="btn btn-success  float-md-right " role="button" aria-pressed="true">Registrar un Inventario</a>
-              </div>
     </div>
-  </div>
+</div>
+
 
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
@@ -44,7 +23,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h3 class="m-0 font-weight-bold">Inventario</h3>
+        <h6 class="m-0 font-weight-bold text-primary">Inventario</h6>
     </div>
     <div class="card-body">
         <div class="container">
@@ -61,6 +40,7 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
+                <th></th>
                 <th>SKU</th>
                 <th>Descripción</th>
                 <th>Cantidad</th>
@@ -70,7 +50,7 @@
                 <th>Moneda</th>
               
                 
-                <th></th>
+                
             </tr>
             </thead>
             
@@ -79,6 +59,9 @@
                 @else  
                     @foreach ($inventories as $var)
                         <tr>
+                            <td>
+                                <a href="{{ route('quotations.createproduct',[$id_quotation,$var->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                            </td>
                             <td>{{ $var->code }}</td>
                             <td>{{ $var->products['description']}}</td>
                             <td style="text-align: right">{{ $var->amount }}</td> 
@@ -95,10 +78,7 @@
                             @endif
 
                            
-                            <td>
-                                <a href="{{ route('inventories.create_increase_inventory',$var->id) }}" style="color: blue;" title="Aumentar Inventario"><i class="fa fa-plus"></i></a>
-                                <a href="{{ route('inventories.create_decrease_inventory',$var->id) }}" style="color: rgb(248, 62, 62);" title="Disminuir Inventario"><i class="fa fa-minus"></i></a>
-                            </td>
+                            
                         </tr>     
                     @endforeach   
                 @endif
@@ -119,11 +99,4 @@
         
             }
     </script>
-     <script>
-        $('#dataTable').DataTable({
-            "order": [],
-            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
-            'iDisplayLength': '50'
-        });
-        </script> 
 @endsection

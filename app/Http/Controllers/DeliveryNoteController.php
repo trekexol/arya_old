@@ -6,6 +6,7 @@ use App\Quotation;
 use App\QuotationProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryNoteController extends Controller
 {
@@ -43,27 +44,33 @@ class DeliveryNoteController extends Controller
          }
  
          if(isset($quotation)){
-             $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
-            // $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+            
+            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            'quotation_products.amount as amount_quotation')
+                                                            ->get(); 
 
-           
-             $total= 0;
-             $base_imponible= 0;
-             foreach($product_quotations as $var){
-                 //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+            
+            $total= 0;
+            $base_imponible= 0;
 
-                    $total += ($var->products['price'] * $var->amount) - $percentage;
+            foreach($inventories_quotations as $var){
+                //Se calcula restandole el porcentaje de descuento (discount)
+                $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                $total += ($var->price * $var->amount_quotation) - $percentage;
                 //----------------------------- 
 
-                if($var->products['exento'] == 0){
+                if($var->exento == 0){
 
-                    $percentage = (($var->products['price'] * $var->amount) * $var->discount)/100;
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                    $base_imponible += ($var->products['price'] * $var->amount) - $percentage; 
+                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
 
                 }
-             }
+            }
 
              $quotation->total_factura = $total;
              $quotation->base_imponible = $base_imponible;
@@ -71,7 +78,7 @@ class DeliveryNoteController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
      
-             return view('admin.quotations.createdeliverynote',compact('quotation','product_quotations','datenow'));
+             return view('admin.quotations.createdeliverynote',compact('quotation','datenow'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 

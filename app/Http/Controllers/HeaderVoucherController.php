@@ -19,7 +19,9 @@ class HeaderVoucherController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $headervouchers = HeaderVoucher::All();
+
+        $headervouchers = HeaderVoucher::where('status','LIKE','U')->get();
+        
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -67,7 +69,8 @@ class HeaderVoucherController extends Controller
             $var->description = request('description');
             $var->date = request('date');
            
-            $var->status =  "1";
+            //U porque son creados por el usuario
+            $var->status =  "U";
         
             $var->save();
 

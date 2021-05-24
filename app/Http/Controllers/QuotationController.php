@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Inventory;
 use App\Product;
 use App\Quotation;
 use App\QuotationProduct;
@@ -10,6 +11,7 @@ use App\Transport;
 use App\Vendor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QuotationController extends Controller
 {
@@ -123,12 +125,20 @@ public function createquotationvendor($id_client,$id_vendor)
         }
 
         if(isset($quotation)){
-            $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+            //$inventories_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+            $inventories_quotations = DB::table('products')
+                            ->join('inventories', 'products.id', '=', 'inventories.product_id')
+                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                            ->where('quotation_products.id_quotation',$id_quotation)
+                            ->select('products.*','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
+                            'quotation_products.amount as amount_quotation')
+                            ->get(); 
            
+            
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
     
-            return view('admin.quotations.create',compact('quotation','product_quotations','datenow'));
+            return view('admin.quotations.create',compact('quotation','inventories_quotations','datenow'));
         }else{
             return redirect('/quotations')->withDanger('La cotizacion no existe');
         } 
@@ -136,7 +146,7 @@ public function createquotationvendor($id_client,$id_vendor)
 
 
    }
-   public function createproduct($id_quotation,$id_product)
+   public function createproduct($id_quotation,$id_inventory)
    {
     $quotation = null;
             
@@ -145,18 +155,25 @@ public function createquotationvendor($id_client,$id_vendor)
     }
 
     if(isset($quotation)){
-        $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+        //$product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
             $product = null;
+            $inventories_quotations = DB::table('products')
+                            ->join('inventories', 'products.id', '=', 'inventories.product_id')
+                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                            ->where('quotation_products.id_quotation',$id_quotation)
+                            ->select('products.*','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
+                            'quotation_products.amount as amount_quotation')
+                            ->get(); 
             
-            if(isset($id_product)){
-                $product = Product::find($id_product);
+            if(isset($id_inventory)){
+                $inventory = Inventory::find($id_inventory);
             }
-            if(isset($product)){
+            if(isset($inventory)){
 
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');    
 
-                return view('admin.quotations.create',compact('quotation','product_quotations','product','datenow'));
+                return view('admin.quotations.create',compact('quotation','inventories_quotations','inventory','datenow'));
 
             }else{
                 return redirect('/quotations')->withDanger('El Producto no existe');
@@ -169,9 +186,9 @@ public function createquotationvendor($id_client,$id_vendor)
 
    public function selectproduct($id_quotation)
    {
-        $products     = Product::all();
+        $inventories     = Inventory::all();
       
-        return view('admin.quotations.selectproduct',compact('products','id_quotation'));
+        return view('admin.quotations.selectinventary',compact('inventories','id_quotation'));
    }
 
 
@@ -272,7 +289,7 @@ public function createquotationvendor($id_client,$id_vendor)
         
        
         'id_quotation'         =>'required',
-        'id_product'         =>'required',
+        'id_inventory'         =>'required',
         'amount'         =>'required',
         'discount'         =>'required',
       
@@ -283,8 +300,9 @@ public function createquotationvendor($id_client,$id_vendor)
 
     $var->id_quotation = request('id_quotation');
     
-    $var->id_product = request('id_product');
-    if($var->id_product == -1){
+    $var->id_inventory = request('id_inventory');
+
+    if($var->id_inventory == -1){
         return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
     }
     $var->amount = request('amount');
@@ -330,6 +348,23 @@ public function createquotationvendor($id_client,$id_vendor)
         return view('admin.quotations.edit',compact('quotation','segments','subsegments','unitofmeasures'));
   
    }
+   public function editquotationproduct($id)
+   {
+        $quotation_product = QuotationProduct::find($id);
+       
+        if(isset($quotation_product)){
+
+            $inventory= Inventory::find($quotation_product->id_inventory);
+
+            return view('admin.quotations.edit_product',compact('quotation_product','inventory'));
+        }else{
+            return redirect('/quotations')->withDanger('No se Encontro el Producto!');
+        }
+       
+       
+  
+   }
+   
 
    /**
     * Update the specified resource in storage.
@@ -414,6 +449,32 @@ public function createquotationvendor($id_client,$id_vendor)
     }
 
 
+
+    
+
+    public function updatequotationproduct(Request $request, $id)
+    { 
+
+        $data = request()->validate([
+            
+            'amount'         =>'required',
+            'discount'         =>'required',
+           
+        ]);
+    
+        $var = QuotationProduct::findOrFail($id);
+    
+        $var->amount = request('amount');
+    
+        $var->discount = request('discount');
+    
+       
+        $var->save();
+    
+        return redirect('/quotations/register/'.$var->id_quotation.'')->withSuccess('Actualizacion Exitosa!');
+       
+    }
+
    /**
     * Remove the specified resource from storage.
     *
@@ -426,12 +487,12 @@ public function createquotationvendor($id_client,$id_vendor)
    }
 
 
-   public function listproduct(Request $request, $var = null){
+   public function listinventory(Request $request, $var = null){
     //validar si la peticion es asincrona
     if($request->ajax()){
         try{
             
-            $respuesta = Product::select('id')->where('code_comercial',$var)->orderBy('description','asc')->get();
+            $respuesta = Inventory::select('id')->where('code',$var)->get();
             return response()->json($respuesta,200);
 
         }catch(Throwable $th){

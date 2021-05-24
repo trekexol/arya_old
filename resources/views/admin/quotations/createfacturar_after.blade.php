@@ -27,8 +27,6 @@
         
             <div class="card" style="width: 70rem;" >
                 <div class="card-header" ><h3>Facturar</h3></div>
-                <form method="POST" action="{{ route('quotations.storefacturacredit') }}" enctype="multipart/form-data">
-                    @csrf   
                 <div class="card-body" >
 
                         <div class="form-group row">
@@ -172,32 +170,11 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-2">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                    <label class="custom-control-label" for="customSwitches">Tiene Crédito</label>
-                                  </div>
-                            </div>
-                            <div class="col-md-2">
-                                <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" placeholder="Dias de Crédito" autocomplete="credit"> 
-                            </div>
+                           
                         </div>
                         <br>
-                        <div class="form-group row" id="formenviarcredito">
-                            
-                            <div class="col-md-2">
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary">
-                                    Guardar Factura
-                                 </button>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="{{ route('quotations.create',$quotation->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
-                            </div>
-                        </div>
-                        
-            </form>           
+                       
+                    
             <form method="POST" action="{{ route('quotations.storefactura') }}" enctype="multipart/form-data">
                 @csrf   
 
@@ -735,7 +712,7 @@
                                  </button>
                             </div>
                             <div class="col-md-2">
-                                <a href="{{ route('quotations.create',$quotation->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                         
@@ -755,40 +732,7 @@
 
 
 @section('consulta')
-    <script>
-        $("#credit").hide();
-        $("#formenviarcredito").hide();
-        var switchStatus = false;
-        $("#customSwitches").on('change', function() {
-            if ($(this).is(':checked')) {
-                switchStatus = $(this).is(':checked');
-                $("#credit").show();
-                $("#formulario1").hide();
-                $("#formulario2").hide();
-                $("#formulario3").hide();
-                $("#formulario4").hide();
-                $("#formulario5").hide();
-                $("#formulario6").hide();
-                $("#formulario7").hide();
-                $("#formenviarcredito").show();
-                $("#enviarpagos").hide();
-                number_form = 1; 
-            }
-            else {
-            switchStatus = $(this).is(':checked');
-                $("#credit").hide();
-                $("#formulario1").show();
-                $("#formenviarcredito").hide();
-                $("#enviarpagos").show();
-            }
-        });
-
-
-        $(document).ready(function () {
-            $("#credit").mask('0000', { reverse: true });
-            
-        });
-    </script>
+    
     <script type="text/javascript">
 
             calculate();

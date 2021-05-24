@@ -26,7 +26,7 @@
     <div class="row justify-content-center" >
         
             <div class="card" style="width: 70rem;" >
-                <div class="card-header" >Cerrar e Imprimir la Nota de Entrega</div>
+                <div class="card-header" ><h3>Cerrar e Imprimir la Nota de Entrega </h3></div>
                 
                 <div class="card-body" >
                         <div class="form-group row">
@@ -130,10 +130,63 @@
 
 
 @section('consulta')
-
-
 <script type="text/javascript">
-               calculate();
+   
+
+    $("#iva").on('change',function(){
+                //calculate();
+               
+                let inputIva = document.getElementById("iva").value; 
+
+                //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
+
+                let totalFactura = "<?php echo $quotation->total_factura ?>";       
+
+                //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
+                let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
+
+                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
+                
+
+                
+                /*-----------------------------------*/
+                /*Toma la Base y la envia por form*/
+                let sub_total_form = document.getElementById("total_factura").value; 
+
+                var montoFormat = sub_total_form.replace(/[$.]/g,'');
+
+                var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
+
+                //document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+                /*-----------------------------------*/
+
+
+                var total_iva_exento =  parseFloat(totalIvaMenos);
+
+                var iva_format = total_iva_exento.toLocaleString('de-DE');
+
+                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
+                //------------------------------
+                
+
+
+                document.getElementById("iva_amount").value = iva_format;
+
+
+                // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
+                var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
+
+                var grand_totalformat = grand_total.toLocaleString('de-DE');
+
+                document.getElementById("grand_total").value = grand_totalformat;
+
+                
+               
+            });
+</script>
+<script type="text/javascript">
+
+    calculate();
 
     function pdf() {
         let inputIva = document.getElementById("iva").value; 
@@ -157,34 +210,48 @@
         let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
 
 
+        /*-----------------------------------*/
+        /*Toma la Base y la envia por form*/
+        let sub_total_form = document.getElementById("total_factura").value; 
+
+        var montoFormat = sub_total_form.replace(/[$.]/g,'');
+
+        var montoFormat_sub_total_form = montoFormat.replace(/[,]/g,'.');    
+
+        //document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
+        /*-----------------------------------*/
+
+
+
+
+
         var total_iva_exento =  parseFloat(totalIvaMenos);
+
+        var iva_format = total_iva_exento.toLocaleString('de-DE');
 
         //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
         //------------------------------
 
-        var ivaformat = total_iva_exento.toFixed(2).toLocaleString('de-DE');
-        document.getElementById("iva_amount").value = ivaformat;
+       
+        document.getElementById("iva_amount").value = iva_format;
 
 
         // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
-        var grand_total = parseFloat(totalFactura) + total_iva_exento;
+        var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-        var grand_totalformat = grand_total.toFixed(2).toLocaleString('de-DE');
+        var grand_totalformat = grand_total.toLocaleString('de-DE');
 
 
         document.getElementById("grand_total").value = grand_totalformat;
 
-       
-       
     }        
-    
   
 
-    $("#iva").on('change',function(){
-        
-        calculate();
-       
-    });
+
+
+
+
+
 
 </script>
 @endsection

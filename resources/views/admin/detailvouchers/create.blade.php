@@ -48,7 +48,7 @@ $suma_haber = 0;
                                 @enderror
                             </div>
                             <div class="col-md-1">
-                                <a href="{{ route('detailvouchers.selectheadervouche') }}" title="Editar"><i class="fa fa-eye"></i></a>    
+                                <a href="{{ route('detailvouchers.selectheadervouche') }}" title="Seleccionar"><i class="fa fa-eye"></i></a>    
                                 <a href="" title="Editar"><i class="fa fa-trash-alt"></i></a>  
                            
                             </div>
@@ -103,19 +103,19 @@ $suma_haber = 0;
                                     
                                     <div class="form-group col-md-1">
                                         <label for="description" >Cuenta</label>
-                                        <input id="code_one" type="number" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one"  autofocus>
+                                        <input id="code_one" type="text" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_two" type="number" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two"  autofocus>
+                                        <input id="code_two" type="text" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two"  autofocus>
                                     </div> 
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                    <input id="code_three" type="number" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three"  autofocus>
+                                    <input id="code_three" type="text" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three"  autofocus>
                                     </div>   
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_four" type="number" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four"  autofocus>
+                                        <input id="code_four" type="text" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <a href="{{ route('detailvouchers.selectaccount',$header->id ?? -1) }}" title="Editar"><i class="fa fa-eye"></i></a>  
@@ -256,6 +256,22 @@ $suma_haber = 0;
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
 
 <script>
+    $(document).ready(function () {
+        $("#code_one").mask('0000', { reverse: true });
+                
+    });
+    $(document).ready(function () {
+                $("#code_two").mask('0000', { reverse: true });
+                
+    });
+    $(document).ready(function () {
+                $("#code_three").mask('0000', { reverse: true });
+                
+            });
+    $(document).ready(function () {
+                $("#code_four").mask('0000', { reverse: true });
+                
+    });
 
 $(document).ready(function () {
     $("#debe").mask('000.000.000.000.000,00', { reverse: true });
