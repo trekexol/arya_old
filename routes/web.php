@@ -567,4 +567,16 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     Route::get('register/{id_provider?}','ExpensesAndPurchaseController@create_expense_detail')->name('expensesandpurchases.create_detail');
     
     Route::get('listaccount/{type_var?}','ExpensesAndPurchaseController@listaccount')->name('expensesandpurchases.listaccount');
+
+    Route::post('storedetail', 'ExpensesAndPurchaseController@store_detail')->name('expensesandpurchases.store_detail');
+
+    Route::get('registerpayment/{id_expense?}','ExpensesAndPurchaseController@create_payment')->name('expensesandpurchases.create_payment');
+    
+    Route::patch('storepayment','ExpensesAndPurchaseController@store_payment')->name('expensesandpurchases.store_payment');
+
+    Route::get('indexhistorial','ExpensesAndPurchaseController@index_historial')->name('expensesandpurchases.index_historial');
+
+    Route::post('storeexpensecredit', 'ExpensesAndPurchaseController@store_expense_credit')->name('expensesandpurchases.store_expense_credit');
+
+   
 });

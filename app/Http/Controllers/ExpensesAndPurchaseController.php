@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Branch;
 use App\Client;
 use App\ExpensesAndPurchase;
+use App\ExpensesDetail;
 use App\Inventory;
 use App\Provider;
 use Carbon\Carbon;
@@ -26,6 +28,7 @@ class ExpensesAndPurchaseController extends Controller
        if($users_role == '1'){
 
         $expensesandpurchases = ExpensesAndPurchase::orderBy('id' ,'DESC')
+                                                    ->where('amount_with_iva','=',null)
                                                     ->get();
 
         }elseif($users_role == '2'){
@@ -33,6 +36,24 @@ class ExpensesAndPurchaseController extends Controller
        }
 
        return view('admin.expensesandpurchases.index',compact('expensesandpurchases'));
+   }
+
+
+   public function index_historial()
+   {
+       $user       =   auth()->user();
+       $users_role =   $user->role_id;
+       if($users_role == '1'){
+
+        $expensesandpurchases = ExpensesAndPurchase::orderBy('id' ,'DESC')
+                                                    ->where('amount_with_iva','<>',null)
+                                                    ->get();
+
+        }elseif($users_role == '2'){
+           return view('admin.index');
+       }
+
+       return view('admin.expensesandpurchases.index_historial',compact('expensesandpurchases'));
    }
 
    /**
@@ -50,79 +71,95 @@ class ExpensesAndPurchaseController extends Controller
         }
     
         $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');    
+        $datenow = $date->format('Y-m-d');  
+        
+        
 
         return view('admin.expensesandpurchases.createexpense',compact('datenow','provider'));
     }
 
-    public function create_expense_detail($id_provider = null)
+    public function create_expense_detail($id_expense = null)
     {
+        $expense = null;
         $provider = null;
+        $expense_details = null;
 
-        if(isset($id_provider)){
-            $provider = Provider::find($id_provider);
+        if(isset($id_expense)){
+            $expense = ExpensesAndPurchase::find($id_expense);
+
+            $provider = Provider::find($expense->id_provider);
+
+            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
         }
-    
+            $branches = Branch::orderBy('description','desc')->get();
+
+            
+
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        return view('admin.expensesandpurchases.create',compact('datenow','provider'));
+        return view('admin.expensesandpurchases.create',compact('datenow','provider','expense','expense_details','branches'));
     }
 
-    public function createexpensesandpurchaseclient($id_client)
-    {
-        $client = null;
-                
-        if(isset($id_client)){
-            $client = Client::find($id_client);
-        }
-        if(isset($client)){
-
-       
-            $date = Carbon::now();
-            $datenow = $date->format('Y-m-d');    
-
-            return view('admin.expensesandpurchases.createexpensesandpurchase',compact('client','datenow','transports'));
-
-        }else{
-            return redirect('/expensesandpurchases')->withDanger('El Cliente no existe');
-        } 
-    }
-
+   
   
 
 
-    public function create($id_expensesandpurchase)
+    public function create_payment($id_expense)
     {
-            $expensesandpurchase = null;
-                
-            if(isset($id_expensesandpurchase)){
-                $expensesandpurchase = expensesandpurchase::find($id_expensesandpurchase);
-            }
+        $expense = null;
+        $provider = null;
+        $expense_details = null;
 
-            if(isset($expensesandpurchase)){
-                //$inventories_expensesandpurchases = expensesandpurchaseProduct::where('id_expensesandpurchase',$expensesandpurchase->id)->get();
-                $inventories_expensesandpurchases = DB::table('products')
-                                ->join('inventories', 'products.id', '=', 'inventories.product_id')
-                                ->join('expensesandpurchase_products', 'inventories.id', '=', 'expensesandpurchase_products.id_inventory')
-                                ->where('expensesandpurchase_products.id_expensesandpurchase',$id_expensesandpurchase)
-                                ->select('products.*','expensesandpurchase_products.id as expensesandpurchase_products_id','inventories.code as code','expensesandpurchase_products.discount as discount',
-                                'expensesandpurchase_products.amount as amount_expensesandpurchase')
-                                ->get(); 
+        if(isset($id_expense)){
+            $expense = ExpensesAndPurchase::find($id_expense);
+
+            $provider = Provider::find($expense->id_provider);
+
+            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+        }else{
+            return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
+        } 
+
+            $anticipos_sum = 0;//Anticipo::where('status',1)->where('id_client',$quotation->id_client)->sum('amount');
+
+            $accounts_bank = DB::table('accounts')->where('code_one', 1)
+                                        ->where('code_two', 1)
+                                        ->where('code_three', 2)
+                                        ->where('code_four', '<>',0)
+                                        ->get();
+            $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+                                        ->where('code_two', 1)
+                                        ->where('code_three', 1)
+                                        ->where('code_four', '<>',0)
+                                        ->get();
+            $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+                                        ->get();
+          
+             $total= 0;
+             $base_imponible= 0;
+
+             foreach($expense_details as $var){
+                 
+                    $total += ($var->price * $var->amount);
+               
+                if($var->exento == 0){
+                    $base_imponible += ($var->price * $var->amount); 
+                }
+             }
+
+             $expense->total_factura = $total;
+             $expense->base_imponible = $base_imponible;
             
-                
-                $date = Carbon::now();
-                $datenow = $date->format('Y-m-d');    
-        
-                return view('admin.expensesandpurchases.create',compact('expensesandpurchase','inventories_expensesandpurchases','datenow'));
-            }else{
-                return redirect('/expensesandpurchases')->withDanger('La cotizacion no existe');
-            } 
-            
+             $date = Carbon::now();
+             $datenow = $date->format('Y-m-d');    
 
-
+             
+     
+             return view('admin.expensesandpurchases.create_payment',compact('expense','datenow','expense_details','accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','anticipos_sum'));
+         
+         
     }
-   
 
     public function selectproduct($id_expensesandpurchase)
     {
@@ -149,7 +186,7 @@ class ExpensesAndPurchaseController extends Controller
         * @return \Illuminate\Http\Response
         */
     public function store(Request $request)
-        {
+    {
     
         $data = request()->validate([
             
@@ -176,46 +213,109 @@ class ExpensesAndPurchaseController extends Controller
         $var->save();
 
         return redirect('expensesandpurchases/register/'.$var->id.'')->withSuccess('Gasto o Compra Resgistrada Correctamente!');
-        }
+    }
 
 
-        public function storeproduct(Request $request)
-        {
+    public function store_detail(Request $request)
+    {
     
+            
+                $data = request()->validate([
+                    
+                
+                    'id_expense'    =>'required',
+                    
+                    'id_user'  =>'required',
+                    'amount'        =>'required',
+                    'description'   =>'required',
+                    'price'         =>'required',
+                
+                
+                ]);
+
+                $var = new ExpensesDetail();
+
+                $var->id_expense = request('id_expense');
+                
+                $var->id_user = request('id_user');
+                $var->id_account = request('Account');
+                
+                $var->amount = request('amount');
+
+                $var->description = request('description');
+                $var->price = request('price');
+
+                $var->id_branch = request('centro_costo');
+
+                $exento = request('exento');
+                if($exento == null){
+                    $var->exento = false;
+                }else{
+                    $var->exento = true;
+                }
+                
+                $islr = request('islr');
+                if($islr == null){
+                    $var->islr = false;
+                }else{
+                    $var->islr = true;
+                }
+
+                $id_inventory = request('id_inventory');
+                if($id_inventory != -1){
+                    $var->id_inventory = $id_inventory;
+                }
+                
+                $var->status =  1;
+            
+                $var->save();
+
+                return redirect('expensesandpurchases/register/'.$var->id_expense.'')->withSuccess('Agregado Exitosamente!');
+    }
+
+
+    public function store_payment(Request $request)
+    {
+        
+        $id_expense = request('id_expense');
+
         $data = request()->validate([
             
         
-            'id_expensesandpurchase'         =>'required',
-            'id_inventory'         =>'required',
-            'amount'         =>'required',
-            'discount'         =>'required',
-        
-        
+            'total_pay_form'        =>'required',
+            'id_user'               =>'required',
+            'base_imponible_form'   =>'required',
+            'sub_total_form'        =>'required',
+            'iva'                   =>'required',
+            'iva_amount_form'       =>'required',
         ]);
 
-        $var = new expensesandpurchaseProduct();
+        $var = ExpensesAndPurchase::findOrFail($id_expense);
 
-        $var->id_expensesandpurchase = request('id_expensesandpurchase');
+        if(isset($var)){
+            $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
         
-        $var->id_inventory = request('id_inventory');
-
-        if($var->id_inventory == -1){
-            return redirect('expensesandpurchases/register/'.$var->id_expensesandpurchase.'')->withDanger('No se encontro el producto!');
-        }
-        $var->amount = request('amount');
-
-        $var->discount = request('discount');
-
-        if(($var->discount < 0) || ($var->discount > 100)){
-            return redirect('expensesandpurchases/register/'.$var->id_expensesandpurchase.'')->withDanger('El descuento debe estar entre 0% y 100%!');
-        }
-        
-        $var->status =  1;
+            $var->iva_percentage = request('iva');
+            
+            $var->id_user = request('id_user');
     
-        $var->save();
-
-        return redirect('expensesandpurchases/register/'.$var->id_expensesandpurchase.'')->withSuccess('Producto agregado Exitosamente!');
+            $var->base_imponible = request('base_imponible_form');
+            $var->amount = request('sub_total_form');
+            $var->amount_iva = $sin_formato_amount_iva;
+            $var->amount_with_iva = request('total_pay_form');
+           
+            $var->save();
+    
+            return redirect('expensesandpurchases/register/'.$var->id.'')->withSuccess('Gasto o Compra Resgistrada Correctamente!');
+        
+        }else{
+            return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
         }
+
+      }
+
+
+    
     /**
         * Display the specified resource.
         *
@@ -247,7 +347,7 @@ class ExpensesAndPurchaseController extends Controller
     }
     public function editexpensesandpurchaseproduct($id)
     {
-            $expensesandpurchase_product = expensesandpurchaseProduct::find($id);
+            $expensesandpurchase_product = ExpensesAndPurchase::find($id);
         
             if(isset($expensesandpurchase_product)){
 
@@ -359,7 +459,7 @@ class ExpensesAndPurchaseController extends Controller
             
             ]);
         
-            $var = expensesandpurchaseProduct::findOrFail($id);
+            $var = ExpensesAndPurchase::findOrFail($id);
         
             $var->amount = request('amount');
         
@@ -381,6 +481,36 @@ class ExpensesAndPurchaseController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function store_expense_credit(Request $request)
+    {
+       
+
+        $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible')));
+        $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('total_factura')));
+        $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount')));
+        $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('grand_total')));
+         
+
+        $id_expense = request('id_expense');
+
+        $expense = ExpensesAndPurchase::findOrFail($id_expense);
+
+        $expense->base_imponible = $sin_formato_base_imponible;
+        $expense->amount =  $sin_formato_amount;
+        $expense->amount_iva =  $sin_formato_amount_iva;
+        $expense->amount_with_iva =  $sin_formato_amount_with_iva;
+
+        $credit = request('credit');
+
+        $expense->iva_percentage = request('iva');
+
+        $expense->credit_days = $credit;
+
+        $expense->save();
+
+        return redirect('quotations/facturado/'.$expense->id.'')->withSuccess('Gasto o Compra Guardada con Exito!');
     }
 
     

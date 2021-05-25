@@ -26,12 +26,7 @@
                 <div class="card-header text-lg font-weight-bold">Registro de Gastos y Compras</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('expensesandpurchases.store') }}" enctype="multipart/form-data">
-                        @csrf
-                       
-                        <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required  readonly autocomplete="id_user">
-                        <input id="id_provider" type="hidden" class="form-control @error('id_provider') is-invalid @enderror" name="id_provider" value="{{ $provider->id ?? ''  }}" required readonly autocomplete="id_provider">
-                       
+
                         
                         <div class="form-group row">
                             <label for="providers" class="col-md-2 col-form-label text-md-right">Proveedor</label>
@@ -101,11 +96,13 @@
                         </div>
                         <br>
                         
-                        <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
+                        <form method="POST" action="{{ route('expensesandpurchases.store_detail') }}" enctype="multipart/form-data" onsubmit="return validacion()">
                             @csrf
-                            <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
+                            <input id="id_expense" type="hidden" class="form-control @error('id_expense') is-invalid @enderror" name="id_expense" value="{{ $expense->id ?? -1}}" readonly required autocomplete="id_expense">
                             <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
-                       
+                            <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required  readonly autocomplete="id_user">
+                           
+                           
                                 <div class="form-group row">
                                     <label for="type" class="col-md-2 col-form-label text-md-right">Tipo de Compra</label>
                                 
@@ -135,10 +132,14 @@
                                                 </span>
                                             @enderror
                                             <select class="form-control" id="centro_costo" name="centro_costo" title="centro_costo">
-                                                <option value="Ninguno">Ninguno</option>
-                                                <option value="Matriz">Matriz</option>
-                                                <option value="GTI">GTI</option>
-                                                <option value="YRE">YRE</option>
+                                                <option value="">Ninguno</option>
+                                                @if(!empty($branches))
+                                                    @foreach ($branches as $var)
+                                                        <option value="{{ $var->id }}">{{ $var->description }}</option>
+                                                    @endforeach
+                                                    
+                                                @endif
+                                               
                                             </select>
                                         </div>
                                         <div class="form-group col-md-1">
@@ -186,52 +187,32 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-md-1">
-                                        @if (empty($inventory))
+                                        
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck">
+                                                <input class="form-check-input" name="exento" type="checkbox" id="gridCheck">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exento
                                                 </label>
                                             </div>
-                                        @else  
-                                            <div class="form-check">
-                                                @if($inventory->products['exento'] == 1)
-                                                    <input class="form-check-input" type="checkbox" checked id="gridCheck">
-                                                @else
-                                                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                                                @endif
-                                                <label class="form-check-label" for="gridCheck">
-                                                    Exento
-                                                </label>
-                                            </div>
-                                        @endif
+                                          
+                                           
                                     </div>
                                     <div class="form-group col-md-2">
-                                        @if (empty($inventory))
+                                        
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="gridCheck">
+                                                <input class="form-check-input" name="islr" type="checkbox" id="gridCheck">
                                                 <label class="form-check-label" for="gridCheck2">
                                                     Retiene ISLR
                                                 </label>
                                             </div>
-                                        @else  
-                                            <div class="form-check">
-                                                @if($inventory->products['exento'] == 1)
-                                                    <input class="form-check-input" type="checkbox" checked id="gridCheck2">
-                                                @else
-                                                    <input class="form-check-input" type="checkbox" id="gridCheck2">
-                                                @endif
-                                                <label class="form-check-label" for="gridCheck2">
-                                                    Retiene ISLR
-                                                </label>
-                                            </div>
-                                        @endif
+                                        
+                                           
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="cost" >Precio</label>
-                                        <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price']  ?? '' }}"  required autocomplete="cost">
+                                        <label for="price" >Precio</label>
+                                        <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $inventory->products['price']  ?? '' }}"  required autocomplete="price">
         
-                                        @error('cost')
+                                        @error('price')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -255,30 +236,30 @@
                                     <thead>
                                     <tr>
                                         
-                                        <th>Descripción</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio</th>
-                                        <th>Sub Total</th>
-                                        <th><i class="fas fa-cog"></i></th>
+                                        <th class="text-center">Descripción</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Precio</th>
+                                        <th class="text-center">Sub Total</th>
+                                        <th class="text-center"><i class="fas fa-cog"></i></th>
                                       
                                     </tr>
                                     </thead>
                                     
                                     <tbody>
-                                        @if (empty($expenses_details))
+                                        @if (empty($expense_details))
                                         @else
                                         <?php
                                             $suma = 0.00;
                                         ?>
-                                            @foreach ($expenses_details as $var)
+                                            @foreach ($expense_details as $var)
 
                                            
                                                 <tr>
                                                
                                                 @if($var->exento == 1)
-                                                    <td style="text-align: right">{{ $var->description}} (E)</td>
+                                                    <td style="text-align: center">{{ $var->description}} (E)</td>
                                                 @else
-                                                    <td style="text-align: right">{{ $var->description}}</td>
+                                                    <td style="text-align: center">{{ $var->description}}</td>
                                                 @endif
                                                 
                                                 <td style="text-align: right">{{ $var->amount}}</td>
@@ -294,14 +275,13 @@
                                                 </tr>
                                             @endforeach
                                             <tr>
-                                                <td style="text-align: right">-------------</td>
-                                                <td style="text-align: right">-------------</td>
-                                                <td style="text-align: right">-------------</td>
-                                                <td style="text-align: right">-------------</td>
+                                                
+                                                <td style="text-align: center">-------------</td>
+                                                <td style="text-align: center">-------------</td>
                                                 <td style="text-align: right">Total</td>
                                                 <td style="text-align: right">{{number_format($suma, 2, ',', '.')}}</td>
                                                 
-                                                <td style="text-align: right">-------------</td>
+                                                <td style="text-align: right"></td>
                                             
                                                 </tr>
                                         @endif
@@ -312,7 +292,7 @@
                             <div class="form-group row mb-0">
                                 
                                 <div class="col-md-4">
-                                    <a id="btnNote" name="btnfacturar" class="btn btn-info" title="facturar">Registrar</a>  
+                                    <a id="btnpayment" href="{{ route('expensesandpurchases.create_payment',$expense->id) }}" name="btnpayment" class="btn btn-info" title="Registrar">Registrar</a>  
                                 </div>
                                 
                             </div>
@@ -324,7 +304,10 @@
     </div>
 </div>
 @endsection
+
+
 @section('consulta')
+   
     <script>
         $("#code_inventary_label").hide();
         $("#code_inventary").hide();
@@ -413,18 +396,12 @@
 
 
 
-@section('validacion')
-    <script>    
-    
-	$(function(){
-        soloAlfaNumerico('code_comercial');
-        soloAlfaNumerico('description');
-    });
-    </script>
-@endsection
+
+
 @section('javascript')
 
 <script>
+    
     $('#dataTable').dataTable( {
       "ordering": false,
       "order": [],

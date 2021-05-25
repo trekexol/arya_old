@@ -16,8 +16,10 @@ class CreateExpensesDetailsTable extends Migration
         Schema::create('expenses_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_expense');
+            $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_inventory')->nullable();
             $table->unsignedBigInteger('id_account')->nullable();
+            $table->unsignedBigInteger('id_branch')->nullable();
 
             $table->string('description',80)->nullable();
             $table->boolean('exento');
@@ -30,6 +32,9 @@ class CreateExpensesDetailsTable extends Migration
             $table->foreign('id_expense')->references('id')->on('expenses_and_purchases');
             $table->foreign('id_inventory')->references('id')->on('inventories');
             $table->foreign('id_account')->references('id')->on('accounts');
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_branch')->references('id')->on('branches');
+            
             $table->timestamps();
         });
     }
