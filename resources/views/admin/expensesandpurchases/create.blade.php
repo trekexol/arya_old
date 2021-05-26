@@ -58,7 +58,7 @@
                             <label for="invoice" class="col-md-2 col-form-label text-md-right">Factura de Compra:</label>
 
                             <div class="col-md-3">
-                                <input id="invoice" type="text" class="form-control @error('invoice') is-invalid @enderror" name="invoice" value="{{ old('invoice') }}" readonly autocomplete="invoice">
+                                <input id="invoice" type="text" class="form-control @error('invoice') is-invalid @enderror" name="invoice" value="{{ $expense->invoice ?? old('invoice') }}" readonly autocomplete="invoice">
 
                                 @error('invoice')
                                     <span class="invalid-feedback" role="alert">
@@ -69,7 +69,7 @@
                             <label for="serie" class="col-md-3 col-form-label text-md-right">N° de Control/Serie:</label>
 
                             <div class="col-md-3">
-                                <input id="serie" type="text" class="form-control @error('serie') is-invalid @enderror" name="serie" value="{{ old('serie') }}" readonly autocomplete="serie">
+                                <input id="serie" type="text" class="form-control @error('serie') is-invalid @enderror" name="serie" value="{{ $expense->serie ?? old('serie') }}" readonly autocomplete="serie">
 
                                 @error('serie')
                                     <span class="invalid-feedback" role="alert">
@@ -85,7 +85,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones:</label>
 
                             <div class="col-md-4">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $expense->observation ?? old('observation') }}" readonly autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">
@@ -108,8 +108,13 @@
                                 
                                     <div class="col-md-4">
                                         <select id="type_form"  name="type_form" class="form-control" required>
-                                            <option value="">Seleccionar</option>
-                                            <option value="1">Inventario de Mercancia</option>
+                                            <option value="-1">Seleccionar</option>
+                                            @if (isset($inventory))
+                                                <option value="1" selected>Inventario de Mercancia</option>
+                                            @else
+                                                <option value="1">Inventario de Mercancia</option>
+                                            @endif
+                                            
                                             <option value="2">Activos Fijos</option>
                                             <option value="3">Costos</option>
                                             <option value="4">Gastos - Personal</option>
@@ -124,7 +129,7 @@
                                         <label id="centro_costo_label" for="centro_costo" class="col-md-2 col-form-label text-md-right">Centro Costo:</label>
                                         
                                         <div class="col-md-2">
-                                            <input id="code_inventary" type="text" class="form-control @error('code_inventary') is-invalid @enderror" name="code_inventary" value="{{ old('code_inventary') }}"  autocomplete="code_inventary">
+                                            <input id="code_inventary" type="text" class="form-control @error('code_inventary') is-invalid @enderror" name="code_inventary" value="{{ $inventory->code ?? old('code_inventary') }}"  autocomplete="code_inventary">
             
                                             @error('code_inventary')
                                                 <span class="invalid-feedback" role="alert">
@@ -143,7 +148,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-1">
-                                            <a id="btn_code_inventary" href="{{ route('expensesandpurchases.selectprovider') }}" title="Buscar un Producto del Inventario"><i class="fa fa-eye"></i></a>  
+                                            <a id="btn_code_inventary" href="{{ route('expensesandpurchases.selectinventary',$expense->id) }}" title="Buscar un Producto del Inventario"><i class="fa fa-eye"></i></a>  
                                         </div>
                                     
                                 </div>
@@ -153,6 +158,11 @@
                                     <div class="col-md-4">
                                         <select  id="account"  name="Account" class="form-control" required>
                                             <option value="">Seleccionar</option>
+                                            @if (isset($accounts_inventory))
+                                                @foreach ($accounts_inventory as $var)
+                                                    <option value="{{ $var->id }}">{{ $var->description }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
 
                                         @if ($errors->has('account'))
@@ -210,7 +220,7 @@
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="price" >Precio</label>
-                                        <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $inventory->products['price']  ?? '' }}"  required autocomplete="price">
+                                        <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $inventory->products['price_buy']  ?? '' }}"  required autocomplete="price">
         
                                         @error('price')
                                             <span class="invalid-feedback" role="alert">
@@ -305,6 +315,15 @@
 </div>
 @endsection
 
+@if (isset($inventory))
+    @section('validacionExpense')
+        <script>
+                $("#code_inventary_label").show();
+                $("#code_inventary").show();
+                $("#btn_code_inventary").show();
+        </script>
+    @endsection
+@endif
 
 @section('consulta')
    
@@ -315,8 +334,10 @@
         $("#centro_costo_label").hide();
         $("#centro_costo").hide();
 
+        var type_var = 0;
+
         $("#type_form").on('change',function(){
-                var type_var = $(this).val();
+                 type_var = $(this).val();
                 
                 if(type_var == 1){
                     $("#code_inventary_label").show();
@@ -324,24 +345,35 @@
                     $("#btn_code_inventary").show();
                     $("#centro_costo_label").hide();
                     $("#centro_costo").hide();
+                    document.getElementById("code_inventary").value = "";
+                    document.getElementById("description").value = "";
+                    document.getElementById("price").value = "";
                     
-                }else if(type_var != 2){
+                }else if(type_var != "-1"){
                     $("#code_inventary_label").hide();
                     $("#code_inventary").hide();
                     $("#btn_code_inventary").hide();
                     $("#centro_costo_label").show();
                     $("#centro_costo").show();
-                   
-                }else{
+                    document.getElementById("code_inventary").value = "";
+                    document.getElementById("description").value = "";
+                    document.getElementById("price").value = "";
+
+                }else if(type_var == "-1"){
                     $("#code_inventary_label").hide();
                     $("#code_inventary").hide();
                     $("#btn_code_inventary").hide();
                     $("#centro_costo_label").hide();
                     $("#centro_costo").hide();
+                    document.getElementById("code_inventary").value = "";
+                    document.getElementById("description").value = "";
+                    document.getElementById("price").value = "";
                 }
                
-               
+               if(type_var != "-1"){
                 searchCode(type_var);
+               }
+                
         });
 
         function searchCode(type_var){
@@ -378,12 +410,12 @@
         }
             $("#account").on('change',function(){
                 
-                var e = document.getElementById("account");
-                var text = e.options[e.selectedIndex].text;
+               
+                    var e = document.getElementById("account");
+                    var text = e.options[e.selectedIndex].text;
 
-                document.getElementById("description").value = text;
-                /*var account = $(this).val();
-                var segment_id    = document.getElementById("segment").value;*/
+                    document.getElementById("description").value = text;
+               
                 
             });
 
@@ -401,6 +433,22 @@
 @section('javascript')
 
 <script>
+    function validacion() {
+
+        let amount = document.getElementById("amount_product").value; 
+
+        if (amount < 1) {
+
+        alert('La cantidad del Producto debe ser mayor a 1');
+        return false;
+        }
+        else {
+            return true;
+        }
+
+
+
+    }
     
     $('#dataTable').dataTable( {
       "ordering": false,

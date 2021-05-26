@@ -78,11 +78,14 @@ class ExpensesAndPurchaseController extends Controller
         return view('admin.expensesandpurchases.createexpense',compact('datenow','provider'));
     }
 
-    public function create_expense_detail($id_expense = null)
+    public function create_expense_detail($id_expense = null,$id_inventory = null)
     {
         $expense = null;
         $provider = null;
         $expense_details = null;
+        
+        $inventory = null;
+        $accounts_inventory = null;
 
         if(isset($id_expense)){
             $expense = ExpensesAndPurchase::find($id_expense);
@@ -90,6 +93,14 @@ class ExpensesAndPurchaseController extends Controller
             $provider = Provider::find($expense->id_provider);
 
             $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+
+            if(isset($id_inventory)){
+                $inventory = Inventory::find($id_inventory);
+                $accounts_inventory = Account::select('id','description')->where('code_one',1)
+                                                                ->where('code_two', 1)
+                                                                ->where('code_three', 8)
+                                                                ->where('code_four', '<>',0)->get();
+            }
         }
             $branches = Branch::orderBy('description','desc')->get();
 
@@ -98,7 +109,7 @@ class ExpensesAndPurchaseController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        return view('admin.expensesandpurchases.create',compact('datenow','provider','expense','expense_details','branches'));
+        return view('admin.expensesandpurchases.create',compact('datenow','provider','expense','expense_details','branches','inventory','accounts_inventory'));
     }
 
    
@@ -161,21 +172,21 @@ class ExpensesAndPurchaseController extends Controller
          
     }
 
-    public function selectproduct($id_expensesandpurchase)
-    {
-            $inventories     = Inventory::all();
-        
-            return view('admin.expensesandpurchases.selectinventary',compact('inventories','id_expensesandpurchase'));
-    }
-
+   
 
     public function selectprovider()
     {
-
-
             $providers     = Provider::all();
         
             return view('admin.expensesandpurchases.selectprovider',compact('providers'));
+    }
+    
+    
+    public function selectinventary($id_expense)
+    {
+            $inventories     = Inventory::all();
+        
+            return view('admin.expensesandpurchases.selectinventary',compact('inventories','id_expense'));
     }
     
 
@@ -485,7 +496,7 @@ class ExpensesAndPurchaseController extends Controller
 
     public function store_expense_credit(Request $request)
     {
-       
+        
 
         $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible')));
         $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('total_factura')));
@@ -510,10 +521,52 @@ class ExpensesAndPurchaseController extends Controller
 
         $expense->save();
 
-        return redirect('quotations/facturado/'.$expense->id.'')->withSuccess('Gasto o Compra Guardada con Exito!');
+        return redirect('expensesandpurchases/expensevoucher/'.$expense->id.'')->withSuccess('Gasto o Compra Guardada con Exito!');
     }
 
     
+
+    public function create_expense_voucher($id_expense){
+
+        $expense = null;
+        $provider = null;
+        $expense_details = null;
+
+        if(isset($id_expense)){
+            $expense = ExpensesAndPurchase::find($id_expense);
+
+            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+        }else{
+            return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
+        } 
+
+             $total= 0;
+             $base_imponible= 0;
+
+             foreach($expense_details as $var){
+                 
+                    $total += ($var->price * $var->amount);
+               
+                if($var->exento == 0){
+                    $base_imponible += ($var->price * $var->amount); 
+                }
+             }
+
+             $expense->total_factura = $total;
+             $expense->base_imponible = $base_imponible;
+            
+             $date = Carbon::now();
+             $datenow = $date->format('Y-m-d');    
+
+             
+     
+             return view('admin.expensesandpurchases.create_payment_voucher',compact('expense','datenow','expense_details'));
+         
+    }
+
+   
+
+
     public function listaccount(Request $request, $type = null){
         //validar si la peticion es asincrona
         if($request->ajax()){

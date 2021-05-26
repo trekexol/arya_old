@@ -149,6 +149,8 @@
 
 
   @yield('validacion')
+
+  @yield('validacionExpense')
   
   <script>
     function soloNumeros(idCampo){

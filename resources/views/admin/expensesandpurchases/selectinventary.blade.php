@@ -22,9 +22,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Inventario</h6>
-    </div>
+   
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -44,7 +42,7 @@
                 <th>SKU</th>
                 <th>Descripción</th>
                 <th>Cantidad</th>
-                <th>Costo</th>
+                <th>Precio de Compra</th>
                 
                 <th>Foto del Producto</th>
                 <th>Moneda</th>
@@ -60,12 +58,12 @@
                     @foreach ($inventories as $var)
                         <tr>
                             <td>
-                                <a href="{{ route('quotations.createproduct',[$id_quotation,$var->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                                <a href="{{ route('expensesandpurchases.create_detail',[$id_expense,$var->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{ $var->code }}</td>
                             <td>{{ $var->products['description']}}</td>
                             <td style="text-align: right">{{ $var->amount }}</td> 
-                            <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
+                            <td style="text-align: right">{{number_format($var->products['price_buy'], 2, ',', '.')}}</td>
                             
                             
                             
