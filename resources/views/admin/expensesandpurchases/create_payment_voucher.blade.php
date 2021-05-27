@@ -154,8 +154,8 @@
                                 <a href="{{ route('invoices.movement',$expense->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
                             @endif
-                            <div class="col-md-2">
-                                <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
+                            <div class="col-md-3">
+                                <a href="{{ route('expensesandpurchases') }}" id="btnvolver" name="btnvolver" class="btn btn-danger" title="volver">Ver Gastos o Compras</a>  
                             </div>
                         </div>
                         

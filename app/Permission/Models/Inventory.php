@@ -17,6 +17,10 @@ class Inventory extends Model
         return $this->belongsToMany('App\QuotationProduct')->withTimesTamps();
     }
 
+    public function expensedetails(){
+        return $this->belongsToMany('App\ExpenseDetail')->withTimesTamps();
+    }
+
     public function permissions(){
         return $this->belongsToMany('App\Permission\Models\Permission')->withTimesTamps();
     }

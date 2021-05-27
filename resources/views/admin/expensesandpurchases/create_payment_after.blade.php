@@ -27,8 +27,7 @@
         
             <div class="card" style="width: 70rem;" >
                 <div class="card-header" ><h3>Guardar la Compra</h3></div>
-                <form method="POST" action="{{ route('expensesandpurchases.store_expense_credit') }}" enctype="multipart/form-data">
-                    @csrf   
+              
                 <div class="card-body" >
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
@@ -149,32 +148,9 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-2">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                    <label class="custom-control-label" for="customSwitches">Tiene Crédito</label>
-                                  </div>
-                            </div>
-                            <div class="col-md-2">
-                                <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" placeholder="Dias de Crédito" autocomplete="credit"> 
-                            </div>
                         </div>
                         <br>
-                        <div class="form-group row" id="formenviarcredito">
-                            
-                            <div class="col-md-2">
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary">
-                                    Guardar Factura
-                                 </button>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="{{ route('expensesandpurchases.create_detail',$expense->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
-                            </div>
-                        </div>
                         
-            </form>           
             <form method="POST" action="{{ route('expensesandpurchases.store_payment') }}" enctype="multipart/form-data">
                 @csrf   
 
@@ -708,7 +684,7 @@
                             </div>
                             <div class="col-md-3">
                                 <button type="submit" class="btn btn-primary">
-                                    Guardar
+                                    Guardar Factura
                                  </button>
                             </div>
                             <div class="col-md-2">
@@ -1041,6 +1017,14 @@
 
                 
             });
+
+       
+
+       
+
+   
+
+
+
     </script>
 @endsection
-

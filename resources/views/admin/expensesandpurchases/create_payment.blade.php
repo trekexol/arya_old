@@ -26,10 +26,11 @@
     <div class="row justify-content-center" >
         
             <div class="card" style="width: 70rem;" >
-                <div class="card-header" ><h3>Guardar la Compra</h3></div>
+                <div class="card-header" ><h3>Gasto o Compra</h3></div>
                 <form method="POST" action="{{ route('expensesandpurchases.store_expense_credit') }}" enctype="multipart/form-data">
                     @csrf   
                 <div class="card-body" >
+
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
                             <div class="col-md-4">
@@ -170,12 +171,12 @@
                                  </button>
                             </div>
                             <div class="col-md-2">
-                                <a href="{{ route('expensesandpurchases.create_detail',$expense->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                <a href="{{ route('expensesandpurchases.create',$expense->id_provider) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                         
             </form>           
-            <form method="POST" action="{{ route('expensesandpurchases.store_payment') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('expensesandpurchases.store_expense_payment') }}" enctype="multipart/form-data">
                 @csrf   
 
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
@@ -712,7 +713,7 @@
                                  </button>
                             </div>
                             <div class="col-md-2">
-                                <a href="{{ route('expensesandpurchases.create_detail',$expense->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                <a href="{{ route('expensesandpurchases.create',$expense->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                         
@@ -723,7 +724,7 @@
 </div>
 @endsection
 
-@section('javascript')
+@section('javascript1')
 
 
     <script src="{{asset('js/facturar.js')}}"></script> 

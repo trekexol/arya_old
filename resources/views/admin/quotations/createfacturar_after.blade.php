@@ -723,7 +723,7 @@
 </div>
 @endsection
 
-@section('javascript')
+@section('javascript1')
 
 
     <script src="{{asset('js/facturar.js')}}"></script> 

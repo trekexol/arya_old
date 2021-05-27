@@ -510,7 +510,7 @@ Route::group(["prefix"=>'invoices'],function(){
 
     Route::get('expense/{id_expense}','PDFController@imprimirExpense')->name('pdf.expense');
 
-    Route::get('expensemedia/{id_expense}','PDFController@imprimirexpense_media')->name('pdf.expense_media');
+    Route::get('expensemedia/{id_expense}','PDFController@imprimirExpenseMedia')->name('pdf.expense_media');
  });
 
 
@@ -585,5 +585,9 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     Route::get('selectinventary/{id_expense}','ExpensesAndPurchaseController@selectinventary')->name('expensesandpurchases.selectinventary');
 
     Route::get('expensevoucher/{id_expense}','ExpensesAndPurchaseController@create_expense_voucher')->name('expensesandpurchases.create_expense_voucher');
+
+    Route::get('registerpaymentafter/{id_expense?}','ExpensesAndPurchaseController@create_payment_after')->name('expensesandpurchases.create_payment_after');
+    
+    Route::post('storeexpensepayment', 'ExpensesAndPurchaseController@store_expense_payment')->name('expensesandpurchases.store_expense_payment');
 
 });

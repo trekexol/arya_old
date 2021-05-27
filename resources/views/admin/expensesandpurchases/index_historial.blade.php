@@ -48,12 +48,12 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0" >
             <thead>
             <tr> 
-                <th ></th>
+                
                 <th >Factura de Compra</th>
                 <th >N° de Control/Serie</th>
                 <th >Proveedor</th>
                 <th >Fecha</th>
-              
+                <th ></th>
                
             </tr>
             </thead>
@@ -63,13 +63,20 @@
                 @else  
                     @foreach ($expensesandpurchases as $expensesandpurchase)
                         <tr>
-                            <td>
-                            <a href="{{ route('expensesandpurchases.create_detail',$expensesandpurchase->id) }}" title="Seleccionar"><i class="fa fa-check" style="color: orange;"></i></a>
-                            </td>
+                           
                             <td>{{$expensesandpurchase->invoice}}</td>
                             <td>{{$expensesandpurchase->serie}}</td>
                             <td>{{$expensesandpurchase->providers['razon_social']}}</td>
                             <td>{{$expensesandpurchase->date}}</td>
+                            @if ($expensesandpurchase->status == "C")
+                            <td class="text-center font-weight-bold">
+                                <a href="{{ route('expensesandpurchases.create_expense_voucher',$expensesandpurchase->id) }}" title="Ver Detalle" class="text-center text-success font-weight-bold">Cobrado</a>
+                            </td>
+                            @else
+                            <td class="text-center font-weight-bold">
+                                <a href="{{ route('expensesandpurchases.create_payment_after',$expensesandpurchase->id) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
+                            </td>
+                            @endif
                         </tr>     
                     @endforeach   
                 @endif

@@ -39,15 +39,11 @@
    
   </tr>
   <tr>
-    @if (isset($expense->credit_days))
-      <td style="width: 40%;">Fecha de Emisión:</td>
-      <td>{{ $expense->date_billing }} | Dias de Crédito: {{ $expense->credit_days }}</td>
     
-    @else
       <td style="width: 40%;">Fecha de Emisión:</td>
-      <td>{{ $expense->date_billing }}</td>
-    @endif
+      <td>{{ $expense->date }}</td>
     
+  
   </tr>
   
 </table>
@@ -57,7 +53,7 @@
 
 <table style="width: 100%;">
   <tr>
-    <th style="font-weight: normal; font-size: medium;">Nombre / Razón Social: &nbsp;  {{ $expense->providers['name'] }}</th>
+    <th style="font-weight: normal; font-size: medium;">Nombre / Razón Social: &nbsp;  {{ $expense->providers['razon_social'] }}</th>
     
    
   </tr>
@@ -77,18 +73,21 @@
   <tr>
     <th style="text-align: center;">Teléfono</th>
     <th style="text-align: center;">RIF/CI</th>
-    <th style="text-align: center;">N° Control / Serie</th>
-    <th style="text-align: center;">Nota de Entrega</th>
-    <th style="text-align: center;">Transporte</th>
+    <th style="text-align: center;">Factura de Compra</th>
+    <th style="text-align: center;">Nro. Control/Serie</th>
+    <th style="text-align: center;">Condiciones de Pago</th>
    
   </tr>
   <tr>
     <td style="text-align: center;">{{ $expense->providers['phone1'] }}</td>
-    <td style="text-align: center;">{{ $expense->providers['cedula_rif'] }}</td>
+    <td style="text-align: center;">{{ $expense->providers['code_provider'] }}</td>
+    <td style="text-align: center;">{{ $expense->invoice }}</td>
     <td style="text-align: center;">{{ $expense->serie }}</td>
-    <td style="text-align: center;">{{ $expense->note }}</td>
-    <td style="text-align: center;">{{ $expense->transports['placa'] }}</td>
-    
+    @if(isset($expense->credit_days))
+      <td style="text-align: center;">Crédito {{ $expense->credit_days }} dias</td>
+    @else
+      <td></td>
+    @endif
     
   </tr>
   
@@ -115,7 +114,6 @@
           <th style="text-align: center; ">Tipo de Pago</th>
           <th style="text-align: center; ">Cuenta</th>
           <th style="text-align: center; ">Referencia</th>
-          <th style="text-align: center; ">Dias de Credito</th>
           <th style="text-align: center; ">Monto</th>
         </tr>
 
@@ -128,7 +126,6 @@
             <th style="text-align: center; font-weight: normal;"></th>
           @endif
           <th style="text-align: center; font-weight: normal;">{{ $var->reference }}</th>
-          <th style="text-align: center; font-weight: normal;">{{ $var->credit_days }}</th>
           <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount, 2, ',', '.')}}</th>
         </tr> 
         @endforeach 
@@ -147,21 +144,23 @@
     <th style="text-align: center; ">Descripción</th>
     <th style="text-align: center; ">Cantidad</th>
     <th style="text-align: center; ">P.V.J.</th>
-    <th style="text-align: center; ">Desc</th>
     <th style="text-align: center; ">Total</th>
   </tr> 
   @foreach ($inventories_expenses as $var)
       <?php
-      $percentage = (($var->price * $var->amount_expense) * $var->discount)/100;
+      $percentage = (($var->price * $var->amount))/100;
 
-      $total_less_percentage = ($var->price * $var->amount_expense) - $percentage;
+      $total_less_percentage = ($var->price * $var->amount) - $percentage;
       ?>
     <tr>
-      <th style="text-align: center; font-weight: normal;">{{ $var->code_comercial }}</th>
+      @if (isset($var->id_inventory))
+        <th style="text-align: center; font-weight: normal;">Inv: {{ $var->inventories['code'] }}</th> 
+      @else
+        <th style="text-align: center; font-weight: normal;">Cuenta: {{ $var->id_account }}</th>
+      @endif
       <th style="text-align: center; font-weight: normal;">{{ $var->description }}</th>
-      <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount_expense, 0, '', '.') }}</th>
+      <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount, 0, '', '.') }}</th>
       <th style="text-align: center; font-weight: normal;">{{ number_format($var->price, 2, ',', '.')  }}</th>
-      <th style="text-align: center; font-weight: normal;">{{ $var->discount }}%</th>
       <th style="text-align: right; font-weight: normal;">{{ number_format($total_less_percentage, 2, ',', '.') }}</th>
     </tr> 
   @endforeach 
@@ -171,7 +170,7 @@
 <?php
   $iva = ($expense->base_imponible * $expense->iva_percentage)/100;
 
-  $total = $expense->sub_total_factura + $iva;
+  $total = $expense->sub_total + $iva;
 
   $total_petro = ($total - $expense->anticipo)/ 159765192.04;
 ?>
@@ -179,7 +178,7 @@
 <table style="width: 100%;">
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Sub Total</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->sub_total_factura, 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->sub_total, 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Base Imponible</th>
@@ -205,12 +204,8 @@
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total - $expense->anticipo, 2, ',', '.') }}</th>
   </tr> 
   <tr>
-    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white; font-size: small;">MONTO TOTAL Petro</th>
+    <th style="text-align: right; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); font-size: small;">MONTO TOTAL Petro</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_petro, 6, ',', '.') }}</th>
-  </tr> 
-  <tr>
-    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"><pre>ESTA FACTURA VA SIN TACHADURAS NI ENMIENDAS        </pre></th>
-    <th style="text-align: right; font-weight: normal; width: 21%; "></th>
   </tr> 
   
   

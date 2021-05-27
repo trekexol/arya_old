@@ -243,13 +243,13 @@
                                 <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
-                                        <th>Código</th>
-                                        <th>Descripción</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio</th>
-                                        <th>Descuento</th>
-                                        <th>Sub Total</th>
-                                        <th><i class="fas fa-cog"></i></th>
+                                        <th class="text-center">Código</th>
+                                        <th class="text-center">Descripción</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Precio</th>
+                                        <th class="text-center">Descuento</th>
+                                        <th class="text-center">Sub Total</th>
+                                        <th class="text-center"><i class="fas fa-cog"></i></th>
                                       
                                     </tr>
                                     </thead>
@@ -296,7 +296,7 @@
                                                 <td style="text-align: right">Total</td>
                                                 <td style="text-align: right">{{number_format($suma, 2, ',', '.')}}</td>
                                                 
-                                                <td style="text-align: right">-------------</td>
+                                                <td style="text-align: right"></td>
                                             
                                                 </tr>
                                         @endif
@@ -323,10 +323,10 @@
 </div>
 @endsection
 
-@section('javascript')
-
+@section('javascript1')
+    
     <script>
-
+     
         $(document).ready(function () {
             $("#discount_product").mask('000', { reverse: true });
             
@@ -337,11 +337,6 @@
             
         });
 
-
-        $('#dataTable').DataTable({
-            "order": []
-        });
-
        // document.querySelector('#total').innerText = {{number_format($suma, 2, ',', '.')}};
        
         document.querySelector('#total').innerText = {{$suma * 100}};
@@ -350,13 +345,19 @@
             $("#total").mask('000.000.000.000.000,00', { reverse: true });
             
         });
-
     </script> 
 
 @endsection         
 
 @section('validacion')
-
+    <script>
+        $('#dataTable').dataTable( {
+        "ordering": false,
+        "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+    } );
+    </script>
     <script>
     var coin = "Bolivares";
 
@@ -389,6 +390,7 @@
     
         
     }
+    
     </script> 
 
 @endsection    
@@ -440,6 +442,7 @@
                 }
             })
         }
+        
 
     </script>
 @endsection
