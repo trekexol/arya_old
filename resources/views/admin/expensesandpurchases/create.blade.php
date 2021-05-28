@@ -415,26 +415,26 @@
                 }
             })
         }
-            $("#account").on('change',function(){
-                
-               
-                    var e = document.getElementById("account");
-                    var text = e.options[e.selectedIndex].text;
 
-                    document.getElementById("description").value = text;
-               
-                
-            });
+                $("#account").on('change',function(){
+                    var type_form_validate = document.getElementById("type_form").value; 
 
-    </script>
+                   
+                    if(type_form_validate != 1){
+                            var e = document.getElementById("account");
+                            var text = e.options[e.selectedIndex].text;
+
+                            document.getElementById("description").value = text;
+                    
+                    }
+                        
+                    
+                });
+
+        </script>
+   
+    
 @endsection
-
-
-
-
-
-
-
 
 
 @section('javascript')

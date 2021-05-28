@@ -151,7 +151,7 @@
                         </div>
                         <br>
                         
-            <form method="POST" action="{{ route('expensesandpurchases.store_payment') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('expensesandpurchases.store_expense_payment') }}" enctype="multipart/form-data">
                 @csrf   
 
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
@@ -688,7 +688,7 @@
                                  </button>
                             </div>
                             <div class="col-md-2">
-                                <a href="{{ route('expensesandpurchases.create_detail',$expense->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                <a href="{{ route('expensesandpurchases.index_historial',$expense->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                         
@@ -699,7 +699,7 @@
 </div>
 @endsection
 
-@section('javascript')
+@section('javascript1')
 
 
     <script src="{{asset('js/facturar.js')}}"></script> 

@@ -99,13 +99,13 @@
 </tr>
   
 </table>
-  @if (empty($payment_expenses))
+  @if (!empty($payment_expenses))
       
 
       <br>
       <table style="width: 100%;">
         <tr>
-          <th style="text-align: center; width: 100%;">Condiciones de Pago</th>
+          <th style="text-align: center; width: 100%;">Pagos</th>
         </tr> 
       </table>
 

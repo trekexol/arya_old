@@ -49,10 +49,13 @@
             <thead>
             <tr> 
                 
-                <th >Factura de Compra</th>
-                <th >N° de Control/Serie</th>
-                <th >Proveedor</th>
-                <th >Fecha</th>
+                <th class="text-center">Factura de Compra</th>
+                <th class="text-center">N° de Control/Serie</th>
+                <th class="text-center">Proveedor</th>
+                <th class="text-center">Fecha</th>
+                <th class="text-center">Monto</th>
+                <th class="text-center">Iva</th>
+                <th class="text-center">Total</th>
                 <th ></th>
                
             </tr>
@@ -68,13 +71,16 @@
                             <td>{{$expensesandpurchase->serie}}</td>
                             <td>{{$expensesandpurchase->providers['razon_social']}}</td>
                             <td>{{$expensesandpurchase->date}}</td>
+                            <td class="text-right">{{number_format($expensesandpurchase->amount, 2, ',', '.')}}</td>
+                            <td class="text-right">{{number_format($expensesandpurchase->amount_iva, 2, ',', '.')}}</td>
+                            <td class="text-right">{{number_format($expensesandpurchase->amount_with_iva, 2, ',', '.')}}</td>
                             @if ($expensesandpurchase->status == "C")
                             <td class="text-center font-weight-bold">
-                                <a href="{{ route('expensesandpurchases.create_expense_voucher',$expensesandpurchase->id) }}" title="Ver Detalle" class="text-center text-success font-weight-bold">Cobrado</a>
+                                <a href="{{ route('expensesandpurchases.create_expense_voucher',$expensesandpurchase->id) }}" title="Ver Detalle" class="text-center text-success font-weight-bold">Pagado</a>
                             </td>
                             @else
                             <td class="text-center font-weight-bold">
-                                <a href="{{ route('expensesandpurchases.create_payment_after',$expensesandpurchase->id) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
+                                <a href="{{ route('expensesandpurchases.create_payment_after',$expensesandpurchase->id) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Pagar</a>
                             </td>
                             @endif
                         </tr>     
@@ -88,7 +94,7 @@
   
 @endsection
 
-@section('javascript')
+@section('javascript1')
 
 <script>
     $('#dataTable').dataTable( {

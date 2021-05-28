@@ -333,7 +333,7 @@ class PDFController extends Controller
              if(isset($expense)){
 
                  $payment_expenses = ExpensePayment::where('id_expense',$expense->id)->get();
-
+                 
                  foreach($payment_expenses as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
                  }
@@ -371,7 +371,7 @@ class PDFController extends Controller
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
 
-                
+                 
                  $pdf = $pdf->loadView('pdf.expense',compact('expense','inventories_expenses','payment_expenses'));
                  return $pdf->stream();
          

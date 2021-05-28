@@ -305,11 +305,15 @@
                                 </div>
                             </div>
                             <div class="form-group row mb-0">
-                                
-                                <div class="col-md-4">
-                                    <a onclick="deliveryNote()" id="btnNote" name="btnfacturar" class="btn btn-info" title="facturar">Procesar como Nota de Entrega</a>  
-                                    <a onclick="deliveryNoteSend()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
-                                </div>
+                                @if(!isset($quotation->date_delivery_note))
+                                    <div class="col-md-4">
+                                        <a onclick="deliveryNote()" id="btnNote" name="btnfacturar" class="btn btn-info" title="facturar">Procesar como Nota de Entrega</a>  
+                                        <a onclick="deliveryNoteSend()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
+                                    </div>
+                                @else
+                                    <div class="col-md-1">
+                                    </div>
+                                @endif
                                 <div class="col-md-4">
                                     <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
                                 </div>

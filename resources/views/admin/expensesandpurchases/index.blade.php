@@ -51,10 +51,10 @@
             <thead>
             <tr> 
                 <th ></th>
-                <th >Factura de Compra</th>
-                <th >N° de Control/Serie</th>
-                <th >Proveedor</th>
-                <th >Fecha</th>
+                <th class="text-center">Factura de Compra</th>
+                <th class="text-center">N° de Control/Serie</th>
+                <th class="text-center">Proveedor</th>
+                <th class="text-center">Fecha</th>
               
                
             </tr>
@@ -83,7 +83,7 @@
   
 @endsection
 
-@section('javascript')
+@section('javascript1')
 
 <script>
     $('#dataTable').dataTable( {

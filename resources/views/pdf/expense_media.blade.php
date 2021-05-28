@@ -100,7 +100,7 @@
 </tr>
   
 </table>
-  @if (empty($payment_expenses))
+  @if (!empty($payment_expenses))
       
 
       <br>

@@ -590,4 +590,6 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     
     Route::post('storeexpensepayment', 'ExpensesAndPurchaseController@store_expense_payment')->name('expensesandpurchases.store_expense_payment');
 
+    Route::get('movementexpense/{id_expense}','ExpensesAndPurchaseController@movements_expense')->name('expensesandpurchases.movement');
+    
 });

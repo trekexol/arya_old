@@ -143,19 +143,19 @@
                         <br>
                         <div class="form-group row">
                            
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <a onclick="pdf();" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <a onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
                             </div>
-                            @if ($expense->status == "C")
+                            
                             <div class="col-md-3">
-                                <a href="{{ route('invoices.movement',$expense->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
+                                <a href="{{ route('expensesandpurchases.movement',$expense->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
-                            @endif
+                            
                             <div class="col-md-3">
-                                <a href="{{ route('expensesandpurchases') }}" id="btnvolver" name="btnvolver" class="btn btn-danger" title="volver">Ver Gastos o Compras</a>  
+                                <a href="{{ route('expensesandpurchases.index_historial') }}" id="btnvolver" name="btnvolver" class="btn btn-danger" title="volver">Ver Gastos o Compras</a>  
                             </div>
                         </div>
                         

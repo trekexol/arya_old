@@ -17,8 +17,8 @@
             </a>
         </div>
         <div class="col-md-2">
-            <a href="{{ route('quotations.createfacturado',$quotation->id) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
-                &nbsp Volver a la Factura
+            <a href="{{ route('expensesandpurchases.create_expense_voucher',$expense->id) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
+                &nbsp Volver a la Compra
             </a>
         </div>
     </div>
@@ -43,7 +43,7 @@
                 <th>Fecha</th>
                 <th>Cuenta</th>
                 <th>Referencia</th>
-                <th>Factura</th>
+                
                 <th>Descripción</th>
                 <th>Debe</th>
                 <th>Haber</th>
@@ -61,8 +61,8 @@
                     <td>{{$var->headers['date']}}</td>
                     <td>{{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
                     <td>{{$var->id_header_voucher}}</td>
-                    <td>{{$var->id_invoice}}</td>
-                    <td>{{$var->headers['description']}} fact({{ $var->id_invoice }}) / {{$var->accounts['description']}}</td>
+                    
+                    <td>{{$var->headers['description']}} Compra({{ $var->id_expense }}) / {{$var->accounts['description']}}</td>
 
                     <td class="text-right">{{number_format($var->debe, 2, ',', '.')}}</td>
                     <td class="text-right">{{number_format($var->haber, 2, ',', '.')}}</td>

@@ -30,6 +30,8 @@
                 <form method="POST" action="{{ route('expensesandpurchases.store_expense_credit') }}" enctype="multipart/form-data">
                     @csrf   
                 <div class="card-body" >
+                    <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
+                       
 
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
@@ -709,7 +711,7 @@
                             </div>
                             <div class="col-md-3">
                                 <button type="submit" class="btn btn-primary">
-                                    Guardar Factura
+                                    Guardar
                                  </button>
                             </div>
                             <div class="col-md-2">

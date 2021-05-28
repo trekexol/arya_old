@@ -112,11 +112,70 @@ class FacturarController extends Controller
 
         $credit = request('credit');
 
+        $user_id = request('user_id');
+
         $quotation->iva_percentage = request('iva');
 
         $quotation->credit_days = $credit;
 
         $quotation->save();
+
+
+        $header_voucher  = new HeaderVoucher();
+
+
+        $header_voucher->description = "Ventas de Bienes o servicios.";
+        $header_voucher->date = $datenow;
+        
+    
+        $header_voucher->status =  "1";
+    
+        $header_voucher->save();
+
+        /*Busqueda de Cuentas*/
+
+        //Cuentas por Cobrar Clientes
+
+        $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
+    
+        if(isset($account_cuentas_por_cobrar)){
+            $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_amount_with_iva,0);
+        }
+
+        //Ingresos por SubSegmento de Bienes
+
+        $account_subsegmento = Account::where('description', 'like', 'Ingresos por SubSegmento de Bienes')->first();
+
+        if(isset($account_cuentas_por_cobrar)){
+            $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sin_formato_amount);
+        }
+
+        //Debito Fiscal IVA por Pagar
+
+        $account_debito_iva_fiscal = Account::where('description', 'like', 'Debito Fiscal IVA por Pagar')->first();
+        
+        if($sin_formato_amount_iva != 0){
+           
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$sin_formato_amount_iva);
+            }
+        }
+        
+        //Mercancia para la Venta
+        
+        $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
+
+        if(isset($account_cuentas_por_cobrar)){
+            $this->add_movement($header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$sin_formato_amount);
+        }
+
+        //Costo de Mercancia
+
+        $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancia')->first();
+
+        if(isset($account_cuentas_por_cobrar)){
+            $this->add_movement($header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sin_formato_amount,0);
+        }
 
         return redirect('quotations/facturado/'.$quotation->id.'')->withSuccess('Factura Guardada con Exito!');
     }
@@ -1031,9 +1090,11 @@ class FacturarController extends Controller
 
             $base_imponible = request('base_imponible_form');
 
+            $verification_detail = DetailVoucher::where('id_invoice',$quotation->id)->first();
 
             /*Aplicamos los movimientos Contables */
-
+            if(!isset($verification_detail)){
+              
                 $header_voucher  = new HeaderVoucher();
 
 
@@ -1093,7 +1154,7 @@ class FacturarController extends Controller
                 /*----------- */
 
 
-            
+            }
 
             /*------------------------------------------------- */
 

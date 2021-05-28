@@ -170,11 +170,11 @@
                             <div class="col-md-4">
                                 <a onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
                             </div>
-                            @if ($quotation->status == "C")
+                           
                             <div class="col-md-3">
                                 <a href="{{ route('invoices.movement',$quotation->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
-                            @endif
+                           
                             <div class="col-md-2">
                                 <a href="{{ route('invoices') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Ver Facturas</a>  
                             </div>
