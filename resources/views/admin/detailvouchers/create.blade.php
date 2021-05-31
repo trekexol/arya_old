@@ -287,7 +287,7 @@ $(document).ready(function () {
 </script>
 @endsection 
 
-@section('javascript')
+@section('javascript1')
 
     @if($suma_debe != $suma_haber)
     <script>

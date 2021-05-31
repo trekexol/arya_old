@@ -16,7 +16,7 @@ class CreateDetailVouchersTable extends Migration
         Schema::create('detail_vouchers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_account');
-            $table->unsignedBigInteger('id_header_voucher');
+            $table->unsignedBigInteger('id_header_voucher')->nullable();
             $table->unsignedBigInteger('id_invoice')->nullable();
             $table->unsignedBigInteger('id_expense')->nullable();
             $table->unsignedBigInteger('user_id');

@@ -110,7 +110,7 @@
   
 @endsection
 
-@section('javascript')
+@section('javascript1')
 
     <script type="text/javascript">
             function pdfinventory() {

@@ -112,7 +112,7 @@
 
 
 
-@section('javascript')
+@section('javascript1')
      
       <!-- Page level custom scripts -->
       <script src="{{asset('vendor/sb-admin/js/demo/chart-area-demo.js')}}"></script>

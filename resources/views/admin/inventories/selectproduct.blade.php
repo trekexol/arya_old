@@ -104,7 +104,7 @@
 </div>
   
 @endsection
-@section('javascript')
+@section('javascript1')
 
     
      <script>

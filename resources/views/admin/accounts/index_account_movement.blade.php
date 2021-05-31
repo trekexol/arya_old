@@ -37,9 +37,10 @@
             <thead>
             <tr>
                 <th>Fecha</th>
-                <th>Cuenta</th>
+                <th>Tipo de Movimiento</th>
+                
                 <th>Referencia</th>
-                <th>Factura</th>
+              
                 <th>Descripción</th>
                 <th>Debe</th>
                 <th>Haber</th>
@@ -52,21 +53,31 @@
             <tbody>
                 @if (empty($detailvouchers))
                 @else
-                    @foreach ($detailvouchers as $key => $var)
+                    @foreach ($detailvouchers as $var)
                     <tr>
-                    <td>{{$var->headers['date']}}</td>
-                    <td>{{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
-                    <td>{{$var->id_header_voucher}}</td>
-                  
-                    @if (isset($var->id_invoice))
+                    <td>{{$var->headers['date'] ?? $var->banks['date'] ?? ''}}</td>
 
-                    <td>{{$var->id_invoice}}</td>
-                    <td>{{$var->headers['description']}} fact({{ $var->id_invoice }}) / {{$var->accounts['description']}}</td>
+                    @if(isset($var->id_bank_voucher))
+                        <td>Bancario</td>
+                    @elseif(isset($var->id_invoice))
+                        <td>Factura</td>
+                    @elseif(isset($var->id_expense))
+                        <td>Gasto o Compra</td>
+                    @else 
+                        <td>Otro</td>
+                    @endif
+                    
+                    <td>{{$var->id_header_voucher ?? $var->id_bank_voucher ?? $var->id_invoice ?? $var->id_expense ?? ''}}</td>
 
+                    @if(isset($var->id_bank_voucher))
+                      
+                        <td>{{$var->banks['description'] ?? ''}}</td>
+                    @elseif (isset($var->id_invoice))
+                        
+                        <td>{{$var->headers['description'] ?? ''}} fact({{ $var->id_invoice }}) / {{$var->accounts['description'] ?? ''}}</td>
                     @else
-                    <td></td>
-                    <td>{{$var->headers['description']}}</td>
-
+                        
+                        <td>{{$var->headers['description'] ?? ''}}</td>
                     @endif
                    
                     <td>{{$var->debe}}</td>
@@ -84,10 +95,12 @@
 
 @endsection
 @section('javascript')
-
     <script>
     $('#dataTable').DataTable({
-        "order": []
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
     });
     </script> 
 @endsection

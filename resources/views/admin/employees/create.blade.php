@@ -343,7 +343,7 @@
     </script>
 @endsection
 
-@section('javascript')
+@section('javascript1')
     <script>
             
             $("#estado").on('change',function(){

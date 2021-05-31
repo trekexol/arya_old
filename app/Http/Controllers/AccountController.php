@@ -27,9 +27,7 @@ class AccountController extends Controller
        
         $accounts = $this->calculation();
 
-        //$accounts = null;
-      
-        }elseif($users_role == '2'){
+        }else if($users_role == '2'){
            return view('admin.index');
        }
 
@@ -44,9 +42,11 @@ class AccountController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-         $detailvouchers = DetailVoucher::where('id_account',$id_account)->get();
-         $account = Account::find($id_account);
-         }elseif($users_role == '2'){
+             
+            $detailvouchers = DetailVoucher::where('id_account',$id_account)->get();
+            $account = Account::find($id_account);
+
+         }else if($users_role == '2'){
             return view('admin.index');
         }
         
@@ -199,18 +199,7 @@ class AccountController extends Controller
                                                                  ->sum('amount');
                                             /*---------------------------------------------------*/
                  
-                                             if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                                                 $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-                 
-                                             }else if(isset($total_amount_bank)){
-                                                 $var->debe = $total_debe + $total_amount_bank;
-                                             
-                                             }else if(isset($total_amount_bank_counterpart)){
-                                                 $var->debe = $total_debe - $total_amount_bank_counterpart;
-                                             }else{
                                                  $var->debe = $total_debe;
-                                             }                                     
-                   
                                                  $var->haber = $total_haber;
                    
                                              
@@ -238,38 +227,10 @@ class AccountController extends Controller
                                                                         ->sum('haber');      
                                          /*---------------------------------------------------*/                               
                    
-                                         /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */    
-                                         $total_amount_bank = DB::table('accounts')
-                                                                 ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                                 ->where('accounts.code_one', $var->code_one)
-                                                                 ->where('accounts.code_two', $var->code_two)
-                                                                 ->where('accounts.code_three', $var->code_three)
-                                                                 ->where('accounts.code_four', $var->code_four)
-                                                                 ->sum('amount');
-                                         $total_amount_bank_counterpart = DB::table('accounts')
-                                                                 ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                                 ->where('accounts.code_one', $var->code_one)
-                                                                 ->where('accounts.code_two', $var->code_two)
-                                                                 ->where('accounts.code_three', $var->code_three)
-                                                                 ->where('accounts.code_four', $var->code_four)
-                                                                 ->sum('amount');
-                                       /*---------------------------------------------------*/     
+                                          
                  
-                 
-                                         if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                                             $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-                 
-                                         }else if(isset($total_amount_bank)){
-                                             $var->debe = $total_debe + $total_amount_bank;
-                                         
-                                         }else if(isset($total_amount_bank_counterpart)){
-                                             $var->debe = $total_debe - $total_amount_bank_counterpart;
-                                         }else{
-                                             $var->debe = $total_debe;
-                                         }                 
-                                             
-                                             
-                                             $var->haber = $total_haber;       
+                                        $var->debe = $total_debe;
+                                        $var->haber = $total_haber;       
                                                            
                                       
                                             
@@ -293,38 +254,9 @@ class AccountController extends Controller
                                                                             ->where('detail_vouchers.status', 'C')
                                                                             ->sum('haber');
                                          /*---------------------------------------------------*/
-                                                  
-                                         /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */  
-                                         $total_amount_bank = DB::table('accounts')
-                                                                 ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                                 ->where('accounts.code_one', $var->code_one)
-                                                                 ->where('accounts.code_two', $var->code_two)
-                                                                 ->where('accounts.code_three', $var->code_three)
-                                                                 ->where('accounts.code_four', $var->code_four)
-                                                                 ->sum('amount');
-                                         $total_amount_bank_counterpart = DB::table('accounts')
-                                                                 ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                                 ->where('accounts.code_one', $var->code_one)
-                                                                 ->where('accounts.code_two', $var->code_two)
-                                                                 ->where('accounts.code_three', $var->code_three)
-                                                                 ->where('accounts.code_four', $var->code_four)
-                                                                 ->sum('amount');
-                                         /*---------------------------------------------------*/
-                 
-                 
-                                         if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                                             $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-                 
-                                         }else if(isset($total_amount_bank)){
-                                             $var->debe = $total_debe + $total_amount_bank;
-                                         
-                                         }else if(isset($total_amount_bank_counterpart)){
-                                             $var->debe = $total_debe - $total_amount_bank_counterpart;
-                                         }else{
-                                             $var->debe = $total_debe;
-                                         }                           
-                   
-                                             $var->haber = $total_haber;
+                                        
+                                        $var->debe = $total_debe;
+                                        $var->haber = $total_haber;
                                      
                                         
                                         }
@@ -346,39 +278,9 @@ class AccountController extends Controller
                                                                         ->sum('haber');
                                      /*---------------------------------------------------*/
                  
-                                         /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */ 
-                                             $total_amount_bank = DB::table('accounts')
-                                                                 ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                                 ->where('accounts.code_one', $var->code_one)
-                                                                 ->where('accounts.code_two', $var->code_two)
-                                                                 ->where('accounts.code_three', $var->code_three)
-                                                                 ->where('accounts.code_four', $var->code_four)
-                                                                 ->sum('amount');
-                 
-                                             $total_amount_bank_counterpart = DB::table('accounts')
-                                                                 ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                                 ->where('accounts.code_one', $var->code_one)
-                                                                 ->where('accounts.code_two', $var->code_two)
-                                                                 ->where('accounts.code_three', $var->code_three)
-                                                                 ->where('accounts.code_four', $var->code_four)
-                                                                 ->sum('amount');
-                                         /*---------------------------------------------------*/
-                 
-                 
-                                         if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                                             $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-                 
-                                         }else if(isset($total_amount_bank)){
-                                             $var->debe = $total_debe + $total_amount_bank;
-                                           
-                                         }else if(isset($total_amount_bank_counterpart)){
-                                             $var->debe = $total_debe - $total_amount_bank_counterpart;
-                                         }else{
-                                             $var->debe = $total_debe;
-                                         }                                        
-                                           
-                   
-                                           $var->haber = $total_haber;           
+                                        
+                                        $var->debe = $total_debe;
+                                        $var->haber = $total_haber;           
                                        
                     
                                     }

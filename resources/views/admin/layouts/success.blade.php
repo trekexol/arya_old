@@ -7,7 +7,7 @@
 </div>
 @endif
 
-@section('javascript')
+@section('javascript1')
 
 <script>
   $(document).ready(function() {

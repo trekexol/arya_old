@@ -593,3 +593,14 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     Route::get('movementexpense/{id_expense}','ExpensesAndPurchaseController@movements_expense')->name('expensesandpurchases.movement');
     
 });
+
+Route::group(["prefix"=>'directpaymentorders'],function(){
+    Route::get('/','DirectPaymentOrderController@createretirement')->name('directpaymentorders.create');
+    Route::post('store','DirectPaymentOrderController@store')->name('directpaymentorders.store');
+
+    Route::get('listbeneficiary/{type_var?}','DirectPaymentOrderController@listbeneficiary')->name('directpaymentorders.listbeneficiary');
+    Route::get('listcontrapartida/{type_var?}','DirectPaymentOrderController@listcontrapartida')->name('directpaymentorders.listcontrapartida');
+
+   
+
+});

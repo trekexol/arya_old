@@ -23,28 +23,38 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Retiros / Ordenes de Pago</div>
+                <div class="card-header">Ordenes de pago Directas</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('bankmovements.storeretirement') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('directpaymentorders.store') }}" enctype="multipart/form-data">
                         @csrf
-                        <input id="id_account" type="hidden" class="form-control @error('id_account') is-invalid @enderror" name="id_account" value="{{ $account->id }}" required autocomplete="id_account" autofocus>
-                        <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
+                       <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                         <input id="type_movement" type="hidden" class="form-control @error('type_movement') is-invalid @enderror" name="type_movement" value="RE" required autocomplete="type_movement" autofocus>
                         
                        
                         <div class="form-group row">
-                            <label for="account" class="col-md-2 col-form-label text-md-right">Retirar Desde:</label>
-
+                            @if (isset($accounts))
+                            <label for="account" class="col-md-2 col-form-label text-md-right">Retirar desde:</label>
+                        
                             <div class="col-md-4">
-                                <input id="account" type="text" class="form-control @error('account') is-invalid @enderror" name="account" value="{{ $account->description ?? old('account') }}" readonly required autocomplete="account" autofocus>
+                            <select id="account"  name="account" class="form-control" required>
+                                <option value="">Seleccione una Cuenta</option>
+                                @foreach($accounts as $index => $value)
+                                    <option value="{{ $index }}" {{ old('account') == $index ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                                </select>
 
-                                @error('account')
+                                @if ($errors->has('account_id'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                                        <strong>{{ $errors->first('account_id') }}</strong>
                                     </span>
-                                @enderror
+                                @endif
                             </div>
+                            @endif
+                            
+                       
                             <label for="date_begin" class="col-md-3 col-form-label text-md-right">Fecha del Retiro:</label>
 
                             <div class="col-md-3">
@@ -64,7 +74,7 @@
                             <label for="description" class="col-md-2 col-form-label text-md-right">Descripción</label>
 
                             <div class="col-md-4">
-                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}" required autocomplete="description">
+                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}"  autocomplete="description">
 
                                 @error('description')
                                     <span class="invalid-feedback" role="alert">
@@ -75,7 +85,7 @@
                             <label for="reference" class="col-md-3 col-form-label text-md-right">Número de Referencia:</label>
 
                             <div class="col-md-3">
-                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" autocomplete="reference">
+                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}"  autocomplete="reference">
 
                                 @error('reference')
                                     <span class="invalid-feedback" role="alert">
@@ -84,19 +94,19 @@
                                 @enderror
                             </div>
                         </div>
+                        <br>
                         <div class="form-group row">
-                                    
                             <label for="beneficiario" class="col-md-2 col-form-label text-md-right">Beneficiario:</label>
                         
                             <div class="col-md-4">
                             <select id="beneficiario"  name="beneficiario" class="form-control" required>
                                 <option value="">Seleccione un Beneficiario</option>
                                
-                                    <option value="Cliente" {{ old('Beneficiario') == 'Cliente' ? 'selected' : '' }}>
-                                        Cliente
+                                    <option value="1" {{ old('Beneficiario') == 'Cliente' ? 'selected' : '' }}>
+                                        Clientes
                                     </option>
-                                    <option value="Vendedor" {{ old('Beneficiario') == 'Vendedor' ? 'selected' : '' }}>
-                                        Vendedor
+                                    <option value="2" {{ old('Beneficiario') == 'Proveedor' ? 'selected' : '' }}>
+                                        Proveedores
                                     </option>
                                 </select>
 
@@ -124,7 +134,7 @@
                             <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Retiro:</label>
 
                             <div class="col-md-4">
-                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" placeholder="0,00" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -137,7 +147,7 @@
                        
                         
                         <div class="form-group row">
-                                    
+                            @if (isset($contrapartidas))      
                             <label for="contrapartida" class="col-md-2 col-form-label text-md-right">Contrapartida:</label>
                         
                             <div class="col-md-4">
@@ -156,7 +166,7 @@
                                     </span>
                                 @endif
                             </div>
-                       
+                       @endif
                           <div class="col-md-4">
                                 <select  id="subcontrapartida"  name="Subcontrapartida" class="form-control" required>
                                     <option value="">Seleccionar</option>
@@ -170,11 +180,24 @@
                             </div>
                         </div>  
 
+                        <div class="form-group row">
+                            @if (isset($branches))
+                                <label for="branch" class="col-md-2 col-form-label text-md-right">Centro de Costo:</label>
+                                <div class="col-md-4">
+                                    <select id="branch"  name="branch" class="form-control" >
+                                        <option value="Ninguno">Ninguno</option>
+                                        @foreach($branches as $var)
+                                            <option value="{{ $var->id }}">{{ $var->description}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+                        </div>  
                         <br>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                   Guardar Depósito
+                                   Guardar
                                 </button>
                             </div>
                         </div>
@@ -185,17 +208,6 @@
     </div>
 </div>
 @endsection
-@section('validacion_usuario')
-<script>
-    
-$(function(){
-    soloNumeroPunto('code');
-    soloAlfaNumerico('description');
-    
-});
-
-</script>
-@endsection
 @section('javascript')
     
     <script>
@@ -205,11 +217,13 @@ $(function(){
         });
     </script> 
 
-@endsection    
+@endsection     
+
 @section('javascript2')
 <script>
         
         $("#beneficiario").on('change',function(){
+           
             var beneficiario_id = $(this).val();
             $("#subbeneficiario").val("");
            
@@ -218,9 +232,11 @@ $(function(){
         });
 
     function getSubbeneficiario(beneficiario_id){
-        // alert(`../subbeneficiario/list/${beneficiario_id}`);
+       
+       
         $.ajax({
-            url:`../../bankmovements/listbeneficiario/${beneficiario_id}`,
+            url:"{{ route('directpaymentorders.listbeneficiary') }}" + '/' + beneficiario_id,
+           
             beforSend:()=>{
                 alert('consultando datos');
             },
@@ -228,12 +244,21 @@ $(function(){
                 let subbeneficiario = $("#subbeneficiario");
                 let htmlOptions = `<option value='' >Seleccione..</option>`;
                 // console.clear();
-                if(response.length > 0){
-                    response.forEach((item, index, object)=>{
-                        let {id,name} = item;
-                        htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${name}</option>`
 
-                    });
+                if(response.length > 0){
+                    if(beneficiario_id == "1"){
+                        response.forEach((item, index, object)=>{
+                            let {id,name} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${name}</option>`
+
+                        });
+                    }else{
+                        response.forEach((item, index, object)=>{
+                            let {id,razon_social} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${razon_social}</option>`
+
+                        });
+                    }
                 }
                 //console.clear();
                 // console.log(htmlOptions);
@@ -255,15 +280,6 @@ $(function(){
             
         });
 
-    
-$(function(){
-    soloNumeros('xtelf_local');
-    soloNumeros('xtelf_cel');
-});
-
-
-
-
 
 </script>
 @endsection
@@ -275,14 +291,13 @@ $(function(){
                 var contrapartida_id = $(this).val();
                 $("#subcontrapartida").val("");
                
-                // alert(contrapartida_id);
                 getSubcontrapartida(contrapartida_id);
             });
 
         function getSubcontrapartida(contrapartida_id){
-            // alert(`../subcontrapartida/list/${contrapartida_id}`);
+            
             $.ajax({
-                url:`../../bankmovements/list/${contrapartida_id}`,
+                url:"{{ route('directpaymentorders.listcontrapartida') }}" + '/' + contrapartida_id,
                 beforSend:()=>{
                     alert('consultando datos');
                 },

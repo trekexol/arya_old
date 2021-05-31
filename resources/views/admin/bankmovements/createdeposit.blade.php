@@ -75,7 +75,7 @@
                             <label for="reference" class="col-md-3 col-form-label text-md-right">Número de Referencia:</label>
 
                             <div class="col-md-3">
-                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" required autocomplete="reference">
+                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" autocomplete="reference">
 
                                 @error('reference')
                                     <span class="invalid-feedback" role="alert">
@@ -89,7 +89,7 @@
                             <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Depósito</label>
 
                             <div class="col-md-4">
-                                <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" placeholder="0,00" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -161,7 +161,16 @@ $(function(){
 
 </script>
 @endsection
+@section('javascript')
+    
+    <script>
+        $(document).ready(function () {
+            $("#amount").mask('00.000.000.000.000,00', { reverse: true });
+            
+        });
+    </script> 
 
+@endsection    
 @section('consultadeposito')
     <script>
             
