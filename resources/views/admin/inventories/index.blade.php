@@ -1,6 +1,19 @@
 @extends('layouts.dashboard')
 
 @section('content')
+
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('products') }}" role="tab" aria-controls="home" aria-selected="true">Productos</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('inventories') }}" role="tab" aria-controls="profile" aria-selected="false">Inventarios</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('inventories.movement') }}" role="tab" aria-controls="contact" aria-selected="false">Movimientos de Inventario</a>
+    </li>
+    
+  </ul>
 <div class="container-fluid">
 
     <!-- Page Heading -->
@@ -110,7 +123,7 @@
   
 @endsection
 
-@section('javascript1')
+@section('javascript')
 
     <script type="text/javascript">
             function pdfinventory() {
@@ -121,6 +134,7 @@
     </script>
      <script>
         $('#dataTable').DataTable({
+            "ordering": false,
             "order": [],
             'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
             'iDisplayLength': '50'

@@ -303,6 +303,7 @@ Route::group(["prefix"=>'inventories'],function(){
    
     Route::post('storedecreaseinventory','InventoryController@store_decrease_inventory')->name('inventories.store_decrease_inventory');
     Route::get('createdecreaseinventory/{id_inventario}','InventoryController@create_decrease_inventory')->name('inventories.create_decrease_inventory');
+    Route::get('movements','InventoryController@indexmovements')->name('inventories.movement');
    
 });
 

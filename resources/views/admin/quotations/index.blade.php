@@ -99,12 +99,15 @@
   
 @endsection
 
-@section('javascript1')
+@section('javascript')
 
 <script>
     $('#dataTable').dataTable( {
-  "ordering": false
-} );
+      "ordering": false,
+      "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+    } );
 </script>
     
 @endsection

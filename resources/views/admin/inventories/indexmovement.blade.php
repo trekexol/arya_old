@@ -4,30 +4,16 @@
 
 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <a class="nav-link active font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('products') }}" role="tab" aria-controls="home" aria-selected="true">Productos</a>
+      <a class="nav-link font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('products') }}" role="tab" aria-controls="home" aria-selected="true">Productos</a>
     </li>
     <li class="nav-item" role="presentation">
       <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('inventories') }}" role="tab" aria-controls="profile" aria-selected="false">Inventarios</a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('inventories.movement') }}" role="tab" aria-controls="contact" aria-selected="false">Movimientos de Inventario</a>
+      <a class="nav-link active font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('inventories.movement') }}" role="tab" aria-controls="contact" aria-selected="false">Movimientos de Inventario</a>
     </li>
     
   </ul>
-
-<!-- container-fluid -->
-<div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="row py-lg-2">
-      <div class="col-md-6">
-          <h2>Productos</h2>
-      </div>
-      <div class="col-md-6">
-        <a href="{{ route('products.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Producto</a>
-      </div>
-    </div>
-  </div>
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
   @include('admin.layouts.success')   {{-- SAVE --}}
@@ -36,7 +22,6 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-   
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -52,34 +37,45 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-               
-            
-                <th>Código Comercial</th>
-                <th>Descripción</th>
+                <th>Fecha</th>
+                <th>Producto</th>
+                <th>Movimiento</th>
                 <th>Tipo</th>
-                <th>Precio</th>
-                <th>Foto del Producto</th>
-              
-                <th></th>
+                <th>Cantidad</th>
+                <th>Costo</th>
+                <th>Costo Total</th>
+                
             </tr>
             </thead>
             
             <tbody>
-                @if (empty($products))
+                @if (empty($inventories_quotations))
                 @else  
-                    @foreach ($products as $product)
+                    @foreach ($inventories_quotations as $var)
                         <tr>
-                           
-                            <td>{{$product->code_comercial}}</td>
-                            <td>{{$product->description}}</td>
-                            <td>{{$product->type}}</td>
-                            <td style="text-align: right">{{number_format($product->price, 2, ',', '.')}}</td>
+                            <td>{{ $var->date_billing ?? $var->date_delivery_note ?? '' }}</td>
+                            <td>{{ $var->description ?? ''}}</td>
+                            @if (isset($var->date_billing))
+                                <td>Factura</td>
+                                <td>Salida</td>
+                            @elseif(isset($var->date_delivery_note))
+                                <td>Nota de Entrega</td>
+                                <td>Salida</td>
+                            @else
+                                <td>Otro</td>
+                                <td>Salida</td>
                             
-                            <td style="text-align: center"><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
+                            @endif
+                            
+                            <td>{{number_format($var->amount_quotation ?? '' , 0, '', '.')}}</td> 
+                            <td>{{number_format($var->amount_inventory, 2, ',', '.')}}</td>
+                            <?php
+                                $total = $var->amount_inventory * $var->amount_quotation; 
+                            ?>
 
-                            <td>
-                                <a href="{{ route('products.edit',$product->id) }}"  title="Editar"><i class="fa fa-edit"></i></a>
-                             </td>
+                            <td>{{number_format($total, 2, ',', '.')}}</td>
+                           
+                           
                         </tr>     
                     @endforeach   
                 @endif
@@ -90,6 +86,7 @@
 </div>
   
 @endsection
+
 @section('javascript')
      <script>
         $('#dataTable').DataTable({

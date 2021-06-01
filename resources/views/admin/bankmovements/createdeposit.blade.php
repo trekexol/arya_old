@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Depósitos Bancarios</div>
+                <div class="card-header text-center font-weight-bold h3">Depósitos Bancarios</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('bankmovements.store') }}" enctype="multipart/form-data">
@@ -137,10 +137,13 @@
 
                         <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                    Guardar Depósito
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('bankmovements') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                     </form>
@@ -151,15 +154,15 @@
 </div>
 @endsection
 @section('validacion_usuario')
-<script>
-    
-$(function(){
-    soloNumeroPunto('code');
-    soloAlfaNumerico('description');
-    
-});
+    <script>
+        
+    $(function(){
+        soloNumeroPunto('code');
+        soloAlfaNumerico('description');
+        
+    });
 
-</script>
+    </script>
 @endsection
 @section('javascript')
     
