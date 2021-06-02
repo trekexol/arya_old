@@ -627,12 +627,10 @@ Route::group(["prefix"=>'companies'],function(){
 });
 
 Route::group(["prefix"=>'nominaformulas'],function(){
-    Route::get('index/{id_nomina}/{id_employee}','NominaFormulaController@index')->name('nominaformulas');
-    Route::get('register/{id_nomina}/{id_employee}','NominaFormulaController@create')->name('nominaformulas.create');
+    Route::get('/','NominaFormulaController@index')->name('nominaformulas');
+    Route::get('register','NominaFormulaController@create')->name('nominaformulas.create');
     Route::post('store','NominaFormulaController@store')->name('nominaformulas.store');
     Route::get('{id}/edit','NominaFormulaController@edit')->name('nominaformulas.edit');
     Route::delete('{id}/delete','NominaFormulaController@destroy')->name('nominaformulas.delete');
     Route::patch('{id}/update','NominaFormulaController@update')->name('nominaformulas.update');
-
-   
 });

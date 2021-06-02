@@ -2,7 +2,14 @@
 
 @section('content')
 
-   
+    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+        <a class="nav-link  font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('nominas') }}" role="tab" aria-controls="home" aria-selected="true">Nóminas</a>
+        </li>
+        <li class="nav-item" role="presentation">
+        <a class="nav-link active font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('nominaconcepts') }}" role="tab" aria-controls="profile" aria-selected="false">Concepto de Nómina</a>
+        </li>
+    </ul>
 
 <!-- container-fluid -->
 <div class="container-fluid">

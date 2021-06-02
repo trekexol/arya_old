@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Employee;
 use App\NominaConcept;
+use App\NominaFormula;
 use App\Profession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,8 +42,10 @@ class NominaConceptController extends Controller
        
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
+        $formulas = NominaFormula::orderBy('id','asc')->get();
 
-        return view('admin.nominaconcepts.create',compact('datenow'));
+
+        return view('admin.nominaconcepts.create',compact('datenow','formulas'));
     }
 
     public function store(Request $request)

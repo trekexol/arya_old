@@ -23,13 +23,13 @@ class NominaFormulaController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $nominaformulas      =   NominaFormula::orderBy('id', 'asc')->get();
+           $nomina_formulas      =   NominaFormula::orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
 
     
-        return view('admin.nominaformulas.index',compact('nominaformulas'));
+        return view('admin.nominaformulas.index',compact('nomina_formulas'));
       
     }
 
@@ -44,18 +44,20 @@ class NominaFormulaController extends Controller
     public function store(Request $request)
     {
         
+        
         $data = request()->validate([
            
           
-            'description'         =>'required|max:255',
-            'status'         =>'required|max:1',
+            'description'         =>'required|max:200',
+            'type'         =>'required|max:1',
            
         ]);
 
         $users = new NominaFormula();
 
         $users->description = request('description');
-        $users->status = request('status');
+        $users->type = request('type');
+        $users->status = 1;
         
 
         $users->save();
@@ -79,19 +81,19 @@ class NominaFormulaController extends Controller
     public function update(Request $request,$id)
     {
         $vars =  NominaFormula::find($id);
-
         $var_status = $vars->status;
 
         $request->validate([
           
-            'description'      =>'required|string|max:100',
-            'status'    =>'required|max:1',
+            'description'      =>'required|string|max:200',
+            'type'    =>'required|max:1',
         ]);
 
         
 
         $var          = NominaFormula::findOrFail($id);
         $var->description        = request('description');
+        $var->type        = request('type');
        
         if(request('status') == null){
             $var->status = $var_status;

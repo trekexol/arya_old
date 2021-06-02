@@ -81,13 +81,17 @@
                             <label for="formula_m" class="col-md-2 col-form-label text-md-right">Fórmula Mensual:</label>
 
                             <div class="col-md-6">
-                                <input id="formula_m" type="text" class="form-control @error('formula_m') is-invalid @enderror" name="formula_m" value="{{ old('formula_m') }}" maxlength="60" autocomplete="formula_m">
-
-                                @error('formula_m')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <select class="form-control" name="formula_m" id="formula_m">
+                                    <option value="">Seleccionar Formula</option>
+                                    @if (isset($formulas))
+                                        @foreach ($formulas as $var)
+                                            @if ($var->type == 'M')
+                                                <option value="{{ $var->id }}">{{ $var->description }}</option>
+                                            @endif
+                                        
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                             <label for="formula_q" class="col-md-2 col-form-label text-md-right">(30 dias)</label>
                         </div>
