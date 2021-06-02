@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header text-center font-weight-bold h3">
                     Agregar Concepto
                 </div>
 
@@ -40,7 +40,7 @@
                             <label for="hours" class="col-md-2 col-form-label text-md-right">Horas:</label>
 
                             <div class="col-md-4">
-                                <input id="hours" type="number" class="form-control @error('hours') is-invalid @enderror" name="hours"  required autocomplete="hours">
+                                <input id="hours" type="text" class="form-control @error('hours') is-invalid @enderror" name="hours"  required autocomplete="hours">
 
                                 @error('hours')
                                     <span class="invalid-feedback" role="alert">
@@ -51,7 +51,7 @@
                             <label for="days" class="col-md-2 col-form-label text-md-right">Dias:</label>
 
                             <div class="col-md-4">
-                                <input id="days" type="number" class="form-control @error('days') is-invalid @enderror" name="days"  required autocomplete="days">
+                                <input id="days" type="text" class="form-control @error('days') is-invalid @enderror" name="days"  required autocomplete="days">
 
                                 @error('days')
                                     <span class="invalid-feedback" role="alert">
@@ -64,7 +64,7 @@
                             <label for="cantidad" class="col-md-2 col-form-label text-md-right">Cantidad:</label>
 
                             <div class="col-md-4">
-                                <input id="cantidad" type="number" class="form-control @error('cantidad') is-invalid @enderror" name="cantidad"  required autocomplete="cantidad">
+                                <input id="cantidad" type="text" class="form-control @error('cantidad') is-invalid @enderror" name="cantidad"  required autocomplete="cantidad">
 
                                 @error('cantidad')
                                     <span class="invalid-feedback" role="alert">
@@ -75,7 +75,7 @@
                             <label for="amount" class="col-md-2 col-form-label text-md-right">Monto:</label>
 
                             <div class="col-md-4">
-                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="0,00" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" placeholder="0,00" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -100,16 +100,23 @@
 </div>
 @endsection
 @section('validacion')
- <!-- Se encarga de los input number, el formato -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
+    <script>
 
-<script>
-
-$(document).ready(function () {
-    $("#amount").mask('000.000.000.000.000,00', { reverse: true });
-    
-});
-
-</script>
+        $(document).ready(function () {
+            $("#amount").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#hours").mask('000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#days").mask('000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#cantidad").mask('000.000', { reverse: true });
+            
+        });
+    </script>
 @endsection 

@@ -22,9 +22,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Inventario</h6>
-    </div>
+    
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -89,14 +87,13 @@
 </div>
   
 @endsection
-
 @section('javascript')
-
-    <script type="text/javascript">
-            function pdfinventory() {
-                
-                var nuevaVentanainventory = window.open("{{ route('pdf.inventory')}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
-        
-            }
-    </script>
+     <script>
+        $('#dataTable').DataTable({
+            "ordering": false,
+            "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+        });
+        </script> 
 @endsection

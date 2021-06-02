@@ -67,6 +67,7 @@ class NominaCalculationController extends Controller
 
     public function create($id_nomina,$id_employee)
     {
+       
         $nomina      =   Nomina::find($id_nomina);
         $employee    =   Employee::find($id_employee);
 

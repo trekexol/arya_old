@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Depósitos Bancarios</div>
+                <div class="card-header text-center font-weight-bold h3">Depósitos Bancarios</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('bankmovements.store') }}" enctype="multipart/form-data">
@@ -75,7 +75,7 @@
                             <label for="reference" class="col-md-3 col-form-label text-md-right">Número de Referencia:</label>
 
                             <div class="col-md-3">
-                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" required autocomplete="reference">
+                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" autocomplete="reference">
 
                                 @error('reference')
                                     <span class="invalid-feedback" role="alert">
@@ -89,7 +89,7 @@
                             <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Depósito</label>
 
                             <div class="col-md-4">
-                                <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" placeholder="0,00" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -137,10 +137,13 @@
 
                         <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                    Guardar Depósito
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('bankmovements') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                     </form>
@@ -151,17 +154,26 @@
 </div>
 @endsection
 @section('validacion_usuario')
-<script>
-    
-$(function(){
-    soloNumeroPunto('code');
-    soloAlfaNumerico('description');
-    
-});
+    <script>
+        
+    $(function(){
+        soloNumeroPunto('code');
+        soloAlfaNumerico('description');
+        
+    });
 
-</script>
+    </script>
 @endsection
+@section('javascript')
+    
+    <script>
+        $(document).ready(function () {
+            $("#amount").mask('00.000.000.000.000,00', { reverse: true });
+            
+        });
+    </script> 
 
+@endsection    
 @section('consultadeposito')
     <script>
             

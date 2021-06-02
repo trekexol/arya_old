@@ -17,7 +17,7 @@
             </a>
         </div>
         <div class="col-md-2">
-            <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
+            <a href="{{ route('quotations.createfacturado',$quotation->id) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
                 &nbsp Volver a la Factura
             </a>
         </div>
@@ -64,8 +64,8 @@
                     <td>{{$var->id_invoice}}</td>
                     <td>{{$var->headers['description']}} fact({{ $var->id_invoice }}) / {{$var->accounts['description']}}</td>
 
-                    <td>{{$var->debe}}</td>
-                    <td>{{$var->haber}}</td>
+                    <td class="text-right">{{number_format($var->debe, 2, ',', '.')}}</td>
+                    <td class="text-right">{{number_format($var->haber, 2, ',', '.')}}</td>
 
                  
                     </tr>
@@ -79,10 +79,12 @@
 
 @endsection
 @section('javascript')
-
     <script>
-    $('#dataTable').DataTable({
-        "order": []
-    });
-    </script> 
+        $('#dataTable').dataTable( {
+        "ordering": false,
+        "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+    } );
+    </script>
 @endsection

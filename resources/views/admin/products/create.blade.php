@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Productos</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Productos</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
@@ -288,16 +288,6 @@
                 var segment_id    = document.getElementById("segment").value;
                 
             });
-
-        
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
 
     </script>
 @endsection

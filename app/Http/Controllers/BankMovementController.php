@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 
 use App\Account;
+use App\BankVoucher;
 use App\Client;
+use App\DetailVoucher;
 use App\Segment;
 use App\Subsegment;
 use App\UnitOfMeasure;
@@ -32,6 +34,7 @@ class BankMovementController extends Controller
         
         $accounts = $this->calculation();
 
+        
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -45,13 +48,13 @@ class BankMovementController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
         
-        $bankmovements = BankMovement::orderby('date','asc')->get();
+        $detailvouchers = DetailVoucher::where('id_bank_voucher','<>',null)->orderby('created_at','asc')->get();
 
         }elseif($users_role == '2'){
            return view('admin.index');
        }
 
-       return view('admin.bankmovements.indexmovement',compact('bankmovements'));
+       return view('admin.bankmovements.indexmovement',compact('detailvouchers'));
    }
 
    /**
@@ -125,79 +128,84 @@ class BankMovementController extends Controller
        }
    }
 
-   /**
-    * Store a newly created resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
-   public function store(Request $request)
+   
+    public function store(Request $request)
     {
 
-   
-    $data = request()->validate([
+
+        $data = request()->validate([
+            
         
-       
-        'id_account'         =>'required',
-        'Subcontrapartida'         =>'required',
-
-        'user_id'         =>'required',
-
-        'description'         =>'required',
-        'amount'         =>'required',
+            'id_account'        =>'required',
+            'Subcontrapartida'  =>'required',
+            'user_id'           =>'required',
+            'amount'            =>'required',
+            
+            'date'              =>'required',
         
-        'date'         =>'required',
+        
+        ]);
+        
+        $account = request('id_account');
+        $contrapartida = request('Subcontrapartida');
 
-        'reference'         =>'required',
-       
-       
-    ]);
-      
-    //EL DINERO SALE DE LA CUENTA CON ID ID_Contrrapartida
-      $id_account = request('id_account');
-      $id_contrapartida = request('Subcontrapartida');
-  
-      if($id_account != $id_contrapartida){
+        if($account != $contrapartida){
 
-            $id_contrapartida = request('Subcontrapartida');
-            $amount = request('amount');
+            $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
 
-            //ME TRAE LA CUENTA CON SU SALDO CALCULADO POR EL DEBE
-            $check_amount = $this->check_amount($id_contrapartida);
+            $check_amount = $this->check_amount($contrapartida);
 
-            //CHEQUEA QUE EL MONTO INGRESADO SEA MENOR O IGUAL AL SALDO DE LA CUENTA
-            if($check_amount->debe >= $amount){
-                $var = new BankMovement();
+            if($check_amount->saldo_actual >= $amount){
+                $var = new BankVoucher();
 
-                $var->id_account = $id_account;
-
-                /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
-                $account = Account::findOrFail($id_account);
-
-                if($account->status != "M"){
-                    $account->status = "M";
-                    $account->save();
-                }
-            
-            
-            
-                $var->id_counterpart = $id_contrapartida;
-            
-            
                 $var->id_user = request('user_id');
-            
                 $var->description = request('description');
-                $var->amount = $amount;
-                
                 $var->type_movement = request('type_movement');
-            
                 $var->date = request('date');
                 $var->reference = request('reference');
-            
                 $var->status =  1;
             
                 $var->save();
+
+
+                $movement = new DetailVoucher();
+
+                $movement->id_account = $contrapartida;
+                $movement->id_bank_voucher = $var->id;
+                $movement->user_id = request('user_id');
+                $movement->debe = 0;
+                $movement->haber = $amount;
+                $movement->status = "C";
             
+                $movement->save();
+
+                $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->id_account = $account;
+                $movement_counterpart->id_bank_voucher = $var->id;
+                $movement_counterpart->user_id = request('user_id');
+                $movement_counterpart->debe = $amount;
+                $movement_counterpart->haber = 0;
+                $movement_counterpart->status = "C";
+
+                $movement_counterpart->save();
+
+
+
+                $verification = Account::findOrFail($account);
+
+                if($verification->status != "M"){
+                    $verification->status = "M";
+                    $verification->save();
+                }
+
+                $verification2 = Account::findOrFail($contrapartida);
+
+                if($verification2->status != "M"){
+                    $verification2->status = "M";
+                    $verification2->save();
+                }
+
+                
                 return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
 
             }else{
@@ -207,150 +215,198 @@ class BankMovementController extends Controller
         }else{
             return redirect('/bankmovements/registerdeposit/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
         }
-        
     }
+
 
 
     public function storeretirement(Request $request)
     {
 
-   
-    $data = request()->validate([
-        
        
-        'id_account'        =>'required',
-        'Subcontrapartida'  =>'required',
-
-        'beneficiario'      =>'required',
-        'Subbeneficiario'      =>'required',
-
-        'user_id'           =>'required',
-
-        'description'       =>'required',
-        'amount'            =>'required',
+        $data = request()->validate([
+            
         
-        'date'              =>'required',
+            'id_account'        =>'required',
+            'Subcontrapartida'  =>'required',
 
-        'reference'         =>'required',
-       
-       
-    ]);
-    //EL DINERO SALE DE LA CUENTA CON ID ID_ACCOUNT
-    $id_account = request('id_account');
-    $id_contrapartida = request('Subcontrapartida');
+            'beneficiario'      =>'required',
+            'Subbeneficiario'      =>'required',
 
-    if($id_account != $id_contrapartida){
-
-        $amount = request('amount');
-
-        $check_amount = $this->check_amount($id_account);
-
-        if($check_amount->debe >= $amount){
-            $var = new BankMovement();
-
-            //AQUI SE REGISTRA EN ID_ACCOUNT DONDE ENTRA LA PLATA Y EN ID_COUNTERPART DE DONDE SALE EL DINERO
-            $var->id_account = $id_contrapartida;
+            'user_id'           =>'required',
+            'amount'            =>'required',
+            
+            'date'              =>'required',
         
-            $var->id_counterpart = $id_account;
         
-            if(strcmp(request('beneficiario'), "Cliente") == 0){
-                $var->id_client = request('Subbeneficiario');
-                
+        ]);
+        
+        $account = request('id_account');
+        $contrapartida = request('Subcontrapartida');
+
+        if($account != $contrapartida){
+
+            $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+
+            $check_amount = $this->check_amount($account);
+
+            if($check_amount->saldo_actual >= $amount){
+                $var = new BankVoucher();
+
+                /*$var->id_account = $contrapartida;
+            
+                $var->id_counterpart = $account;*/
+            
+                if(request('beneficiario') == 1){
+                    $var->id_client = request('Subbeneficiario');
+                    
+                }else{
+                    $var->id_provider = request('Subbeneficiario');
+                }
+
+                $var->id_user = request('user_id');
+                $var->description = request('description');
+                $var->type_movement = request('type_movement');
+                $var->date = request('date');
+                $var->reference = request('reference');
+                $var->status =  1;
+            
+                $var->save();
+
+
+                $movement = new DetailVoucher();
+
+                $movement->id_account = $account;
+                $movement->id_bank_voucher = $var->id;
+                $movement->user_id = request('user_id');
+                $movement->debe = 0;
+                $movement->haber = $amount;
+                $movement->status = "C";
+            
+                $movement->save();
+
+                $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->id_account = $contrapartida;
+                $movement_counterpart->id_bank_voucher = $var->id;
+                $movement_counterpart->user_id = request('user_id');
+                $movement_counterpart->debe = $amount;
+                $movement_counterpart->haber = 0;
+                $movement_counterpart->status = "C";
+
+                $movement_counterpart->save();
+
+
+                $verification = Account::findOrFail($account);
+
+                if($verification->status != "M"){
+                    $verification->status = "M";
+                    $verification->save();
+                }
+
+                $verification2 = Account::findOrFail($contrapartida);
+
+                if($verification2->status != "M"){
+                    $verification2->status = "M";
+                    $verification2->save();
+                }
+
+                return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+
             }else{
-                $var->id_vendor = request('Subbeneficiario');
+                return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
             }
 
-
-            $var->id_user = request('user_id');
-        
-            $var->description = request('description');
-            $var->amount = $amount;
-            
-            $var->type_movement = request('type_movement');
-        
-            $var->date = request('date');
-            $var->reference = request('reference');
-        
-            $var->status =  1;
-        
-            $var->save();
-        
-            return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
-
         }else{
-            return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
+            return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
         }
-
-    }else{
-        return redirect('/bankmovements/registerretirement/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
     }
-}
 
 
-
-public function storetransfer(Request $request)
+    public function storetransfer(Request $request)
     {
-
-   
-    $data = request()->validate([
-        
        
-        'id_account'        =>'required',
-        'id_counterpart'  =>'required',
-
-        
-        'user_id'           =>'required',
-
-        
-        'amount'            =>'required',
-        
-        'date'              =>'required',
-
-        'reference'         =>'required',
-       
-       
-    ]);
-    //EL DINERO SALE DE LA CUENTA CON ID id_account
-    $id_account = request('id_account');
-    $id_counterpart = request('id_counterpart');
-
-    if($id_account != $id_counterpart){
-
-        $amount = request('amount');
-
-        $check_amount = $this->check_amount($id_account);
-
-        if($check_amount->debe >= $amount){
-            $var = new BankMovement();
-
-            //AQUI SE REGISTRA EN ID_ACCOUNT DONDE ENTRA LA PLATA 
-            $var->id_account = $id_counterpart;
-        
-            $var->id_counterpart = $id_account;
-        
-            $var->id_user = request('user_id');
-        
-            $var->amount = $amount;
+        $data = request()->validate([
             
-            $var->type_movement = request('type_movement');
         
-            $var->date = request('date');
-            $var->reference = request('reference');
+            'id_account'        =>'required',
+            'id_counterpart'  =>'required',
+
+            'user_id'           =>'required',
+            'amount'            =>'required',
+            
+            'date'              =>'required',
         
-            $var->status =  1;
         
-            $var->save();
+        ]);
         
-            return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+        $account = request('id_account');
+        $contrapartida = request('id_counterpart');
+
+        if($account != $contrapartida){
+
+            $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+
+            $check_amount = $this->check_amount($account);
+
+            if($check_amount->saldo_actual >= $amount){
+                $var = new BankVoucher();
+
+                $var->id_user = request('user_id');
+                $var->description = request('description');
+                $var->type_movement = request('type_movement');
+                $var->date = request('date');
+                $var->reference = request('reference');
+                $var->status =  1;
+            
+                $var->save();
+
+
+                $movement = new DetailVoucher();
+
+                $movement->id_account = $account;
+                $movement->id_bank_voucher = $var->id;
+                $movement->user_id = request('user_id');
+                $movement->debe = 0;
+                $movement->haber = $amount;
+                $movement->status = "C";
+            
+                $movement->save();
+
+                $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->id_account = $contrapartida;
+                $movement_counterpart->id_bank_voucher = $var->id;
+                $movement_counterpart->user_id = request('user_id');
+                $movement_counterpart->debe = $amount;
+                $movement_counterpart->haber = 0;
+                $movement_counterpart->status = "C";
+
+                $movement_counterpart->save();
+
+
+                $verification = Account::findOrFail($account);
+
+                if($verification->status != "M"){
+                    $verification->status = "M";
+                    $verification->save();
+                }
+
+                $verification2 = Account::findOrFail($contrapartida);
+
+                if($verification2->status != "M"){
+                    $verification2->status = "M";
+                    $verification2->save();
+                }
+
+
+                return redirect('/bankmovements')->withSuccess('Registro Exitoso!');
+
+            }else{
+                return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
+            }
 
         }else{
-            return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('El saldo de la Cuenta '.$check_amount->description.' es menor al monto del deposito!');
+            return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
         }
-
-    }else{
-        return redirect('/bankmovements/registertransfer/'.request('id_account').'')->withDanger('No se puede hacer un movimiento a la misma cuenta!');
     }
-}
    /**
     * Display the specified resource.
     *
@@ -403,36 +459,7 @@ public function storetransfer(Request $request)
                                                        ->sum('haber');   
                             /*---------------------------------------------------*/
 
-                            /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */                                 
-                            $total_amount_bank = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-
-                            $total_amount_bank_counterpart = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                           /*---------------------------------------------------*/
-
-                            if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                                $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                            }else if(isset($total_amount_bank)){
-                                $var->debe = $total_debe + $total_amount_bank;
-                            
-                            }else if(isset($total_amount_bank_counterpart)){
-                                $var->debe = $total_debe - $total_amount_bank_counterpart;
-                            }else{
                                 $var->debe = $total_debe;
-                            }                                     
-  
                                 $var->haber = $total_haber;
   
                             
@@ -460,37 +487,8 @@ public function storetransfer(Request $request)
                                                        ->sum('haber');      
                         /*---------------------------------------------------*/                               
   
-                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */    
-                        $total_amount_bank = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                        $total_amount_bank_counterpart = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                      /*---------------------------------------------------*/     
-
-
-                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                        }else if(isset($total_amount_bank)){
-                            $var->debe = $total_debe + $total_amount_bank;
                         
-                        }else if(isset($total_amount_bank_counterpart)){
-                            $var->debe = $total_debe - $total_amount_bank_counterpart;
-                        }else{
                             $var->debe = $total_debe;
-                        }                 
-                            
-                            
                             $var->haber = $total_haber;       
                                           
                      
@@ -516,36 +514,8 @@ public function storetransfer(Request $request)
                                                            ->sum('haber');
                         /*---------------------------------------------------*/
                                  
-                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */  
-                        $total_amount_bank = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                        $total_amount_bank_counterpart = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                        /*---------------------------------------------------*/
-
-
-                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                        }else if(isset($total_amount_bank)){
-                            $var->debe = $total_debe + $total_amount_bank;
-                        
-                        }else if(isset($total_amount_bank_counterpart)){
-                            $var->debe = $total_debe - $total_amount_bank_counterpart;
-                        }else{
+                       
                             $var->debe = $total_debe;
-                        }                           
-  
                             $var->haber = $total_haber;
                     
                        
@@ -568,39 +538,9 @@ public function storetransfer(Request $request)
                                                        ->sum('haber');
                     /*---------------------------------------------------*/
 
-                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */ 
-                            $total_amount_bank = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-
-                            $total_amount_bank_counterpart = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                        /*---------------------------------------------------*/
-
-
-                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                        }else if(isset($total_amount_bank)){
-                            $var->debe = $total_debe + $total_amount_bank;
-                          
-                        }else if(isset($total_amount_bank_counterpart)){
-                            $var->debe = $total_debe - $total_amount_bank_counterpart;
-                        }else{
-                            $var->debe = $total_debe;
-                        }                                        
-                          
-  
-                          $var->haber = $total_haber;           
+                        
+                        $var->debe = $total_debe;
+                        $var->haber = $total_haber;           
                       
    
                    }
@@ -656,36 +596,145 @@ public function storetransfer(Request $request)
                                                        ->sum('haber');   
                             /*---------------------------------------------------*/
 
-                            /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */                                 
-                            $total_amount_bank = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-
-                            $total_amount_bank_counterpart = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                           /*---------------------------------------------------*/
-
-                            if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                                $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                            }else if(isset($total_amount_bank)){
-                                $var->debe = $total_debe + $total_amount_bank;
                             
-                            }else if(isset($total_amount_bank_counterpart)){
-                                $var->debe = $total_debe - $total_amount_bank_counterpart;
-                            }else{
                                 $var->debe = $total_debe;
-                            }                                     
+                                $var->haber = $total_haber;
+                                $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
+
+                           }else{
+                              
+                             
+                         
+                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
+                           $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                           $total_haber =  DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');      
+                        /*---------------------------------------------------*/                               
   
+                        
+                            $var->debe = $total_debe;
+                            $var->haber = $total_haber;       
+                            $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
+                                  
+                   }
+                       }else{
+                           
+                      
+                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                   
+                           $total_debe = DB::table('accounts')
+                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                           ->where('accounts.code_one', $var->code_one)
+                                                           ->where('accounts.code_two', $var->code_two)
+                                                           ->where('detail_vouchers.status', 'C')
+                                                           ->sum('debe');
+   
+                         
+                           $total_haber = DB::table('accounts')
+                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                           ->where('accounts.code_one', $var->code_one)
+                                                           ->where('accounts.code_two', $var->code_two)
+                                                           ->where('detail_vouchers.status', 'C')
+                                                           ->sum('haber');
+                      
+
+                            $var->debe = $total_debe;
+                            $var->haber = $total_haber;
+                            $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
+                                  
+                       }
+                   }else{
+                       //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
+                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
+                            $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                        
+                          
+                           $total_haber = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');
+                   
+
+
+                       
+                            $var->debe = $total_debe;
+                            $var->haber = $total_haber;           
+                            $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
+                                  
+                   }
+               }else{
+                   return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+               }
+           } 
+       
+      
+       
+        return $var;
+    }
+   
+    public function calculation2()
+    {       $accounts = DB::table('accounts')->where('code_one', 1)
+            ->where('code_four','<>',0)
+            ->where('code_two', 1)
+            ->whereIn('code_three', [1,2])
+            ->get();
+
+                      
+       if(isset($accounts)) {
+           foreach ($accounts as $var) {
+
+                   
+               if($var->code_one != 0){
+                   
+                   if($var->code_two != 0){
+   
+   
+                       if($var->code_three != 0){
+   
+   
+                           if($var->code_four != 0){
+                             
+                            /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
+                            $total_debe = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('accounts.code_four', $var->code_four)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('debe');
+   
+                            $total_haber = DB::table('accounts')
+                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                       ->where('accounts.code_one', $var->code_one)
+                                                       ->where('accounts.code_two', $var->code_two)
+                                                       ->where('accounts.code_three', $var->code_three)
+                                                       ->where('accounts.code_four', $var->code_four)
+                                                       ->where('detail_vouchers.status', 'C')
+                                                       ->sum('haber');   
+                            /*---------------------------------------------------*/
+
+                          
+
+                           
+                                $var->debe = $total_debe;
                                 $var->haber = $total_haber;
   
                             
@@ -713,37 +762,9 @@ public function storetransfer(Request $request)
                                                        ->sum('haber');      
                         /*---------------------------------------------------*/                               
   
-                        /*CALCULA LOS MONTOS REALIZADOS POR MOVIMIENTOS BANCARIOS */    
-                        $total_amount_bank = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_account', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                        $total_amount_bank_counterpart = DB::table('accounts')
-                                                ->join('bank_movements', 'bank_movements.id_counterpart', '=', 'accounts.id')
-                                                ->where('accounts.code_one', $var->code_one)
-                                                ->where('accounts.code_two', $var->code_two)
-                                                ->where('accounts.code_three', $var->code_three)
-                                                ->where('accounts.code_four', $var->code_four)
-                                                ->sum('amount');
-                      /*---------------------------------------------------*/     
-
-
-                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                        }else if(isset($total_amount_bank)){
-                            $var->debe = $total_debe + $total_amount_bank;
-                        
-                        }else if(isset($total_amount_bank_counterpart)){
-                            $var->debe = $total_debe - $total_amount_bank_counterpart;
-                        }else{
+                      
                             $var->debe = $total_debe;
-                        }                 
-                            
-                            
+                       
                             $var->haber = $total_haber;       
                                           
                      
@@ -787,18 +808,8 @@ public function storetransfer(Request $request)
                         /*---------------------------------------------------*/
 
 
-                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                        }else if(isset($total_amount_bank)){
-                            $var->debe = $total_debe + $total_amount_bank;
                         
-                        }else if(isset($total_amount_bank_counterpart)){
-                            $var->debe = $total_debe - $total_amount_bank_counterpart;
-                        }else{
                             $var->debe = $total_debe;
-                        }                           
-  
                             $var->haber = $total_haber;
                     
                        
@@ -840,20 +851,9 @@ public function storetransfer(Request $request)
                         /*---------------------------------------------------*/
 
 
-                        if((isset($total_amount_bank)) && (isset($total_amount_bank_counterpart))){
-                            $var->debe = $total_debe + $total_amount_bank - $total_amount_bank_counterpart;
-
-                        }else if(isset($total_amount_bank)){
-                            $var->debe = $total_debe + $total_amount_bank;
-                          
-                        }else if(isset($total_amount_bank_counterpart)){
-                            $var->debe = $total_debe - $total_amount_bank_counterpart;
-                        }else{
-                            $var->debe = $total_debe;
-                        }                                        
-                          
-  
-                          $var->haber = $total_haber;           
+                        
+                        $var->debe = $total_debe;
+                        $var->haber = $total_haber;           
                       
    
                    }
@@ -861,13 +861,15 @@ public function storetransfer(Request $request)
                    return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
                }
            } 
-       
+       }  else{
+           return redirect('/accounts')->withDanger('No hay Cuentas');
+       }              
+
       
        
-        return $var;
+        return $accounts;
     }
    
-
 
   
    /**

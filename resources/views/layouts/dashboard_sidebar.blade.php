@@ -61,6 +61,9 @@
             <a class="collapse-item" href="{{ route('transports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-car-side fa-sm fa-fw mr-2 text-blue-400"></i><strong>Transportes</strong></a>
             <a class="collapse-item" href="{{ route('historictransports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-archive fa-sm fa-fw mr-2 text-blue-400"></i><strong>Historial de<br> <div style="text-indent: 22px;">Transporte</div></strong></a>
             <a class="collapse-item" href="{{ route('tasas') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tasa del Día</strong></a>
+            <a class="collapse-item" href="{{ route('inventarytypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-boxes fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de<br> <div style="text-indent: 22px;">Inventario</div></strong></a>
+            <a class="collapse-item" href="{{ route('ratetypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-donate fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Tarifas</strong></a>
+            <a class="collapse-item" href="{{ route('nominaformulas') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-donate fa-sm fa-fw mr-2 text-blue-400"></i><strong>Formulas de Nómina</strong></a>
            
         </div>
     </div>
@@ -115,19 +118,12 @@
             <div class="bg-white py-2 collapse-inner rounded">
            
              <!-- <a  class="collapse-header" href="buttons.html">Gastos y Compras</a> -->
-                <a class="collapse-item" href="{{ route('providers')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-alt fa-sm fa-fw mr-2 text-black-400"></i><strong>Proveedores</strong></a>
+                <a class="collapse-item" href="{{ route('expensesandpurchases')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-file-invoice-dollar fa-sm fa-fw mr-2 text-black-400"></i><strong>Gastos y Compras</strong></a>
+                <a class="collapse-item" href="{{ route('providers')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-user fa-sm fa-fw mr-2 text-black-400"></i><strong>Proveedores</strong></a>
+                <a class="collapse-item" href="{{ route('directpaymentorders.create')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-black-400"></i><strong>Ordenes de Pago</strong></a>
                 
-              <!--  <a  class="collapse-header" href="buttons.html">Compras</a>
-                    <a class="collapse-item" href="buttons.html">Listar Compras</a>
-                    <a class="collapse-item" href="buttons.html">Notas de Crédito</a>
-                    <a class="collapse-item" href="buttons.html">Notas de Débito</a>
-                <a class="collapse-header" href="buttons.html">Anticipo Proveedores</a>
-                    <a class="collapse-item" href="buttons.html">Listar Anticipo Proveedores</a>
-                    <a class="collapse-item" href="buttons.html">Ver Saldos de Proveedores</a>
-                <a class="collapse-header" href="buttons.html">Pagos</a>
-                    <a class="collapse-item" href="buttons.html">Listar Pagos</a>
-                    <a class="collapse-item" href="buttons.html">Ordenes de Pago</a>
-                    <a class="collapse-item" href="buttons.html">Pagar Facturas de Compra</a>-->
+                
+              
                 <a class="collapse-item" href="{{ route('products')}}" style="color: rgb(255, 81, 0)"><i class="fab fa-product-hunt fa-sm fa-fw mr-2 text-black-400"></i><strong>Productos y Servicios</strong></a> 
             </div>
         </div>

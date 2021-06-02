@@ -2,7 +2,7 @@
 
 @section('content')
 
-   
+
 
 <!-- container-fluid -->
 <div class="container-fluid">
@@ -12,16 +12,16 @@
         <div class="col-md-6">
             <h2>Empresas Registradas</h2>
         </div>
-       
+
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
         <div class="col-md-6">
             <a href="{{ route('companies.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empresa</a>
-         
+
         </div>
         @endif
-       
-            
-       
+
+
+
     </div>
 
   </div>
@@ -36,40 +36,38 @@
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Listado de Empresas Registradas</h6>
     </div>
-   
+
     <div class="card-body">
         <div class="table-responsive">
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Foto</th>
-                <th>Status</th>
+                <th>Nro</th>
+                <th>Login</th>
+                <th>Razon Social</th>
                 <th>Opciones</th>
-              
+                <th>Logo</th>
+
             </tr>
             </thead>
-            
+
             <tbody>
                 @if (empty($users))
                 @else
                     @foreach ($users as $key => $user)
                     <tr>
                     <td>{{$user->id}}</td>
-                    <td>{!!$user->name!!}</td>
-                    <td>{{$user->description}}</td>
-                    <td>{{$user->foto_company}}</td>
-                   
+                    <td>{{$user->login}}</td>
+                    <td>{!!$user->razon_social!!}</td>
+
                     @if (Auth::user()->role_id  == '1')
-                        @if($user->status == 1)
-                            <td>Activo</td>
-                        @else
-                            <td>Inactivo</td>
-                        @endif
                         <td>
-                        <a href="{{route('companies.edit',$user->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                        <a href="{{route('companies.edit',$user->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
+                        </td>
+                    @endif
+                    @if (Auth::user()->role_id  == '1')
+                        <td>
+                           <button>Subir Logo</button>
                         </td>
                     @endif
                     </tr>

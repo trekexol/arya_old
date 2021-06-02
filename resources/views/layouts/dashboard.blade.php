@@ -135,11 +135,16 @@
         <!-- Para las mascaras -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
 
-    
-    @yield('javascript')  
+
+  @yield('javascript1') 
+  @yield('javascript2') 
+  @yield('javascript')  
+  @yield('validacionbtn')
+  @yield('validacionbtn2')
+  @yield('consulta')  
   @yield('javascript_edit')
   @yield('js_charts')
-  @yield('consulta')  
+  
   @yield('consultadeposito')  
 
   @yield('validacion_usuario')
@@ -147,7 +152,16 @@
 
 
   @yield('validacion')
-  
+  @yield('validacionExpense')
+
+  @yield('validacion_time')
+  @yield('product_edit')
+  @yield('quotation_create')
+  @yield('quotation_facturar')
+  @yield('quotation_facturar_after')
+  @yield('validacion_transport')
+  @yield('validacion_vendor')
+
   <script>
     function soloNumeros(idCampo){
     $('#'+idCampo).keyup(function (){

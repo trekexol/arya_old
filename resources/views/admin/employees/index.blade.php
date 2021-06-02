@@ -23,9 +23,6 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Empleado</h6>
-    </div>
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -68,7 +65,7 @@
                             <td>{{$employee->fecha_ingreso}}</td>
                             <td>{{$employee->fecha_egreso}}</td>
                             <td>{{$employee->direccion}}</td>
-                            <td>{{$employee->monto_pago}}</td>
+                            <td>{{number_format($employee->monto_pago, 2, ',', '.')}}</td>
                             <td>{{$employee->email}}</td>
                             
                            
@@ -110,6 +107,16 @@
 @endif
 
     
+@endsection
+@section('javascript')
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
 @endsection
 @section('js_modal_employees')
     <script>

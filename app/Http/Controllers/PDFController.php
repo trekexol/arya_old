@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App;
+use App\ExpensePayment;
+use App\ExpensesAndPurchase;
+use App\ExpensesDetail;
 use App\Inventory;
 use App\Quotation;
 use App\QuotationPayment;
@@ -302,6 +305,148 @@ class PDFController extends Controller
          
                 }else{
                  return redirect('/invoices')->withDanger('La factura no existe');
+             } 
+             
+        
+
+        
+    }
+
+
+
+    function imprimirExpense($id_expense){
+      
+
+        $pdf = App::make('dompdf.wrapper');
+
+        
+             $expense = null;
+                 
+             if(isset($id_expense)){
+                 $expense = ExpensesAndPurchase::find($id_expense);
+              
+                                     
+             }else{
+                return redirect('/expensesandpurchases')->withDanger('No llega el numero del Gasto o Compra');
+                } 
+     
+             if(isset($expense)){
+
+                 $payment_expenses = ExpensePayment::where('id_expense',$expense->id)->get();
+                 
+                 foreach($payment_expenses as $var){
+                    $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                 }
+
+
+                $inventories_expenses = ExpensesDetail::where('id_expense',$expense->id)->get();
+            
+                $total= 0;
+                $base_imponible= 0;
+                $ventas_exentas= 0;
+                foreach($inventories_expenses as $var){
+                    //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount))/100;
+
+                    $total += ($var->price * $var->amount) - $percentage;
+                    //----------------------------- 
+
+                    if($var->exento == 0){
+
+                        $percentage = (($var->price * $var->amount))/100;
+
+                        $base_imponible += ($var->price * $var->amount) - $percentage; 
+
+                    }
+                    if($var->exento == 1){
+    
+                        $percentage = (($var->price * $var->amount))/100;
+    
+                        $ventas_exentas += ($var->price * $var->amount) - $percentage; 
+    
+                    }
+                }
+    
+                 $expense->sub_total = $total;
+                 $expense->base_imponible = $base_imponible;
+                 $expense->ventas_exentas = $ventas_exentas;
+
+                 
+                 $pdf = $pdf->loadView('pdf.expense',compact('expense','inventories_expenses','payment_expenses'));
+                 return $pdf->stream();
+         
+                }else{
+                 return redirect('/expensesandpurchases')->withDanger('La Compra no existe');
+             } 
+             
+        
+
+        
+    }
+
+    function imprimirExpenseMedia($id_expense){
+      
+
+        $pdf = App::make('dompdf.wrapper');
+
+        
+             $expense = null;
+                 
+             if(isset($id_expense)){
+                 $expense = ExpensesAndPurchase::find($id_expense);
+              
+                                     
+             }else{
+                return redirect('/expensesandpurchases')->withDanger('No llega el numero del Gasto o Compra');
+                } 
+     
+             if(isset($expense)){
+
+                 $payment_expenses = ExpensePayment::where('id_expense',$expense->id)->get();
+
+                 foreach($payment_expenses as $var){
+                    $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                 }
+
+
+                $inventories_expenses = ExpensesDetail::where('id_expense',$expense->id)->get();
+            
+                $total= 0;
+                $base_imponible= 0;
+                $ventas_exentas= 0;
+                foreach($inventories_expenses as $var){
+                    //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount))/100;
+
+                    $total += ($var->price * $var->amount) - $percentage;
+                    //----------------------------- 
+
+                    if($var->exento == 0){
+
+                        $percentage = (($var->price * $var->amount))/100;
+
+                        $base_imponible += ($var->price * $var->amount) - $percentage; 
+
+                    }
+                    if($var->exento == 1){
+    
+                        $percentage = (($var->price * $var->amount))/100;
+    
+                        $ventas_exentas += ($var->price * $var->amount) - $percentage; 
+    
+                    }
+                }
+    
+                 $expense->sub_total = $total;
+                 $expense->base_imponible = $base_imponible;
+                 $expense->ventas_exentas = $ventas_exentas;
+
+                
+                 $pdf = $pdf->loadView('pdf.expense',compact('expense','inventories_expenses','payment_expenses'));
+                 return $pdf->stream();
+         
+                }else{
+                 return redirect('/expensesandpurchases')->withDanger('La Compra no existe');
              } 
              
         

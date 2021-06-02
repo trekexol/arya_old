@@ -19,7 +19,7 @@ class CreateQuotationProductsTable extends Migration
             $table->unsignedBigInteger('id_inventory');
 
             $table->integer('amount');
-            $table->decimal('discount',16,2);
+            $table->decimal('discount',64,2);
 
             $table->string('status',1);
 

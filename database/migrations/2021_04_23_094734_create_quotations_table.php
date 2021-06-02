@@ -26,17 +26,17 @@ class CreateQuotationsTable extends Migration
             $table->date('date_billing')->nullable();
             $table->date('date_delivery_note')->nullable();
 
-            $table->decimal('anticipo',16,2)->nullable();
+            $table->decimal('anticipo',64,2)->nullable();
             $table->integer('iva_percentage')->nullable();
             $table->string('observation',150)->nullable();
             $table->string('note',150)->nullable();
             $table->integer('credit_days')->nullable();
             $table->string('coin',15)->nullable();
 
-            $table->decimal('base_imponible',32,2)->nullable();
-            $table->decimal('amount',32,2)->nullable();
-            $table->decimal('amount_iva',32,2)->nullable();
-            $table->decimal('amount_with_iva',32,2)->nullable();
+            $table->decimal('base_imponible',64,2)->nullable();
+            $table->decimal('amount',64,2)->nullable();
+            $table->decimal('amount_iva',64,2)->nullable();
+            $table->decimal('amount_with_iva',64,2)->nullable();
 
 
 

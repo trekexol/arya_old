@@ -20,7 +20,7 @@ class CreateTasasTable extends Migration
             $table->date('date_begin');
             $table->date('date_end')->nullable();
 
-            $table->decimal('amount',16,2);
+            $table->decimal('amount',64,2);
 
             $table->foreign('id_user')->references('id')->on('users');
             $table->timestamps();

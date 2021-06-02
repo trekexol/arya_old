@@ -294,7 +294,7 @@
     </script>
 @endsection
 
-@section('javascript')
+@section('product_edit')
     <script>
             
             $("#segment").on('change',function(){

@@ -11,7 +11,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="row justify-content-left">
-    <div class="col-md-1">
+    <div class="col-md-2">
     </div>
     <div class="col-md-4">
         <a href="{{ route('bankmovements') }}" class="btn btn-info" title="Transferencia">Bancos</a>
@@ -22,88 +22,62 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header" style="text-align: center">Listado de Movimientos de Caja y Bancos</div>
+                <div class="card-header text-center font-weight-bold h3">Listado de Movimientos de Caja y Bancos</div>
 
                 <div class="card-body">
                         <div class="table-responsive">
                         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
-                            <tr> 
-                                <th>Fecha del Movimiento</th>
-                                <th>Caja / Banco</th>
-                                <th>Tipo Mov.</th>	
-                                <th>Referencia</th>	
-                                <th>Descripción</th>
+                                <tr>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center">Referencia</th>
+                                    <th class="text-center">Cuenta</th>
+                                    <th class="text-center">Tipo</th>
+                                    <th class="text-center">Descripción</th>
+                                    <th class="text-center">Debe</th>
+                                    <th class="text-center">Haber</th>
+                                </tr>
+                                </thead>
                                 
-                                <th>Monto</th>
-                            
-                                <th>Opciones</th>
-                            </tr>
-                            </thead>
-                            
-                            <tbody>
-                                @if (empty($bankmovements))
-                                @else  
-                                <?php
-                                    $intercalar = true;
-                                    $total = 0;
-                                ?>
-                            
-                                    @foreach ($bankmovements as $var)
+                                <tbody>
+                                    @if (empty($detailvouchers))
+                                    @else
+                                        @foreach ($detailvouchers as $var)
                                         <tr>
-                                        @if($intercalar)
-                                        <?php 
-                                            $intercalar = false;
-                                            $total += $var->amount;
-                                        ?>
-
-                                            <td style="text-align:right; color:black;">{{$var->date}}</td>
-                                            <td style="text-align:right; color:black;">{{ $var->accounts['description']}}</td>
-                                            
-                                            <td style="text-align:right; color:black;">{{$var->type_movement}}</td>
-                                            <td style="text-align:right; color:black;">{{$var->reference}}</td>
-                                            <td style="text-align:right; color:black;">{{$var->description}}</td>
-                                            <td style="text-align:right; color:black;">{{number_format($var->amount, 2, ',', '.')}}</td>
-                                                            
+                                        <td>{{$var->banks['date'] ?? ''}}</td>
+                    
                                         
-                                            <td style="text-align:right; color:black;">  
-                                                <a href="{{ route('bankmovements.createdeposit',$var->id) }}" title="Depositar"><i class="fa fa-download"></i></a>
-                                         </td>
-                                        </tr>   
+                                        
+                                        <td>{{$var->id_bank_voucher ?? ''}}</td>
 
+                                        <td>{{ $var->accounts['description'] }} / {{$var->accounts['code_one']}}.{{$var->accounts['code_two']  }}.{{ $var->accounts['code_three'] }}.{{ $var->accounts['code_four'] }}</td>
+                    
+                                        @if ($var->banks['type_movement'] == "RE")
+                                            <td>Retiro</td>
+                                        @elseif($var->banks['type_movement'] == "DE")
+                                            <td>Depósito</td>
                                         @else
-                                            <?php 
-                                                $intercalar = true; 
-                                                $total += $var->amount;
-                                            ?>
+                                            <td>Transferencia</td>
+                                        @endif
+                                        
 
-                                            <td style="text-align:right; color:black;">{{$var->date}}</td>
-                                            <td style="text-align:right; color:black;">{{ $var->accounts['description']}}</td>
+                                        @if(isset($var->id_bank_voucher))
+                                          
+                                            <td>{{$var->banks['description'] ?? ''}}</td>
+                                        @elseif (isset($var->id_invoice))
                                             
-                                            <td style="text-align:right; color:black;">{{$var->type_movement}}</td>
-                                            <td style="text-align:right; color:black;">{{$var->reference}}</td>
-                                            <td style="text-align:right; color:black;">{{$var->description}}</td>
-                                            <td style="text-align:right; color:black;">{{number_format($var->amount, 2, ',', '.')}}</td>
-                                                            
-
-                                            <td style="text-align:right; color:black;">  
-                                                <a href="{{ route('bankmovements.createdeposit',$var->id) }}" title="Depositar"><i class="fa fa-download"></i></a>
-                                            </td>
-                                        </tr>   
-                                        @endif  
-                                        
-                                    @endforeach   
-                                    <tr>
-                                        <td style="background: #E0D7CD; text-align:right; color:black;">-----------</td>
-                                        <td style="background: #E0D7CD; text-align:right; color:black;">-----------</td>
-                                        <td style="background: #E0D7CD; text-align:right; color:black;">------</td>
-                                        <td style="background: #E0D7CD; text-align:right; color:black;">-----------</td>
-                                        <td style="background: #E0D7CD; text-align:right; color:black;">Totales</td>
-                                        <td style="background: #E0D7CD; text-align:right; color:black;">{{number_format($total, 2, ',', '.')}}</td>
-                                        
-                                        <td style="background: #E0D7CD; text-align:right; color:black;"></td>
-                                    
+                                            <td>{{$var->headers['description'] ?? ''}} fact({{ $var->id_invoice }}) / {{$var->accounts['description'] ?? ''}}</td>
+                                        @else
+                                            
+                                            <td>{{$var->headers['description'] ?? ''}}</td>
+                                        @endif
+                                       
+                                        <td>{{$var->debe}}</td>
+                                        <td>{{$var->haber}}</td>
+                    
+                                     
                                         </tr>
+                                    @endforeach
                                 @endif
                             </tbody>
                         </table>
@@ -116,12 +90,13 @@
 </div>
   
 @endsection
-
 @section('javascript')
-
     <script>
     $('#dataTable').DataTable({
-        "order": []
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
     });
     </script> 
 @endsection

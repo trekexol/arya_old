@@ -100,7 +100,7 @@
 </tr>
   
 </table>
-  @if (empty($payment_quotations))
+  @if (!empty($payment_quotations))
       
 
       <br>

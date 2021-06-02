@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Inventory;
 use App\Product;
+use App\QuotationProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +27,34 @@ class InventoryController extends Controller
        }
 
        return view('admin.inventories.index',compact('inventories'));
+   }
+
+   public function indexmovements()
+   {
+       $user       =   auth()->user();
+       $users_role =   $user->role_id;
+       if($users_role == '1'){
+
+        $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                        ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                        ->join('quotations', 'quotations.id', '=', 'quotation_products.id_quotation')
+                                                        ->where('quotations.date_billing','<>',null)
+                                                        ->orwhere('quotations.date_delivery_note','<>',null)
+                                                        ->select('products.*','quotation_products.discount as discount',
+                                                        'quotation_products.amount as amount_quotation',
+                                                        'quotation_products.id_quotation as id_quotation',
+                                                        'quotations.*',
+                                                        'inventories.amount as amount_inventory'
+                                                        )
+                                                        ->get(); 
+
+       
+
+        }elseif($users_role == '2'){
+           return view('admin.index');
+       }
+
+       return view('admin.inventories.indexmovement',compact('inventories_quotations'));
    }
 
    /**

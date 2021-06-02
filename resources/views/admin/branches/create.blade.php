@@ -301,14 +301,6 @@
                 }
             })
         }
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
-
+	
     </script>
 @endsection

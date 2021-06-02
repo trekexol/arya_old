@@ -21,11 +21,11 @@ class CreateReceiptVacationsTable extends Migration
             $table->integer('days_vacations');
             $table->integer('bono_vacations');
             $table->integer('days_feriados');
-            $table->decimal('lph',15,2);
-            $table->decimal('sso',15,2);
-            $table->decimal('seguro_paro_forzoso',15,2);
-            $table->decimal('ultimo_sueldo',15,2);
-            $table->decimal('total_pagar',15,2);
+            $table->decimal('lph',64,2);
+            $table->decimal('sso',64,2);
+            $table->decimal('seguro_paro_forzoso',64,2);
+            $table->decimal('ultimo_sueldo',64,2);
+            $table->decimal('total_pagar',64,2);
             
             $table->string('status',1);
             $table->foreign('employee_id')->references('id')->on('employees');

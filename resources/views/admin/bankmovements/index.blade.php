@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <div class="card-header" style="text-align: center">Consulta de Caja Y Bancos</div>
+                <div class="card-header text-center font-weight-bold h3">Consulta de Caja Y Bancos</div>
 
                 <div class="card-body">
                         <div class="table-responsive">
@@ -31,11 +31,11 @@
                             <thead>
                             <tr> 
                             
-                                <th>Descripción</th>
+                                <th class="text-center">Descripción</th>
                                 
-                                <th>Saldo Actual</th>
+                                <th class="text-center">Saldo Actual</th>
                             
-                                <th>Opciones</th>
+                                <th class="text-center">Opciones</th>
                             </tr>
                             </thead>
                             
@@ -52,11 +52,11 @@
                                         @if($intercalar)
                                         <?php 
                                             $intercalar = false;
-                                            $total += $var->debe;
+                                            $total += ($var->balance_previus + $var->debe) - $var->haber;
                                         ?>
                                             <td style="text-align:right; color:black;">{{$var->description}}</td>
                                         
-                                            <td style="text-align:right; color:black;">{{number_format($var->debe, 2, ',', '.')}}</td>
+                                            <td style="text-align:right; color:black;">{{number_format(($var->balance_previus + $var->debe) - $var->haber, 2, ',', '.')}}</td>
                                                             
                                         
                                             <td style="text-align:right; color:black;">  
@@ -69,11 +69,11 @@
                                         @else
                                             <?php 
                                                 $intercalar = true; 
-                                                $total += $var->debe;
+                                                $total += ($var->balance_previus + $var->debe) - $var->haber;
                                             ?>
 
                                             <td style=" text-align:right; color:black;">{{$var->description}}</td>
-                                            <td style=" text-align:right; color:black;">{{number_format($var->debe, 2, ',', '.')}}</td>
+                                            <td style=" text-align:right; color:black;">{{number_format(($var->balance_previus + $var->debe) - $var->haber, 2, ',', '.')}}</td>
                                             
                                             <td style=" text-align:right; color:black;">
                                                 <a href="{{ route('bankmovements.createdeposit',$var->id) }}" title="Depositar"><i class="fa fa-download"></i></a>
@@ -106,10 +106,12 @@
 @endsection
 
 @section('javascript')
-
     <script>
     $('#dataTable').DataTable({
-        "order": []
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
     });
     </script> 
 @endsection

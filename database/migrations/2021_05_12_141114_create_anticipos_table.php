@@ -20,7 +20,7 @@ class CreateAnticiposTable extends Migration
             $table->unsignedBigInteger('id_user');
 
             $table->date('date');
-            $table->decimal('amount',16,2);
+            $table->decimal('amount',64,2);
             $table->string('reference',20)->nullable();
             
            

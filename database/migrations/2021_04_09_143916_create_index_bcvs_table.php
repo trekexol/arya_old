@@ -17,7 +17,7 @@ class CreateIndexBcvsTable extends Migration
             $table->bigIncrements('id');
             $table->string('period',4);
             $table->string('month',15);
-            $table->decimal('rate',10,2);
+            $table->decimal('rate',64,2);
             
             $table->string('status',1);
             $table->timestamps();

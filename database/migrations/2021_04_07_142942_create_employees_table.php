@@ -21,6 +21,7 @@ class CreateEmployeesTable extends Migration
             $table->unsignedBigInteger('estado_id');
             $table->unsignedBigInteger('municipio_id');
             $table->unsignedBigInteger('parroquia_id');
+            $table->unsignedBigInteger('branch_id')->nullable();
             $table->string('id_empleado',50);//cedula
             $table->string('apellidos',160);
             $table->string('nombres',160);
@@ -28,14 +29,13 @@ class CreateEmployeesTable extends Migration
             $table->date('fecha_egreso')->nullable();
             $table->date('fecha_nacimiento');
             $table->string('direccion',250);
-            $table->double('monto_pago', 14, 2);
+            $table->double('monto_pago', 64, 2);
             $table->string('email',100);
             $table->string('telefono1',20);
-            $table->double('acumulado_prestaciones', 15, 2);
-            $table->double('acumulado_utilidades', 15, 2);
+            $table->double('acumulado_prestaciones', 64, 2);
+            $table->double('acumulado_utilidades', 64, 2);
             $table->string('status',1);
-            $table->string('centro_cos',20);
-
+           
             $table->string('code_employee',30)->nullable();
             $table->string('amount_utilities',2);
 
@@ -46,6 +46,7 @@ class CreateEmployeesTable extends Migration
             $table->foreign('profession_id')->references('id')->on('professions');
             $table->foreign('salary_types_id')->references('id')->on('salary_types');
             $table->foreign('position_id')->references('id')->on('positions');
+            $table->foreign('branch_id')->references('id')->on('branches');
             $table->timestamps();
         });
     }

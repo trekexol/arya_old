@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Retiros / Ordenes de Pago</div>
+                <div class="card-header text-center font-weight-bold h3">Retiros / Ordenes de Pago</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('bankmovements.storeretirement') }}" enctype="multipart/form-data">
@@ -45,7 +45,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="date_begin" class="col-md-3 col-form-label text-md-right">Fecha del Depósito:</label>
+                            <label for="date_begin" class="col-md-3 col-form-label text-md-right">Fecha del Retiro:</label>
 
                             <div class="col-md-3">
                                 <input id="date_begin" type="date" class="form-control @error('date_begin') is-invalid @enderror" name="date" value="{{ $datenow ?? old('date_begin') }}" required autocomplete="date_begin">
@@ -75,7 +75,7 @@
                             <label for="reference" class="col-md-3 col-form-label text-md-right">Número de Referencia:</label>
 
                             <div class="col-md-3">
-                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" required autocomplete="reference">
+                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" autocomplete="reference">
 
                                 @error('reference')
                                     <span class="invalid-feedback" role="alert">
@@ -121,10 +121,10 @@
                         </div>  
                         <div class="form-group row">
                             
-                            <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Depósito</label>
+                            <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Retiro:</label>
 
                             <div class="col-md-4">
-                                <input id="amount" type="number" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" placeholder="0,00" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
 
                                 @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -138,7 +138,7 @@
                         
                         <div class="form-group row">
                                     
-                            <label for="contrapartida" class="col-md-2 col-form-label text-md-right">Contrapartida</label>
+                            <label for="contrapartida" class="col-md-2 col-form-label text-md-right">Contrapartida:</label>
                         
                             <div class="col-md-4">
                             <select id="contrapartida"  name="contrapartida" class="form-control" required>
@@ -172,10 +172,13 @@
 
                         <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                    Guardar Depósito
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('bankmovements') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                     </form>
@@ -186,77 +189,86 @@
 </div>
 @endsection
 @section('validacion_usuario')
-<script>
-    
-$(function(){
-    soloNumeroPunto('code');
-    soloAlfaNumerico('description');
-    
-});
-
-</script>
-@endsection
-
-@section('javascript')
-<script>
+    <script>
         
-        $("#beneficiario").on('change',function(){
-            var beneficiario_id = $(this).val();
-            $("#subbeneficiario").val("");
-           
-            // alert(beneficiario_id);
-            getSubbeneficiario(beneficiario_id);
-        });
+    $(function(){
+        soloNumeroPunto('code');
+        soloAlfaNumerico('description');
+        
+    });
 
-    function getSubbeneficiario(beneficiario_id){
-        // alert(`../subbeneficiario/list/${beneficiario_id}`);
-        $.ajax({
-            url:`../../bankmovements/listbeneficiario/${beneficiario_id}`,
-            beforSend:()=>{
-                alert('consultando datos');
-            },
-            success:(response)=>{
-                let subbeneficiario = $("#subbeneficiario");
-                let htmlOptions = `<option value='' >Seleccione..</option>`;
-                // console.clear();
-                if(response.length > 0){
-                    response.forEach((item, index, object)=>{
-                        let {id,name} = item;
-                        htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${name}</option>`
-
-                    });
-                }
-                //console.clear();
-                // console.log(htmlOptions);
-                subbeneficiario.html('');
-                subbeneficiario.html(htmlOptions);
-            
-                
-            
-            },
-            error:(xhr)=>{
-                alert('Presentamos inconvenientes al consultar los datos');
-            }
-        })
-    }
-
-    $("#subbeneficiario").on('change',function(){
-            var subbeneficiario_id = $(this).val();
-            var beneficiario_id    = document.getElementById("beneficiario").value;
-            
-        });
-
+    </script>
+@endsection
+@section('javascript')
     
-$(function(){
-    soloNumeros('xtelf_local');
-    soloNumeros('xtelf_cel');
-});
+    <script>
+        $(document).ready(function () {
+            $("#amount").mask('00.000.000.000.000,00', { reverse: true });
+            
+        });
+    </script> 
+
+@endsection    
+@section('javascript2')
+    <script>
+            
+            $("#beneficiario").on('change',function(){
+                var beneficiario_id = $(this).val();
+                $("#subbeneficiario").val("");
+            
+                // alert(beneficiario_id);
+                getSubbeneficiario(beneficiario_id);
+            });
+
+        function getSubbeneficiario(beneficiario_id){
+            // alert(`../subbeneficiario/list/${beneficiario_id}`);
+            $.ajax({
+                url:`../../bankmovements/listbeneficiario/${beneficiario_id}`,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                    let subbeneficiario = $("#subbeneficiario");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,name} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subbeneficiario') == '${id}' ? 'selected' : '' }}>${name}</option>`
+
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subbeneficiario.html('');
+                    subbeneficiario.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
+
+        $("#subbeneficiario").on('change',function(){
+                var subbeneficiario_id = $(this).val();
+                var beneficiario_id    = document.getElementById("beneficiario").value;
+                
+            });
+
+        
+    $(function(){
+        soloNumeros('xtelf_local');
+        soloNumeros('xtelf_cel');
+    });
 
 
 
 
 
-</script>
+    </script>
 @endsection
 
 @section('consultadeposito')

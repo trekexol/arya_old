@@ -2,16 +2,29 @@
 
 @section('content')
 
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active font-weight-bold" style="color: black;" id="home-tab"  href="{{ route('products') }}" role="tab" aria-controls="home" aria-selected="true">Productos</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('inventories') }}" role="tab" aria-controls="profile" aria-selected="false">Inventarios</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link font-weight-bold" style="color: black;" id="contact-tab"  href="{{ route('inventories.movement') }}" role="tab" aria-controls="contact" aria-selected="false">Movimientos de Inventario</a>
+    </li>
+    
+  </ul>
+
 <!-- container-fluid -->
 <div class="container-fluid">
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
       <div class="col-md-6">
-          <h2>Productos</h2>
+          
       </div>
       <div class="col-md-6">
-        <a href="{{ route('products.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Producto</a>
+        <a href="{{ route('products.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar un Producto</a>
       </div>
     </div>
   </div>
@@ -41,13 +54,13 @@
             <tr> 
                
             
-                <th>Código Comercial</th>
-                <th>Descripción</th>
-                <th>Tipo</th>
-                <th>Precio</th>
-                <th>Foto del Producto</th>
+                <th class="text-center">Código Comercial</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Foto del Producto</th>
               
-                <th></th>
+                <th class="text-center"></th>
             </tr>
             </thead>
             
@@ -57,14 +70,14 @@
                     @foreach ($products as $product)
                         <tr>
                            
-                            <td>{{$product->code_comercial}}</td>
-                            <td>{{$product->description}}</td>
-                            <td>{{$product->type}}</td>
-                            <td style="text-align: right">{{number_format($product->price, 2, ',', '.')}}</td>
+                            <td class="text-center">{{$product->code_comercial}}</td>
+                            <td class="text-center">{{$product->description}}</td>
+                            <td class="text-center">{{$product->type}}</td>
+                            <td class="text-right">{{number_format($product->price, 2, ',', '.')}}</td>
                             
-                            <td style="text-align: center"><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
+                            <td class="text-center"><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
 
-                            <td>
+                            <td class="text-center">
                                 <a href="{{ route('products.edit',$product->id) }}"  title="Editar"><i class="fa fa-edit"></i></a>
                              </td>
                         </tr>     
@@ -78,12 +91,12 @@
   
 @endsection
 @section('javascript')
-
-    <script>
-    $('#dataTable').DataTable({
-        "order": [],
-        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
-        'iDisplayLength': '50'
-    });
-    </script> 
+     <script>
+        $('#dataTable').DataTable({
+            "ordering": false,
+            "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+        });
+        </script> 
 @endsection

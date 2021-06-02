@@ -65,13 +65,13 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0" >
             <thead>
             <tr> 
-                <th>Fecha</th>
-                <th>Nº</th>
-                <th>Cliente</th>
-                <th>Monto</th>
-                <th>Iva</th>
-                <th>Monto Con Iva</th>
-                <th></th>
+                <th class="text-center">Fecha</th>
+                <th class="text-center">Nº</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Monto</th>
+                <th class="text-center">Iva</th>
+                <th class="text-center">Monto Con Iva</th>
+                <th class="text-center"></th>
             </tr>
             </thead>
             
@@ -80,11 +80,11 @@
                 @else  
                     @foreach ($quotations as $quotation)
                         <tr>
-                            <td class="font-weight-bold">{{$quotation->date_billing}}</td>
+                            <td class="text-center font-weight-bold">{{$quotation->date_billing}}</td>
                             <td class="text-center font-weight-bold">
                                 <a href="{{ route('quotations.createfacturado',$quotation->id) }}" title="Ver Factura" class="font-weight-bold text-dark">{{ $quotation->id }}</a>
                             </td>
-                            <td class="font-weight-bold">{{ $quotation->clients['name']}}</td>
+                            <td class="text-center font-weight-bold">{{ $quotation->clients['name']}}</td>
                             <td class="text-right font-weight-bold">{{number_format($quotation->amount, 2, ',', '.')}}</td>
                             <td class="text-right font-weight-bold">{{number_format($quotation->amount_iva, 2, ',', '.')}}</td>
                             <td class="text-right font-weight-bold">{{number_format($quotation->amount_with_iva, 2, ',', '.')}}</td>
@@ -111,11 +111,12 @@
   
 @endsection
 @section('javascript')
-
-<script>
-    $('#dataTable').dataTable( {
-  "ordering": false
-} );
-</script>
-    
+    <script>
+        $('#dataTable').dataTable( {
+        "ordering": false,
+        "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+    } );
+    </script>
 @endsection

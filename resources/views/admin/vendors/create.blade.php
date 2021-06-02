@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header"><h3>Registro de Vendedores</h3></div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Vendedores</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('vendors.store') }}" enctype="multipart/form-data">
@@ -97,7 +97,7 @@
                             <label for="comision" class="col-md-2 col-form-label text-md-right">Comisión</label>
 
                             <div class="col-md-4">
-                                <input id="comision" type="number" class="form-control @error('comision') is-invalid @enderror" name="comision" value="{{ old('comision') }}" required autocomplete="comision">
+                                <input id="comision" type="text" class="form-control @error('comision') is-invalid @enderror" name="comision" value="{{ old('comision') }}" required autocomplete="comision">
 
                                 @error('comision')
                                     <span class="invalid-feedback" role="alert">
@@ -148,7 +148,7 @@
                             <label for="phone2" class="col-md-2 col-form-label text-md-right">Teléfono 2</label>
 
                             <div class="col-md-4">
-                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ old('phone2') }}" required autocomplete="phone2">
+                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ old('phone2') }}" autocomplete="phone2">
 
                                 @error('phone2')
                                     <span class="invalid-feedback" role="alert">
@@ -216,7 +216,7 @@
                             <label for="instagram" class="col-md-2 col-form-label text-md-right">Instagram</label>
 
                             <div class="col-md-4">
-                                <input id="instagram" type="text" class="form-control @error('instagram') is-invalid @enderror" name="instagram" value="{{ old('instagram') }}" required autocomplete="instagram">
+                                <input id="instagram" type="text" class="form-control @error('instagram') is-invalid @enderror" name="instagram" value="{{ old('instagram') }}"  autocomplete="instagram">
 
                                 @error('instagram')
                                     <span class="invalid-feedback" role="alert">
@@ -227,7 +227,7 @@
                             <label for="facebook" class="col-md-2 col-form-label text-md-right">Facebook</label>
 
                             <div class="col-md-4">
-                                <input id="facebook" type="text" class="form-control @error('facebook') is-invalid @enderror" name="facebook" value="{{ old('facebook') }}" required autocomplete="facebook">
+                                <input id="facebook" type="text" class="form-control @error('facebook') is-invalid @enderror" name="facebook" value="{{ old('facebook') }}"  autocomplete="facebook">
 
                                 @error('facebook')
                                     <span class="invalid-feedback" role="alert">
@@ -240,7 +240,7 @@
                             <label for="twitter" class="col-md-2 col-form-label text-md-right">Twitter</label>
 
                             <div class="col-md-4">
-                                <input id="twitter" type="text" class="form-control @error('twitter') is-invalid @enderror" name="twitter" value="{{ old('twitter') }}" required autocomplete="twitter">
+                                <input id="twitter" type="text" class="form-control @error('twitter') is-invalid @enderror" name="twitter" value="{{ old('twitter') }}"  autocomplete="twitter">
 
                                 @error('twitter')
                                     <span class="invalid-feedback" role="alert">
@@ -251,7 +251,7 @@
                             <label for="especification" class="col-md-2 col-form-label text-md-right">Especificación</label>
 
                             <div class="col-md-4">
-                                <input id="especification" type="text" class="form-control @error('especification') is-invalid @enderror" name="especification" value="{{ old('especification') }}" required autocomplete="especification">
+                                <input id="especification" type="text" class="form-control @error('especification') is-invalid @enderror" name="especification" value="{{ old('especification') }}"  autocomplete="especification">
 
                                 @error('especification')
                                     <span class="invalid-feedback" role="alert">
@@ -273,22 +273,18 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="rol" class="col-md-2 col-form-label text-md-right">Status</label>
-
-                            <div class="col-md-4">
-                            <select class="form-control" name="status" id="status">
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                            </div>
+                           
                         </div>
                         
                         <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                    Registrar Vendedor
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('vendors') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                     </form>
@@ -300,21 +296,35 @@
 @endsection
 @section('validacion_usuario')
 <script>
+    $(document).ready(function () {
+        $("#comision").mask('000.000.000.000.000', { reverse: true });
+        
+    }); 
+    $(document).ready(function () {
+        $("#phone").mask('0000 000-0000', { reverse: true });
+        
+    }); 
+    $(document).ready(function () {
+        $("#phone2").mask('0000 000-0000', { reverse: true });
+        
+    }); 
+    $(document).ready(function () {
+        $("#cedula_rif").mask('000.000.000', { reverse: true });
+        
+    }); 
+    </script>
+<script>
        
 $(function(){
     soloAlfaNumerico('code');
-    soloNumeros('cedula_rif');
     soloLetras('name');
     soloLetras('surname');
-    soloNumeros('comision');
-    soloNumeros('phone');
-    soloNumeros('phone2');
 });
 
 </script>
 @endsection
 
-@section('javascript')
+@section('validacion_vendor')
     <script>
             
             $("#estado").on('change',function(){
@@ -391,14 +401,5 @@ $(function(){
                 }
             })
         }
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
-
     </script>
 @endsection

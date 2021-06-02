@@ -68,16 +68,6 @@ Route::group(["prefix"=>'salarytypes'],function(){
 
 });
 
-Route::group(["prefix"=>'companies'],function(){
-    Route::get('/','CompaniesController@index')->name('companies');
-    Route::get('register','CompaniesController@create')->name('companies.create');
-    Route::post('store','CompaniesController@store')->name('companies.store');
-   
-    Route::get('{id}/edit','CompaniesController@edit')->name('companies.edit');
-    Route::delete('{id}/delete','CompaniesController@destroy')->name('companies.delete');
-    Route::patch('{id}/update','CompaniesController@update')->name('companies.update');
-
-});
 
 Route::group(["prefix"=>'positions'],function(){
     Route::get('/','PositionsController@index')->name('positions');
@@ -303,6 +293,7 @@ Route::group(["prefix"=>'inventories'],function(){
    
     Route::post('storedecreaseinventory','InventoryController@store_decrease_inventory')->name('inventories.store_decrease_inventory');
     Route::get('createdecreaseinventory/{id_inventario}','InventoryController@create_decrease_inventory')->name('inventories.create_decrease_inventory');
+    Route::get('movements','InventoryController@indexmovements')->name('inventories.movement');
    
 });
 
@@ -432,7 +423,7 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::post('storefacturacredit','FacturarController@storefacturacredit')->name('quotations.storefacturacredit');
 
 
-    Route::get('facturar/{id_quotation}','FacturarController@createfacturar_after')->name('quotations.createfacturar_after');
+    Route::get('facturarafter/{id_quotation}','FacturarController@createfacturar_after')->name('quotations.createfacturar_after');
 
    
 });
@@ -507,6 +498,10 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::get('inventory','PDFController@imprimirinventory')->name('pdf.inventory');
 
     Route::get('facturamedia/{id_quotation}','PDFController@imprimirfactura_media')->name('pdf.media');
+
+    Route::get('expense/{id_expense}','PDFController@imprimirExpense')->name('pdf.expense');
+
+    Route::get('expensemedia/{id_expense}','PDFController@imprimirExpenseMedia')->name('pdf.expense_media');
  });
 
 
@@ -549,4 +544,95 @@ Route::group(["prefix"=>'sales'],function(){
     Route::delete('{id}/delete','SaleController@destroy')->name('sales.delete');
     Route::patch('{id}/update','SaleController@update')->name('sales.update');*/
 
+});
+
+
+Route::group(["prefix"=>'expensesandpurchases'],function(){
+    Route::get('/','ExpensesAndPurchaseController@index')->name('expensesandpurchases');
+    Route::get('registerexpense/{id_provider?}','ExpensesAndPurchaseController@create_expense')->name('expensesandpurchases.create');
+    Route::post('store', 'ExpensesAndPurchaseController@store')->name('expensesandpurchases.store');
+   
+    Route::get('{id}/edit','ExpensesAndPurchaseController@edit')->name('expensesandpurchases.edit');
+    Route::delete('{id}/delete','ExpensesAndPurchaseController@destroy')->name('expensesandpurchases.delete');
+    Route::patch('{id}/update','ExpensesAndPurchaseController@update')->name('expensesandpurchases.update');
+
+
+    Route::get('selectprovider','ExpensesAndPurchaseController@selectprovider')->name('expensesandpurchases.selectprovider');
+
+    Route::get('register/{id_expense?}/{id_inventory?}','ExpensesAndPurchaseController@create_expense_detail')->name('expensesandpurchases.create_detail');
+    
+    Route::get('listaccount/{type_var?}','ExpensesAndPurchaseController@listaccount')->name('expensesandpurchases.listaccount');
+
+    Route::post('storedetail', 'ExpensesAndPurchaseController@store_detail')->name('expensesandpurchases.store_detail');
+
+    Route::get('registerpayment/{id_expense?}','ExpensesAndPurchaseController@create_payment')->name('expensesandpurchases.create_payment');
+    
+    Route::patch('storepayment','ExpensesAndPurchaseController@store_payment')->name('expensesandpurchases.store_payment');
+
+    Route::get('indexhistorial','ExpensesAndPurchaseController@index_historial')->name('expensesandpurchases.index_historial');
+
+    Route::post('storeexpensecredit', 'ExpensesAndPurchaseController@store_expense_credit')->name('expensesandpurchases.store_expense_credit');
+
+    Route::get('selectinventary/{id_expense}','ExpensesAndPurchaseController@selectinventary')->name('expensesandpurchases.selectinventary');
+
+    Route::get('expensevoucher/{id_expense}','ExpensesAndPurchaseController@create_expense_voucher')->name('expensesandpurchases.create_expense_voucher');
+
+    Route::get('registerpaymentafter/{id_expense?}','ExpensesAndPurchaseController@create_payment_after')->name('expensesandpurchases.create_payment_after');
+    
+    Route::post('storeexpensepayment', 'ExpensesAndPurchaseController@store_expense_payment')->name('expensesandpurchases.store_expense_payment');
+
+    Route::get('movementexpense/{id_expense}','ExpensesAndPurchaseController@movements_expense')->name('expensesandpurchases.movement');
+    
+});
+
+Route::group(["prefix"=>'directpaymentorders'],function(){
+    Route::get('/','DirectPaymentOrderController@createretirement')->name('directpaymentorders.create');
+    Route::post('store','DirectPaymentOrderController@store')->name('directpaymentorders.store');
+
+    Route::get('listbeneficiary/{type_var?}','DirectPaymentOrderController@listbeneficiary')->name('directpaymentorders.listbeneficiary');
+    Route::get('listcontrapartida/{type_var?}','DirectPaymentOrderController@listcontrapartida')->name('directpaymentorders.listcontrapartida');
+
+   
+
+});
+
+
+Route::group(["prefix"=>'inventarytypes'],function(){
+    Route::get('/','InventaryTypeController@index')->name('inventarytypes');
+    Route::get('create','InventaryTypeController@create')->name('inventarytypes.create');
+    Route::post('store','InventaryTypeController@store')->name('inventarytypes.store');
+    Route::get('{id}/edit','InventaryTypeController@edit')->name('inventarytypes.edit');
+    Route::patch('{id}/update','InventaryTypeController@update')->name('inventarytypes.update');
+
+});
+
+Route::group(["prefix"=>'ratetypes'],function(){
+    Route::get('/','RateTypeController@index')->name('ratetypes');
+    Route::get('create','RateTypeController@create')->name('ratetypes.create');
+    Route::post('store','RateTypeController@store')->name('ratetypes.store');
+    Route::get('{id}/edit','RateTypeController@edit')->name('ratetypes.edit');
+    Route::patch('{id}/update','RateTypeController@update')->name('ratetypes.update');
+
+});
+
+Route::group(["prefix"=>'companies'],function(){
+    Route::get('/','CompaniesController@index')->name('companies');
+    Route::get('register','CompaniesController@create')->name('companies.create');
+    Route::post('store','CompaniesController@store')->name('companies.store');
+
+    Route::get('{id}/edit','CompaniesController@edit')->name('companies.edit');
+    Route::delete('{id}/delete','CompaniesController@destroy')->name('companies.delete');
+    Route::patch('{id}/update','CompaniesController@update')->name('companies.update');
+
+});
+
+Route::group(["prefix"=>'nominaformulas'],function(){
+    Route::get('index/{id_nomina}/{id_employee}','NominaFormulaController@index')->name('nominaformulas');
+    Route::get('register/{id_nomina}/{id_employee}','NominaFormulaController@create')->name('nominaformulas.create');
+    Route::post('store','NominaFormulaController@store')->name('nominaformulas.store');
+    Route::get('{id}/edit','NominaFormulaController@edit')->name('nominaformulas.edit');
+    Route::delete('{id}/delete','NominaFormulaController@destroy')->name('nominaformulas.delete');
+    Route::patch('{id}/update','NominaFormulaController@update')->name('nominaformulas.update');
+
+   
 });

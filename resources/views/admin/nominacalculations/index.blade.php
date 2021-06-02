@@ -45,14 +45,14 @@
             <thead>
             <tr>
                 
-                <th>Abreviatura</th>
-                <th>Concepto</th>
-                <th>Dias</th>
-                <th>Horas</th>
-                <th>Cantidad</th>
-                <th>Asignación</th>
-                <th>Deducción</th>
-               <th>Op</th>
+                <th class="text-center">Abreviatura</th>
+                <th class="text-center">Concepto</th>
+                <th class="text-center">Dias</th>
+                <th class="text-center">Horas</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Asignación</th>
+                <th class="text-center">Deducción</th>
+               <th class="text-center"></th>
               
             </tr>
             </thead>
@@ -103,18 +103,14 @@
                         <td>------------</td>
                         <td>------------</td>
                         <td>------------</td>
-                        <td style="text-align: right">Total: </td>
+                        <td class="text-right">Total: </td>
     
                        
                         
-                            <td style="text-align: right">{{number_format($total_asignacion, 2, ',', '.')}}</td>
-                            <td style="text-align: right">{{number_format($total_deduccion, 2, ',', '.')}}</td>
-                        
-    
-                       
-                            <td style="text-align: right">
-                                 
-                            </td>
+                            <td class="text-right">{{number_format($total_asignacion, 2, ',', '.')}}</td>
+                            <td class="text-right">{{number_format($total_deduccion, 2, ',', '.')}}</td>
+
+                            <td class="text-right">{{number_format($total_asignacion - $total_deduccion, 2, ',', '.')}}</td>
                         
                         </tr>
                 @endif
@@ -125,10 +121,12 @@
 </div>
 @endsection
 @section('javascript')
-
     <script>
-    $('#dataTable').DataTable({
-        "order": []
-    });
-    </script> 
+        $('#dataTable').dataTable( {
+        "ordering": false,
+        "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+    } );
+    </script>
 @endsection
