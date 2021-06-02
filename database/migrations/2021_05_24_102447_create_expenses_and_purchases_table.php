@@ -26,15 +26,15 @@ class CreateExpensesAndPurchasesTable extends Migration
             $table->date('date');
             $table->date('date_payment')->nullable();
          
-            $table->decimal('anticipo',16,2)->nullable();
+            $table->decimal('anticipo',64,2)->nullable();
             $table->integer('iva_percentage')->nullable();
             $table->integer('credit_days')->nullable();
            
 
-            $table->decimal('base_imponible',32,2)->nullable();
-            $table->decimal('amount',32,2)->nullable();
-            $table->decimal('amount_iva',32,2)->nullable();
-            $table->decimal('amount_with_iva',32,2)->nullable();
+            $table->decimal('base_imponible',64,2)->nullable();
+            $table->decimal('amount',64,2)->nullable();
+            $table->decimal('amount_iva',64,2)->nullable();
+            $table->decimal('amount_with_iva',64,2)->nullable();
 
 
 

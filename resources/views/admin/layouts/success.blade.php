@@ -7,7 +7,7 @@
 </div>
 @endif
 
-@section('javascript1')
+@section('validacion_time')
 
 <script>
   $(document).ready(function() {

@@ -23,7 +23,7 @@ class CreateAccountsTable extends Migration
              $table->string('description',100);
              $table->string('type',10);
              $table->integer('level');
-             $table->decimal('balance_previus',15,2);
+             $table->decimal('balance_previus',64,2);
             
              $table->string('status',1);
 

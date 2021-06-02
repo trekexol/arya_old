@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Transporte</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Transporte</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('transports.store') }}" enctype="multipart/form-data">
@@ -83,7 +83,7 @@
                             <label for="photo_transport" class="col-md-2 col-form-label text-md-right">Foto Transporte</label>
 
                             <div class="col-md-4">
-                                <input id="photo_transport" type="text" class="form-control @error('photo_transport') is-invalid @enderror" name="photo_transport" value="{{ old('photo_transport') }}" required autocomplete="photo_transport">
+                                <input id="photo_transport" type="text" class="form-control @error('photo_transport') is-invalid @enderror" name="photo_transport" value="{{ old('photo_transport') }}" autocomplete="photo_transport">
 
                                 @error('photo_transport')
                                     <span class="invalid-feedback" role="alert">
@@ -122,93 +122,5 @@
         soloAlfaNumerico('placa');
        
     });
-    </script>
-@endsection
-@section('javascript1')
-    <script>
-            
-            $("#estado").on('change',function(){
-                var estado_id = $(this).val();
-                $("#municipio").val("");
-                $("#parroquia").val("");
-                // alert(estado_id);
-                getMunicipios(estado_id);
-            });
-
-        function getMunicipios(estado_id){
-            // alert(`../municipio/list/${estado_id}`);
-            $.ajax({
-                url:`../municipio/list/${estado_id}`,
-                beforSend:()=>{
-                    alert('consultando datos');
-                },
-                success:(response)=>{
-                    let municipio = $("#municipio");
-                    let htmlOptions = `<option value='' >Seleccione..</option>`;
-                    // console.clear();
-                    if(response.length > 0){
-                        response.forEach((item, index, object)=>{
-                            let {id,descripcion} = item;
-                            htmlOptions += `<option value='${id}' {{ old('Municipio') == '${id}' ? 'selected' : '' }}>${descripcion}</option>`
-
-                        });
-                    }
-                    //console.clear();
-                    // console.log(htmlOptions);
-                    municipio.html('');
-                    municipio.html(htmlOptions);
-                
-                    
-                
-                },
-                error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
-                }
-            })
-        }
-
-        $("#municipio").on('change',function(){
-                var municipio_id = $(this).val();
-                var estado_id    = document.getElementById("estado").value;
-                getParroquias(municipio_id,estado_id);
-            });
-
-        function getParroquias(municipio_id,estado_id){
-            // alert(`../parroquia/list/${municipio_id}/${estado_id}`);
-            $.ajax({
-                url:`../parroquia/list/${municipio_id}/${estado_id}`,
-                beforSend:()=>{
-                    alert('consultando datos');
-                },
-                success:(response)=>{
-                    let parroquia = $("#parroquia");
-                    let htmlOptions = `<option value='' >Seleccione..</option>`;
-                    // console.clear();
-                    if(response.length > 0){
-                        response.forEach((item, index, object)=>{
-                            let {id,descripcion} = item;
-                            htmlOptions += `<option value='${id}' {{ old('Parroquia') == '${descripcion}' ? 'selected' : '' }} >${descripcion}</option>`
-
-                        });
-                    }
-                    // console.clear();
-                    // console.log(htmlOptions);
-                    parroquia.html('');
-                    parroquia.html(htmlOptions);
-                },
-                error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
-                }
-            })
-        }
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
-
     </script>
 @endsection

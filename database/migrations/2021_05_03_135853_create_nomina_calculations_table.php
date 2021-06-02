@@ -21,7 +21,7 @@ class CreateNominaCalculationsTable extends Migration
 
             $table->integer('number_receipt');
             $table->string('type',20);
-            $table->decimal('amount',16,2);
+            $table->decimal('amount',64,2);
             $table->integer('hours');
             $table->integer('days');
             $table->integer('cantidad');

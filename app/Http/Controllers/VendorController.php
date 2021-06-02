@@ -75,14 +75,9 @@ class VendorController extends Controller
         'surname'         =>'required',
         'email'         =>'required',
         'phone'         =>'required',
-        'phone2'         =>'required',
+       
         'comision'         =>'required',
-        'instagram'         =>'required',
-        'facebook'         =>'required',
-        'twitter'         =>'required',
-        'especification'         =>'required',
-        'observation'         =>'required',
-        'status'         =>'required',
+      
        
     ]);
 
@@ -102,7 +97,10 @@ class VendorController extends Controller
     $var->email = request('email');
     $var->phone = request('phone');
     $var->phone2 = request('phone2');
-    $var->comision = request('comision');
+
+    $sin_formato_comision = str_replace(',', '.', str_replace('.', '', request('comision')));
+
+    $var->comision = $sin_formato_comision;
     $var->instagram = request('instagram');
 
     $var->facebook = request('facebook');
@@ -111,7 +109,7 @@ class VendorController extends Controller
     $var->twitter = request('twitter');
     $var->especification = request('especification');
     $var->observation = request('observation');
-    $var->status =  request('status');
+    $var->status =  1;
   
     $var->save();
 

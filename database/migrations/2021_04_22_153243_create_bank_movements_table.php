@@ -25,7 +25,7 @@ class CreateBankMovementsTable extends Migration
             $table->string('description',150)->nullable();
             $table->string('type_movement',2);
 
-            $table->decimal('amount',16,2);
+            $table->decimal('amount',64,2);
 
             $table->date('date');
 

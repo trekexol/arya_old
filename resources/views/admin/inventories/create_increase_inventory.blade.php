@@ -133,17 +133,8 @@
 @section('validacion')
     <script>    
 	 $(document).ready(function () {
-            $("#amount").mask('000.000.000', { reverse: true });
+            $("#amount").mask('000.000.000.000.000', { reverse: true });
             
         });
-        
-
     </script>
-@endsection
-
-@section('javascript1')
-    <script>
-            
-          
-</script>
 @endsection

@@ -437,7 +437,7 @@
 @endsection
 
 
-@section('javascript1')
+@section('javascript')
 
 <script>
     function validacion() {

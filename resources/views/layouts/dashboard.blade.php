@@ -152,9 +152,16 @@
 
 
   @yield('validacion')
-
   @yield('validacionExpense')
-  
+
+  @yield('validacion_time')
+  @yield('product_edit')
+  @yield('quotation_create')
+  @yield('quotation_facturar')
+  @yield('quotation_facturar_after')
+  @yield('validacion_transport')
+  @yield('validacion_vendor')
+
   <script>
     function soloNumeros(idCampo){
     $('#'+idCampo).keyup(function (){

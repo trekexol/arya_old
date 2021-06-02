@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Empleados</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Empleados</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('employees.store') }}" enctype="multipart/form-data">
@@ -105,7 +105,7 @@
                         <div class="form-group row">
                             <label for="email" class="col-md-2 col-form-label text-md-right">Correo Electrónico</label>
 
-                            <div class="col-md-10">
+                            <div class="col-md-4">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
 
                                 @error('email')
@@ -236,7 +236,7 @@
                             <label for="monto_pago" class="col-md-2 col-form-label text-md-right">Monto Pago</label>
 
                             <div class="col-md-4">
-                                <input id="monto_pago" type="number" class="form-control @error('monto_pago') is-invalid @enderror" name="monto_pago" value="{{ old('monto_pago') }}" placeholder="Ej: 19.55" required autocomplete="monto_pago">
+                                <input id="monto_pago" type="text" class="form-control @error('monto_pago') is-invalid @enderror" name="monto_pago" value="{{ old('monto_pago') }}" placeholder="Ej: 19.55" required autocomplete="monto_pago">
 
                                 @error('monto_pago')
                                     <span class="invalid-feedback" role="alert">
@@ -276,21 +276,14 @@
                             <label for="centro_costo" class="col-md-2 col-form-label text-md-right">Centro Costo</label>
 
                             <div class="col-md-4">
-                                <input id="centro_costo" type="text" class="form-control @error('centro_costo') is-invalid @enderror" name="centro_costo" value="{{ old('centro_costo') }}" required autocomplete="centro_costo">
-
-                                @error('centro_costo')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="rol" class="col-md-2 col-form-label text-md-right">Status</label>
-                            <div class="col-md-4">
-                            <select class="form-control" name="status" id="status">
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                            </div>
+                                <select class="form-control" id="centro_costo" name="centro_costo">
+                                    @foreach($centro_costo as $var)
+                                        <option value="{{ $var->id }}">{{ $var->description }}</option>
+                                    @endforeach
+                                  
+                                </select>
+                                </div>
+                          
                         </div>
                         
                         <br>
@@ -309,10 +302,7 @@
 </div>
 @endsection
 @section('validacion')
-    <!-- Se encarga de los input number, el formato -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
-    <script>
+  <script>
         $(document).ready(function () {
             $("#id_empleado").mask('000.000.000.000.000', { reverse: true });
             
@@ -329,7 +319,10 @@
             $("#acumulado_utilidades").mask('000.000.000.000.000,00', { reverse: true });
             
         });
-
+        $(document).ready(function () {
+            $("#monto_pago").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
         
         </script>
     <script>    
@@ -343,7 +336,7 @@
     </script>
 @endsection
 
-@section('javascript1')
+@section('javascript')
     <script>
             
             $("#estado").on('change',function(){
@@ -420,14 +413,6 @@
                 }
             })
         }
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
-
+	
     </script>
 @endsection

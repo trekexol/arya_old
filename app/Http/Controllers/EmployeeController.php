@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use Illuminate\Http\Request;
 
 use App\Employee;
@@ -26,14 +27,7 @@ class EmployeeController extends Controller
    {
        $user= auth()->user();
        $employees = Employee::orderBy('id' ,'DESC')->get();
-       //dd($user->estado_id);
-
-       //$rol = $user->roles();
-       //dd($rol);
-       //$persons = Person::where('estado_id', $user->estado_id)
-                           //->orderBy('id', 'DESC')
-                           //->get();
-       // dd($persons);
+      
        return view('admin.employees.index',compact('employees'));
    }
 
@@ -54,7 +48,8 @@ class EmployeeController extends Controller
        $position           = Position::all();
        $salarytype         = Salarytype::all();
        $profession         = Profession::all();
-       return view('admin.employees.create',compact('estados','municipios','parroquias','position','salarytype','profession'));
+       $centro_costo       = Branch::orderBy('description','asc')->get();
+       return view('admin.employees.create',compact('estados','municipios','parroquias','position','salarytype','profession','centro_costo'));
    }
 
    /**
@@ -73,7 +68,7 @@ class EmployeeController extends Controller
         'telefono1'         =>'required',
         'email'         =>'required|max:255|unique:employees,email',
 
-        'amount_utilities'         =>'required|max:2',
+        'amount_utilities'         =>'required',
 
         'fecha_ingreso'         =>'required',
         'fecha_nacimiento'         =>'required',
@@ -85,19 +80,10 @@ class EmployeeController extends Controller
         'Municipio'         =>'required',
         'Parroquia'         =>'required',
         'direccion'         =>'required',
-        
         'salarytype_id'         =>'required',
-       
-        
-
-        
         'monto_pago'         =>'required',
-        
-        
-
         'acumulado_prestaciones'         =>'required',
         'acumulado_utilidades'         =>'required',
-        'status'         =>'required',
         'centro_costo'         =>'required',
         
        
@@ -127,17 +113,24 @@ class EmployeeController extends Controller
    
     $users->fecha_nacimiento = request('fecha_nacimiento');
     $users->direccion = request('direccion');
-    $users->monto_pago = request('monto_pago');
+
+    $sin_formato_monto_pago = str_replace(',', '.', str_replace('.', '', request('monto_pago')));
+
+    $users->monto_pago = $sin_formato_monto_pago;
 
     $users->salary_types_id = request('salarytype_id');
 
 
     $users->email = request('email');
     $users->telefono1 = request('telefono1');
-    $users->acumulado_prestaciones = request('acumulado_prestaciones');
-    $users->acumulado_utilidades = request('acumulado_utilidades');
-    $users->status =  request('status');
-    $users->centro_cos = request('centro_costo');
+
+    $sin_formato_acumulado_prestaciones = str_replace(',', '.', str_replace('.', '', request('acumulado_prestaciones')));
+    $sin_formato_acumulado_utilidades = str_replace(',', '.', str_replace('.', '', request('acumulado_utilidades')));
+
+    $users->acumulado_prestaciones = $sin_formato_acumulado_prestaciones;
+    $users->acumulado_utilidades = $sin_formato_acumulado_utilidades;
+    $users->status =  1;
+    $users->branch_id = request('centro_costo');
 
     $users->save();
 

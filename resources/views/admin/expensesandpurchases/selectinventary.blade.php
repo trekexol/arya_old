@@ -87,14 +87,15 @@
 </div>
   
 @endsection
+@section('javascript')
 
-@section('javascript1')
-
-    <script type="text/javascript">
-            function pdfinventory() {
-                
-                var nuevaVentanainventory = window.open("{{ route('pdf.inventory')}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
-        
-            }
-    </script>
+<script>
+    $('#dataTable').dataTable( {
+      "ordering": false,
+      "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+} );
+</script>
+    
 @endsection

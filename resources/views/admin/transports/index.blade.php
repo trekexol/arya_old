@@ -23,9 +23,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Transportes</h6>
-    </div>
+    
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -79,4 +77,16 @@
     </div>
 </div>
 
+@endsection
+@section('javascript')
+
+    <script>
+        $('#dataTable').dataTable( {
+        "ordering": false,
+        "order": [],
+                'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+                'iDisplayLength': '50'
+        } );
+    </script>
+    
 @endsection

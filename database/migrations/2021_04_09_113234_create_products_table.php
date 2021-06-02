@@ -21,14 +21,14 @@ class CreateProductsTable extends Migration
             $table->string('code_comercial',20)->nullable();
             $table->string('type',15);
             $table->string('description',150);
-            $table->decimal('price', 16, 2);
-            $table->decimal('price_buy', 16, 2);
-            $table->decimal('cost_average', 16, 2);
+            $table->decimal('price', 64, 2);
+            $table->decimal('price_buy', 64, 2);
+            $table->decimal('cost_average', 64, 2);
             $table->string('photo_product',150)->nullable();
             $table->string('money',2);
             $table->string('exento',1);
             $table->string('islr',1);
-            $table->decimal('special_impuesto', 16, 2);
+            $table->decimal('special_impuesto', 64, 2);
 
             $table->string('status',1);
             

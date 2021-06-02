@@ -748,11 +748,8 @@
 </div>
 @endsection
 
-@section('javascript1')
-
-
+@section('quotation_facturar')
     <script src="{{asset('js/facturar.js')}}"></script> 
-
 @endsection   
 
 

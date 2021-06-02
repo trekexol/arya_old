@@ -21,7 +21,7 @@ class CreateExpensePaymentsTable extends Migration
 
 
             $table->integer('payment_type');
-            $table->decimal('amount',16,2);
+            $table->decimal('amount',64,2);
             $table->string('reference',30)->nullable();
 
             $table->string('status',1);

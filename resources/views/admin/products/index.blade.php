@@ -21,10 +21,10 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
       <div class="col-md-6">
-          <h2>Productos</h2>
+          
       </div>
       <div class="col-md-6">
-        <a href="{{ route('products.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Producto</a>
+        <a href="{{ route('products.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar un Producto</a>
       </div>
     </div>
   </div>
@@ -54,13 +54,13 @@
             <tr> 
                
             
-                <th>Código Comercial</th>
-                <th>Descripción</th>
-                <th>Tipo</th>
-                <th>Precio</th>
-                <th>Foto del Producto</th>
+                <th class="text-center">Código Comercial</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Foto del Producto</th>
               
-                <th></th>
+                <th class="text-center"></th>
             </tr>
             </thead>
             
@@ -70,14 +70,14 @@
                     @foreach ($products as $product)
                         <tr>
                            
-                            <td>{{$product->code_comercial}}</td>
-                            <td>{{$product->description}}</td>
-                            <td>{{$product->type}}</td>
-                            <td style="text-align: right">{{number_format($product->price, 2, ',', '.')}}</td>
+                            <td class="text-center">{{$product->code_comercial}}</td>
+                            <td class="text-center">{{$product->description}}</td>
+                            <td class="text-center">{{$product->type}}</td>
+                            <td class="text-right">{{number_format($product->price, 2, ',', '.')}}</td>
                             
-                            <td style="text-align: center"><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
+                            <td class="text-center"><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
 
-                            <td>
+                            <td class="text-center">
                                 <a href="{{ route('products.edit',$product->id) }}"  title="Editar"><i class="fa fa-edit"></i></a>
                              </td>
                         </tr>     

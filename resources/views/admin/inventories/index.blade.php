@@ -56,9 +56,7 @@
   {{-- VALIDACIONES-RESPUESTA --}}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h3 class="m-0 font-weight-bold">Inventario</h3>
-    </div>
+    
     <div class="card-body">
         <div class="container">
             @if (session('flash'))
@@ -74,16 +72,16 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-                <th>SKU</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-                <th>Costo</th>
+                <th class="text-center">SKU</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Costo</th>
                 
-                <th>Foto del Producto</th>
-                <th>Moneda</th>
+                <th class="text-center">Foto del Producto</th>
+                <th class="text-center">Moneda</th>
               
                 
-                <th></th>
+                <th class="text-center"></th>
             </tr>
             </thead>
             
@@ -92,23 +90,23 @@
                 @else  
                     @foreach ($inventories as $var)
                         <tr>
-                            <td>{{ $var->code }}</td>
-                            <td>{{ $var->products['description']}}</td>
-                            <td style="text-align: right">{{ $var->amount }}</td> 
-                            <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
+                            <td class="text-center">{{ $var->code }}</td>
+                            <td class="text-center">{{ $var->products['description']}}</td>
+                            <td class="text-right">{{ $var->amount }}</td> 
+                            <td class="text-right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
                             
                             
                             
-                            <td>{{ $var->products['photo_product']}}</td> 
+                            <td class="text-center">{{ $var->products['photo_product']}}</td> 
                             
                             @if($var->products['money'] == "D")
-                            <td>Dolar</td>
+                            <td class="text-center">Dolar</td>
                             @else
-                            <td>Bolívar</td>
+                            <td class="text-center">Bolívar</td>
                             @endif
 
                            
-                            <td>
+                            <td class="text-center">
                                 <a href="{{ route('inventories.create_increase_inventory',$var->id) }}" style="color: blue;" title="Aumentar Inventario"><i class="fa fa-plus"></i></a>
                                 <a href="{{ route('inventories.create_decrease_inventory',$var->id) }}" style="color: rgb(248, 62, 62);" title="Disminuir Inventario"><i class="fa fa-minus"></i></a>
                             </td>

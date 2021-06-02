@@ -25,8 +25,8 @@ class CreateNominaConceptsTable extends Migration
             $table->string('formula_s',60)->nullable();
             $table->string('formula_q',60)->nullable();
 
-            $table->decimal('minimum',16,2)->nullable();
-            $table->decimal('maximum',16,2)->nullable();
+            $table->decimal('minimum',64,2)->nullable();
+            $table->decimal('maximum',64,2)->nullable();
 
             $table->string('status',1);
             $table->timestamps();

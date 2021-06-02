@@ -28,7 +28,7 @@ $suma_haber = 0;
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro Comprobante Detalle</div>
+                <div class="card-header text-center font-weight-bold h3">Registro Comprobante Detalle</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('headervouchers.store') }}" enctype="multipart/form-data">
@@ -192,8 +192,8 @@ $suma_haber = 0;
                                         $suma_debe += $var->debe;
                                         $suma_haber += $var->haber;
                                     ?>
-                                    <td>{{$var->debe}}</td>
-                                    <td>{{$var->haber}}</td>
+                                    <td>{{number_format($var->debe, 2, ',', '.')}}</td>
+                                    <td>{{number_format($var->haber, 2, ',', '.')}}</td>
                                     
                                         <td>
                                         <a href="{{route('detailvouchers.edit',$var->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
@@ -251,10 +251,7 @@ $suma_haber = 0;
 @endsection
 
 @section('validacion')
- <!-- Se encarga de los input number, el formato -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
-
+ 
 <script>
     $(document).ready(function () {
         $("#code_one").mask('0000', { reverse: true });
@@ -277,6 +274,10 @@ $(document).ready(function () {
     $("#debe").mask('000.000.000.000.000,00', { reverse: true });
     
 });
+$(document).ready(function () {
+    $("#haber").mask('000.000.000.000.000,00', { reverse: true });
+    
+});
 
 $(document).ready(function () {
     $("#reference").mask('000000000000000', { reverse: true });
@@ -287,7 +288,7 @@ $(document).ready(function () {
 </script>
 @endsection 
 
-@section('javascript1')
+@section('javascript')
 
     @if($suma_debe != $suma_haber)
     <script>
@@ -295,9 +296,14 @@ $(document).ready(function () {
         btncontabilizar.style.pointerEvents = 'none';
         btncontabilizar.style.color = '#bbb';
 
+       
     $('#dataTable').DataTable({
-        "order": []
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
     });
+    
 
     </script> 
 
@@ -309,9 +315,12 @@ $(document).ready(function () {
 
 
     $('#dataTable').DataTable({
-        "order": []
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
     });
-
+    
     </script> 
         
     @endif

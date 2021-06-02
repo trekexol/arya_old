@@ -78,10 +78,11 @@
 </div>
 
 @endsection
-@section('javascript1')
+@section('javascript')
 
     <script>
     $('#dataTable').DataTable({
+        "ordering": false,
         "order": []
     });
     </script> 

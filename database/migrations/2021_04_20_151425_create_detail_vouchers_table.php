@@ -21,8 +21,8 @@ class CreateDetailVouchersTable extends Migration
             $table->unsignedBigInteger('id_expense')->nullable();
             $table->unsignedBigInteger('user_id');
 
-            $table->decimal('debe',16,2);
-            $table->decimal('haber',16,2);
+            $table->decimal('debe',64,2);
+            $table->decimal('haber',64,2);
 
             $table->string('status',1);
             $table->foreign('id_account')->references('id')->on('accounts');

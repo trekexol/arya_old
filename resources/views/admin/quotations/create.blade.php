@@ -327,7 +327,7 @@
 </div>
 @endsection
 
-@section('javascript1')
+@section('quotation_create')
     
     <script>
      

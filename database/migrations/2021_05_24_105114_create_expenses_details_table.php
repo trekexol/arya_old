@@ -25,7 +25,7 @@ class CreateExpensesDetailsTable extends Migration
             $table->boolean('exento');
             $table->boolean('islr');
             $table->integer('amount');
-            $table->decimal('price',24,2);
+            $table->decimal('price',64,2);
           
             $table->string('status',1);
 

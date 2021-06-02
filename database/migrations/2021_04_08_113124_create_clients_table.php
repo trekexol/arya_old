@@ -29,10 +29,10 @@ class CreateClientsTable extends Migration
             $table->string('phone1',20);
             $table->string('phone2',20)->nullable();
             $table->integer('days_credit');
-            $table->decimal('amount_max_credit', 16, 2)->nullable();
+            $table->decimal('amount_max_credit', 64, 2)->nullable();
            
-            $table->decimal('percentage_retencion_iva', 5, 2)->nullable();
-            $table->decimal('percentage_retencion_islr', 5, 2)->nullable();
+            $table->decimal('percentage_retencion_iva', 64, 2)->nullable();
+            $table->decimal('percentage_retencion_islr', 64, 2)->nullable();
            
             
             $table->string('status',1);

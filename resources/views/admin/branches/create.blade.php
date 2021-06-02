@@ -224,7 +224,7 @@
     });
     </script>
 @endsection
-@section('javascript1')
+@section('javascript')
     <script>
             
             $("#estado").on('change',function(){
@@ -301,14 +301,6 @@
                 }
             })
         }
-	$(function(){
-        soloNumeros('xtelf_local');
-        soloNumeros('xtelf_cel');
-    });
-    
- 
-
-
-
+	
     </script>
 @endsection

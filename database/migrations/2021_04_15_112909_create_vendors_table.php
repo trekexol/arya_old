@@ -26,7 +26,7 @@ class CreateVendorsTable extends Migration
             $table->string('email',150);
             $table->string('phone',30);
             $table->string('phone2',30)->nullable();
-            $table->decimal('comision',15,2);
+            $table->decimal('comision',64,2);
             $table->string('instagram',100)->nullable();
             $table->string('facebook',100)->nullable();
             $table->string('twitter',100)->nullable();

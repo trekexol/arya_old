@@ -169,7 +169,7 @@
                             </div>
                             <div class="col-md-3">
                                 <button type="submit" class="btn btn-primary">
-                                    Guardar Factura
+                                    Guardar
                                  </button>
                             </div>
                             <div class="col-md-2">
@@ -726,11 +726,8 @@
 </div>
 @endsection
 
-@section('javascript1')
-
-
+@section('javascript')
     <script src="{{asset('js/facturar.js')}}"></script> 
-
 @endsection   
 
 

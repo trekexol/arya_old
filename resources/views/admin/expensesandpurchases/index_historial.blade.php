@@ -94,7 +94,7 @@
   
 @endsection
 
-@section('javascript1')
+@section('javascript')
 
 <script>
     $('#dataTable').dataTable( {
