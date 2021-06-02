@@ -68,16 +68,6 @@ Route::group(["prefix"=>'salarytypes'],function(){
 
 });
 
-Route::group(["prefix"=>'companies'],function(){
-    Route::get('/','CompaniesController@index')->name('companies');
-    Route::get('register','CompaniesController@create')->name('companies.create');
-    Route::post('store','CompaniesController@store')->name('companies.store');
-   
-    Route::get('{id}/edit','CompaniesController@edit')->name('companies.edit');
-    Route::delete('{id}/delete','CompaniesController@destroy')->name('companies.delete');
-    Route::patch('{id}/update','CompaniesController@update')->name('companies.update');
-
-});
 
 Route::group(["prefix"=>'positions'],function(){
     Route::get('/','PositionsController@index')->name('positions');
@@ -603,5 +593,35 @@ Route::group(["prefix"=>'directpaymentorders'],function(){
     Route::get('listcontrapartida/{type_var?}','DirectPaymentOrderController@listcontrapartida')->name('directpaymentorders.listcontrapartida');
 
    
+
+});
+
+
+Route::group(["prefix"=>'inventarytypes'],function(){
+    Route::get('/','InventaryTypeController@index')->name('inventarytypes');
+    Route::get('create','InventaryTypeController@create')->name('inventarytypes.create');
+    Route::post('store','InventaryTypeController@store')->name('inventarytypes.store');
+    Route::get('{id}/edit','InventaryTypeController@edit')->name('inventarytypes.edit');
+    Route::patch('{id}/update','InventaryTypeController@update')->name('inventarytypes.update');
+
+});
+
+Route::group(["prefix"=>'ratetypes'],function(){
+    Route::get('/','RateTypeController@index')->name('ratetypes');
+    Route::get('create','RateTypeController@create')->name('ratetypes.create');
+    Route::post('store','RateTypeController@store')->name('ratetypes.store');
+    Route::get('{id}/edit','RateTypeController@edit')->name('ratetypes.edit');
+    Route::patch('{id}/update','RateTypeController@update')->name('ratetypes.update');
+
+});
+
+Route::group(["prefix"=>'companies'],function(){
+    Route::get('/','CompaniesController@index')->name('companies');
+    Route::get('register','CompaniesController@create')->name('companies.create');
+    Route::post('store','CompaniesController@store')->name('companies.store');
+
+    Route::get('{id}/edit','CompaniesController@edit')->name('companies.edit');
+    Route::delete('{id}/delete','CompaniesController@destroy')->name('companies.delete');
+    Route::patch('{id}/update','CompaniesController@update')->name('companies.update');
 
 });

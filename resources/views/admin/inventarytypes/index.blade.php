@@ -10,20 +10,14 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
         <div class="col-md-6">
-            <h2>Empresas Registradas</h2>
+            <h2>Tipos de Inventario</h2>
         </div>
-
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
         <div class="col-md-6">
-            <a href="{{ route('companies.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empresa</a>
-
+            <a href="{{ route('inventarytypes.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Tipo de Inventario</a>
         </div>
         @endif
-
-
-
     </div>
-
   </div>
 
   {{-- VALIDACIONES-RESPUESTA--}}
@@ -34,7 +28,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Listado de Empresas Registradas</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Listado de Tipos de Inventario</h6>
     </div>
 
     <div class="card-body">
@@ -43,32 +37,23 @@
             <thead>
             <tr>
                 <th>Nro</th>
-                <th>Login</th>
-                <th>Razon Social</th>
-                <th>Opciones</th>
-                <th>Logo</th>
-
+                <th>Descripción</th>
+                <th>Status</th>
             </tr>
             </thead>
-
             <tbody>
-                @if (empty($users))
+                @if (empty($inventarytypes))
                 @else
-                    @foreach ($users as $key => $user)
+                    @foreach ($inventarytypes as $key => $var)
                     <tr>
-                    <td>{{$user->id}}</td>
-                    <td>{{$user->login}}</td>
-                    <td>{!!$user->razon_social!!}</td>
-
+                    <td>{{$var->id}}</td>
+                    <td>{{$var->description}}</td>
                     @if (Auth::user()->role_id  == '1')
-                        <td>
-                        <a href="{{route('companies.edit',$user->id) }}" title="Editar"><i class="fa fa-edit"></i></a>
-                        </td>
-                    @endif
-                    @if (Auth::user()->role_id  == '1')
-                        <td>
-                           <button>Subir Logo</button>
-                        </td>
+                        @if($var->status == 1)
+                            <td>Activo</td>
+                        @else
+                            <td>Inactivo</td>
+                        @endif
                     @endif
                     </tr>
                     @endforeach
@@ -78,5 +63,4 @@
         </div>
     </div>
 </div>
-
 @endsection
