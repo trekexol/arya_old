@@ -26,7 +26,7 @@ class NominaController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $nominas      =   Nomina::orderBy('id', 'asc')->get();
+           $nominas      =   Nomina::orderBy('id', 'desc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -57,6 +57,22 @@ class NominaController extends Controller
 
        // dd($var);
         return view('admin.nominas.selectemployee',compact('var','employees','datenow'));
+        
+    }
+
+    public function calculate($id)
+    {
+
+        
+        
+        return view('admin.nominas.selectemployee',compact('var','employees','datenow'));
+        
+    }
+
+    public function formula($id)
+    {
+
+        
         
     }
 

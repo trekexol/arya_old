@@ -8,7 +8,7 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
       <div class="col-md-8">
-          <h4>Empleados Registrados en la Nómina: {{ $var->description }}  <br>Tipo de Empleados: {{ $var->professions['name'] }}</h4>
+          <h4>Nómina: {{ $var->description }}  <br>Tipo de Empleado: {{ $var->professions['name'] }}</h4>
       </div>
       <div class="col-md-4">
         <a href="{{ route('employees.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>
@@ -39,17 +39,17 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-                <th>Cedula</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Celular</th>
-                <th>Fecha Ingreso</th>
-                <th>Fecha Egreso</th>
-                <th>Dirección</th>
-                <th>Monto de Pago</th>
-                <th>Correo Electronico</th>
+                <th class="text-center">Cedula</th>
+                <th class="text-center">Nombres</th>
+                <th class="text-center">Apellidos</th>
+                <th class="text-center">Celular</th>
+                <th class="text-center">Fecha Ingreso</th>
+                <th class="text-center">Fecha Egreso</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Monto de Pago</th>
+                <th class="text-center">Correo Electronico</th>
                
-                <th>Tools</th>
+                <th></th>
             </tr>
             </thead>
             
@@ -58,19 +58,19 @@
                 @else  
                     @foreach ($employees as $employee)
                         <tr>
-                            <td>{{$employee->id_empleado}}</td>
-                            <td>{{$employee->nombres}}</td>
-                            <td>{{$employee->apellidos}}</td>
-                            <td>{{$employee->telefono1}}</td>
+                            <td class="text-center">{{$employee->id_empleado}}</td>
+                            <td class="text-center">{{$employee->nombres}}</td>
+                            <td class="text-center">{{$employee->apellidos}}</td>
+                            <td class="text-center">{{$employee->telefono1}}</td>
 
-                            <td>{{$employee->fecha_ingreso}}</td>
-                            <td>{{$employee->fecha_egreso}}</td>
-                            <td>{{$employee->direccion}}</td>
-                            <td>{{$employee->monto_pago}}</td>
-                            <td>{{$employee->email}}</td>
+                            <td class="text-center">{{$employee->fecha_ingreso}}</td>
+                            <td class="text-center">{{$employee->fecha_egreso}}</td>
+                            <td class="text-center">{{$employee->direccion}}</td>
+                            <td class="text-center">{{number_format($employee->monto_pago, 2, ',', '.')}}</td>
+                            <td class="text-center">{{$employee->email}}</td>
                             
                            
-                            <td>
+                            <td class="text-center">
                                 <a href="{{route('nominacalculations',[$var->id,$employee->id]) }}" title="Ver Detalles"><i class="fa fa-binoculars"></i></a>  
                            </td>
                         </tr>     
@@ -106,7 +106,17 @@
 </div>
 @endif
 
-    
+@endsection
+
+@section('javascript')
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
 @endsection
 @section('js_modal_employees')
     <script>

@@ -42,7 +42,6 @@
             <tr>
                 
                 <th>Descripción</th>
-                <th>Tipo de Fórmula</th>
                 <th></th>
               
             </tr>
@@ -55,7 +54,6 @@
                     <tr>
                     
                     <td>{{$nomina_formula->description}}</td>
-                    <td>{{$nomina_formula->type}}</td>
                     
                     @if (Auth::user()->role_id  == '1')
                         <td>

@@ -459,7 +459,9 @@ Route::group(["prefix"=>'nominas'],function(){
     Route::patch('{id}/update','NominaController@update')->name('nominas.update');
 
     Route::get('selectemployee/{id}','NominaController@selectemployee')->name('nominas.selectemployee');
- });
+ 
+    Route::get('calculate/{id}','NominaController@calculate')->name('nominas.calculate');
+});
 
 
 Route::group(["prefix"=>'nominaconcepts'],function(){

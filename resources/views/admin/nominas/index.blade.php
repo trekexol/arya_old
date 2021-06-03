@@ -23,7 +23,7 @@
        
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
         <div class="col-md-6">
-            <a href="{{ route('nominas.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar una Nómina</a>
+            <a href="{{ route('nominas.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar una Nómina</a>
          
         </div>
         @endif
@@ -49,12 +49,12 @@
             <thead>
             <tr>
                 
-                <th>Descripción</th>
-                <th>Tipo de Nómina</th>
-                <th>Desde</th>
-                <th>Hasta</th>
-                <th>Tipo de Empleado</th>
-               <th>Opciones</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Tipo de Nómina</th>
+                <th class="text-center">Desde</th>
+                <th class="text-center">Hasta</th>
+                <th class="text-center">Tipo de Empleado</th>
+               <th class="text-center"></th>
               
             </tr>
             </thead>
@@ -65,14 +65,15 @@
                     @foreach ($nominas as $key => $nomina)
                     <tr>
                     
-                    <td>{{$nomina->description}}</td>
-                    <td>{{$nomina->type}}</td>
-                    <td>{{$nomina->date_begin}}</td>
-                    <td>{{$nomina->date_end}}</td>
-                    <td>{{$nomina->professions['name']}}</td>
+                    <td class="text-center">{{$nomina->description}}</td>
+                    <td class="text-center">{{$nomina->type}}</td>
+                    <td class="text-center">{{$nomina->date_begin}}</td>
+                    <td class="text-center">{{$nomina->date_end}}</td>
+                    <td class="text-center">{{$nomina->professions['name']}}</td>
                    
                     @if (Auth::user()->role_id  == '1')
-                        <td>
+                        <td class="text-center">
+                            <a href="{{route('nominas.calculate',$nomina->id) }}" title="Calcular Nomina"><i class="fa fa-calculator"></i></a>  
                             <a href="{{route('nominas.selectemployee',$nomina->id) }}" title="Ver Detalles"><i class="fa fa-binoculars"></i></a>  
                             <a href="{{route('nominas.edit',$nomina->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                         </td>
@@ -87,4 +88,14 @@
 </div>
 
 
+@endsection
+@section('javascript')
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
 @endsection

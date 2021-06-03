@@ -79,9 +79,9 @@ class NominaConceptController extends Controller
         $users->sign = request('sign');
         
         $users->calculate = request('calculate');
-        $users->formula_m = request('formula_m');
-        $users->formula_s = request('formula_s');
-        $users->formula_q = request('formula_q');
+        $users->id_formula_m = request('formula_m');
+        $users->id_formula_s = request('formula_s');
+        $users->id_formula_q = request('formula_q');
 
         $valor_sin_formato_minimum = str_replace(',', '.', str_replace('.', '', request('minimum')));
         $valor_sin_formato_maximum = str_replace(',', '.', str_replace('.', '', request('maximum')));

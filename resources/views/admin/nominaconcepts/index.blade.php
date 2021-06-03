@@ -22,7 +22,7 @@
        
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
         <div class="col-md-6">
-            <a href="{{ route('nominaconcepts.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Concepto de Nómina</a>
+            <a href="{{ route('nominaconcepts.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar un Concepto de Nómina</a>
          
         </div>
         @endif
@@ -47,15 +47,15 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
-                <th>Abreviatura</th>
-                <th>Descripción</th>
-                <th>Signo</th>
-                <th>Tipo de Nómina</th>
-                <th>Fórmula Mensual</th>
-                <th>Fórmula Semanal</th>
-                <th>Fórmula Quincenal</th>
-                <th>Calcular Nómina</th>
-               <th>Opciones</th>
+                <th class="text-center">Abreviatura</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Signo</th>
+                <th class="text-center">Tipo de Nómina</th>
+                <th class="text-center">Fórmula Mensual</th>
+                <th class="text-center">Fórmula Semanal</th>
+                <th class="text-center">Fórmula Quincenal</th>
+                <th class="text-center">Calcular Nómina</th>
+               <th class="text-center"></th>
               
             </tr>
             </thead>
@@ -63,29 +63,29 @@
             <tbody>
                 @if (empty($nominaconcepts))
                 @else
-                    @foreach ($nominaconcepts as $key => $nominaconcept)
+                    @foreach ($nominaconcepts as $nominaconcept)
                     <tr>
 
-                    <td>{{$nominaconcept->abbreviation}}</td>
-                    <td>{{$nominaconcept->description}}</td>
+                    <td class="text-center">{{$nominaconcept->abbreviation}}</td>
+                    <td class="text-center">{{$nominaconcept->description}}</td>
                     @if($nominaconcept->sign == "A")
-                        <td>Asignación</td>
+                        <td class="text-center">Asignación</td>
                     @else
-                        <td>Deducción</td>
+                        <td class="text-center">Deducción</td>
                     @endif
                     
-                    <td>{{$nominaconcept->type}}</td>
-                    <td>{{$nominaconcept->formula_m}}</td>
-                    <td>{{$nominaconcept->formula_s}}</td>
-                    <td>{{$nominaconcept->formula_q}}</td>
+                    <td class="text-center">{{$nominaconcept->type}}</td>
+                    <td class="text-center">{{$nominaconcept->formulasm['description'] ?? ''}}</td>
+                    <td class="text-center">{{$nominaconcept->formulass['description'] ?? ''}}</td>
+                    <td class="text-center">{{$nominaconcept->formulasq['description'] ?? ''}}</td>
                    
                     @if($nominaconcept->calculate == "S")
-                        <td>Si</td>
+                        <td class="text-center">Si</td>
                     @else
-                        <td>No</td>
+                        <td class="text-center">No</td>
                     @endif
                     @if (Auth::user()->role_id  == '1')
-                        <td>
+                        <td class="text-center">
                             <a href="{{route('nominaconcepts.edit',$nominaconcept->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                         </td>
                     @endif
@@ -98,4 +98,14 @@
     </div>
 </div>
 
+@endsection
+@section('javascript')
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
 @endsection
