@@ -2,19 +2,32 @@
 
 @section('content')
 
-<!-- container-fluid -->
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <div class="row py-lg-2">
-      <div class="col-md-8">
-          <h4>Nómina: {{ $var->description }}  <br>Tipo de Empleado: {{ $var->professions['name'] }}</h4>
-      </div>
-      <div class="col-md-4">
-        <a href="{{ route('employees.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>
-      </div>
+    
+    <div class="justify-content-left border-left-danger">
+        <div class="card-body h4">
+                <div class="row py-lg-2">
+                    <div class="col-md-6">
+                        Nómina: {{ $var->description }} 
+                    </div>
+                </div>
+                <div class="row py-lg-2">
+                    <div class="col-md-6">
+                        Tipo de Empleado: {{ $var->professions['name'] }} 
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('employees.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('nominas')}}" class="btn btn-danger float-md-right" role="button" aria-pressed="true">Volver</a>
+                    </div>
+                </div>
+        </div>
     </div>
-  </div>
+    
+</div>
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
   @include('admin.layouts.success')   {{-- SAVE --}}

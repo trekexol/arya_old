@@ -107,12 +107,13 @@ class NominaConceptController extends Controller
 
         $var  = NominaConcept::find($id);
 
-        
+        $formulas  = NominaFormula::orderBy('description','asc')->get();
+
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
 
        // dd($var);
-        return view('admin.nominaconcepts.edit',compact('var','datenow'));
+        return view('admin.nominaconcepts.edit',compact('var','datenow','formulas'));
         
     }
 

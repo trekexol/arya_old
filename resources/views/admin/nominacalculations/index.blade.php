@@ -19,11 +19,14 @@
         
     </div>
     <div class="row py-lg-2">
-        <div class="col-md-6">
+        <div class="col-md-7">
         </div>
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
-        <div class="col-md-5">
-            <a href="{{ route('nominacalculations.create',[$nomina->id,$employee->id])}}"  class="btn btn-info btn-lg float-md-right" role="button" aria-pressed="true">Agregar Concepto</a>
+        <div class="col-md-2">
+            <a href="{{ route('nominacalculations.create',[$nomina->id,$employee->id])}}"  class="btn btn-info float-md-right" role="button" aria-pressed="true">Agregar Concepto</a>
+        </div>
+        <div class="col-md-2">
+            <a href="{{ route('nominas.selectemployee',$nomina->id)}}"  class="btn btn-danger float-md-right" role="button" aria-pressed="true">Volver</a>
         </div>
         @endif
     </div>

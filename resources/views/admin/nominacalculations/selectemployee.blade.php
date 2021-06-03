@@ -11,8 +11,11 @@
           <h4>Empleados Registrados en la Nómina: {{ $var->description }}</h4>
       </div>
       
-      <div class="col-md-4">
-        <a href="{{ route('employees.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>
+      <div class="col-md-2">
+        <a href="{{ route('employees.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar Empleado</a>
+      </div>
+      <div class="col-md-2">
+        <a href="{{ route('nominas')}}" class="btn btn-danger float-md-right" role="button" aria-pressed="true">Volver</a>
       </div>
     </div>
   </div>

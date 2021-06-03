@@ -22,10 +22,10 @@ class CreateNominaCalculationsTable extends Migration
             $table->integer('number_receipt');
             $table->string('type',20);
             $table->decimal('amount',64,2);
-            $table->integer('hours');
-            $table->integer('days');
-            $table->integer('cantidad');
-            $table->integer('voucher');
+            $table->integer('hours')->nullable();
+            $table->integer('days')->nullable();
+            $table->integer('cantidad')->nullable();
+            $table->integer('voucher')->nullable();
            
             $table->string('status',1);
             $table->foreign('id_nomina')->references('id')->on('nominas');

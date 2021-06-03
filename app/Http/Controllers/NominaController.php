@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Employee;
 use App\Nomina;
+use App\NominaCalculation;
+use App\NominaConcept;
 use App\Profession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -60,21 +62,82 @@ class NominaController extends Controller
         
     }
 
-    public function calculate($id)
+    public function calculate($id_nomina)
     {
 
+        $nomina = Nomina::find($id_nomina);
         
-        
-        return view('admin.nominas.selectemployee',compact('var','employees','datenow'));
+        $employees = Employee::where('profession_id',$nomina->id_profession)->get();
+
+        foreach($employees as $employee){
+            $this->addNominaCalculation($nomina,$employee);
+        }
+
+        return redirect('/nominas')->withSuccess('El calculo de la Nomina '.$nomina->description.' Exitoso!');
         
     }
 
-    public function formula($id)
+    
+  
+    public function addNominaCalculation($nomina,$employee)
     {
+        if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
+            $nominaconcepts = NominaConcept::where('type','LIKE','%Quincena%')
+                                                ->where('calculate','LIKE','S')->get();
+        }
+       
 
+        foreach($nominaconcepts as $nominaconcept){
+
+            $vars = new NominaCalculation();
+
+            $vars->id_nomina = $nomina->id;
+            $vars->id_nomina_concept = $nominaconcept->id;
+            $vars->id_employee = $employee->id;
+           
+            $vars->number_receipt = 0;
+            
+            $vars->type = 'No';
+    
+            $amount = 0;
+            if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
+                $amount = $this->formula($nominaconcept->id_formula_q,$employee);
+            }
+            $vars->amount = $amount;
+            $vars->status =  "1";
+           
+           
+    
+            $vars->save();
+        }
         
+       
         
     }
+
+    public function formula($id_formula,$employee)
+    {
+
+        if($id_formula == 1){
+            //{{sueldo}} * 12 / 52 * {{lunes}} * 0.04
+            $total = ($employee->monto_pago * 12)/52 * 0.04;
+            return $total;
+        }
+        else if($id_formula == 4){
+            //{{sueldo}} * 0.01 / 2
+            $total = ($employee->monto_pago * 0.01)/2 ;
+            return $total;
+        }
+        else if($id_formula == 6){
+            //{{sueldo}} / 2
+            $total = ($employee->monto_pago)/2 ;
+            return $total;
+        }else{
+            return -1;
+        }
+        
+    }
+
 
     public function store(Request $request)
     {

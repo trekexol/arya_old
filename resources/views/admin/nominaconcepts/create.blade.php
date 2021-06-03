@@ -73,7 +73,7 @@
                                     <option value="Semanal">Semanal</option>
                                     <option value="Mensual">Mensual</option>
                                     <option value="Especial">Especial</option>
-                                    <option value="Quincenal">Quincenal</option>
+                                    <option value="Quincena">Quincenal</option>
                                 </select>
                             </div>
                         </div>

@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
             RolesTableSeeder::class,
             UsersTableSeeder::class,
             AccountsTableSeeder::class,
-           
+            FormulasTableSeeder::class,
         ]);
     }
 }

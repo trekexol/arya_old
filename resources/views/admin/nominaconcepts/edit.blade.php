@@ -139,26 +139,38 @@
                                 <label for="formula_m" class="col-md-2 col-form-label text-md-right">Fórmula Mensual:</label>
     
                                 <div class="col-md-6">
-                                    <input id="formula_m" type="text" class="form-control @error('formula_m') is-invalid @enderror" name="formula_m" value="{{ $var->formula_m ?? old('formula_m') }}" maxlength="60" autocomplete="formula_m">
-    
-                                    @error('formula_m')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <select class="form-control" id="formula_m" name="formula_m" title="formula_mensual">
+                                        @foreach ($formulas as $formula)
+                                            <option value="{{ $formula->id }}">{{ $formula->description }}</option>
+                                        @endforeach
+                                    <option value="nulo">----------------</option>
+                                    
+                                    <div class="dropdown">
+                                        @foreach ($formulas as $m)
+                                            <option value="{{ $m->id }}">{{ $m->description }}</option>
+                                        @endforeach
+                                    </div>
+
+                                </select>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="formula_s" class="col-md-2 col-form-label text-md-right">Fórmula Semanal:</label>
     
                                 <div class="col-md-6">
-                                    <input id="formula_s" type="text" class="form-control @error('formula_s') is-invalid @enderror" name="formula_s" value="{{ $var->formula_s ?? old('formula_s') }}" maxlength="60" autocomplete="formula_s">
-    
-                                    @error('formula_s')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                   <select class="form-control" id="formula_s" name="formula_s" title="formula_semanal">
+                                        @foreach ($formulas as $formula_s)
+                                            <option value="{{ $formula_s->id }}">{{ $formula_s->description }}</option>
+                                        @endforeach
+                                    <option value="nulo">----------------</option>
+                                    
+                                    <div class="dropdown">
+                                        @foreach ($formulas as $s)
+                                            <option value="{{ $s->id }}">{{ $s->description }}</option>
+                                        @endforeach
+                                    </div>
+                                    
+                                </select>
                                 </div>
                             </div>
                             <div class="form-group row">
