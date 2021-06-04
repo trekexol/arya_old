@@ -56,6 +56,7 @@ class SegmentController extends Controller
 
         $users->description = request('description');
         
+        $users->status = 1;
 
         $users->save();
 

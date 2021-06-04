@@ -42,7 +42,7 @@ class BranchController extends Controller
    {
         $estados            = Estado::orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
         $municipios         = Municipio::all();
-        $companies     = Company::orderBy('name', 'DESC')->get();
+        $companies     = Company::orderBy('razon_social', 'DESC')->get();
         $parroquias         = Parroquia::orderBy('descripcion', 'ASC')->get();
 
        return view('admin.branches.create',compact('companies','parroquias','estados','municipios'));

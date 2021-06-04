@@ -35,7 +35,7 @@
                             <div class="col-md-4">
                                 <select class="form-control" id="company_id" name="company_id">
                                     @foreach($companies as $var)
-                                        <option value="{{ $var->id }}" {{ old('Companies') }}>{{ $var->name }}</option>
+                                        <option value="{{ $var->id }}" {{ old('Companies') }}>{{ $var->razon_social }}</option>
                                     @endforeach
                                 
                                 </select>

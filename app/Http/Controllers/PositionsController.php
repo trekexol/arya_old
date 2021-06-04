@@ -75,7 +75,7 @@ class PositionsController extends Controller
 
         $user                   = Position::find($id);
         
-        return view('admin.companies.edit',compact('user'));
+        return view('admin.positions.edit',compact('user'));
     }
 
    

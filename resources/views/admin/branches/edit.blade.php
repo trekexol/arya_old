@@ -37,7 +37,7 @@
                                 <select class="form-control" id="company_id"  name="company_id" class="form-control" >
                                     @foreach($companies as $company)
                                         @if ( $var->company_id == $company->id)
-                                            <option selected style="backgroud-color:blue;" value="{{$var->company_id}}"><strong>{{ $company->name }}</strong></option>
+                                            <option selected style="backgroud-color:blue;" value="{{$var->company_id}}"><strong>{{ $company->razon_social }}</strong></option>
                                         @endif
                                     @endforeach
                                     <option class="hidden" disabled data-color="#A0522D" >------------------</option>

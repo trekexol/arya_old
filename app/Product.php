@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     public function segments(){
-        return $this->belongsTo('App\Permission\Models\segment','segment_id');
+        return $this->belongsTo('App\Permission\Models\Segment','segment_id');
     }
 
     public function subsegments(){

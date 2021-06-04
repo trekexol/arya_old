@@ -135,7 +135,7 @@ Route::get('danger/{ruta}', function($ruta) {
 Route::group(["prefix"=>'segments'],function(){
     Route::get('/','SegmentController@index')->name('segments');
     Route::get('register','SegmentController@create')->name('segments.create');
-    Route::post('store', 'segmentController@store')->name('segments.store');
+    Route::post('store', 'SegmentController@store')->name('segments.store');
    
     Route::get('{id}/edit','SegmentController@edit')->name('segments.edit');
     Route::delete('{id}/delete','SegmentController@destroy')->name('segments.delete');
@@ -145,7 +145,7 @@ Route::group(["prefix"=>'segments'],function(){
 Route::group(["prefix"=>'subsegment'],function(){
     Route::get('/','SubsegmentController@index')->name('subsegment');
     Route::get('register','SubsegmentController@create')->name('subsegment.create');
-    Route::post('store', 'subsegmentController@store')->name('subsegment.store');
+    Route::post('store', 'SubsegmentController@store')->name('subsegment.store');
    
     Route::get('{id}/edit','SubsegmentController@edit')->name('subsegment.edit');
     Route::delete('{id}/delete','SubsegmentController@destroy')->name('subsegment.delete');
@@ -245,13 +245,13 @@ Route::group(["prefix"=>'receiptvacations'],function(){
 });
 
 Route::group(["prefix"=>'comisiontypes'],function(){
-    Route::get('/','ComisiontypeController@index')->name('comisiontypes');
-    Route::get('register','ComisiontypeController@create')->name('comisiontypes.create');
-    Route::post('store','ComisiontypeController@store')->name('comisiontypes.store');
+    Route::get('/','ComisionTypeController@index')->name('comisiontypes');
+    Route::get('register','ComisionTypeController@create')->name('comisiontypes.create');
+    Route::post('store','ComisionTypeController@store')->name('comisiontypes.store');
    
-    Route::get('{id}/edit','ComisiontypeController@edit')->name('comisiontypes.edit');
-    Route::delete('{id}/delete','ComisiontypeController@destroy')->name('comisiontypes.delete');
-    Route::patch('{id}/update','ComisiontypeController@update')->name('comisiontypes.update');
+    Route::get('{id}/edit','ComisionTypeController@edit')->name('comisiontypes.edit');
+    Route::delete('{id}/delete','ComisionTypeController@destroy')->name('comisiontypes.delete');
+    Route::patch('{id}/update','ComisionTypeController@update')->name('comisiontypes.update');
 
 });
 
