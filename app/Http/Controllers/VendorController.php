@@ -49,6 +49,8 @@ class VendorController extends Controller
        $comisions   = ComisionType::all();
        $employees   = Employee::all();
 
+       
+
        return view('admin.vendors.create',compact('estados','municipios','parroquias','comisions','employees'));
    }
 
@@ -237,4 +239,6 @@ class VendorController extends Controller
    {
        //
    }
+
+  
 }

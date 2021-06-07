@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Clientes</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Clientes</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('clients.store') }}" enctype="multipart/form-data">
@@ -53,8 +53,9 @@
 
                             <div class="col-md-3">
                             <select class="form-control" id="id_vendor" name="id_vendor">
-                                @foreach($vendors as $var)
-                                    <option value="{{ $var->id }}">{{ $var->name }}</option>
+                                <option value="">Seleccione un Vendedor</option>
+                                @foreach($vendors as $vendor)
+                                    <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
                                 @endforeach
                               
                             </select>
@@ -279,3 +280,4 @@
 
     </script>
 @endsection
+

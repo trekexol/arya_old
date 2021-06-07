@@ -153,7 +153,7 @@
                               
                             </select>
                             </div>
-                            <label for="profession" class="col-md-2 col-form-label text-md-right">Tipo de Trabajador</label>
+                            <label for="profession" class="col-md-2 col-form-label text-md-right">Profesión</label>
 
                             <div class="col-md-4">
                             <select class="form-control" id="profession_id" name="profession_id">

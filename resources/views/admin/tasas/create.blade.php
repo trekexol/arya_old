@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <div class="card-header">Registro de Tasa del Día</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Tasa del Día</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('tasas.store') }}">

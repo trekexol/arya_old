@@ -264,6 +264,7 @@ Route::group(["prefix"=>'vendors'],function(){
     Route::delete('{id}/delete','VendorController@destroy')->name('vendors.delete');
     Route::patch('{id}/update','VendorController@update')->name('vendors.update');
 
+   
 });
 
 Route::group(["prefix"=>'products'],function(){

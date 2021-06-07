@@ -1118,9 +1118,9 @@ class FacturarController extends Controller
 
                 //Ingresos por SubSegmento de Bienes
 
-                $account_subsegmento = Account::where('description', 'like', 'Ingresos por SubSegmento de Bienes')->first();
+                $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
 
-                if(isset($account_cuentas_por_cobrar)){
+                if(isset($account_subsegmento)){
                     $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
                 }
 
@@ -1146,7 +1146,7 @@ class FacturarController extends Controller
 
                 //Costo de Mercancia
 
-                $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancia')->first();
+                $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancía')->first();
 
                 if(isset($account_cuentas_por_cobrar)){
                     $this->add_movement($header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sub_total,0);

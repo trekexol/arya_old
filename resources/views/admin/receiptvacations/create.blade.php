@@ -15,7 +15,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro Recibo de Vacaciones, {{ $employee->id }} / {{ $employee->nombres }}</div>
+                <div class="card-header text-center font-weight-bold h3">Registro Recibo de Vacaciones del empleado: {{ $employee->nombres }}</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('receiptvacations.store') }}">

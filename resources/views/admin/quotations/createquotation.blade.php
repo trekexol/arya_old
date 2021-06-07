@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Cotización</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Cotización</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('quotations.store') }}" enctype="multipart/form-data">

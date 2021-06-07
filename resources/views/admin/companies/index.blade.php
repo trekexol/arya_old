@@ -9,8 +9,7 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-        <div class="col-md-6">
-            <h2>Empresas Registradas</h2>
+        <div class="col-md-6 h2">Empresas Registradas
         </div>
 
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
@@ -33,10 +32,7 @@
 {{-- VALIDACIONES-RESPUESTA --}}
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Listado de Empresas Registradas</h6>
-    </div>
-
+    
     <div class="card-body">
         <div class="table-responsive">
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">

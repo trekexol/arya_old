@@ -148,9 +148,7 @@
   </tr> 
   @foreach ($inventories_expenses as $var)
       <?php
-      $percentage = (($var->price * $var->amount))/100;
-
-      $total_less_percentage = ($var->price * $var->amount) - $percentage;
+      $total_less_percentage = ($var->price * $var->amount);
       ?>
     <tr>
       @if (isset($var->id_inventory))

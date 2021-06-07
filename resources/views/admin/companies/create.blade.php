@@ -21,7 +21,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">Registro de Compañía</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Compañía</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('companies.store') }}">

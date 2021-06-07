@@ -9,13 +9,12 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-        <div class="col-md-6">
-            <h2>Tipos de Salario</h2>
+        <div class="col-md-6 h2">Tipos de Salario
         </div>
        
         @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
         <div class="col-md-6">
-            <a href="{{ route('salarytypes.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Registrar un Tipo de Salario</a>
+            <a href="{{ route('salarytypes.create')}}" class="btn btn-primary  float-md-right" role="button" aria-pressed="true">Registrar un Tipo de Salario</a>
          
         </div>
         @endif
@@ -33,9 +32,6 @@
 {{-- VALIDACIONES-RESPUESTA --}}
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Listado de Tipos de Salario</h6>
-    </div>
    
     <div class="card-body">
         <div class="table-responsive">
@@ -80,4 +76,14 @@
     </div>
 </div>
 
+@endsection
+@section('javascript')
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
 @endsection

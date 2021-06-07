@@ -1254,7 +1254,7 @@ class ExpensesAndPurchaseController extends Controller
     
                     //Debito Fiscal IVA por Pagar
     
-                    $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA Credito Fiscal')->first();
+                    $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
                         
                     if(isset($account_credito_iva_fiscal)){
                         if($sin_formato_amount_iva != 0){
@@ -1397,7 +1397,7 @@ class ExpensesAndPurchaseController extends Controller
 
         //IVA credito Fiscal
 
-        $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA Credito Fiscal')->first();
+        $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
             
         if(isset($account_credito_iva_fiscal)){
             if($sin_formato_amount_iva != 0){

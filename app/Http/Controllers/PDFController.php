@@ -345,24 +345,16 @@ class PDFController extends Controller
                 $base_imponible= 0;
                 $ventas_exentas= 0;
                 foreach($inventories_expenses as $var){
-                    //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($var->price * $var->amount))/100;
-
-                    $total += ($var->price * $var->amount) - $percentage;
+                   
+                    $total += ($var->price * $var->amount);
                     //----------------------------- 
 
                     if($var->exento == 0){
-
-                        $percentage = (($var->price * $var->amount))/100;
-
-                        $base_imponible += ($var->price * $var->amount) - $percentage; 
+                        $base_imponible += ($var->price * $var->amount); 
 
                     }
                     if($var->exento == 1){
-    
-                        $percentage = (($var->price * $var->amount))/100;
-    
-                        $ventas_exentas += ($var->price * $var->amount) - $percentage; 
+                        $ventas_exentas += ($var->price * $var->amount); 
     
                     }
                 }
@@ -415,24 +407,18 @@ class PDFController extends Controller
                 $base_imponible= 0;
                 $ventas_exentas= 0;
                 foreach($inventories_expenses as $var){
-                    //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($var->price * $var->amount))/100;
 
-                    $total += ($var->price * $var->amount) - $percentage;
+                    $total += ($var->price * $var->amount);
                     //----------------------------- 
 
                     if($var->exento == 0){
 
-                        $percentage = (($var->price * $var->amount))/100;
-
-                        $base_imponible += ($var->price * $var->amount) - $percentage; 
+                        $base_imponible += ($var->price * $var->amount); 
 
                     }
                     if($var->exento == 1){
     
-                        $percentage = (($var->price * $var->amount))/100;
-    
-                        $ventas_exentas += ($var->price * $var->amount) - $percentage; 
+                        $ventas_exentas += ($var->price * $var->amount); 
     
                     }
                 }

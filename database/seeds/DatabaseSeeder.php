@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             AccountsTableSeeder::class,
             FormulasTableSeeder::class,
+            InventaryTypeTableSeeder::class,
+            RateTypeTableSeeder::class,
         ]);
     }
 }

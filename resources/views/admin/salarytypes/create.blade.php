@@ -15,7 +15,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <div class="card-header">Registro de Tipos de Salario</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Tipos de Salario</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('salarytypes.store') }}">

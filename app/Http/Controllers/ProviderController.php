@@ -18,14 +18,7 @@ class ProviderController extends Controller
        $user= auth()->user();
 
        $providers = Provider::orderBy('id' ,'DESC')->get();
-       //dd($user->estado_id);
-
-       //$rol = $user->roles();
-       //dd($rol);
-       //$persons = Person::where('estado_id', $user->estado_id)
-                           //->orderBy('id', 'DESC')
-                           //->get();
-       // dd($persons);
+      
        return view('admin.providers.index',compact('providers'));
    }
 
@@ -62,10 +55,10 @@ class ProviderController extends Controller
 
         
         'days_credit'         =>'required|integer',
-        'amount_max_credit'    =>'required|numeric',
-        'porc_retencion_iva'    =>'required|numeric',
+        'amount_max_credit'    =>'required',
+        'porc_retencion_iva'    =>'required',
         
-        'balance'         =>'required|numeric',
+        'balance'         =>'required',
         
        
        
@@ -95,14 +88,19 @@ class ProviderController extends Controller
     }else{
         $users->retiene_islr = true;
     }
-    
+
     $users->days_credit = request('days_credit');
-    $users->amount_max_credit = request('amount_max_credit');
+
+    $sin_formato_amount_max_credit = str_replace(',', '.', str_replace('.', '', request('amount_max_credit')));
+    $sin_formato_balance = str_replace(',', '.', str_replace('.', '', request('balance')));
+   
+    
+    $users->amount_max_credit = $sin_formato_amount_max_credit;
     $users->porc_retencion_iva = request('porc_retencion_iva');
     
-    $users->balance = request('balance');
+    $users->balance = $sin_formato_balance;
     $users->select_balance = 0;
-    $users->status =  request('status');
+    $users->status =  1;
    
     $users->save();
 

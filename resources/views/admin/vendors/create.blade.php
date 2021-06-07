@@ -265,7 +265,7 @@
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observación</label>
 
                             <div class="col-md-4">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" required autocomplete="observation">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}"  autocomplete="observation">
 
                                 @error('observation')
                                     <span class="invalid-feedback" role="alert">

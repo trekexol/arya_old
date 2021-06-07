@@ -11,7 +11,7 @@
           <h2>Proveedores</h2>
       </div>
       <div class="col-md-6">
-        <a href="{{ route('providers.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar Cliente</a>
+        <a href="{{ route('providers.create')}}" class="btn btn-primary float-md-right" role="button" aria-pressed="true">Registrar un Proveedor</a>
       </div>
     </div>
 </div>

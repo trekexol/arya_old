@@ -37,7 +37,7 @@ class ClientController extends Controller
     */
    public function create()
    {
-        $vendors = Vendor::orderBy('name','asc');
+        $vendors = Vendor::orderBy('name','asc')->get();
       
        return view('admin.clients.create',compact('vendors'));
    }

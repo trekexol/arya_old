@@ -206,6 +206,9 @@
                                    Registrar Producto
                                 </button>
                             </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('products') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                            </div>
                         </div>
                     </form>
                 </div>

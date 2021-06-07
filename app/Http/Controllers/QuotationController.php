@@ -45,10 +45,6 @@ class QuotationController extends Controller
     
     public function createquotation()
     {
-    /* $clients     = Client::all();
-    
-        $vendors     = Vendor::all();*/
-
         $transports     = Transport::all();
 
         $date = Carbon::now();
@@ -262,23 +258,39 @@ class QuotationController extends Controller
         
         ]);
 
-        $var = new Quotation();
+        $id_client = request('id_client');
+        $id_vendor = request('id_vendor');
 
-        $var->id_client = request('id_client');
-        $var->id_vendor = request('id_vendor');
-        $var->id_transport = request('id_transport');
-        $var->id_user = request('id_user');
-        $var->serie = request('serie');
-        $var->date_quotation = request('date_quotation');
+        
+        if($id_client != '-1'){
+            if($id_vendor != '-1'){
+                $var = new Quotation();
 
-        $var->observation = request('observation');
-        $var->note = request('note');
+                $var->id_client = $id_client;
+                $var->id_vendor = $id_vendor;
+                $var->id_transport = request('id_transport');
+                $var->id_user = request('id_user');
+                $var->serie = request('serie');
+                $var->date_quotation = request('date_quotation');
+        
+                $var->observation = request('observation');
+                $var->note = request('note');
+        
+                $var->status =  1;
+            
+                $var->save();
+        
+                return redirect('quotations/register/'.$var->id.'');
 
-        $var->status =  1;
-    
-        $var->save();
+            }else{
+                return redirect('/quotations/registerquotation/'.$id_client.'')->withDanger('Debe Buscar un Vendedor');
+            } 
+        
+        }else{
+            return redirect('/quotations/registerquotation')->withDanger('Debe Buscar un Cliente');
+        } 
 
-        return redirect('quotations/register/'.$var->id.'');
+        
         }
 
 

@@ -23,7 +23,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Registro de Proveedores</div>
+                <div class="card-header text-center font-weight-bold h3">Registro de Proveedores</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('providers.store') }}" enctype="multipart/form-data">
@@ -94,7 +94,7 @@
                                 <label for="porc_retencion_iva" class="col-md-2 col-form-label text-md-right">Porcentaje Retención de Iva</label>
 
                                 <div class="col-md-4">
-                                    <input id="porc_retencion_iva" type="number" class="form-control @error('porc_retencion_iva') is-invalid @enderror" name="porc_retencion_iva" value="{{ old('porc_retencion_iva') }}" required autocomplete="porc_retencion_iva">
+                                    <input id="porc_retencion_iva" type="text" class="form-control @error('porc_retencion_iva') is-invalid @enderror" name="porc_retencion_iva" value="{{ old('porc_retencion_iva') }}" required autocomplete="porc_retencion_iva">
     
                                     @error('porc_retencion_iva')
                                         <span class="invalid-feedback" role="alert">
@@ -136,7 +136,7 @@
                             <label for="amount_max_credit" class="col-md-2 col-form-label text-md-right">Monto Máximo de Crédito</label>
 
                             <div class="col-md-4">
-                                <input id="amount_max_credit" type="number" class="form-control @error('amount_max_credit') is-invalid @enderror" name="amount_max_credit" value="{{ old('amount_max_credit') }}" required autocomplete="amount_max_credit">
+                                <input id="amount_max_credit" type="text" class="form-control @error('amount_max_credit') is-invalid @enderror" name="amount_max_credit" value="{{ old('amount_max_credit') }}" required autocomplete="amount_max_credit">
 
                                 @error('amount_max_credit')
                                     <span class="invalid-feedback" role="alert">
@@ -148,7 +148,7 @@
                               <label for="balance" class="col-md-2 col-form-label text-md-right">Saldo</label>
 
                               <div class="col-md-4">
-                                  <input id="balance" type="number" class="form-control @error('balance') is-invalid @enderror" name="balance" value="{{ old('balance') }}" required autocomplete="balance">
+                                  <input id="balance" type="text" class="form-control @error('balance') is-invalid @enderror" name="balance" value="{{ old('balance') }}" required autocomplete="balance">
   
                                   @error('balance')
                                       <span class="invalid-feedback" role="alert">
@@ -160,16 +160,16 @@
 
                        
                         <div class="form-group row">
-                                <label for="email" class="col-md-2 col-form-label text-md-right">Tiene Crédito</label>
+                                <label for="" class="col-md-2 col-form-label text-md-right">Tiene Crédito</label>
 
                                 <div class="form-check">
-                                    <input class="form-check-input position-static" type="checkbox" id="has_credit" name="has_credit" value="1" aria-label="...">
+                                    <input class="form-check-input position-static" onclick="calc();" type="checkbox" id="has_credit" name="has_credit" value="1" aria-label="...">
                                 </div>
-                              
-                                <label for="days_credit" class="col-md-2 col-form-label text-md-right">Dias de Crédito</label>
-
                                 <div class="col-md-2">
-                                  <input id="days_credit" type="number" class="form-control @error('days_credit') is-invalid @enderror" name="days_credit" value="{{ old('days_credit') }}" required autocomplete="days_credit">
+                                    <label id="days_credit_label" for="days_credit_label" class=" col-form-label text-md-right">Dias de Crédito</label>
+                                </div>
+                                <div class="col-md-2">
+                                  <input id="days_credit" type="text" class="form-control @error('days_credit') is-invalid @enderror" name="days_credit" value="{{ old('days_credit') ?? 0 }}" autocomplete="days_credit">
   
                                   @error('days_credit')
                                       <span class="invalid-feedback" role="alert">
@@ -182,19 +182,6 @@
                                 <div class="form-check">
                                     <input class="form-check-input position-static" type="checkbox" id="retiene_islr" name="retiene_islr" value="1" aria-label="...">
                                 </div>
-                              
-                              
-                           
-                                <label for="status" class="col-md-1 col-form-label text-md-right">Status</label>
-    
-                                <div class="col-md-2">
-                                    <select class="form-control" name="status" id="status">
-                                        <option value="1">Activo</option>
-                                        <option value="0">Inactivo</option>
-                                    </select>
-                                </div>
-                            
-                           
                         </div>
 
 
@@ -204,12 +191,16 @@
                         
                         <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                   Registrar providere
+                                   Registrar proveedor
                                 </button>
                             </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('providers') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                            </div>
                         </div>
+                        <br>
                     </form>
                 </div>
                 </div>
@@ -220,15 +211,60 @@
 @endsection
 @section('validacion')
     <script>    
-	$(function(){
-        soloAlfaNumerico('code_provider');
-        soloAlfaNumerico('razon_social');
-        soloLetras('country');
-        soloLetras('city');
-        soloAlfaNumerico('direction');
-        soloNumeros('phone1');
-        soloNumeros('phone2');
-       
-    });
+        $(document).ready(function () {
+            $("#phone1").mask('0000 000-0000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#phone2").mask('0000 000-0000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#porc_retencion_iva").mask('000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#amount_max_credit").mask('000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#balance").mask('000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#days_credit").mask('000', { reverse: true });
+            
+        });
+
+        $(function(){
+            soloAlfaNumerico('code_provider');
+            soloAlfaNumerico('razon_social');
+            soloLetras('country');
+            soloLetras('city');
+            soloAlfaNumerico('direction');
+        });
+
+
+        $("#days_credit_label").hide();
+        $("#days_credit").hide();
+        document.getElementById('days_credit').value = 0;
+
+
+        function calc()
+        {
+            if (document.getElementById('has_credit').checked) 
+            {
+                $("#days_credit_label").show();
+                $("#days_credit").show();
+                
+                document.getElementById('days_credit').value = 0;
+            } else {
+                $("#days_credit_label").hide();
+                $("#days_credit").hide();
+                document.getElementById('days_credit').value = 0;
+            }
+        }
+
+
     </script>
 @endsection

@@ -62,7 +62,7 @@
             <a class="collapse-item" href="{{ route('historictransports') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-archive fa-sm fa-fw mr-2 text-blue-400"></i><strong>Historial de<br> <div style="text-indent: 22px;">Transporte</div></strong></a>
             <a class="collapse-item" href="{{ route('tasas') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tasa del Día</strong></a>
             <a class="collapse-item" href="{{ route('inventarytypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-boxes fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de<br> <div style="text-indent: 22px;">Inventario</div></strong></a>
-            <a class="collapse-item" href="{{ route('ratetypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-donate fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Tarifas</strong></a>
+            <a class="collapse-item" href="{{ route('ratetypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-donate fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Tasas</strong></a>
             <a class="collapse-item" href="{{ route('nominaformulas') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-calculator fa-sm fa-fw mr-2 text-blue-400"></i><strong>Formulas de Nómina</strong></a>
            
         </div>
