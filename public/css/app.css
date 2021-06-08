@@ -62,7 +62,7 @@ body {
   line-height: 1.6;
   color: #212529;
   text-align: left;
-  background-color: #f8fafc;
+  background-color: #fcd5a8;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -10385,7 +10385,7 @@ footer .copyright {
 }
 
 .bg-image {
-  background-image: url("https://source.unsplash.com/WEQbe2jBg40/600x1200");
+  background-image: url("img/logo.png");
   background-size: cover;
   background-position: center;
 }

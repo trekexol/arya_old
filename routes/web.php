@@ -477,14 +477,13 @@ Route::group(["prefix"=>'nominaconcepts'],function(){
 });
 
 Route::group(["prefix"=>'nominacalculations'],function(){
-    Route::get('{id_nomina}/{id_employee}','NominaCalculationController@index')->name('nominacalculations');
+    Route::get('index/{id_nomina}/{id_employee}','NominaCalculationController@index')->name('nominacalculations');
     Route::get('register/{id_nomina}/{id_employee}','NominaCalculationController@create')->name('nominacalculations.create');
     Route::post('store','NominaCalculationController@store')->name('nominacalculations.store');
     Route::get('{id}/edit','NominaCalculationController@edit')->name('nominacalculations.edit');
     Route::delete('{id}/delete','NominaCalculationController@destroy')->name('nominacalculations.delete');
     Route::patch('{id}/update','NominaCalculationController@update')->name('nominacalculations.update');
 
-   
 });
 
 Route::group(["prefix"=>'invoices'],function(){
@@ -636,4 +635,6 @@ Route::group(["prefix"=>'nominaformulas'],function(){
     Route::get('{id}/edit','NominaFormulaController@edit')->name('nominaformulas.edit');
     Route::delete('{id}/delete','NominaFormulaController@destroy')->name('nominaformulas.delete');
     Route::patch('{id}/update','NominaFormulaController@update')->name('nominaformulas.update');
+
+    Route::get('calcularlunes','NominaController@calcular_cantidad_de_lunes')->name('nominaformulas.calcular_cantidad_de_lunes');
 });

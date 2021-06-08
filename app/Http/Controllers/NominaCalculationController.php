@@ -159,12 +159,12 @@ class NominaCalculationController extends Controller
 
         $var  = NominaCalculation::find($id);
 
-        $professions = Profession::orderBY('name','asc')->get();
+        
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
 
         
-        return view('admin.nominacalculations.edit',compact('var','professions','datenow'));
+        return view('admin.nominacalculations.edit',compact('var','datenow'));
         
     }
 

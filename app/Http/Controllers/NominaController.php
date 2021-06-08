@@ -101,7 +101,7 @@ class NominaController extends Controller
     
             $amount = 0;
             if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
-                $amount = $this->formula($nominaconcept->id_formula_q,$employee);
+                $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina);
             }
             $vars->amount = $amount;
             $vars->status =  "1";
@@ -115,27 +115,105 @@ class NominaController extends Controller
         
     }
 
-    public function formula($id_formula,$employee)
+    public function formula($id_formula,$employee,$nomina)
     {
+
+        $lunes = 0;
+        $horas = 0;
+        $dias = 0;
+        $dias_feriados = 0;
+        $cestaticket = 0;
+        $dias_faltados = 0;
 
         if($id_formula == 1){
             //{{sueldo}} * 12 / 52 * {{lunes}} * 0.04
             $total = ($employee->monto_pago * 12)/52 * 0.04;
-            return $total;
-        }
-        else if($id_formula == 4){
+            
+        }else if($id_formula == 2){
+            //{{sueldo}} * 12 / 52 * {{lunes}} * 0.04 * 5 / 5
+            $lunes = $this->calcular_cantidad_de_lunes($nomina);
+            $total = (($employee->monto_pago * 12)/52) * (($lunes * 0.04) * 5)/5 ;
+            
+        }else if($id_formula == 3){
+            //{{sueldo}} / 30 * 7.5
+            $total = ($employee->monto_pago * 30) * 7.5 ;
+            
+        }else if($id_formula == 4){
             //{{sueldo}} * 0.01 / 2
             $total = ($employee->monto_pago * 0.01)/2 ;
-            return $total;
-        }
-        else if($id_formula == 6){
+            
+        }else if($id_formula == 5){
+            //{{sueldo}} * 0.01 / 4
+            $total = ($employee->monto_pago * 0.01) / 4 ;
+            
+        }else if($id_formula == 6){
             //{{sueldo}} / 2
             $total = ($employee->monto_pago)/2 ;
-            return $total;
+            
+        }else if($id_formula == 7){
+            //{{sueldo}} 
+            $total = ($employee->monto_pago) ;
+            
+        }else if($id_formula == 8){
+            //{{sueldo}} / 30 / 8 * 1.6 / {{horas}} 
+            $total = (($employee->monto_pago * 30)/8 * 1.6) * $horas ;
+            
+        }else if($id_formula == 9){
+            //{{sueldo}} / 30 / 8 * 1.8 / {{horas}}
+            $total = (($employee->monto_pago * 30)/8 * 1.8) * $horas ;
+            
+        }else if($id_formula == 10){
+            //{{sueldo}} / 30*1.5 *{{dias}}
+            $total = ($employee->monto_pago / 30) * 1.5 * $dias;
+            
+        }else if($id_formula == 11){
+            //{{sueldo}} / 30 * 1.5 * {{diasferiados}}
+            $total = ($employee->monto_pago / 30) * 1.5 * $dias_feriados;
+            
+        }else if($id_formula == 12){
+            //{{cestaticket}} / 2
+            $total = $cestaticket / 2;
+            
+        }else if($id_formula == 13){
+            //{{sueldo}} * 0.03
+            $total = $employee->monto_pago * 0.03;
+            
+        }else if($id_formula == 14){
+            //{{sueldo}} * 12 / 52 * {{lunes}} * 0.005
+            $lunes = $this->calcular_cantidad_de_lunes($nomina);
+            $total = ($employee->monto_pago * 12)/52 * $lunes * 0.005;
+            
+        }else if($id_formula == 15){
+            //{{sueldo}} * 12 / 52 * {{lunes}} * 0.004
+            $lunes = $this->calcular_cantidad_de_lunes($nomina);
+            $total = ($employee->monto_pago * 12)/52 * $lunes * 0.004;
+            
+        }else if($id_formula == 16){
+            //{{sueldo}} / 30 * {{dias_faltados}}
+            
+            $total = ($employee->monto_pago / 30) * $dias_faltados;
+            
         }else{
             return -1;
         }
-        
+        return $total;
+    }
+
+    public function calcular_cantidad_de_lunes($nomina)
+    {
+        $fechaInicio= $nomina->date_begin;
+        $fechaFin= $nomina->date_end;
+
+        $cantidad_de_dias_lunes = 0;
+        //Recorro las fechas y con la función strotime obtengo los lunes
+        for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
+            //Sacar el dia de la semana con el modificador N de la funcion date
+            $dia = date('N', $i);
+            if($dia==1){
+                $cantidad_de_dias_lunes += 1;
+            }
+        }
+        return $cantidad_de_dias_lunes;
     }
 
 

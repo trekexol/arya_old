@@ -19,7 +19,7 @@
        
   
   <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{asset('vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet')}}">
 
   <!-- Custom fonts for this template -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -27,8 +27,8 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
   <!-- Custom styles for this template -->
-  <link href="css/clean-blog.min.css" rel="stylesheet">
-  <link href="css/app.css" rel="stylesheet">
+  <link href="{{asset('css/clean-blog.min.css')}}" rel="stylesheet">
+  <link href="{{asset('css/app.css')}}" rel="stylesheet">
   
 </head>
 
@@ -71,7 +71,7 @@
                   <label class="custom-control-label" for="customCheck1">Recordar Contraseña</label>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Iniciar Sesión</button>
-                <a class="btn btn-lg btn-primary2 btn-block btn-login text-uppercase font-weight-bold mb-2" href="{{url('/')}}">Menú Principal</a>
+                <a class="btn btn-lg btn-light btn-block btn-login text-uppercase font-weight-bold mb-2" href="{{url('/')}}">Menú Principal</a>
                
                 <div class="text-center">
                   @if (Route::has('password.request'))
