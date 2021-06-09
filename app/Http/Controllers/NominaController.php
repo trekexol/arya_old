@@ -73,7 +73,7 @@ class NominaController extends Controller
             $this->addNominaCalculation($nomina,$employee);
         }
 
-        return redirect('/nominas')->withSuccess('El calculo de la Nomina '.$nomina->description.' Exitoso!');
+        return redirect('/nominas')->withSuccess('El calculo de la Nomina '.$nomina->description.' fue Exitoso!');
         
     }
 
@@ -81,8 +81,38 @@ class NominaController extends Controller
   
     public function addNominaCalculation($nomina,$employee)
     {
+        
         if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','%Quincena%')
+            
+            $nominaconcepts_comun = NominaConcept::where('type','LIKE','Quincenal')
+                                                ->where('calculate','LIKE','S')->get();
+        }
+
+        if(($nomina->type == "Primera Quincena")){
+            $nominaconcepts = NominaConcept::where('type','LIKE','%Primera Quincena%')
+                                                ->where('calculate','LIKE','S')->get();
+
+        }else if(($nomina->type == "Segunda Quincena")){
+            $nominaconcepts = NominaConcept::where('type','LIKE','%Segunda Quincena%')
+                                                ->where('calculate','LIKE','S')->get();
+
+        }else if(($nomina->type == "Quincenal")){
+            $nominaconcepts = NominaConcept::where('type','LIKE','Quincenal')
+                                                ->where('calculate','LIKE','S')->get();
+
+        }else if(($nomina->type == "Mensual")){
+            $nominaconcepts = NominaConcept::where('type','LIKE','%Mensual%')
+                                                ->where('calculate','LIKE','S')->get();
+
+        }else if(($nomina->type == "Semanal")){
+            $nominaconcepts = NominaConcept::where('type','LIKE','%Semanal%')
+                                                ->where('calculate','LIKE','S')->get();
+
+        }else if(($nomina->type == "Especial")){
+            $nominaconcepts = NominaConcept::where('type','LIKE','%Especial%')
+                                                ->where('calculate','LIKE','S')->get();
+        }else{
+            $nominaconcepts = NominaConcept::where('type','LIKE',$nomina->type)
                                                 ->where('calculate','LIKE','S')->get();
         }
        
@@ -100,17 +130,82 @@ class NominaController extends Controller
             $vars->type = 'No';
     
             $amount = 0;
+            $tiene_calculo = false;
+
             if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
-                $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina);
+                if(isset($nominaconcept->id_formula_q)){
+                    $tiene_calculo = true;
+                    $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina);
+                }
+                
+            }else if(($nomina->type == "Mensual")){
+                if(isset($nominaconcept->id_formula_m)){
+                    $tiene_calculo = true;
+                    $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina);
+                }
+
+            }else if(($nomina->type == "Semanal")){
+                if(isset($nominaconcept->id_formula_s)){
+                    $tiene_calculo = true;
+                    $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina);
+                }
             }
+
+            $vars->amount = $amount;
+            $vars->status =  "1";
+           
+            if($tiene_calculo == true){
+                $vars->save();
+            }
+        }
+
+
+
+        
+        foreach($nominaconcepts_comun as $nominaconcept){
+
+            $vars = new NominaCalculation();
+
+            $vars->id_nomina = $nomina->id;
+            $vars->id_nomina_concept = $nominaconcept->id;
+            $vars->id_employee = $employee->id;
+           
+            $vars->number_receipt = 0;
+            
+            $vars->type = 'No';
+    
+            $amount = 0;
+            $tiene_calculo = false;
+
+            if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
+                if(isset($nominaconcept->id_formula_q)){
+                    $tiene_calculo = true;
+                    $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina);
+                }
+
+            }else if(($nomina->type == "Mensual")){
+                if(isset($nominaconcept->id_formula_m)){
+                    $tiene_calculo = true;
+                    $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina);
+                }
+
+            }else if(($nomina->type == "Semanal")){
+                if(isset($nominaconcept->id_formula_s)){
+                    $tiene_calculo = true;
+                    $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina);
+                }
+            }
+
             $vars->amount = $amount;
             $vars->status =  "1";
            
            
-    
-            $vars->save();
+            if($tiene_calculo == true){
+                $vars->save();
+            }
+            
         }
-        
+
        
         
     }
@@ -201,8 +296,9 @@ class NominaController extends Controller
 
     public function calcular_cantidad_de_lunes($nomina)
     {
-        $fechaInicio= $nomina->date_begin;
-        $fechaFin= $nomina->date_end;
+        $fechaInicio= strtotime($nomina->date_begin);
+        $fechaFin= strtotime($nomina->date_end);
+       
 
         $cantidad_de_dias_lunes = 0;
         //Recorro las fechas y con la función strotime obtengo los lunes

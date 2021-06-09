@@ -73,10 +73,13 @@
                        
                     <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                    Registrar Nómina
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('nominas') }}" id="btnvolver" name="btnvolver" class="btn btn-danger" title="volver">Volver</a>  
                             </div>
                         </div>
                     </form>

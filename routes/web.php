@@ -484,6 +484,9 @@ Route::group(["prefix"=>'nominacalculations'],function(){
     Route::delete('{id}/delete','NominaCalculationController@destroy')->name('nominacalculations.delete');
     Route::patch('{id}/update','NominaCalculationController@update')->name('nominacalculations.update');
 
+    Route::get('listformula/{id?}','NominaCalculationController@listformula')->name('nominacalculations.listformula');
+    Route::get('listformulamensual/{id?}','NominaCalculationController@listformulamensual')->name('nominacalculations.listformulamensual');
+    Route::get('listformulasemanal/{id?}','NominaCalculationController@listformulasemanal')->name('nominacalculations.listformulasemanal');
 });
 
 Route::group(["prefix"=>'invoices'],function(){

@@ -66,7 +66,7 @@
                     @foreach ($nominaconcepts as $nominaconcept)
                     <tr>
 
-                    <td class="text-center">{{$nominaconcept->abbreviation}}</td>
+                    <td class="text-center font-weight-bold">{{$nominaconcept->abbreviation}}</td>
                     <td class="text-center">{{$nominaconcept->description}}</td>
                     @if($nominaconcept->sign == "A")
                         <td class="text-center">Asignación</td>
