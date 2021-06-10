@@ -47,6 +47,20 @@ class NominaController extends Controller
         return view('admin.nominas.create',compact('professions','datenow'));
     }
 
+    public function create_recibo_vacaciones()
+    {
+        $employees = Employee::orderBY('nombres','asc')->get();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+
+        
+        $dateend =  date("Y-m-d",strtotime($date."+ 15 days")); 
+        
+
+        return view('admin.nominas.create_recibo_vacaciones',compact('employees','datenow','dateend'));
+    }
+
     public function selectemployee($id)
     {
 
@@ -77,7 +91,7 @@ class NominaController extends Controller
         
     }
 
-    
+   
   
     public function addNominaCalculation($nomina,$employee)
     {
@@ -109,120 +123,157 @@ class NominaController extends Controller
                                                 ->where('calculate','LIKE','S')->get();
 
         }else if(($nomina->type == "Especial")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','%Especial%')
+            $nominaconcepts = NominaConcept::where('type','LIKE','Especial')
                                                 ->where('calculate','LIKE','S')->get();
         }else{
             $nominaconcepts = NominaConcept::where('type','LIKE',$nomina->type)
                                                 ->where('calculate','LIKE','S')->get();
         }
        
+        if(isset($nominaconcepts)){
+            foreach($nominaconcepts as $nominaconcept){
 
-        foreach($nominaconcepts as $nominaconcept){
+                $vars = new NominaCalculation();
 
-            $vars = new NominaCalculation();
-
-            $vars->id_nomina = $nomina->id;
-            $vars->id_nomina_concept = $nominaconcept->id;
-            $vars->id_employee = $employee->id;
-           
-            $vars->number_receipt = 0;
+                $vars->id_nomina = $nomina->id;
+                $vars->id_nomina_concept = $nominaconcept->id;
+                $vars->id_employee = $employee->id;
             
-            $vars->type = 'No';
-    
-            $amount = 0;
-            $tiene_calculo = false;
+                $vars->number_receipt = 0;
+                
+                $vars->type = 'No';
 
-            if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
-                if(isset($nominaconcept->id_formula_q)){
-                    $tiene_calculo = true;
-                    $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina);
+                $vars->days = 0;
+                $vars->hours = 0;
+                $vars->cantidad = 0;
+        
+                $amount = 0;
+                $tiene_calculo = false;
+
+                if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
+                    if(isset($nominaconcept->id_formula_q)){
+                        $tiene_calculo = true;
+                        $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina,$vars);
+                    }
+                    
+                }else if(($nomina->type == "Mensual")){
+                    if(isset($nominaconcept->id_formula_m)){
+                        $tiene_calculo = true;
+                        $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina,$vars);
+                    }
+
+                }else if(($nomina->type == "Semanal")){
+                    if(isset($nominaconcept->id_formula_s)){
+                        $tiene_calculo = true;
+                        $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina,$vars);
+                    }
+
+                }else if(($nomina->type == "Especial")){
+                    if(isset($nominaconcept->id_formula_m)){
+                        $tiene_calculo = true;
+                        $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina,$vars);
+                    }
+                }
+
+                $vars->amount = $amount;
+                $vars->status =  "1";
+            
+                if($tiene_calculo == true){
+                    $vars->save();
+                }
+            }
+        }
+
+
+        if(isset($nominaconcepts_comun)){
+            foreach($nominaconcepts_comun as $nominaconcept){
+
+                $vars = new NominaCalculation();
+    
+                $vars->id_nomina = $nomina->id;
+                $vars->id_nomina_concept = $nominaconcept->id;
+                $vars->id_employee = $employee->id;
+               
+                $vars->number_receipt = 0;
+                
+                $vars->type = 'No';
+
+                $vars->days = 0;
+                $vars->hours = 0;
+                $vars->cantidad = 0;
+        
+                $amount = 0;
+                $tiene_calculo = false;
+    
+                if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
+                    if(isset($nominaconcept->id_formula_q)){
+                        $tiene_calculo = true;
+                        $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina,$vars);
+                    }
+    
+                }else if(($nomina->type == "Mensual")){
+                    if(isset($nominaconcept->id_formula_m)){
+                        $tiene_calculo = true;
+                        $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina,$vars);
+                    }
+    
+                }else if(($nomina->type == "Semanal")){
+                    if(isset($nominaconcept->id_formula_s)){
+                        $tiene_calculo = true;
+                        $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina,$vars);
+                    }
+                }
+    
+                $vars->amount = $amount;
+                $vars->status =  "1";
+               
+               
+                if($tiene_calculo == true){
+                    $vars->save();
                 }
                 
-            }else if(($nomina->type == "Mensual")){
-                if(isset($nominaconcept->id_formula_m)){
-                    $tiene_calculo = true;
-                    $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina);
-                }
-
-            }else if(($nomina->type == "Semanal")){
-                if(isset($nominaconcept->id_formula_s)){
-                    $tiene_calculo = true;
-                    $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina);
-                }
             }
-
-            $vars->amount = $amount;
-            $vars->status =  "1";
-           
-            if($tiene_calculo == true){
-                $vars->save();
-            }
-        }
-
-
-
+        }    
         
-        foreach($nominaconcepts_comun as $nominaconcept){
-
-            $vars = new NominaCalculation();
-
-            $vars->id_nomina = $nomina->id;
-            $vars->id_nomina_concept = $nominaconcept->id;
-            $vars->id_employee = $employee->id;
-           
-            $vars->number_receipt = 0;
-            
-            $vars->type = 'No';
-    
-            $amount = 0;
-            $tiene_calculo = false;
-
-            if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
-                if(isset($nominaconcept->id_formula_q)){
-                    $tiene_calculo = true;
-                    $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina);
-                }
-
-            }else if(($nomina->type == "Mensual")){
-                if(isset($nominaconcept->id_formula_m)){
-                    $tiene_calculo = true;
-                    $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina);
-                }
-
-            }else if(($nomina->type == "Semanal")){
-                if(isset($nominaconcept->id_formula_s)){
-                    $tiene_calculo = true;
-                    $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina);
-                }
-            }
-
-            $vars->amount = $amount;
-            $vars->status =  "1";
-           
-           
-            if($tiene_calculo == true){
-                $vars->save();
-            }
-            
-        }
 
        
         
     }
 
-    public function formula($id_formula,$employee,$nomina)
+    public function formula($id_formula,$employee,$nomina,$nomina_calculation)
     {
 
+        
         $lunes = 0;
-        $horas = 0;
-        $dias = 0;
-        $dias_feriados = 0;
+        $hours = 0;
+        $days = 0;
         $cestaticket = 0;
-        $dias_faltados = 0;
+        
+
+        if(isset($nomina_calculation->days)){
+            if($nomina_calculation->days != 0){
+                $days = $nomina_calculation->days;
+            }
+        }
+
+        if(isset($nomina_calculation->hours)){
+            if($nomina_calculation->hours != 0){
+                $hours = $nomina_calculation->hours;
+            }
+        }
+
+        if(isset($nomina_calculation->cantidad)){
+            if($nomina_calculation->cantidad != 0){
+                $cestaticket = $nomina_calculation->cantidad;
+            }
+        }
+
+        
 
         if($id_formula == 1){
             //{{sueldo}} * 12 / 52 * {{lunes}} * 0.04
-            $total = ($employee->monto_pago * 12)/52 * 0.04;
+            $lunes = $this->calcular_cantidad_de_lunes($nomina);
+            $total = ($employee->monto_pago * 12)/52 * ($lunes * 0.04);
             
         }else if($id_formula == 2){
             //{{sueldo}} * 12 / 52 * {{lunes}} * 0.04 * 5 / 5
@@ -251,19 +302,19 @@ class NominaController extends Controller
             
         }else if($id_formula == 8){
             //{{sueldo}} / 30 / 8 * 1.6 / {{horas}} 
-            $total = (($employee->monto_pago * 30)/8 * 1.6) * $horas ;
+            $total = (($employee->monto_pago * 30)/8 * 1.6) * $hours ;
             
         }else if($id_formula == 9){
             //{{sueldo}} / 30 / 8 * 1.8 / {{horas}}
-            $total = (($employee->monto_pago * 30)/8 * 1.8) * $horas ;
+            $total = (($employee->monto_pago * 30)/8 * 1.8) * $hours ;
             
         }else if($id_formula == 10){
             //{{sueldo}} / 30*1.5 *{{dias}}
-            $total = ($employee->monto_pago / 30) * 1.5 * $dias;
+            $total = ($employee->monto_pago / 30) * 1.5 * $days;
             
         }else if($id_formula == 11){
             //{{sueldo}} / 30 * 1.5 * {{diasferiados}}
-            $total = ($employee->monto_pago / 30) * 1.5 * $dias_feriados;
+            $total = ($employee->monto_pago / 30) * 1.5 * $days;
             
         }else if($id_formula == 12){
             //{{cestaticket}} / 2
@@ -286,7 +337,7 @@ class NominaController extends Controller
         }else if($id_formula == 16){
             //{{sueldo}} / 30 * {{dias_faltados}}
             
-            $total = ($employee->monto_pago / 30) * $dias_faltados;
+            $total = ($employee->monto_pago / 30) * $days;
             
         }else{
             return -1;

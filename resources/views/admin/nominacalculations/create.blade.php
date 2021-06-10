@@ -28,9 +28,10 @@
                             <label for="nominaconcept" class="col-md-2 col-form-label text-md-right">Concepto:</label>
                             <div class="col-md-4">
                                 <select  id="id_nomina_concept"  name="id_nomina_concept" class="form-control">
-                                    @foreach($nominaconcepts as $nominaconcept)
-                                            <option selected value="{{$nominaconcept->id}}">{{ $nominaconcept->abbreviation  }} - {{ $nominaconcept->description }}</option>
-                                       @endforeach
+                                    <option selected value="">Seleccione un Concepto</option>
+                                        @foreach($nominaconcepts as $nominaconcept)
+                                            <option  value="{{$nominaconcept->id}}">{{ $nominaconcept->abbreviation  }} - {{ $nominaconcept->description }}</option>
+                                        @endforeach
                                    
                                 </select>
                             </div>
@@ -60,10 +61,22 @@
                                 </div>
                             </div>
                         @endif
-                        <div id="dias_form" class="form-group row">
+                        <div id="days_form" class="form-group row">
                             <label for="nominaconcept" class="col-md-2 col-form-label text-md-right">Dias:</label>
                             <div class="col-md-4">
-                                <input id="dias" type="text"  class="form-control @error('dias') is-invalid @enderror" name="dias"  autocomplete="dias">
+                                <input id="days" type="text" value="0" class="form-control @error('days') is-invalid @enderror" name="days"  autocomplete="days">
+                            </div>
+                        </div>
+                        <div id="hours_form" class="form-group row">
+                            <label for="nominaconcept" class="col-md-2 col-form-label text-md-right">Horas:</label>
+                            <div class="col-md-4">
+                                <input id="hours" type="text" value="0" class="form-control @error('hours') is-invalid @enderror" name="hours"  autocomplete="hours">
+                            </div>
+                        </div>
+                        <div id="cantidad_form" class="form-group row">
+                            <label for="nominaconcept" class="col-md-2 col-form-label text-md-right">Cantidad:</label>
+                            <div class="col-md-4">
+                                <input id="cantidad" type="text" placeholder="0,00" class="form-control @error('cantidad') is-invalid @enderror" name="cantidad"  autocomplete="cantidad">
                             </div>
                         </div>
                     <br>
@@ -83,22 +96,24 @@
 @endsection
 @section('validacion')
     <script>
-        $("#dias_form").hide();
+        $("#days_form").hide();
+        $("#hours_form").hide();
+        $("#cantidad_form").hide();
         
         $(document).ready(function () {
             $("#amount").mask('000.000.000.000.000,00', { reverse: true });
             
         });
         $(document).ready(function () {
-            $("#hours").mask('000', { reverse: true });
+            $("#hours").mask('000000', { reverse: true });
             
         });
         $(document).ready(function () {
-            $("#days").mask('000', { reverse: true });
+            $("#days").mask('000000', { reverse: true });
             
         });
         $(document).ready(function () {
-            $("#cantidad").mask('000.000', { reverse: true });
+            $("#cantidad").mask('000.000.000.000.000,00', { reverse: true });
             
         });
         
@@ -136,13 +151,44 @@
                             
                             document.getElementById("formula_q").value = description; 
 
-                            var validate = -1;
-                            validate = description.indexOf("dia");
-                            //alert(validate);
-                            if(validate != -1){
-                                $("#dias_form").show();
+                            var validate_dia = -1;
+                            var validate_hora = -1;
+                            var validate_cantidad = -1;
+
+                            validate_dia = description.indexOf("dia");
+                            validate_hora = description.indexOf("hora");
+                            validate_cantidad = description.indexOf("cesta");
+                            
+                            if(validate_dia != -1){
+                                if(description.charAt(validate_dia) == 'd'){
+                                    $("#days_form").show();
+                                    document.getElementById("days_form").value = 0;
+                                }
                             }else{
-                                $("#dias_form").hide();
+                                $("#days_form").hide();
+                                document.getElementById("days_form").value = 0;
+                            }
+
+                            if(validate_hora != -1){
+                                if(description.charAt(validate_hora) == 'h'){
+                                    $("#hours_form").show();
+                                    document.getElementById("hours_form").value = 0;
+                                }
+                                
+                            }else{
+                                $("#hours_form").hide();
+                                document.getElementById("hours_form").value = 0;
+                            }
+
+                            if(validate_cantidad != -1){
+                                if(description.charAt(validate_cantidad) == 'c'){
+                                    $("#cantidad_form").show();
+                                    document.getElementById("cantidad_form").value = 0;
+                                }
+                                
+                            }else{
+                                $("#cantidad_form").hide();
+                                document.getElementById("cantidad_form").value = 0;
                             }
                             
                         });
@@ -171,13 +217,44 @@
                             
                             document.getElementById("formula_m").value = description; 
 
-                            var validate = -1;
-                            validate = description.indexOf("dia");
+                            var validate_dia = -1;
+                            var validate_hora = -1;
+                            var validate_cantidad = -1;
+
+                            validate_dia = description.indexOf("dia");
+                            validate_hora = description.indexOf("hora");
+                            validate_cantidad = description.indexOf("cesta");
                             
-                            if(validate != -1){
-                                $("#dias_form").show();
+                            if(validate_dia != -1){
+                                if(description.charAt(validate_dia) == 'd'){
+                                    $("#days_form").show();
+                                    document.getElementById("days_form").value = 0;
+                                }
                             }else{
-                                $("#dias_form").hide();
+                                $("#days_form").hide();
+                                document.getElementById("days_form").value = 0;
+                            }
+
+                            if(validate_hora != -1){
+                                if(description.charAt(validate_hora) == 'h'){
+                                    $("#hours_form").show();
+                                    document.getElementById("hours_form").value = 0;
+                                }
+                                
+                            }else{
+                                $("#hours_form").hide();
+                                document.getElementById("hours_form").value = 0;
+                            }
+
+                            if(validate_cantidad != -1){
+                                if(description.charAt(validate_cantidad) == 'c'){
+                                    $("#cantidad_form").show();
+                                    document.getElementById("cantidad_form").value = 0;
+                                }
+                                
+                            }else{
+                                $("#cantidad_form").hide();
+                                document.getElementById("cantidad_form").value = 0;
                             }
                         });
                     }
@@ -205,13 +282,44 @@
                             
                             document.getElementById("formula_s").value = description; 
 
-                            var validate = -1;
-                            validate = description.indexOf("dia");
+                            var validate_dia = -1;
+                            var validate_hora = -1;
+                            var validate_cantidad = -1;
+
+                            validate_dia = description.indexOf("dia");
+                            validate_hora = description.indexOf("hora");
+                            validate_cantidad = description.indexOf("cesta");
                             
-                            if(validate != -1){
-                                $("#dias_form").show();
+                            if(validate_dia != -1){
+                                if(description.charAt(validate_dia) == 'd'){
+                                    $("#days_form").show();
+                                    document.getElementById("days_form").value = 0;
+                                }
                             }else{
-                                $("#dias_form").hide();
+                                $("#days_form").hide();
+                                document.getElementById("days_form").value = 0;
+                            }
+
+                            if(validate_hora != -1){
+                                if(description.charAt(validate_hora) == 'h'){
+                                    $("#hours_form").show();
+                                    document.getElementById("hours_form").value = 0;
+                                }
+                                
+                            }else{
+                                $("#hours_form").hide();
+                                document.getElementById("hours_form").value = 0;
+                            }
+
+                            if(validate_cantidad != -1){
+                                if(description.charAt(validate_cantidad) == 'c'){
+                                    $("#cantidad_form").show();
+                                    document.getElementById("cantidad_form").value = 0;
+                                }
+                                
+                            }else{
+                                $("#cantidad_form").hide();
+                                document.getElementById("cantidad_form").value = 0;
                             }
                         });
                     }

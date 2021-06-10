@@ -10,7 +10,40 @@
         <a class="nav-link font-weight-bold" style="color: black;" id="profile-tab"  href="{{ route('nominaconcepts') }}" role="tab" aria-controls="profile" aria-selected="false">Concepto de Nómina</a>
         </li>
     </ul>
-   
+  <br>
+    
+<!-- container-fluid -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="row py-lg-3">
+        <div class="col">
+            <a href="{{ route('nominas.create_recibo_vacaciones') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
+                &nbsp Recibo de Vacaciones
+            </a>
+        </div>
+        <div class="col">
+            <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
+                &nbsp Recibo de Prestaciones
+            </a>
+        </div>
+        <div class="col">
+            <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
+                &nbsp Recibo de Utilidades
+            </a>
+        </div>
+        <div class="col">
+            <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
+                &nbsp Calcula Liquidación Auto
+            </a>
+        </div>
+        <div class="col">
+            <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
+                &nbsp Crear Liquidación
+            </a>
+        </div>
+    </div>
+  </div>
 
 <!-- container-fluid -->
 <div class="container-fluid">

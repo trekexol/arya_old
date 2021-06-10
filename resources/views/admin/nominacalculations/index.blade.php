@@ -1,5 +1,6 @@
 @extends('layouts.dashboard')
 
+
 @section('content')
 
  
@@ -78,7 +79,7 @@
                     <td class="text-center">{{$nominacalculation->nominaconcepts['description']}}</td>
                     <td class="text-right">{{number_format($nominacalculation->days, 0, '', '.')}}</td>
                     <td class="text-right">{{number_format($nominacalculation->hours, 0, '', '.')}}</td>
-                    <td class="text-right">{{number_format($nominacalculation->cantidad, 0, '', '.')}}</td>
+                    <td class="text-right">{{number_format($nominacalculation->cantidad, 2, ',', '.')}}</td>
 
                     @if($nominacalculation->nominaconcepts['sign'] == 'A')
                         <?php
@@ -96,9 +97,11 @@
                     @endif
 
                     @if (Auth::user()->role_id  == '1')
+                    
                         <td class="text-right">
-                            <a href="" title="Eliminar"><i class="fa fa-trash-alt"></i></a>  
+                            <a href="{{ route('nominacalculations.delete',$nominacalculation->id) }}" title="Eliminar"><i class="fa fa-trash-alt"></i></a>  
                         </td>
+                        
                     @endif
                     </tr>
                     @endforeach
@@ -134,6 +137,36 @@
         </div>
     </div>
 </div>
+<button data-toggle="modal" data-target="#PopUpNoAutorizado">Abrir</button>
+ <div class="modal" id="PopUpNoAutorizado" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header Popup">
+                <div class="col-xs-12">
+                    <h5>
+                        ENTRADA ELECTRONICA
+                        <small class="text-muted color">Almacen Planta Naco</small>
+                    </h5>
+                </div>                  
+            </div>
+            <div class="modal-body">                    
+              <div class="col-xs-4"></div>
+                <div class="col-xs-8"> 
+                  <img src="" />
+                </div>                   
+              <div class="col-sx-12 centrarTexto">
+                  <h1>Acceso no autorizado</h1>
+              </div>              
+            </div> 
+            <div class="modal-footer Popup">
+              <div class="col-xs-10 modal-edit">
+                  <h5>100 Años</h5>
+              </div>
+             
+          </div>
+        </div>
+    </div>
+  </div>
 @endsection
 @section('javascript')
     <script>

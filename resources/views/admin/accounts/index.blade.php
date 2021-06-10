@@ -2,17 +2,7 @@
 
 @section('content')
 
-@section('header')
-<!-- CSS media query within a style sheet -->
-<style>
 
-  body {
-   
-    zoom: 80%;
-  }
-
-</style>
-@endsection
 <!-- container-fluid -->
 <div class="container-fluid">
 

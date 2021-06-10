@@ -24,7 +24,7 @@ class CreateNominaCalculationsTable extends Migration
             $table->decimal('amount',64,2);
             $table->integer('hours')->nullable();
             $table->integer('days')->nullable();
-            $table->integer('cantidad')->nullable();
+            $table->decimal('cantidad',64,2)->nullable();
             $table->integer('voucher')->nullable();
            
             $table->string('status',1);

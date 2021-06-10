@@ -114,59 +114,162 @@ class NominaCalculationController extends Controller
             
         ]);
 
-        $users = new NominaCalculation();
+        $nomina_calculation = new NominaCalculation();
 
 
-        $users->id_nomina = request('id_nomina');
-        $users->id_nomina_concept = request('id_nomina_concept');
-        $users->id_employee = request('id_employee');
+        $nomina_calculation->id_nomina = request('id_nomina');
+        $nomina_calculation->id_nomina_concept = request('id_nomina_concept');
+        $nomina_calculation->id_employee = request('id_employee');
        
-        $users->number_receipt = 0;
+        $nomina_calculation->number_receipt = 0;
         
-        $users->type = 'No';
+        $nomina_calculation->type = 'No';
 
-        $nomina = Nomina::find($users->id_nomina);
-        $employee = Employee::find($users->id_employee);
-        $nomina_concept = NominaConcept::find($users->id_nomina_concept);
+        $nomina = Nomina::find($nomina_calculation->id_nomina);
+        $employee = Employee::find($nomina_calculation->id_employee);
+        $nomina_concept = NominaConcept::find($nomina_calculation->id_nomina_concept);
 
-        $amount = $this->addNominaCalculation($nomina,$nomina_concept,$employee);
+        
+        
+        $days = request('days');
+        $hours = request('hours');
+        $cantidad = str_replace(',', '.', str_replace('.', '', request('cantidad')));
+         
+        if(isset($days)){
+            if($days != 0){
+                $nomina_calculation->days = $days;
+            }else{
+                $nomina_calculation->days = 0;
+            }
+        }else{
+            $nomina_calculation->days = 0;
+        }
+
+        if(isset($hours)){
+            if($hours != 0){
+                $nomina_calculation->hours = $hours;
+            }else{
+                $nomina_calculation->hours = 0;
+            }
+        }else{
+            $nomina_calculation->hours = 0;
+        }
+
+        if(isset($cantidad)){
+            if($cantidad != 0){
+                $nomina_calculation->cantidad = $cantidad;
+            }else{
+                $nomina_calculation->cantidad = 0;
+            }
+        }else{
+            $nomina_calculation->cantidad = 0;
+        }
+
+        
+        $nomina_calculation->voucher = 0;
+
+
+        $nomina_calculation->status =  "1";
+
+        $amount = $this->addNominaCalculation($nomina,$nomina_concept,$employee,$nomina_calculation);
 
         if(isset($amount)){
-            $users->amount = $amount;
+            $nomina_calculation->amount = $amount;
         }else{
-            $users->amount = 0;
+            $nomina_calculation->amount = 0;
         }
-        
-
-        $users->hours = 0;
-        $users->days = 0;
-
-        $users->cantidad = 0;
-        $users->voucher = 0;
-
-
-        $users->status =  "1";
        
        
 
-        $users->save();
+        $nomina_calculation->save();
 
-        return redirect('/nominacalculations/index/'.$users->id_nomina.'/'.$users->id_employee.'')->withSuccess('Registro Exitoso!');
+        return redirect('/nominacalculations/index/'.$nomina_calculation->id_nomina.'/'.$nomina_calculation->id_employee.'')->withSuccess('Registro Exitoso!');
     }
 
-    public function formula($id_formula,$employee,$nomina)
+   
+
+    public function calcular_cantidad_de_lunes($nomina)
+    {
+        $fechaInicio= strtotime($nomina->date_begin);
+        $fechaFin= strtotime($nomina->date_end);
+       
+        $cantidad_de_dias_lunes = 0;
+        //Recorro las fechas y con la función strotime obtengo los lunes
+        for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
+            //Sacar el dia de la semana con el modificador N de la funcion date
+            
+            $dia = date('N', $i);
+            if($dia==1){
+                $cantidad_de_dias_lunes += 1;
+            }
+        }
+
+        return $cantidad_de_dias_lunes;
+    }
+
+ 
+
+    public function addNominaCalculation($nomina,$nominaconcept,$employee,$nomina_calculation)
+    {
+        
+        $amount = -1;
+
+            if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
+                if(isset($nominaconcept->id_formula_q)){
+                    $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina,$nomina_calculation);
+                }
+                
+            }else if(($nomina->type == "Mensual") || ($nomina->type == "Especial")){
+                if(isset($nominaconcept->id_formula_m)){
+                    $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina,$nomina_calculation);
+                }
+
+            }else if(($nomina->type == "Semanal")){
+                if(isset($nominaconcept->id_formula_s)){
+                    $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina,$nomina_calculation);
+                }
+            }
+
+           return $amount;
+        
+        
+    }
+
+
+    public function formula($id_formula,$employee,$nomina,$nomina_calculation)
     {
 
+        
         $lunes = 0;
-        $horas = 0;
-        $dias = 0;
-        $dias_feriados = 0;
+        $hours = 0;
+        $days = 0;
         $cestaticket = 0;
-        $dias_faltados = 0;
+        
+
+        if(isset($nomina_calculation->days)){
+            if($nomina_calculation->days != 0){
+                $days = $nomina_calculation->days;
+            }
+        }
+
+        if(isset($nomina_calculation->hours)){
+            if($nomina_calculation->hours != 0){
+                $hours = $nomina_calculation->hours;
+            }
+        }
+
+        if(isset($nomina_calculation->cantidad)){
+            if($nomina_calculation->cantidad != 0){
+                $cestaticket = $nomina_calculation->cantidad;
+            }
+        }
+
+        
 
         if($id_formula == 1){
             //{{sueldo}} * 12 / 52 * {{lunes}} * 0.04
-            $total = ($employee->monto_pago * 12)/52 * 0.04;
+            $lunes = $this->calcular_cantidad_de_lunes($nomina);
+            $total = ($employee->monto_pago * 12)/52 * ($lunes * 0.04);
             
         }else if($id_formula == 2){
             //{{sueldo}} * 12 / 52 * {{lunes}} * 0.04 * 5 / 5
@@ -195,19 +298,19 @@ class NominaCalculationController extends Controller
             
         }else if($id_formula == 8){
             //{{sueldo}} / 30 / 8 * 1.6 / {{horas}} 
-            $total = (($employee->monto_pago * 30)/8 * 1.6) * $horas ;
+            $total = (($employee->monto_pago / 30)/8 * 1.6) / $hours ;
             
         }else if($id_formula == 9){
             //{{sueldo}} / 30 / 8 * 1.8 / {{horas}}
-            $total = (($employee->monto_pago * 30)/8 * 1.8) * $horas ;
+            $total = (($employee->monto_pago / 30)/8 * 1.8) / $hours ;
             
         }else if($id_formula == 10){
             //{{sueldo}} / 30*1.5 *{{dias}}
-            $total = ($employee->monto_pago / 30) * 1.5 * $dias;
+            $total = ($employee->monto_pago / 30) * 1.5 * $days;
             
         }else if($id_formula == 11){
             //{{sueldo}} / 30 * 1.5 * {{diasferiados}}
-            $total = ($employee->monto_pago / 30) * 1.5 * $dias_feriados;
+            $total = ($employee->monto_pago / 30) * 1.5 * $days;
             
         }else if($id_formula == 12){
             //{{cestaticket}} / 2
@@ -230,7 +333,7 @@ class NominaCalculationController extends Controller
         }else if($id_formula == 16){
             //{{sueldo}} / 30 * {{dias_faltados}}
             
-            $total = ($employee->monto_pago / 30) * $dias_faltados;
+            $total = ($employee->monto_pago / 30) * $days;
             
         }else{
             return -1;
@@ -238,67 +341,21 @@ class NominaCalculationController extends Controller
         return $total;
     }
 
-    public function calcular_cantidad_de_lunes($nomina)
-    {
-        $fechaInicio= strtotime($nomina->date_begin);
-        $fechaFin= strtotime($nomina->date_end);
-       
-        $cantidad_de_dias_lunes = 0;
-        //Recorro las fechas y con la función strotime obtengo los lunes
-        for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
-            //Sacar el dia de la semana con el modificador N de la funcion date
-            
-            $dia = date('N', $i);
-            if($dia==1){
-                $cantidad_de_dias_lunes += 1;
-            }
-        }
-        return $cantidad_de_dias_lunes;
-    }
-
- 
-
-    public function addNominaCalculation($nomina,$nominaconcept,$employee)
-    {
-        
-            if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
-                if(isset($nominaconcept->id_formula_q)){
-                    $amount = $this->formula($nominaconcept->id_formula_q,$employee,$nomina);
-                }
-                
-            }else if(($nomina->type == "Mensual")){
-                if(isset($nominaconcept->id_formula_m)){
-                    $amount = $this->formula($nominaconcept->id_formula_m,$employee,$nomina);
-                }
-
-            }else if(($nomina->type == "Semanal")){
-                if(isset($nominaconcept->id_formula_s)){
-                    $amount = $this->formula($nominaconcept->id_formula_s,$employee,$nomina);
-                }
-            }
-
-           return $amount;
-        
-        
-    }
-
-
-
-
 
 
     public function edit($id)
     {
 
-        $var  = NominaCalculation::find($id);
+        $nomina_calculation  = NominaCalculation::find($id);
 
-        
-        $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');
+        $nomina      =   Nomina::find($nomina_calculation->id_nomina);
+        $employee    =   Employee::find($nomina_calculation->id_employee);
+        $nomina_concept      =   NominaConcept::find($nomina_calculation->id_nomina_concept);
 
-        
-        return view('admin.nominacalculations.edit',compact('var','datenow'));
-        
+        $nominaconcepts   =   NominaConcept::orderBy('description','asc')->get();
+
+       
+        return view('admin.nominacalculations.edit',compact('nomina_calculation','nomina','employee','nomina_concept','nominaconcepts'));
     }
 
    
@@ -310,38 +367,85 @@ class NominaCalculationController extends Controller
         $vars =  NominaCalculation::find($id);
         $var_status = $vars->status;
       
-
         $data = request()->validate([
            
-            'id_profession'         =>'required',
-            'description'         =>'required|max:255',
-            'type'         =>'required',
-            'date_begin'         =>'required|max:255',
+            'id_nomina'     =>'required',
+            'id_nomina_concept'       =>'required|max:60',
+            'id_employee'              =>'required',
             
-            
-           
         ]);
 
-        $var          = NominaCalculation::findOrFail($id);
+        $nomina_calculation = NominaCalculation::findOrFail($id);
 
-        $var->id_profession = request('id_profession');
-        $var->description = request('description');
-        $var->type = request('type');
-        $var->date_begin = request('date_begin');
-        $var->date_end = request('date_end');
+
+        $nomina_calculation->id_nomina = request('id_nomina');
+        $nomina_calculation->id_nomina_concept = request('id_nomina_concept');
+        $nomina_calculation->id_employee = request('id_employee');
        
-        if(request('status') == null){
-            $var->status = $var_status;
+        $nomina_calculation->number_receipt = 0;
+        
+        $nomina_calculation->type = 'No';
+
+        $nomina = Nomina::find($nomina_calculation->id_nomina);
+        $employee = Employee::find($nomina_calculation->id_employee);
+        $nomina_concept = NominaConcept::find($nomina_calculation->id_nomina_concept);
+
+        
+        
+        $days = request('days');
+        $hours = request('hours');
+        $cantidad = str_replace(',', '.', str_replace('.', '', request('cantidad')));
+         
+        if(isset($days)){
+            if($days != 0){
+                $nomina_calculation->days = $days;
+            }else{
+                $nomina_calculation->days = 0;
+            }
         }else{
-            $var->status = request('status');
+            $nomina_calculation->days = 0;
+        }
+
+        if(isset($hours)){
+            if($hours != 0){
+                $nomina_calculation->hours = $hours;
+            }else{
+                $nomina_calculation->hours = 0;
+            }
+        }else{
+            $nomina_calculation->hours = 0;
+        }
+
+        if(isset($cantidad)){
+            if($cantidad != 0){
+                $nomina_calculation->cantidad = $cantidad;
+            }else{
+                $nomina_calculation->cantidad = 0;
+            }
+        }else{
+            $nomina_calculation->cantidad = 0;
+        }
+
+        
+        $nomina_calculation->voucher = 0;
+
+
+        $nomina_calculation->status =  "1";
+
+        $amount = $this->addNominaCalculation($nomina,$nomina_concept,$employee,$nomina_calculation);
+
+        if(isset($amount)){
+            $nomina_calculation->amount = $amount;
+        }else{
+            $nomina_calculation->amount = 0;
         }
        
+       
+        $nomina_calculation->save();
 
-        $var->save();
 
-
-        return redirect('/nominacalculations')->withSuccess('Registro Guardado Exitoso!');
-
+        return redirect('/nominacalculations/index/'.$nomina_calculation->id_nomina.'/'.$nomina_calculation->id_employee.'')->withSuccess('Actualizacion Exitosa!');
+  
     }
 
 
@@ -396,5 +500,17 @@ class NominaCalculationController extends Controller
             }
         }
         
+    }
+
+
+
+
+    public function destroy($id)
+    {
+        $nomina_calculation = NominaCalculation::find($id);
+        
+        $nomina_calculation->delete();
+        return redirect('/nominacalculations/index/'.$nomina_calculation->id_nomina.'/'.$nomina_calculation->id_employee.'')->withDanger('Se ha Eliminado Correctamente!');
+  
     }
 }

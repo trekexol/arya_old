@@ -35,8 +35,8 @@
          
           zoom: 80%;
         }
-      
-      </style>
+        
+    </style>
 </head>
 
 <body id="page-top">
