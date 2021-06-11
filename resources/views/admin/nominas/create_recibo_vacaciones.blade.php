@@ -8,13 +8,13 @@
                 <div class="card-header text-center font-weight-bold h3">Registro de Recibo de Vacaciones</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('pdfnomina.vacaciones') }}">
+                    <form method="POST" action="{{ route('pdfnomina.vacaciones') }}" target="print_popup">
                         @csrf
 
                         <div class="form-group row">
                             <label for="id_employee" class="col-md-2 col-form-label text-md-right">Empleados:</label>
                             <div class="col-md-4">
-                                <select class="form-control" name="id_employee" id="id_employee">
+                                <select class="form-control" required name="id_employee" id="id_employee">
                                     <option value="">Seleccione un Empleado</option>
                                     @foreach ($employees as $var)
                                         <option value="{{ $var->id }}">{{ $var->nombres }}</option>
@@ -75,7 +75,7 @@
 
                             <div class="col-md-6">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitches">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitches" name="enable_holidays">
                                     <label class="custom-control-label" for="customSwitches">Dias no Habiles Feriados y Domingos</label>
                                   </div>
                             </div>
@@ -106,9 +106,16 @@
                         </div>  
                     <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-3 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" onclick="pdf();" class="btn btn-primary">
                                    Ver Recibo
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" name="guardar" value="guardar" class="btn btn-info">
+                                   Guardar y descargar recibo
                                 </button>
                             </div>
                             <div class="col-md-2">
@@ -140,6 +147,11 @@
             $("#lph").mask('000.000.000.000.000,00', { reverse: true });
             
         });
+        function pdf() {
+                window.open('about:blank','print_popup','width=1000,height=800')
+               
+            }
 
+        
     </script>
 @endsection

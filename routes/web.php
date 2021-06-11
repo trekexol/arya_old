@@ -464,6 +464,7 @@ Route::group(["prefix"=>'nominas'],function(){
     Route::get('calculate/{id}','NominaController@calculate')->name('nominas.calculate');
 
     Route::get('recibovacaciones','NominaController@create_recibo_vacaciones')->name('nominas.create_recibo_vacaciones');
+    Route::get('reciboprestaciones','NominaController@create_recibo_prestaciones')->name('nominas.create_recibo_prestaciones');
 });
 
 
@@ -645,6 +646,7 @@ Route::group(["prefix"=>'nominaformulas'],function(){
 });
 
 Route::group(["prefix"=>'pdfnomina'],function(){
-    Route::post('recibovacaciones','PdfNominaController@imprimirfactura')->name('pdfnomina.vacaciones');
-  
+    Route::post('recibovacaciones','PdfNominaController@imprimirVacaciones')->name('pdfnomina.vacaciones');
+    Route::post('reciboprestaciones','PdfNominaController@imprimirPrestaciones')->name('pdfnomina.prestaciones');
+    
  });

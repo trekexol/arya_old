@@ -24,6 +24,10 @@ class Employee extends Model
         return $this->belongsTo('App\Parroquia', 'parroquia_id');
     }
 
+    public function professions()
+    {
+        return $this->belongsTo('App\Profession', 'profession_id');
+    }
 
 
     public function transports()

@@ -16,6 +16,12 @@ class Profession extends Model
     public function nominas(){
         return $this->belongsToMany('App\Nomina')->withTimesTamps();
     }
+
+    public function employees(){
+        return $this->belongsToMany('App\Employee')->withTimesTamps();
+    }
+
+
     public function permissions(){
         return $this->belongsToMany('App\Permission\Models\Permission')->withTimesTamps();
     }

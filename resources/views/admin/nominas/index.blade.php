@@ -23,7 +23,7 @@
             </a>
         </div>
         <div class="col">
-            <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
+            <a href="{{ route('nominas.create_recibo_prestaciones') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
                 &nbsp Recibo de Prestaciones
             </a>
         </div>
