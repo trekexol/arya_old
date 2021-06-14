@@ -64,7 +64,6 @@
             <a class="collapse-item" href="{{ route('inventarytypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-boxes fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de<br> <div style="text-indent: 22px;">Inventario</div></strong></a>
             <a class="collapse-item" href="{{ route('ratetypes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-donate fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Tasas</strong></a>
             <a class="collapse-item" href="{{ route('nominaformulas') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-calculator fa-sm fa-fw mr-2 text-blue-400"></i><strong>Formulas de Nómina</strong></a>
-            <a class="collapse-item" href="{{ route('nominaformulas.calcular_cantidad_de_lunes') }}" style="color: rgb(255, 81, 0)"> <i class="fas fa-calculator fa-sm fa-fw mr-2 text-blue-400"></i><strong>Calcular dias lunes</strong></a>
            
         </div>
     </div>
