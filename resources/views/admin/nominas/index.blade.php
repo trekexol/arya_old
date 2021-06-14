@@ -28,12 +28,12 @@
             </a>
         </div>
         <div class="col">
-            <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
+            <a href="{{ route('nominas.create_recibo_utilidades') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
                 &nbsp Recibo de Utilidades
             </a>
         </div>
         <div class="col">
-            <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
+            <a href="{{ route('nominas.create_recibo_liquidacion_auto') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
                 &nbsp Calcula Liquidación Auto
             </a>
         </div>

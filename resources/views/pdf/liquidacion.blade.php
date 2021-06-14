@@ -30,9 +30,9 @@
 
 <body>
 
-
-  <br><br><br><br><br><br><br><br><br>
-  <div class="text-center h6">RECIBO DE PRESTACIONES ACUMULADAS</div>
+<div class="small">
+  <br><br><br>
+  <div class="text-center h6">RECIBO DE LIQUIDACION</div>
 
  <div class="small">
    
@@ -61,9 +61,9 @@
     <table style="width: 100%;">
       <tr>
         <th  class="text-center" style="border-bottom-color: white; width: 25%;">Empleado</th>
-        <th  class="text-center">Nombre del Trabajador:</th>
-        <th  class="text-center">Cargo</th>
-        <th  class="text-center">Cédula</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Nombre del Trabajador:</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Cargo</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Cédula</th>
       </tr>
       <tr>
         <td class="text-center font-weight-normal"></td>
@@ -100,11 +100,11 @@
     <table style="width: 100%;">
       <tr>
         <th  class="text-center" style="border-bottom-color: #ffffff; width: 25%;">Tiempo de Servicio</th>
-        <th  class="text-center">Fecha de Ingreso</th>
-        <th  class="text-center">Fecha de Egreso</th>
-        <th  class="text-center">Años</th>
-        <th  class="text-center">Meses</th>
-        <th  class="text-center">Motivo</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Fecha de Ingreso</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Fecha de Egreso</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Años</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Meses</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Motivo</th>
       </tr>
       <tr>
         <td class="text-center font-weight-normal"></td>
@@ -127,26 +127,28 @@
     <table style="width: 100%;">
       <tr>
         <th  class="text-center" style="border-bottom-color: #ffffff; width: 25%;">Periodo Actual</th>
-        <th  class="text-center">Fecha de último Pago</th>
-        <th  class="text-center">Periodo</th>
-        <th  class="text-center">Mes</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Fecha de último Pago</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Periodo</th>
+        <th  class="text-center" style="background: rgb(221, 221, 221)">Mes</th>
       </tr>
       <tr>
         <td class="text-center font-weight-normal"></td>
         <td class="text-center font-weight-normal">{{ $ultima_nomina->date_begin ?? '' }}</td>
-        <td class="text-center font-weight-normal">{{ \Carbon\Carbon::parse($ultima_nomina->date_begin)->format('Y') }}</td>
-        <td class="text-center font-weight-normal">{{ \Carbon\Carbon::parse($ultima_nomina->date_begin)->format('M') }}</td>
+        <td class="text-center font-weight-normal">{{ \Carbon\Carbon::parse($ultima_nomina->date_begin)->format('Y') ?? '' }}</td>
+        <td class="text-center font-weight-normal">{{ \Carbon\Carbon::parse($ultima_nomina->date_begin)->format('M') ?? '' }}</td>
       </tr>  
     </table>
+
+    
 
       <table style="width: 100%;">
         <tr>
           <th  class="text-center" style="border-bottom-color: #ffffff; width: 25%;">Último Salario</th>
-          <th  class="text-center">Último Sueldo</th>
-          <th  class="text-center">Sueldo Diario</th>
-          <th  class="text-center">Alic. Utilidades</th>
-          <th  class="text-center">Alic. Vacaciones</th>
-          <th  class="text-center">Salario Integral</th>
+          <th  class="text-center" style="background: rgb(221, 221, 221)">Último Sueldo</th>
+          <th  class="text-center" style="background: rgb(221, 221, 221)">Sueldo Diario</th>
+          <th  class="text-center" style="background: rgb(221, 221, 221)">Alic. Utilidades</th>
+          <th  class="text-center" style="background: rgb(221, 221, 221)">Alic. Vacaciones</th>
+          <th  class="text-center" style="background: rgb(221, 221, 221)">Salario Integral</th>
         </tr>
         <tr>
           <td class="text-center font-weight-normal"></td>
@@ -159,20 +161,7 @@
       </table>
 
 
-      <table style="width: 100%;">
-        <tr>
-          <th  class="text-center" style="border-bottom-color: #ffffff; width: 25%;">Periodo Actual</th>
-          <th  class="text-center">Fecha de último Pago</th>
-          <th  class="text-center">Periodo</th>
-          <th  class="text-center">Mes</th>
-        </tr>
-        <tr>
-          <td class="text-center font-weight-normal"></td>
-          <td class="text-center font-weight-normal">{{ $ultima_nomina->date_begin ?? '' }}</td>
-          <td class="text-center font-weight-normal">{{ \Carbon\Carbon::parse($ultima_nomina->date_begin)->format('Y') }}</td>
-          <td class="text-center font-weight-normal">{{ \Carbon\Carbon::parse($ultima_nomina->date_begin)->format('M') }}</td>
-        </tr>  
-      </table>
+   
   
         <table style="width: 100%;">
           <tr>
@@ -184,7 +173,7 @@
 
         <table style="width: 100%;">
           <tr>
-            <th  class="text-left" >1 - PRESTACIONES SOCIALES</th>
+            <th  class="text-left" style="background: rgb(221, 221, 221)">1 - PRESTACIONES SOCIALES</th>
           </tr>
         </table>
 
@@ -208,7 +197,7 @@
 
         <table style="width: 100%;">
           <tr>
-            <th  class="text-left" >2 - INTERESES SOBRE PRESTACIONES SOCIALES</th>
+            <th  class="text-left" style="background: rgb(221, 221, 221)">2 - INTERESES SOBRE PRESTACIONES SOCIALES</th>
           </tr>
         </table>
 
@@ -225,9 +214,124 @@
           </tr>
         </table>
 
+        <?php 
+        
+        $total_vacaciones_bonificaciones = $employee->otras_asignaciones;
+        ?>
+
+
         <table style="width: 100%;">
           <tr>
-            <th  class="text-left" >3 - TOTAL DE PRESTACIÓNES</th>
+            <th  class="text-left" style="background: rgb(221, 221, 221)">3 - VACACIONES Y BONIFICACIONES</th>
+          </tr>
+        </table>
+
+        <table style="width: 100%;">
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">Dias de Vacaciones: Dia(s)</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+          <tr>
+            <td  class="text-left" style="width: 68%;">Bono Vacacional: Dia(s)</td>
+            <td  class="text-center" style="width: 16%;"></td>
+            <td  class="text-center" style="width: 16%;"></td>
+          </tr>
+          <tr>
+            <td  class="text-left" style="width: 68%;">Dias Vacaciones Fraccionadas: Dia(s)</td>
+            <td  class="text-center" style="width: 16%;"></td>
+            <td  class="text-center" style="width: 16%;"></td>
+          </tr>
+          <tr>
+            <td  class="text-left" style="width: 68%;">Bono Vacacional Fraccionado: Dia(s) </td>
+            <td  class="text-center" style="width: 16%;"></td>
+            <td  class="text-center" style="width: 16%;"></td>
+          </tr>
+          <tr>
+            <td  class="text-left" style="width: 68%;">Otras Asignaciones:</td>
+            <td  class="text-right" style="width: 16%;">{{ number_format($employee->otras_asignaciones, 2, ',', '.') }}</td>
+            <td  class="text-center" style="width: 16%;"></td>
+          </tr>
+          <tr>
+            <td  class="text-left" style="width: 68%;">Total Vacaciones y Bonificaciones:</td>
+            <td  class="text-right" style="width: 16%;"></td>
+            <td  class="text-center" style="width: 16%;">{{ number_format($total_vacaciones_bonificaciones, 2, ',', '.') }}</td>
+          </tr>
+        </table>
+
+
+        <table style="width: 100%;">
+          <tr>
+            <th  class="text-left" style="background: rgb(221, 221, 221)">4 - UTILIDADES:</th>
+          </tr>
+        </table>
+
+        <table style="width: 100%;">
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">Total de Utilidades:</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+        </table>
+
+
+        <?php 
+        
+        $total_otras_deducciones = 0;
+
+
+        ?>
+
+
+        <table style="width: 100%;">
+          <tr>
+            <th  class="text-left" style="background: rgb(221, 221, 221)">5 - OTRAS DEDUCIONES:</th>
+          </tr>
+        </table>
+
+        <table style="width: 100%;">
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">Seguro Social: {{ $employee->lunes ?? 0 }} lunes</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">F.A.O.V %</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">I.N.C.E.S %</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">Anticipo de Prestaciones</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">Dias No Laborados * {{ $employee->dias_no_laborados ?? 0 }}</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">Otras Deducciones</th>
+            <th  class="text-center" style="width: 16%;">{{ number_format($employee->otras_deducciones, 2, ',', '.')}}</th>
+            <th  class="text-center" style="width: 16%;"></th>
+          </tr>
+          <tr>
+            <th  class="text-left font-weight-normal" style="width: 68%;">Total Otras Deducciones</th>
+            <th  class="text-center" style="width: 16%;"></th>
+            <th  class="text-center" style="width: 16%;">{{ number_format($total_otras_deducciones, 2, ',', '.')}}</th>
+          </tr>
+        </table>
+
+
+        <table style="width: 100%;">
+          <tr>
+            <th  class="text-left" style="background: rgb(221, 221, 221)">TOTAL LIQUIDACIÓN
+            </th>
           </tr>
         </table>
 
@@ -239,8 +343,9 @@
           </tr>
         </table>
 
-        <div class="small">El suscrito trabajador declara haber recibido de la empresa EMPRESA DEMO C.A. la cantidad de Bolivares  a su entera satisfacción por concepto de pago completo e indemnizaciones, hasta la fecha de la presente liquidación, no teniendo nada
-         que reclamar en relación a salarios e indemnizaciones causadas por el contrato de trabajo que hoy queda terminado.
+        <div class="small">El suscrito trabajador declara haber recibido de la empresa EMPRESA DEMO C.A. la cantidad de Bolivares a su entera satisfacción por concepto de pago completo e indemnizaciones, hasta la fecha de la
+          presente liquidación, no teniendo nada que reclamar en relación a salarios e indemnizaciones causadas por el contrato de trabajo que hoy queda
+          terminado
         </div>
       
       <br>
@@ -261,6 +366,7 @@
         </tr>
       </table>
       
+</div>
 </div>
  
 </body>

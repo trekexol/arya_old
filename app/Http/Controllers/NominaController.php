@@ -47,31 +47,7 @@ class NominaController extends Controller
         return view('admin.nominas.create',compact('professions','datenow'));
     }
 
-    public function create_recibo_vacaciones()
-    {
-        $employees = Employee::orderBY('nombres','asc')->get();
-
-        $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');
-
-        
-        $dateend =  date("Y-m-d",strtotime($date."+ 15 days")); 
-        
-
-        return view('admin.nominas.create_recibo_vacaciones',compact('employees','datenow','dateend'));
-    }
-
-
-    public function create_recibo_prestaciones()
-    {
-        $employees = Employee::orderBY('nombres','asc')->get();
-
-        $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');
-
-        return view('admin.nominas.create_recibo_prestaciones',compact('employees','datenow'));
-    }
-
+   
     public function selectemployee($id)
     {
 

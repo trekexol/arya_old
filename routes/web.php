@@ -463,8 +463,7 @@ Route::group(["prefix"=>'nominas'],function(){
  
     Route::get('calculate/{id}','NominaController@calculate')->name('nominas.calculate');
 
-    Route::get('recibovacaciones','NominaController@create_recibo_vacaciones')->name('nominas.create_recibo_vacaciones');
-    Route::get('reciboprestaciones','NominaController@create_recibo_prestaciones')->name('nominas.create_recibo_prestaciones');
+    
 });
 
 
@@ -648,5 +647,12 @@ Route::group(["prefix"=>'nominaformulas'],function(){
 Route::group(["prefix"=>'pdfnomina'],function(){
     Route::post('recibovacaciones','PdfNominaController@imprimirVacaciones')->name('pdfnomina.vacaciones');
     Route::post('reciboprestaciones','PdfNominaController@imprimirPrestaciones')->name('pdfnomina.prestaciones');
+    Route::post('reciboutilidades','PdfNominaController@imprimirUtilidades')->name('pdfnomina.utilidades');
+    Route::post('reciboliquidacionauto','PdfNominaController@imprimirLiquidacionAuto')->name('pdfnomina.liquidacion_auto');
+
+    Route::get('recibovacaciones','PdfNominaController@create_recibo_vacaciones')->name('nominas.create_recibo_vacaciones');
+    Route::get('reciboprestaciones','PdfNominaController@create_recibo_prestaciones')->name('nominas.create_recibo_prestaciones');
+    Route::get('reciboutilidades','PdfNominaController@create_recibo_utilidades')->name('nominas.create_recibo_utilidades');
+    Route::get('reciboliquidacionauto','PdfNominaController@create_recibo_liquidacion_auto')->name('nominas.create_recibo_liquidacion_auto');
     
  });

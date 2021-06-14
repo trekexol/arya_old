@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-center font-weight-bold h3">Registro de Recibo de Vacaciones</div>
+                <div class="card-header text-center font-weight-bold h3">Registro Recibo de Vacaciones</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('pdfnomina.vacaciones') }}" target="print_popup">

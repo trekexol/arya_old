@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Employee;
+use App\Nomina;
+use App\NominaCalculation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -11,6 +13,60 @@ use Illuminate\Support\Facades\DB;
 
 class PdfNominaController extends Controller
 {
+
+    public function create_recibo_vacaciones()
+    {
+        $employees = Employee::orderBY('nombres','asc')->get();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+
+        
+        $dateend =  date("Y-m-d",strtotime($date."+ 15 days")); 
+        
+
+        return view('admin.nominas.create_recibo_vacaciones',compact('employees','datenow','dateend'));
+    }
+
+
+    public function create_recibo_prestaciones()
+    {
+        $employees = Employee::orderBY('nombres','asc')->get();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+
+        return view('admin.nominas.create_recibo_prestaciones',compact('employees','datenow'));
+    }
+
+    public function create_recibo_utilidades()
+    {
+        $employees = Employee::orderBY('nombres','asc')->get();
+
+        $date = Carbon::now(); 
+        $datenow = $date->format('Y-m-d');
+        
+        $dateend =  date("Y-m-d",strtotime($date."+ 15 days")); 
+
+        return view('admin.nominas.create_recibo_utilidades',compact('employees','datenow','dateend'));
+    }
+
+
+    public function create_recibo_liquidacion_auto()
+    {
+        $employees = Employee::orderBY('nombres','asc')->get();
+
+        $date = Carbon::now(); 
+        $datenow = $date->format('Y-m-d');
+        
+        $dateend =  date("Y-m-d",strtotime($date."+ 15 days")); 
+
+        return view('admin.nominas.create_recibo_liquidacion_auto',compact('employees','datenow','dateend'));
+    }
+
+
+
+
     function imprimirVacaciones(Request $request){
       
         $guardar = request('guardar');
@@ -49,7 +105,7 @@ class PdfNominaController extends Controller
             $pdf = $pdf->loadView('pdf.bono_vacaciones',compact('employee','datenow'));
 
             if(isset($guardar)){
-                return $pdf->download('invoice.pdf');
+                return $pdf->download('vacaciones.pdf');
             }
             
             return $pdf->stream();
@@ -74,8 +130,99 @@ class PdfNominaController extends Controller
 
             $employee->date_begin = request('date_begin');
            
+            $ultima_nomina = Nomina::where('id_profession',$employee->profession_id)
+                                                ->latest()->first();
+
+            $nomina_calculation = NominaCalculation::where('id_nomina',$ultima_nomina->id)->get();                                    
          
-            $pdf = $pdf->loadView('pdf.prestaciones',compact('employee','datenow'));
+            $pdf = $pdf->loadView('pdf.prestaciones',compact('employee','datenow','ultima_nomina','nomina_calculation'));
+            return $pdf->stream();
+    
+        }else{
+            return redirect('/nominas')->withDanger('El empleado no existe');
+        } 
+            
+    }
+
+    function imprimirUtilidades(Request $request){
+      
+        $guardar = request('guardar');
+
+        $pdf = App::make('dompdf.wrapper');
+
+        $employee = Employee::find(request('id_employee'));
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+        
+
+        if(isset($employee)){
+
+            $employee->date_end = request('date_end');
+            $employee->days = request('days');
+           
+
+            
+            $pdf = $pdf->loadView('pdf.utilidades',compact('employee','datenow'));
+
+            if(isset($guardar)){
+                return $pdf->download('utilidades.pdf');
+            }
+            
+            return $pdf->stream();
+    
+        }else{
+            return redirect('/nominas')->withDanger('El empleado no existe');
+        } 
+            
+    }
+
+    function imprimirLiquidacionAuto(Request $request){
+      
+        $guardar = request('guardar');
+
+        $pdf = App::make('dompdf.wrapper');
+
+        $employee = Employee::find(request('id_employee'));
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+        
+
+        if(isset($employee)){
+
+            $employee->date_begin = request('date_begin');
+            
+            $employee->motivo = request('motivo');
+            $employee->utilidad = request('utilidad');
+          
+            $employee->faov = request('faov');
+            $employee->inces = request('inces');
+            $employee->adicionales = request('adicionales');
+            $employee->bono_alimenticio = request('bono_alimenticio');
+            
+            $employee->lunes = request('lunes');
+            $employee->dias_no_laborados = request('dias_no_laborados');
+            $employee->meses_utilidades = request('meses_utilidades');
+
+            $sin_formato_otras_asignaciones = str_replace(',', '.', str_replace('.', '', request('otras_asignaciones')));
+            $sin_formato_otras_deducciones = str_replace(',', '.', str_replace('.', '', request('otras_deducciones')));
+
+            $employee->otras_asignaciones = $sin_formato_otras_asignaciones;
+            $employee->otras_deducciones = $sin_formato_otras_deducciones;
+
+
+            $ultima_nomina = Nomina::where('id_profession',$employee->profession_id)
+                                    ->latest()->first();
+
+            $nomina_calculation = NominaCalculation::where('id_nomina',$ultima_nomina->id)->get();     
+
+            $pdf = $pdf->loadView('pdf.liquidacion',compact('employee','datenow','ultima_nomina','nomina_calculation'));
+
+            if(isset($guardar)){
+                return $pdf->download('liquidacion.pdf');
+            }
+            
             return $pdf->stream();
     
         }else{
