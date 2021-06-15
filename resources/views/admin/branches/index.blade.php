@@ -50,7 +50,7 @@
                     @else  
                         @foreach ($branches as $var)
                             <tr>
-                                <td>{{ $var->companies['name']}}</td>
+                                <td>{{ $var->companies['razon_social'] ?? ''}}</td>
                                 <td>{{$var->parroquias['descripcion']}}</td>
                                 <td>{{$var->description}}</td>
                                 <td>{{$var->direction}}</td>

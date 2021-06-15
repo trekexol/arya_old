@@ -70,7 +70,7 @@
                             <label for="telefono1" class="col-md-2 col-form-label text-md-right">Teléfono</label>
 
                             <div class="col-md-4">
-                                <input id="telefono1" type="text" class="form-control @error('telefono1') is-invalid @enderror" name="telefono1" value="{{ old('telefono1') }}" required autocomplete="telefono1">
+                                <input id="telefono1" type="text" class="form-control @error('telefono1') is-invalid @enderror" name="telefono1" value="{{ old('telefono1') }}" placeholder="Ej: 0414 xxx-xxxx" required autocomplete="telefono1">
 
                                 @error('telefono1')
                                     <span class="invalid-feedback" role="alert">

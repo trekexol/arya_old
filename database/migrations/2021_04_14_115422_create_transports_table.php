@@ -21,7 +21,7 @@ class CreateTransportsTable extends Migration
             
             $table->string('type',20);
             $table->string('placa',20);
-            $table->string('photo_transport',150);
+            $table->string('photo_transport',150)->nullable();
             $table->string('status',1);
 
             $table->foreign('modelo_id')->references('id')->on('modelos');
