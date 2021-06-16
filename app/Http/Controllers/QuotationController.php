@@ -132,9 +132,11 @@ class QuotationController extends Controller
             
                 
                 $date = Carbon::now();
-                $datenow = $date->format('Y-m-d');    
+                $datenow = $date->format('Y-m-d');  
+                
+                $bcv = $this->search_bcv();
         
-                return view('admin.quotations.create',compact('quotation','inventories_quotations','datenow'));
+                return view('admin.quotations.create',compact('quotation','inventories_quotations','datenow','bcv'));
             }else{
                 return redirect('/quotations')->withDanger('La cotizacion no existe');
             } 
@@ -142,6 +144,27 @@ class QuotationController extends Controller
 
 
     }
+            public function search_bcv()
+            {
+                /*Buscar el indice bcv*/
+                $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+                $pageDocument = @file_get_contents($urlToGet);
+                preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+                if ($cap[0] == array()){ // VALIDAR Concidencia
+                    $titulo = '0,00';
+                } else {
+                    $titulo = $cap[1][2];
+                }
+
+                $bcv_con_formato = $titulo;
+                $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+                /*-------------------------- */
+                return $bcv;
+
+            }
     public function createproduct($id_quotation,$id_inventory)
     {
         $quotation = null;
@@ -169,7 +192,9 @@ class QuotationController extends Controller
                     $date = Carbon::now();
                     $datenow = $date->format('Y-m-d');    
 
-                    return view('admin.quotations.create',compact('quotation','inventories_quotations','inventory','datenow'));
+                    $bcv = $this->search_bcv();
+
+                    return view('admin.quotations.create',compact('quotation','inventories_quotations','inventory','bcv','datenow'));
 
                 }else{
                     return redirect('/quotations')->withDanger('El Producto no existe');
@@ -317,7 +342,10 @@ class QuotationController extends Controller
         if($var->id_inventory == -1){
             return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
         }
-        $var->amount = request('amount');
+
+        $amount_sin_formato = str_replace(',', '.', str_replace('.', '',request('amount')));
+
+        $var->amount = $amount_sin_formato;
 
         $var->discount = request('discount');
 

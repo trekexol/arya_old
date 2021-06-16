@@ -55,10 +55,11 @@
                             </div>
                             
                         </div>
+
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
                             <div class="col-md-4">
-                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($quotation->total_factura, 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
+                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($quotation->total_factura * ($bcv ?? 1) , 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
     
                                 @error('total_factura')
                                     <span class="invalid-feedback" role="alert">
@@ -68,7 +69,7 @@
                             </div>
                             <label for="base_imponible" class="col-md-2 col-form-label text-md-right">Base Imponible:</label>
                             <div class="col-md-3">
-                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($quotation->base_imponible, 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
+                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($quotation->base_imponible * ($bcv ?? 1) , 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
                                 @error('base_imponible')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -215,7 +216,7 @@
                         <input type="hidden" id="base_imponible_form" name="base_imponible_form"  readonly>
 
                         <!--Total del pago que se va a realizar-->
-                        <input type="hidden" id="sub_total_form" name="sub_total_form" value="{{ $quotation->total_factura }}" readonly>
+                        <input type="hidden" id="sub_total_form" name="sub_total_form" value="{{ $quotation->total_factura * ($bcv ?? 1)}}" readonly>
 
                       
 
@@ -797,12 +798,12 @@
 
                 //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
 
-                let totalFactura = "<?php echo $quotation->total_factura ?>";       
+                let totalFactura = "<?php echo $quotation->total_factura  * ($bcv ?? 1) ?>";       
 
                 //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-                let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
+                let totalBaseImponible = "<?php echo $quotation->base_imponible  * ($bcv ?? 1) ?>";
 
-                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
+                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible  * ($bcv ?? 1) ; ?>") / 100;  
 
 
 
@@ -832,7 +833,8 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+               
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -845,7 +847,8 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+                
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -869,8 +872,8 @@
 
                // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
-
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+                
                 document.getElementById("total_pay").value =  total_payformat;
 
                 document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
@@ -892,12 +895,12 @@
 
                 //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
 
-                let totalFactura = "<?php echo $quotation->total_factura ?>";       
+                let totalFactura = "<?php echo $quotation->total_factura  * ($bcv ?? 1) ?>";       
 
                 //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-                let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
+                let totalBaseImponible = "<?php echo $quotation->base_imponible  * ($bcv ?? 1) ?>";
 
-                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
+                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible  * ($bcv ?? 1) ; ?>") / 100;  
 
 
                 /*Toma la Base y la envia por form*/
@@ -922,8 +925,8 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
-
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+               
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
 
@@ -935,7 +938,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("grand_total").value = grand_totalformat;
 
@@ -958,7 +961,7 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 
@@ -1014,7 +1017,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -1027,7 +1030,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -1050,7 +1053,7 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 

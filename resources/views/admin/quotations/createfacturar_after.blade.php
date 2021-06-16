@@ -774,7 +774,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -787,7 +787,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -811,7 +811,7 @@
 
                // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 
@@ -864,7 +864,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -877,7 +877,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("grand_total").value = grand_totalformat;
 
@@ -900,7 +900,7 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 
@@ -956,7 +956,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -969,7 +969,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -992,7 +992,7 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 

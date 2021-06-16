@@ -78,9 +78,11 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
+             $bcv = $this->search_bcv();
+             
              
      
-             return view('admin.quotations.createfacturar',compact('quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum'));
+             return view('admin.quotations.createfacturar',compact('quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','bcv','anticipos_sum'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -181,7 +183,27 @@ class FacturarController extends Controller
     }
 
 
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
 
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        } else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
+    }
 
 
 
@@ -194,6 +216,12 @@ class FacturarController extends Controller
         
         
         ]);
+
+        $quotation = Quotation::findOrFail(request('id_quotation'));
+
+        if(isset($quotation->date_billing)){
+            return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Ya esta factura fue procesada!');
+        }else{
 
         
 
@@ -220,7 +248,7 @@ class FacturarController extends Controller
 
         //-----------------------
 
-        $quotation = Quotation::findOrFail(request('id_quotation'));
+        
 
      
         $payment_type = request('payment_type');
@@ -1090,10 +1118,7 @@ class FacturarController extends Controller
 
             $base_imponible = request('base_imponible_form');
 
-            $verification_detail = DetailVoucher::where('id_invoice',$quotation->id)->first();
-
-            /*Aplicamos los movimientos Contables */
-            if(!isset($verification_detail)){
+           
               
                 $header_voucher  = new HeaderVoucher();
 
@@ -1118,7 +1143,7 @@ class FacturarController extends Controller
 
                 //Ingresos por SubSegmento de Bienes
 
-                $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
+                $account_subsegmento = Account::where('description', 'like', 'Ingresos por SubSegmento de Bienes')->first();
 
                 if(isset($account_subsegmento)){
                     $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
@@ -1153,34 +1178,25 @@ class FacturarController extends Controller
                 }
                 /*----------- */
 
-
-            }
-
-            /*------------------------------------------------- */
-
+                    /*Verificamos si el cliente tiene anticipos activos */
+                    if($anticipo != 0){
+                        DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+                        ->where('status', '=', '1')
+                        ->update(['status' => 'C']);
             
+                    }
+                    /*------------------------------------------------- */
 
-            /*Verificamos si el cliente tiene anticipos activos */
+                    return redirect('quotations/facturado/'.$quotation->id.'')->withSuccess('Factura Guardada con Exito!');
 
-            if($anticipo != 0){
-                    DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
-                    ->where('status', '=', '1')
-                    ->update(['status' => 'C']);
-        
-            }
-
-            
-
-
-                /*------------------------------------------------- */
-
+           
         }else{
             return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('La suma de los pagos es diferente al monto Total a Pagar!');
         }
 
         
-
-        return redirect('quotations/facturado/'.$quotation->id.'')->withSuccess('Factura Guardada con Exito!');
+    }
+        
     }
 
 
@@ -1382,8 +1398,10 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
+             $bcv = $this->search_bcv();
+
              
-             return view('admin.quotations.createfacturado',compact('quotation','payment_quotations', 'datenow'));
+             return view('admin.quotations.createfacturado',compact('quotation','payment_quotations', 'datenow','bcv'));
             }else{
              return redirect('/invoices')->withDanger('La factura no existe');
          } 
@@ -1450,9 +1468,9 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
-             
+             $bcv = $this->search_bcv();
      
-             return view('admin.quotations.createfacturar_after',compact('quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum'));
+             return view('admin.quotations.createfacturar_after',compact('quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum','bcv'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 

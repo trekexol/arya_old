@@ -1252,9 +1252,9 @@ class ExpensesAndPurchaseController extends Controller
                         $this->add_movement($header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sub_total,0);
                     }
     
-                    //Debito Fiscal IVA por Pagar
+                    //Credito Fiscal IVA por Pagar
     
-                    $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
+                    $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA Credito Fiscal')->first();
                         
                     if(isset($account_credito_iva_fiscal)){
                         if($sin_formato_amount_iva != 0){
@@ -1397,7 +1397,7 @@ class ExpensesAndPurchaseController extends Controller
 
         //IVA credito Fiscal
 
-        $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
+        $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA Credito Fiscal')->first();
             
         if(isset($account_credito_iva_fiscal)){
             if($sin_formato_amount_iva != 0){

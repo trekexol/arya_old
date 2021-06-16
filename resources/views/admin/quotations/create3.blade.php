@@ -208,17 +208,13 @@
                                         @endif
                                     </div>
                                     <div class="form-group col-md-2">
-                                        @if(isset($inventory->products['price']) && (isset($bcv))) 
-                                            <?php 
-                                                $product_Bs = $inventory->products['price'] * $bcv;
-                                            ?>
+                                        @if(isset($inventory->products['price']) && (isset($bcv)))
                                             <label for="cost" >Precio</label>
-                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($product_Bs, 2, ',', '.') ?? '' }}" readonly required autocomplete="cost">
+                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($inventory->products['price'] * $bcv, 2, ',', '.') ?? '' }}" readonly required autocomplete="cost">
                                         @else
                                             <label for="cost" >Precio</label>
-                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price']  ?? '' }}" readonly required autocomplete="cost">
+                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($inventory->products['price'], 2, ',', '.')  ?? '' }}" readonly required autocomplete="cost">
                                         @endif
-
                                         
                                         @error('cost')
                                             <span class="invalid-feedback" role="alert">
@@ -269,18 +265,12 @@
                                         <?php
                                             $suma = 0.00;
                                         ?>
-                                       
                                             @foreach ($inventories_quotations as $var)
 
                                             <?php
                                             $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
                                             $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
-
-                                                if(isset($bcv)){
-                                                    $product_Bs = $total_less_percentage * $bcv;
-                                                }
-                                            
                                             ?>
                                                 <tr>
                                                 <td style="text-align: right">{{ $var->code}}</td>
@@ -293,15 +283,14 @@
                                                 <td style="text-align: right">{{ $var->amount_quotation}}</td>
                                                 <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td>
                                                 <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>
-                                                @if(isset($bcv))
-                                                    <td style="text-align: right">{{number_format($product_Bs, 2, ',', '.')}}</td>
-                                                @else
-                                                    <td style="text-align: right">{{number_format($total_less_percentage, 2, ',', '.')}}</td>
-                                                @endif
 
+                                                @if(isset($bcv))
+                                                    <td style="text-align: right">{{number_format($total_less_percentage * $bcv, 2, ',', '.')}}</td>
+                                                @else
+                                                     <td style="text-align: right">{{number_format($total_less_percentage, 2, ',', '.')}}</td>
+                                               @endif
                                                 <?php
                                                     $suma += $total_less_percentage;
-                                                    
                                                 ?>
                                                     <td style="text-align: right">
                                                     <a href="{{ route('quotations.productedit',$var->quotation_products_id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
@@ -309,20 +298,18 @@
                                             
                                                 </tr>
                                             @endforeach
-
-                                            <?php
-                                                if(isset($bcv)){
-                                                    $suma = $suma * $bcv;
-                                                }
-                                            ?>
                                             <tr>
                                                 <td style="text-align: right">-------------</td>
                                                 <td style="text-align: right">-------------</td>
                                                 <td style="text-align: right">-------------</td>
                                                 <td style="text-align: right">-------------</td>
                                                 <td style="text-align: right">Total</td>
-                                                <td style="text-align: right">{{number_format($suma, 2, ',', '.')}}</td>
-                                                
+
+                                                @if(isset($bcv))
+                                                    <td style="text-align: right">{{number_format($suma * $bcv, 2, ',', '.')}}</td>
+                                                @else
+                                                    <td style="text-align: right">{{number_format($suma, 2, ',', '.')}}</td>
+                                                @endif
                                                 <td style="text-align: right"></td>
                                             
                                                 </tr>
