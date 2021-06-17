@@ -87,7 +87,7 @@
                 <a class="collapse-item" href="{{route('quotations.indexdeliverynote')}}" style="color: rgb(255, 81, 0)"> <i class="fas fa-sort-amount-up-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Notas de Entrega</strong></a>
                 <a class="collapse-item" href="{{route('clients')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Clientes</strong></a>
                 <a class="collapse-item" href="{{route('vendors')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Vendedores</strong></a>
-                <a class="collapse-item" href="{{route('billings')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Ventas</strong></a>
+                <a class="collapse-item" href="{{route('sales')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-dollar-sign fa-sm fa-fw mr-2 text-blue-400"></i><strong>Ventas</strong></a>
                 <a class="collapse-item" href="{{route('anticipos')}}" style="color: rgb(255, 81, 0)"><i class="fas fa-hand-holding-usd fa-sm fa-fw mr-2 text-blue-400"></i><strong>Anticipos Clientes</strong></a>
               <!--      <a class="collapse-item" href="buttons.html">Listar Factura</a>
                     <a class="collapse-item" href="buttons.html">Notas de Entrega</a>

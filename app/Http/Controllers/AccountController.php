@@ -43,7 +43,7 @@ class AccountController extends Controller
         $users_role =   $user->role_id;
         if($users_role == '1'){
              
-            $detailvouchers = DetailVoucher::where('id_account',$id_account)->get();
+            $detailvouchers = DetailVoucher::where('id_account',$id_account)->orderBy('id','desc')->get();
             $account = Account::find($id_account);
 
          }else if($users_role == '2'){

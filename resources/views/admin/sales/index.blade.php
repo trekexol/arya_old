@@ -75,15 +75,22 @@
             </thead>
             
             <tbody>
+
+                
+
+
                 @if (empty($inventories_quotations))
                 @else  
                     @foreach ($inventories_quotations as $var)
+                        <?php 
+                        $total = $var->amount_sales * $var->price * ($bcv ?? 1);
+                        ?>
                         <tr>
                             <td class="text-center font-weight-bold">{{$var->code}}</td>
                             <td class="text-center font-weight-bold">{{$var->description}}</td>
                             <td class="text-center font-weight-bold">{{$var->type}}</td>
                             <td class="text-right font-weight-bold">{{number_format($var->amount_sales, 2, ',', '.')}}</td>
-                            <td class="text-right font-weight-bold">{{number_format($var->amount_sales * $var->amount, 2, ',', '.')}}</td>
+                            <td class="text-right font-weight-bold">{{number_format($total, 2, ',', '.')}}</td>
                             
                             
                         </tr>     

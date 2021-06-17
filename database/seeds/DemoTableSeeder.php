@@ -44,39 +44,47 @@ class DemoTableSeeder extends Seeder
             'status' => '1',
         ]);
         DB::table('positions')->insert([
+            'id' => 1,
             'name' => 'Ingeniero',
             'description' => 'Se encarga del sistema',
             'status' => '1',
         ]);
         DB::table('positions')->insert([
+            'id' => 2,
             'name' => 'Contador',
             'description' => 'Se encarga de las finanzas',
             'status' => '1',
         ]);
 
         DB::table('unit_of_measures')->insert([
+            'id' => 1,
             'code' => 'Kgs',
             'description' => 'Kilogramos',
             'status' => '1',
         ]);
         DB::table('unit_of_measures')->insert([
+            'id' => 2,
             'code' => 'Lts',
             'description' => 'Litros',
             'status' => '1',
         ]);
         DB::table('modelos')->insert([
+            'id' => 1,
             'description' => 'Chevrolet',
             'status' => '1',
         ]);
         DB::table('modelos')->insert([
+            'id' => 2,
             'description' => 'Toyota',
             'status' => '1',
         ]);
         DB::table('colors')->insert([
+            'id' => 1,
             'description' => 'Negro',
             'status' => '1',
         ]);
         DB::table('colors')->insert([
+            'id' => 2,
             'description' => 'Blanco',
             'status' => '1',
         ]);
@@ -129,6 +137,7 @@ class DemoTableSeeder extends Seeder
         ]);
 
         DB::table('branches')->insert([
+            'id' => 1,
             'company_id' => 1,
             'parroquia_id' => 10111,
             'description' => 'Sucursal Principal',
@@ -142,16 +151,19 @@ class DemoTableSeeder extends Seeder
         ]);
 
         DB::table('academiclevels')->insert([
+            'id' => 1,
             'name' => 'Licenciado',
             'description' => 'Graduado Universitario',
             'status' => '1',
         ]);
         DB::table('academiclevels')->insert([
+            'id' => 2,
             'name' => 'Bachiller',
             'description' => 'Finalizo Bachillerato',
             'status' => '1',
         ]);
         DB::table('employees')->insert([
+            'id' => 1,
             'position_id' => 1,
             'salary_types_id' => 1,
             'profession_id' => 1,
@@ -160,18 +172,71 @@ class DemoTableSeeder extends Seeder
             'parroquia_id' => 10102,
             'branch_id' => 1,
             'id_empleado' => '26.396.591',
-            'nombres' => 'Empleado',
-            'apellidos' => 'Bachiller',
+            'nombres' => 'Primer Empleado',
+            'apellidos' => 'Prueba',
             'fecha_ingreso' => '2021-04-01',
             'fecha_nacimiento' => '1997-09-09',
             'direccion' => 'Fuerzas Armadas',
             'monto_pago' => 1561651156.10,
             'email' => 'cefreitas.16@gmail.com',
-            'telefono1' => '0414 236-1595',
+            'telefono1' => '0414 236-1514',
             'acumulado_prestaciones' => 0,
             'acumulado_utilidades' => 0,
             'amount_utilities' => 'Ma',
             'status' => '1',
         ]);
+        DB::table('Vendors')->insert([
+            'id' => 1,
+            'parroquia_id' => 10113,
+            'comision_id' => 1,
+            'employee_id' => 1,
+            'user_id' => 1,
+            'code' => '0001',
+            'cedula_rif' => '27.615.651',
+            'name' => 'Primer Vendedor',
+            'surname' => 'Prueba',
+            'email' => 'Eduardoperez17@gmail.com',
+            'phone' => '0414 255-1545',
+            'phone2' => '0412 255-1545',
+            'comision' => 0,
+            'status' => '1',
+        ]);
+        DB::table('clients')->insert([
+            'id' => 1,
+            'id_vendor' => 1,
+            'id_user' => 1,
+            'type_code' => 'V-',
+            'cedula_rif' => '17.615.785',
+            'name' => 'Primer Cliente',
+            'direction' => 'Chacao',
+            'city' => 'Caracas',
+            'country' => 'Venezuela',
+            'phone1' => '0414 265-1651',
+            'phone2' => '0424 965-2952',
+            'days_credit' => 9,
+            'amount_max_credit' => 999999999999.99,
+            'percentage_retencion_iva' => 12,
+            'percentage_retencion_islr' => 10,
+            'status' => '1',
+        ]);
+        /*DB::table('products')->insert([
+            'id' => 1,
+            'segment_id' => 2,
+            'subsegment_id' => 2,
+            'id_user' => 1,
+            'type_code' => 'V-',
+            'cedula_rif' => '17.615.785',
+            'name' => 'Primer Cliente',
+            'direction' => 'Chacao',
+            'city' => 'Caracas',
+            'country' => 'Venezuela',
+            'phone1' => '0414 265-1651',
+            'phone2' => '0424 965-2952',
+            'days_credit' => 9,
+            'amount_max_credit' => 999999999999.99,
+            'percentage_retencion_iva' => 12,
+            'percentage_retencion_islr' => 10,
+            'status' => '1',
+        ]);*/
     }
 }

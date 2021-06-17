@@ -9,11 +9,17 @@
   @include('admin.layouts.danger')    {{-- EDITAR --}}
   @include('admin.layouts.delete')    {{-- DELELTE --}}
   {{-- VALIDACIONES-RESPUESTA --}}
+  <!-- Page Heading -->
+  <div class="row py-lg-2">
+    <div class="col-md-6">
+        <h2>Seleccionar Cliente</h2>
+    </div>
+    
+  </div>
+
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h2 class="m-0 font-weight-bold text-primary">Clientes</h2>
-    </div>
+    
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">

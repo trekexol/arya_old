@@ -83,12 +83,12 @@
                         <tr>
                             <td >
                                 
-                            <a href="{{ route('quotations.create',$quotation->id) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                            <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1)}}" title="Seleccionar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{$quotation->serie}}</td>
                             <td>{{ $quotation->clients['name']}}</td>
                             <td>{{ $quotation->vendors['name']}}</td>
-                            <td>{{ $quotation->transports['placa']}}</td>
+                            <td>{{ $quotation->transports['placa'] ?? ''}}</td>
                             <td>{{$quotation->date_quotation}}</td>
                             <td>{{$quotation->date_delivery_note}}</td>
                         </tr>     
@@ -100,4 +100,17 @@
     </div>
 </div>
   
+@endsection
+
+@section('javascript')
+
+<script>
+    $('#dataTable').dataTable( {
+      "ordering": false,
+      "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+            'iDisplayLength': '50'
+    } );
+</script>
+    
 @endsection

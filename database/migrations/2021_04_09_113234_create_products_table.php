@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('segment_id');
             $table->unsignedBigInteger('subsegment_id');
             $table->unsignedBigInteger('unit_of_measure_id');
+            $table->unsignedBigInteger('id_user');
             $table->string('code_comercial',20)->nullable();
             $table->string('type',15);
             $table->string('description',150);
@@ -36,6 +37,7 @@ class CreateProductsTable extends Migration
             $table->foreign('segment_id')->references('id')->on('segments');
             $table->foreign('subsegment_id')->references('id')->on('subsegments');
             $table->foreign('unit_of_measure_id')->references('id')->on('unit_of_measures');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Anticipo;
 use App\Client;
+use App\DetailVoucher;
+use App\HeaderVoucher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,39 +99,93 @@ class AnticipoController extends Controller
    public function store(Request $request)
     {
    
-    $data = request()->validate([
+        $data = request()->validate([
+            
         
-       
-        'date_begin'         =>'required',
-        'id_client'         =>'required',
-        'id_account'         =>'required',
-        'id_user'         =>'required',
+            'date_begin'         =>'required',
+            'id_client'         =>'required',
+            'id_account'         =>'required',
+            'id_user'         =>'required',
 
-        'amount'         =>'required',
+            'amount'         =>'required',
 
-    ]);
+        ]);
 
-    $var = new anticipo();
+        $var = new anticipo();
 
-    $var->date = request('date_begin');
-    $var->id_client = request('id_client');
-    $var->id_account = request('id_account');
-    $var->id_user = request('id_user');
+        $var->date = request('date_begin');
+        $var->id_client = request('id_client');
+        $var->id_account = request('id_account');
+        $var->id_user = request('id_user');
+        
+        $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+            
+
+        $var->amount = $valor_sin_formato_amount;
+        $var->reference = request('reference');
     
-    $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+        $var->status = 1;
+
+        $var->save();
+
+        /*Aplicamos el movimiento contable*/
+        $header_voucher  = new HeaderVoucher();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+
+        $header_voucher->description = "Anticipo";
+        $header_voucher->date = $datenow;
+        $header_voucher->status =  "1";
+        $header_voucher->save();
+
+        $this->add_movement($header_voucher->id,$var->id_account,$var->id_user,$var->amount,0);
+
+
+        $account_anticipo = Account::where('description', 'like', 'Anticipos Clientes Nacionales')->first();  
+            
+        if(isset($account_anticipo)){
+            $this->add_movement($header_voucher->id,$account_anticipo->id,$var->id_user,0,$var->amount);
+        }
         
 
-    $var->amount = $valor_sin_formato_amount;
-    $var->reference = request('reference');
-   
-    $var->status = 1;
 
-    $var->save();
-
-    return redirect('/anticipos')->withSuccess('Registro Exitoso!');
+        return redirect('/anticipos')->withSuccess('Registro Exitoso!');
     }
 
   
+
+
+
+    public function add_movement($id_header,$id_account,$id_user,$debe,$haber){
+
+       
+
+        $detail = new DetailVoucher();
+
+        $detail->id_account = $id_account;
+        $detail->id_header_voucher = $id_header;
+        $detail->user_id = $id_user;
+
+        $detail->debe = $debe;
+        $detail->haber = $haber;
+       
+      
+        $detail->status =  "C";
+
+         /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
+         
+            $account = Account::findOrFail($detail->id_account);
+
+            if($account->status != "M"){
+                $account->status = "M";
+                $account->save();
+            }
+         
+    
+        $detail->save();
+
+    }
 
    /**
     * Show the form for editing the specified resource.

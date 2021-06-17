@@ -35,7 +35,7 @@
                     <div class="form-group row">
                         <label for="cost" class="col-md-2 col-form-label text-md-right">Precio</label>
                         <div class="col-md-3">
-                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price'] }}" readonly required autocomplete="cost">
+                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($inventory->products['price'] * ($bcv ?? 1), 2, ',', '.')}}" readonly required autocomplete="cost">
                         </div>  
                         <label for="amount" class="col-md-3 col-form-label text-md-right">Cantidad En Inventario</label>
                         <div class="col-md-3">

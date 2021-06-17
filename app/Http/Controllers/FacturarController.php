@@ -120,6 +120,9 @@ class FacturarController extends Controller
 
         $quotation->credit_days = $credit;
 
+        //P de por pagar
+        $quotation->status = 'P';
+
         $quotation->save();
 
 
@@ -219,10 +222,13 @@ class FacturarController extends Controller
 
         $quotation = Quotation::findOrFail(request('id_quotation'));
 
-        if(isset($quotation->date_billing)){
+        $quotation_status = $quotation->status;
+
+        if($quotation->status == 'C' ){
             return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('Ya esta factura fue procesada!');
         }else{
-
+            
+            
         
 
        // dd($request);
@@ -1119,6 +1125,9 @@ class FacturarController extends Controller
             $base_imponible = request('base_imponible_form');
 
            
+            if($quotation_status != 'C'){
+
+            
               
                 $header_voucher  = new HeaderVoucher();
 
@@ -1177,7 +1186,10 @@ class FacturarController extends Controller
                     $this->add_movement($header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sub_total,0);
                 }
                 /*----------- */
+            }
 
+
+            
                     /*Verificamos si el cliente tiene anticipos activos */
                     if($anticipo != 0){
                         DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
@@ -1269,10 +1281,14 @@ class FacturarController extends Controller
                     $inventory = Inventory::findOrFail($quotation_product->id_inventory);
 
                         if(isset($inventory)){
+                            //REVISO QUE SEA MAYOR EL MONTO DEL INVENTARIO Y LUEGO DESCUENTO
                             if($inventory->amount >= $quotation_product->amount){
                                 $inventory->amount -= $quotation_product->amount;
                                 $inventory->save();
 
+                                //CAMBIAMOS EL ESTADO PARA SABER QUE ESE PRODUCTO YA SE COBRO Y SE RESTO DEL INVENTARIO
+                                $quotation_product->status = 'C';  
+                                $quotation_product->save();
                             }else{
                                 return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de Codigo: '.$inventory->code.' no tiene Cantidad suficiente!');
                             }

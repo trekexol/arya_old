@@ -77,11 +77,38 @@ class DeliveryNoteController extends Controller
             
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
+
+
+             $bcv = $this->search_bcv();
      
-             return view('admin.quotations.createdeliverynote',compact('quotation','datenow'));
+             return view('admin.quotations.createdeliverynote',compact('quotation','datenow','bcv'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
          
+    }
+
+
+
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        }else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
     }
 }

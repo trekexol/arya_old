@@ -144,27 +144,31 @@ class QuotationController extends Controller
 
 
     }
-            public function search_bcv()
-            {
-                /*Buscar el indice bcv*/
-                $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
-                $pageDocument = @file_get_contents($urlToGet);
-                preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
 
-                if ($cap[0] == array()){ // VALIDAR Concidencia
-                    $titulo = '0,00';
-                } else {
-                    $titulo = $cap[1][2];
-                }
+    
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
 
-                $bcv_con_formato = $titulo;
-                $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        }else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
 
 
-                /*-------------------------- */
-                return $bcv;
+        /*-------------------------- */
+        return $bcv;
 
-            }
+    }
+
+
     public function createproduct($id_quotation,$id_inventory)
     {
         $quotation = null;
@@ -293,7 +297,12 @@ class QuotationController extends Controller
 
                 $var->id_client = $id_client;
                 $var->id_vendor = $id_vendor;
-                $var->id_transport = request('id_transport');
+
+                $id_transport = request('id_transport');
+                if($id_transport != '-1'){
+                    $var->id_transport = request('id_transport');
+                }
+                
                 $var->id_user = request('id_user');
                 $var->serie = request('serie');
                 $var->date_quotation = request('date_quotation');
@@ -396,7 +405,9 @@ class QuotationController extends Controller
 
                 $inventory= Inventory::find($quotation_product->id_inventory);
 
-                return view('admin.quotations.edit_product',compact('quotation_product','inventory'));
+                $bcv = $this->search_bcv();
+
+                return view('admin.quotations.edit_product',compact('quotation_product','inventory','bcv'));
             }else{
                 return redirect('/quotations')->withDanger('No se Encontro el Producto!');
             }

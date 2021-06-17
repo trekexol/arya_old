@@ -7,7 +7,7 @@
         <!-- Page Heading -->
         <div class="row py-lg-2">
             <div class="col-md-6">
-                <h2>Editar Empleado</h2>
+                <h2>Editar Vendedor</h2>
             </div>
 
         </div>

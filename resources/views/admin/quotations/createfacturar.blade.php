@@ -737,9 +737,14 @@
                                     Guardar Factura
                                  </button>
                             </div>
+                            
                             <div class="col-md-2">
+                            @if(isset($quotation->date_delivery_note))
+                                 <a href="{{ route('quotations.indexdeliverynote') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                            @else
                                 <a href="{{ route('quotations.create',$quotation->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
-                            </div>
+                            @endif
+                             </div>
                         </div>
                         
                     </form>    

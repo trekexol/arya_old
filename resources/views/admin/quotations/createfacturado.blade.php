@@ -110,7 +110,7 @@
                         <div class="form-group row">
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             <div class="col-md-2">
-                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($quotation->anticipo  * ($bcv ?? 1), 2, ',', '.') ?? '0,00' }}" readonly required autocomplete="anticipo"> 
+                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($quotation->anticipo, 2, ',', '.') ?? '0,00' }}" readonly required autocomplete="anticipo"> 
                            
                                 @error('anticipo')
                                     <span class="invalid-feedback" role="alert">

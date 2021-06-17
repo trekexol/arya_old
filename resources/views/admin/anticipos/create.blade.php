@@ -56,7 +56,7 @@
                         </div>
                       
                         <div class="form-group row">
-                            <label for="amount" class="col-md-3 col-form-label text-md-right">Monto</label>
+                            <label for="amount" class="col-md-3 col-form-label text-md-right">Monto en Bs</label>
 
                             <div class="col-md-6">
                                 <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" placeholder="0,00" required autocomplete="amount">
@@ -85,10 +85,13 @@
                        
                     <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-4 offset-md-4">
                                 <button type="submit" class="btn btn-info">
                                    Registrar Anticipo
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('anticipos') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>                                 
                             </div>
                         </div>
                     </form>

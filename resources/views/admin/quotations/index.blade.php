@@ -86,7 +86,7 @@
                             <td>{{$quotation->serie}}</td>
                             <td>{{ $quotation->clients['name']}}</td>
                             <td>{{ $quotation->vendors['name']}}</td>
-                            <td>{{ $quotation->transports['placa']}}</td>
+                            <td>{{ $quotation->transports['placa'] ?? ''}}</td>
                             <td>{{$quotation->date_quotation}}</td>
                         </tr>     
                     @endforeach   

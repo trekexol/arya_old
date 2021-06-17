@@ -80,6 +80,7 @@
 
                             <div class="col-md-3">
                             <select class="form-control" id="id_transport" name="id_transport">
+                                <option selected value="-1">Ninguno</option>
                                 @foreach($transports as $var)
                                     <option value="{{ $var->id }}">{{ $var->placa }}</option>
                                 @endforeach

@@ -116,7 +116,7 @@
                             <label for="phone1" class="col-md-2 col-form-label text-md-right">Teléfono</label>
 
                             <div class="col-md-4">
-                                <input id="phone1" type="text" class="form-control @error('phone1') is-invalid @enderror" name="phone1" value="{{ old('phone1') }}" placeholder="(000) 000-0000" required autocomplete="phone1">
+                                <input id="phone1" type="text" class="form-control @error('phone1') is-invalid @enderror" name="phone1" value="{{ old('phone1') }}" placeholder="0000 000-0000" required autocomplete="phone1">
 
                                 @error('phone1')
                                     <span class="invalid-feedback" role="alert">
@@ -127,7 +127,7 @@
                             <label for="phone2" class="col-md-2 col-form-label text-md-right">Teléfono 2</label>
 
                             <div class="col-md-3">
-                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ old('phone2') }}" placeholder="(000) 000-0000"  autocomplete="phone2">
+                                <input id="phone2" type="text" class="form-control @error('phone2') is-invalid @enderror" name="phone2" value="{{ old('phone2') }}" placeholder="0000 000-0000"  autocomplete="phone2">
 
                                 @error('phone2')
                                     <span class="invalid-feedback" role="alert">
@@ -161,7 +161,7 @@
                             <label for="amount_max_credit" class="col-md-2 col-form-label text-md-right">Monto Máximo de Crédito</label>
 
                             <div class="col-md-4">
-                                <input id="amount_max_credit" type="number" class="form-control @error('amount_max_credit') is-invalid @enderror" name="amount_max_credit" value="{{ old('amount_max_credit') }}"  autocomplete="amount_max_credit">
+                                <input id="amount_max_credit" type="text" class="form-control @error('amount_max_credit') is-invalid @enderror" name="amount_max_credit" value="{{ old('amount_max_credit') }}"  autocomplete="amount_max_credit">
 
                                 @error('amount_max_credit')
                                     <span class="invalid-feedback" role="alert">
@@ -231,28 +231,12 @@
         soloAlfaNumerico('code_client');
         soloAlfaNumerico('razon_social');
         sololetras('name');
-        soloNumeros('cedula_rif');
         sololetras('country');
         sololetras('city');
         soloAlfaNumerico('direction');
-        soloNumeros('phone1');
-        soloNumeros('phone2');
         sololetras('seller');
     });
         
-    document.getElementById('phone1').addEventListener('input', function (e) {
-        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-        });
-
-        document.getElementById('phone2').addEventListener('input', function (e) {
-        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-        });
-
-
-
-
         $("#days_credit_label").hide();
         $("#days_credit").hide();
         document.getElementById('days_credit').value = 0;
@@ -273,11 +257,30 @@
         }
     }
 
-    $(document).ready(function () {
-            $("#cedula_rif").mask('000000000', { reverse: true });
+        $(document).ready(function () {
+            $("#cedula_rif").mask('000.000.000', { reverse: true });
             
         });
-
+        $(document).ready(function () {
+            $("#phone1").mask('0000 000-0000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#phone2").mask('0000 000-0000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#amount_max_credit").mask('000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#percentage_retencion_iva").mask('000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#percentage_retencion_islr").mask('000', { reverse: true });
+            
+        });
     </script>
 @endsection
 

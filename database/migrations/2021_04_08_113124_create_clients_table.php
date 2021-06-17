@@ -18,7 +18,7 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_vendor')->nullable();
-
+            $table->unsignedBigInteger('id_user');
             $table->string('type_code',2);
            
             $table->string('name',80);
@@ -38,6 +38,7 @@ class CreateClientsTable extends Migration
             $table->string('status',1);
 
             $table->foreign('id_vendor')->references('id')->on('vendors');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ class CreateQuotationsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_client');
             $table->unsignedBigInteger('id_vendor');
-            $table->unsignedBigInteger('id_transport');
+            $table->unsignedBigInteger('id_transport')->nullable();
             $table->unsignedBigInteger('id_user');
 
             $table->string('serie',30)->nullable();
@@ -32,6 +32,8 @@ class CreateQuotationsTable extends Migration
             $table->string('note',150)->nullable();
             $table->integer('credit_days')->nullable();
             $table->string('coin',15)->nullable();
+
+            $table->decimal('bcv',64,2)->nullable()->comment = 'Tasa de cambio a bolivares del banco central de venezuela';
 
             $table->decimal('base_imponible',64,2)->nullable();
             $table->decimal('amount',64,2)->nullable();

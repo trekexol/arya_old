@@ -43,7 +43,7 @@ Route::group(["prefix"=>'users'],function(){
 
 });
 
-/*MODULO DE FACTURACION*/
+/*MODULO DE FACTURACION
 Route::group(["prefix"=>'billings'],function(){
     Route::get('/','billings\BillController@index')->name('billings');
     Route::get('clients','billings\ClientController@index')->name('clients');
@@ -51,7 +51,7 @@ Route::group(["prefix"=>'billings'],function(){
     Route::get('vendors','billings\VendorController@index')->name('vendors');
     Route::get('vendors/create','billings\VendorController@create')->name('vendors.create');
    });
-/*------------------------------------ */
+------------------------------------ */
 
 //Tablas Referenciales
 
