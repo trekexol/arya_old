@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserCompany extends Model
 {
-    protected $connection = 'logins';
+  //  protected $connection = 'logins';
 }

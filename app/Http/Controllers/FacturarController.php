@@ -149,7 +149,7 @@ class FacturarController extends Controller
 
         //Ingresos por SubSegmento de Bienes
 
-        $account_subsegmento = Account::where('description', 'like', 'Ingresos por SubSegmento de Bienes')->first();
+        $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
 
         if(isset($account_cuentas_por_cobrar)){
             $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sin_formato_amount);
@@ -213,7 +213,7 @@ class FacturarController extends Controller
 
     public function storefactura(Request $request)
     {
-       
+        
         $data = request()->validate([
             
         
@@ -221,6 +221,10 @@ class FacturarController extends Controller
         ]);
 
         $quotation = Quotation::findOrFail(request('id_quotation'));
+
+
+      
+
 
         $quotation_status = $quotation->status;
 
@@ -998,12 +1002,15 @@ class FacturarController extends Controller
         //VALIDA QUE LA SUMA MONTOS INGRESADOS SEAN IGUALES AL MONTO TOTAL DEL PAGO
         if($total_pay == $total_pay_form){
 
-            /*descontamos el inventario*/
-            $retorno = $this->discount_inventory($quotation->id);
+            /*descontamos el inventario, si existe la fecha de nota de entrega, significa que ya hemos descontado del inventario, por ende no descontamos de nuevo*/
+            if(!isset($quotation->date_delivery_note)){
+                $retorno = $this->discount_inventory($quotation->id);
 
-            if($retorno != "exito"){
-                return redirect('quotations/facturar/'.$quotation->id.'');
+                if($retorno != "exito"){
+                    return redirect('quotations/facturar/'.$quotation->id.'');
+                }
             }
+            
         
             /*---------------- */
 
@@ -1077,11 +1084,14 @@ class FacturarController extends Controller
             }
             
 
-            $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible_form')));
-            $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('sub_total_form')));
+            //$sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible_form')));
+            //$sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('sub_total_form')));
             $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
             $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('total_pay_form')));
 
+            $sin_formato_base_imponible = request('base_imponible_form');
+            $sin_formato_amount = request('sub_total_form');
+            
             $quotation->base_imponible = $sin_formato_base_imponible;
             $quotation->amount =  $sin_formato_amount;
             $quotation->amount_iva =  $sin_formato_amount_iva;
@@ -1152,7 +1162,7 @@ class FacturarController extends Controller
 
                 //Ingresos por SubSegmento de Bienes
 
-                $account_subsegmento = Account::where('description', 'like', 'Ingresos por SubSegmento de Bienes')->first();
+                $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
 
                 if(isset($account_subsegmento)){
                     $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
@@ -1288,6 +1298,7 @@ class FacturarController extends Controller
 
                                 //CAMBIAMOS EL ESTADO PARA SABER QUE ESE PRODUCTO YA SE COBRO Y SE RESTO DEL INVENTARIO
                                 $quotation_product->status = 'C';  
+                                $quotation_product->price = $inventories_quotation->price;
                                 $quotation_product->save();
                             }else{
                                 return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de Codigo: '.$inventory->code.' no tiene Cantidad suficiente!');

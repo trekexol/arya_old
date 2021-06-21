@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.dashboard')
 
 @section('content')
 
@@ -59,10 +59,7 @@
                     <th>Nombre</th>
                     <th>Cedula o Rif</th>
                     <th>Dirección</th>
-                    <th>Ciudad</th>
-                    <th>Pais</th>
                     <th>Telefono</th>
-                    <th>Telefono 2</th>
                   
                     <th>Dias de Crédito</th>
                    
@@ -81,10 +78,7 @@
                                 <td>{{$client->name}}</td>
                                 <td>{{$client->type_code}} {{$client->cedula_rif}}</td>
                                 <td>{{$client->direction}}</td>
-                                <td>{{$client->city}}</td>
-                                <td>{{$client->country}}</td>
                                 <td>{{$client->phone1}}</td>
-                                <td>{{$client->phone2}}</td>
                                 <td>{{$client->days_credit}}</td>
                                
 
@@ -110,4 +104,15 @@
 
 
     
+@endsection
+@section('javascript')
+
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
 @endsection

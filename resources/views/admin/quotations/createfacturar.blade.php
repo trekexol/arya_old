@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.dashboard')
 
 @section('content')
 
@@ -36,7 +36,7 @@
                         <div class="form-group row">
                             <label for="cedula_rif" class="col-md-2 col-form-label text-md-right">CI/Rif Cliente:</label>
                             <div class="col-md-4">
-                                <input id="cedula_rif" type="text" class="form-control @error('cedula_rif') is-invalid @enderror" name="cedula_rif" value="{{ number_format($quotation->clients['cedula_rif'], 0, ',', '.')  ?? '' }}" readonly required autocomplete="cedula_rif">
+                                <input id="cedula_rif" type="text" class="form-control @error('cedula_rif') is-invalid @enderror" name="cedula_rif" value="{{ $quotation->clients['cedula_rif']  ?? '' }}" readonly required autocomplete="cedula_rif">
 
                                 @error('cedula_rif')
                                     <span class="invalid-feedback" role="alert">
@@ -89,11 +89,18 @@
                                     </span>
                                 @enderror
                             </div>
+
                             <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
                             <div class="col-md-2">
+
                             <select class="form-control" name="iva" id="iva">
-                                <option value="16">16%</option>
-                                <option value="12">12%</option>
+                                @if(isset($quotation->iva_percentage))
+                                    <option value="{{ $quotation->iva_percentage }}">{{ $quotation->iva_percentage }}%</option>
+                                @else
+                                    <option value="16">16%</option>
+                                    <option value="12">12%</option>
+                                @endif
+                                
                             </select>
                             </div>
                             

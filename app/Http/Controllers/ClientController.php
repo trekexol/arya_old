@@ -122,10 +122,9 @@ class ClientController extends Controller
    {
         $var = client::find($id);
         
-     
-      
+        $vendors = Vendor::orderBy('name','asc')->get();
 
-        return view('admin.clients.edit',compact('var'));
+        return view('admin.clients.edit',compact('var','vendors'));
   
    }
 
@@ -160,6 +159,7 @@ class ClientController extends Controller
 
        
     ]);
+    dd($request);
 
     $users = client::findOrFail($id);
     

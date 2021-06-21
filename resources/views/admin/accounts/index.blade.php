@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.dashboard')
 
 @section('content')
 
@@ -8,12 +8,13 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-        <div class="col dropdown mb-4">
-            <button class="btn btn-light2 dropdown-toggle" type="button"
+        <div class="col-sm-1  dropdown mb-4">
+            <button class="btn btn-light" type="button"
                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
-                <i class="fas fa-code-branch"></i>
-                &nbsp Niveles
+                <div class="small"><i class="fas fa-code-branch"></i>
+                Niveles
+                </div>
             </button>
             <div class="dropdown-menu animated--fade-in"
                 aria-labelledby="dropdownMenuButton">
@@ -23,12 +24,13 @@
                 <a class="dropdown-item" href="#">Todos</a>
             </div>
         </div>
-        <div class="col dropdown mb-4">
-            <button class="btn btn-light2 dropdown-toggle" type="button"
-                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+        <div class="col-sm-3  dropdown mb-4">
+            <button class="btn btn-light " type="button"
+                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
                 aria-expanded="false">
-                <i class="fas fa-bars"></i>
-                &nbsp Opciones de Cuentas
+                <div class="small"><i class="fas fa-bars"></i>
+                Opciones de Cuentas
+                </div>
             </button>
             <div class="dropdown-menu animated--fade-in"
                 aria-labelledby="dropdownMenuButton">
@@ -38,20 +40,25 @@
                 <a class="dropdown-item" href="#">Subir Cuentas</a>
             </div>
         </div> 
-        <div class="col">
-            <a href="#" class="btn btn-light2"><i class="fas fa-eye" ></i>
-                &nbsp Ver Ejercicio Anterior
+        <div class="col-sm-3">
+            <a href="#" class="btn btn-light">
+                <div class="small"><i class="fas fa-eye" ></i>
+                Ejercicio Anterior
+                </div>
             </a>
         </div>
-            <div class="col">
-                <a href="#" class="btn btn-light2"><i class="fas fa-times" ></i>
-                    &nbsp Cierre de Ejercicio
+            <div class="col-sm-2">
+                <a href="#" class="btn btn-light">
+                    <div class="small"><i class="fas fa-times" ></i>
+                    Cierre de Ejercicio
+                    </div>
                 </a>
             </div>
-            <div class="col">
-                <a href="{{ route('accounts.create')}}" class="btn btn-light2" role="button" aria-pressed="true">
-                    <i class="fas fa-pencil-alt" ></i>
-                    &nbsp Registrar una Cuenta
+            <div class="col-sm-3">
+                <a href="{{ route('accounts.create')}}" class="btn btn-light" role="button" aria-pressed="true">
+                    
+                    <div class="small"><i class="fas fa-pencil-alt" ></i>Registrar una Cuenta</div>
+                    
                 </a>
             </div>
         
@@ -81,19 +88,19 @@
         <div class="table-responsive">
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
-            <tr> 
+            <tr > 
                
-                <th style="text-align: right; ">Código</th>
-                <th style="text-align: right; ">Descripción</th>
-                <th style="text-align: right; ">Nivel</th>
-                <th style="text-align: right; ">Tipo</th>
+                <th style="text-align: right;">Código</th>
+                <th style="text-align: right;">Descripción</th>
+                <th style="text-align: right;">Nivel</th>
+                <th style="text-align: right;">Tipo</th>
                 
-                <th style="text-align: right; ">Saldo Anterior</th>
-                <th style="text-align: right; ">Debe</th>
-                <th style="text-align: right; ">Haber</th>
-                <th style="text-align: right; ">Saldo Actual</th>
+                <th style="text-align: right;">Saldo Anterior</th>
+                <th style="text-align: right;">Debe</th>
+                <th style="text-align: right;">Haber</th>
+                <th style="text-align: right;">Saldo Actual</th>
                
-                <th style="text-align: right; "></th>
+                <th style="text-align: right;"></th>
             </tr>
             </thead>
             

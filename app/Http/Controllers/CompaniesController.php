@@ -27,8 +27,9 @@ class CompaniesController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-            $user_companies = UserCompany::where('id_user',Auth::id())->first();
-            $users      =   Company::on($user_companies->name_connection)->orderBy('id', 'asc')->get();
+           /* $user_companies = UserCompany::where('id_user',Auth::id())->first();
+            $users      =   Company::on($user_companies->name_connection)->orderBy('id', 'asc')->get();*/
+            $users      =   Company::orderBy('id', 'asc')->get();
         
         }elseif($users_role == '2'){
             return view('admin.index');
@@ -90,9 +91,9 @@ class CompaniesController extends Controller
         $rate_number_2          = str_replace(",",".",$rate_number);
 
         $companies  = new Company();
-
+/*
         $user_companies = UserCompany::where('id_user',Auth::id())->first();
-        $companies->setConnection($user_companies->name_connection);
+        $companies->setConnection($user_companies->name_connection);*/
 
         $companies->login           = request('Login');
         $companies->email           = $email;

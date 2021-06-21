@@ -18,6 +18,7 @@ class DeliveryNoteController extends Controller
         if($users_role == '1'){
          $quotations = Quotation::orderBy('id' ,'DESC')
                                  ->where('date_delivery_note','<>',null)
+                                 ->where('date_billing',null)
                                  ->get();
                                  
          }elseif($users_role == '2'){
@@ -80,6 +81,8 @@ class DeliveryNoteController extends Controller
 
 
              $bcv = $this->search_bcv();
+
+             
      
              return view('admin.quotations.createdeliverynote',compact('quotation','datenow','bcv'));
          }else{

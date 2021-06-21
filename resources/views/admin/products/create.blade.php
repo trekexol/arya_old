@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.dashboard')
 
 @section('content')
 
@@ -28,6 +28,9 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
                         @csrf
+
+                        <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
+                       
                         <div class="form-group row">
                             <label for="type" class="col-md-2 col-form-label text-md-right">Tipo</label>
                             <div class="col-md-4">

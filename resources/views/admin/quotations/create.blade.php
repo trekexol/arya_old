@@ -1,20 +1,7 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.dashboard')
 
 @section('content')
 
-@section('header')
-
-
-<!-- CSS media query within a style sheet -->
-<style>
-
-  body {
-   
-    zoom: 90%;
-  }
-
-</style>
-@endsection
 
     {{-- VALIDACIONES-RESPUESTA--}}
     @include('admin.layouts.success')   {{-- SAVE --}}
@@ -37,7 +24,7 @@
 <div class="container" >
     <div class="row justify-content-center" >
         <div class="col-md-12" >
-            <div class="card" style="width: 70rem;" >
+            <div class="card">
                 <div class="card-header" ><h3>Registro de Cotización</h3></div>
 
                 <div class="card-body" >

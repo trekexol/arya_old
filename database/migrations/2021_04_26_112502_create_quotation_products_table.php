@@ -20,6 +20,7 @@ class CreateQuotationProductsTable extends Migration
 
             $table->integer('amount');
             $table->decimal('discount',64,2);
+            $table->decimal('price',64,2)->nullable();
 
             $table->string('status',1);
 

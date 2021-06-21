@@ -1,11 +1,11 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.dashboard')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="row py-lg-2">
        
-        <div class="col-md-6">
+        <div class="col-md-10">
             <h2>Seleccione un Producto del Inventario</h2>
         </div>
         

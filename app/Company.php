@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    //
+    
     public function tipoinv()
     {
         return $this->belongsTo('App\InventaryType', 'tipoinv_id');

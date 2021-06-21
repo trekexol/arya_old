@@ -87,6 +87,8 @@ class ProductController extends Controller
     $var->type = request('type');
     $var->description = request('description');
 
+    $var->id_user = request('id_user');
+
     $valor_sin_formato_price = str_replace(',', '.', str_replace('.', '',request('price')));
     $valor_sin_formato_price_buy = str_replace(',', '.', str_replace('.', '',request('price_buy')));
     $valor_sin_formato_cost_average = str_replace(',', '.', str_replace('.', '',request('cost_average')));

@@ -219,24 +219,29 @@ class DemoTableSeeder extends Seeder
             'percentage_retencion_islr' => 10,
             'status' => '1',
         ]);
-        /*DB::table('products')->insert([
+        DB::table('products')->insert([
             'id' => 1,
             'segment_id' => 2,
             'subsegment_id' => 2,
             'id_user' => 1,
-            'type_code' => 'V-',
-            'cedula_rif' => '17.615.785',
-            'name' => 'Primer Cliente',
-            'direction' => 'Chacao',
-            'city' => 'Caracas',
-            'country' => 'Venezuela',
-            'phone1' => '0414 265-1651',
-            'phone2' => '0424 965-2952',
-            'days_credit' => 9,
-            'amount_max_credit' => 999999999999.99,
-            'percentage_retencion_iva' => 12,
-            'percentage_retencion_islr' => 10,
+            'code_comercial' => '1001',
+            'type' => 'MERCANCIA',
+            'description' => 'Producto 1',
+            'price' => 10,
+            'price_buy' => 5,
+            'cost_average' => 4,
+            'money' => 'D',
+            'exento' => 0,
+            'islr' => 0,
+            'special_impuesto' => 0,
             'status' => '1',
-        ]);*/
+        ]);
+        DB::table('inventories')->insert([
+            'id' => 1,
+            'product_id' => 2,
+            'code' => 1001,
+            'amount' => 100,
+            'status' => '1',
+        ]);
     }
 }

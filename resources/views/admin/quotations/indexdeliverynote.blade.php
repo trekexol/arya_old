@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.dashboard')
 
 @section('content')
 
@@ -65,13 +65,13 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0" >
             <thead>
             <tr> 
-                <th></th>
-                <th>N° de Control/Serie</th>
-                <th>Cliente</th>
-                <th>Vendedor</th>
-                <th>Transporte</th>
-                <th>Fecha de Cotización</th>
-                <th>Fecha de la Nota de Entrega</th>
+                <th class="text-center"></th>
+                <th class="text-center">N° de Control/Serie</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Vendedor</th>
+                <th class="text-center">Transporte</th>
+                <th class="text-center">Fecha de Cotización</th>
+                <th class="text-center">Fecha de la Nota de Entrega</th>
                
             </tr>
             </thead>
