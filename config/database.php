@@ -63,6 +63,47 @@ return [
             ]) : [],
         ],
 
+        'logins' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('LOGINS_HOST', '127.0.0.1'),
+            'port' => env('LOGINS_PORT', '3306'),
+            'database' => env('LOGINS_DATABASE', 'forge'),
+            'username' => env('LOGINS_USERNAME', 'forge'),
+            'password' => env('LOGINS_PASSWORD', ''),
+            'unix_socket' => env('LOGINS_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+
+        'arya1' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('ARYA1_HOST', '127.0.0.1'),
+            'port' => env('ARYA1_PORT', '3306'),
+            'database' => env('ARYA1_DATABASE', 'forge'),
+            'username' => env('ARYA1_USERNAME', 'forge'),
+            'password' => env('ARYA1_PASSWORD', ''),
+            'unix_socket' => env('ARYA1_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
