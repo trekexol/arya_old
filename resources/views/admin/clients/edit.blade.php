@@ -168,7 +168,7 @@
                             <label for="retencion_iva" class="col-md-2 col-form-label text-md-right">Retención <br>de Iva</label>
 
                             <div class="col-md-4">
-                                <input id="retencion_iva" type="text" class="form-control @error('retencion_iva') is-invalid @enderror" name="retencion_iva" value="{{ $var->retencion_iva }}" required autocomplete="retencion_iva">
+                                <input id="retencion_iva" type="text" class="form-control @error('retencion_iva') is-invalid @enderror" name="retencion_iva" value="{{ number_format($var->percentage_retencion_iva, 0, '', '.')}}" required autocomplete="retencion_iva">
 
                                 @error('retencion_iva')
                                     <span class="invalid-feedback" role="alert">
@@ -180,7 +180,7 @@
                               <label for="retencion_islr" class="col-md-2 col-form-label text-md-right">Retención de ISLR</label>
 
                               <div class="col-md-4">
-                                  <input id="retencion_islr" type="text" class="form-control @error('retencion_islr') is-invalid @enderror" name="retencion_islr" value="{{ $var->retencion_islr }}" required autocomplete="retencion_islr">
+                                  <input id="retencion_islr" type="text" class="form-control @error('retencion_islr') is-invalid @enderror" name="retencion_islr" value="{{ number_format($var->percentage_retencion_islr, 0, '', '.') }}" required autocomplete="retencion_islr">
   
                                   @error('retencion_islr')
                                       <span class="invalid-feedback" role="alert">
@@ -226,10 +226,10 @@
                         <div class="form-group row mb-0">
                             <div class="form-group col-sm-2">
                             </div>    
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-sm-2">
                                 <button type="submit" class="btn btn-success btn-block"><i class="fa fa-send-o"></i>Actualizar</button>
                             </div>
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-sm-2">
                                 <a href="{{ route('clients') }}" name="danger" type="button" class="btn btn-danger btn-block">Cancelar</a>
                             </div>
                         </div>
@@ -286,11 +286,11 @@
             
         });
         $(document).ready(function () {
-            $("#percentage_retencion_iva").mask('000', { reverse: true });
+            $("#retencion_iva").mask('000', { reverse: true });
             
         });
         $(document).ready(function () {
-            $("#percentage_retencion_islr").mask('000', { reverse: true });
+            $("#retencion_islr").mask('000', { reverse: true });
             
         });
     </script>

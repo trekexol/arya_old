@@ -108,6 +108,7 @@ class AnticipoController extends Controller
             'id_user'         =>'required',
 
             'amount'         =>'required',
+            'coin'         =>'required',
 
         ]);
 
@@ -123,6 +124,7 @@ class AnticipoController extends Controller
 
         $var->amount = $valor_sin_formato_amount;
         $var->reference = request('reference');
+        $var->coin = request('coin');
     
         $var->status = 1;
 

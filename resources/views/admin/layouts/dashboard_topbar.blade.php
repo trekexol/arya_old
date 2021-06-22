@@ -1,18 +1,18 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark2 topbar mb-4 static-top shadow" >
    
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
                    
-
+                   
+                    <nav class="navbar navbar-light bg-light ">
+                        <a class="navbar-brand text-secondary" href="#">
+                            <img src="{{ asset('img/northdelivery.jpg') }}" width="90" height="30" class="d-inline-block align-top" alt="">                
+                            North Delivery
+                        </a>
+                      </nav>
+                     
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                      
-
+                       
                         
                         <div class="topbar-divider d-none d-sm-block"></div>
 

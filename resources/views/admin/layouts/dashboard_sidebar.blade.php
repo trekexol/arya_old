@@ -11,17 +11,55 @@
             </div>
         
     </a>
+        <!-- first is the link in your navbar -->
 
+        <button type="button" class="btn btn-secondary rounded-sm m-2 pb-2" id="servicesDropdown" data-toggle="dropdown" 
+        aria-haspopup="true" aria-expanded="false">Acceso Rápido</button>
+
+        <!-- your mega menu starts here! -->
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="servicesDropdown">
+
+        <!-- finally, using flex to create your layout -->
+        <div class="d-md-flex align-items-start justify-content-start">
+        
+            <div>   
+            <div class="dropdown-header text-dark font-weight-bold">Facturación</div>
+                <a class="dropdown-item" href="#">Nueva Cotización</a>
+                <a class="dropdown-item" href="#">Nuevo Cliente</a>
+                <a class="dropdown-item" href="#">Nuevo Vendedor</a>
+            </div>
+                                    
+            <div>
+            <div class="dropdown-header text-dark font-weight-bold">Gastos o Compras</div>
+                <a class="dropdown-item" href="#">Registrar Compra</a>
+                <a class="dropdown-item" href="#">Nuevo Proveedor</a>
+                <a class="dropdown-item" href="#">Registrar Orden de Pago</a>
+                <a class="dropdown-item" href="#">Nuevo Producto</a>
+            </div>
+
+            <div>                      
+            <div class="dropdown-header text-dark font-weight-bold">Nóminas</div>
+                <a class="dropdown-item" href="#">Nueva Nómina</a>
+                <a class="dropdown-item" href="#">Registrar Concepto de Nómina</a>
+                <a class="dropdown-item" href="#">Nuevo Empleado</a>
+            </div>
+            <div>
+            <div class="dropdown-header text-dark font-weight-bold">Transación</div>
+                <a class="dropdown-item" href="#">Registrar Depósito</a>
+                <a class="dropdown-item" href="#">Registrar Retiro</a>
+                <a class="dropdown-item" href="#">Registrar Transferencia</a>
+            </div>
+            
+            
+        </div>
+    </div>
+            
+      
+    
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-        <a class="nav-link" href="{{url('home')}}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Inicio</span></a>
-    </li>
-
+    
     <!-- Divider -->
     <hr class="sidebar-divider">
 

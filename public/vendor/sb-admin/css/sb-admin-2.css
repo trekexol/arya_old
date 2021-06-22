@@ -6443,6 +6443,8 @@ button.bg-light:focus {
   background-color: #d4daed !important;
 }
 
+.btn-light2{color:inherit;background-color:#E9E5E5;border-color:orange}.btn-light2:hover{font-weight: bold;color:inherit;background-color:#E9E5E5;border-color:orange}.btn-light2.focus,.btn-light2:focus{color:inherit;background-color:#E9E5E5;border-color:orange;box-shadow:0 0 0 .2rem rgba(220,221,225,.5)}.btn-light2.disabled,.btn-light2:disabled{color:inherit;background-color:#E9E5E5;border-color:orange}.btn-light2:not(:disabled):not(.disabled).active,.btn-light2:not(:disabled):not(.disabled):active,.show>.btn-light2.dropdown-toggle{color:inherit;background-color:#d4daed;border-color:orange}.btn-light2:not(:disabled):not(.disabled).active:focus,.btn-light2:not(:disabled):not(.disabled):active:focus,.show>.btn-light2.dropdown-toggle:focus{box-shadow:0 0 0 .2rem rgba(220,221,225,.5)}
+
 .bg-dark {
   background-color: #1c1d20 !important;
 }

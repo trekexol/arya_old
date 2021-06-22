@@ -59,20 +59,17 @@
 
                     @if(isset($var->id_bank_voucher))
                         <td>Bancario</td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_bank_voucher,'bank']) }}" title="Crear">{{ $var->id_bank_voucher }}</a>
                     @elseif(isset($var->id_invoice))
                         <td>Factura</td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_invoice,'invoice']) }}" title="Crear">{{ $var->id_invoice }}</a>
                     @elseif(isset($var->id_expense))
                         <td>Gasto o Compra</td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_expense,'expense']) }}" title="Crear">{{ $var->id_expense }}</a>
-                    @elseif(isset($var->id_header_voucher)) 
+                    @else 
                         <td>Otro</td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_header_voucher,'header_voucher']) }}" title="Crear">{{ $var->id_header_voucher }}</a>
                     @endif
                     
 
                     <td>{{$var->id_header_voucher ?? $var->id_bank_voucher ?? $var->id_invoice ?? $var->id_expense ?? ''}}</td>
+                    <a href="{{ route('') }}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
                                    
                     @if(isset($var->id_bank_voucher))
                       

@@ -11,8 +11,9 @@
   {{-- VALIDACIONES-RESPUESTA --}}
   <!-- Page Heading -->
   <div class="row py-lg-2">
-    <div class="col-md-6">
-        <h2>Seleccionar Cliente</h2>
+    
+    <div class="col-md-4 h3 text-center">
+     Seleccionar Cliente
     </div>
     
   </div>
@@ -65,4 +66,15 @@
 
 
     
+@endsection
+@section('javascript')
+
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
+        'iDisplayLength': '50'
+    });
+    </script> 
 @endsection

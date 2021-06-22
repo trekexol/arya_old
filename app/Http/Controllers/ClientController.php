@@ -144,7 +144,7 @@ class ClientController extends Controller
     $data = request()->validate([
         'type_code'         =>'required|max:20',
         
-        'name'         =>'required|max:80',
+        'razon_social'         =>'required|max:80',
         'cedula_rif'         =>'required|max:20',
         'direction'         =>'required|max:100',
 
@@ -159,7 +159,7 @@ class ClientController extends Controller
 
        
     ]);
-    dd($request);
+    
 
     $users = client::findOrFail($id);
     
@@ -167,7 +167,7 @@ class ClientController extends Controller
 
     $users->type_code = request('type_code');
    
-    $users->name = request('name');
+    $users->name = request('razon_social');
     $users->cedula_rif = request('cedula_rif');
     $users->direction = request('direction');
     $users->city = request('city');
@@ -176,10 +176,14 @@ class ClientController extends Controller
     $users->phone2 = request('phone2');
     
     $users->days_credit = request('days_credit');
-    $users->amount_max_credit = request('amount_max_credit');
+
+    $sin_formato_amount_max_credit = str_replace(',', '.', str_replace('.', '', request('amount_max_credit')));
+
+
+    $users->amount_max_credit = $sin_formato_amount_max_credit;
     
-    $users->percentage_retencion_iva = request('percentage_retencion_iva');
-    $users->percentage_retencion_islr = request('percentage_retencion_islr');
+    $users->percentage_retencion_iva = request('retencion_iva');
+    $users->percentage_retencion_islr = request('retencion_islr');
 
     if(request('status') == null){
         $users->status = $vars_status;

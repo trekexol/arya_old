@@ -350,6 +350,8 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}/{period}','AccountController@createlevel')->name('accounts.createlevel');
     
     Route::get('movementaccount/{id_account}','AccountController@movements')->name('accounts.movements');
+
+    Route::get('movementheader/{id}/{type}','AccountController@header_movements')->name('accounts.header_movements');
 });
 
 Route::group(["prefix"=>'headervouchers'],function(){

@@ -17,7 +17,7 @@
                         <div class="form-group row">
                             <label for="clients" class="col-md-3 col-form-label text-md-right">Cliente</label>
                             <div class="col-md-6">
-                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? '' }}" readonly required autocomplete="client">
+                                <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? '' }}" readonly required >
     
                                 @error('client')
                                     <span class="invalid-feedback" role="alert">
@@ -32,8 +32,8 @@
                         <div class="form-group row">
                             <label for="clients" class="col-md-3 col-form-label text-md-right">Cuentas</label>
                             <div class="col-md-6">
-                                <select  id="id_account"  name="id_account" class="form-control">
-                                    <option selected value="0">Seleccione una Opcion</option>
+                                <select  id="id_account"  name="id_account" class="form-control" required>
+                                    <option selected value="">Seleccione una Opcion</option>
                                     @foreach($accounts as $account)
                                             <option  value="{{$account->id}}">{{ $account->description }}</option>
                                     @endforeach
@@ -54,9 +54,18 @@
                                 @enderror
                             </div>
                         </div>
-                      
                         <div class="form-group row">
-                            <label for="amount" class="col-md-3 col-form-label text-md-right">Monto en Bs</label>
+                            <label for="coin" class="col-md-3 col-form-label text-md-right">Moneda</label>
+                            <div class="col-md-6">
+                                <select  id="coin" name="coin" class="form-control" required>
+                                    <option value="">Seleccione una Moneda</option>
+                                    <option  value="Bolivares">Bolivares</option>
+                                    <option  value="Dolares">Dolares</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="amount" class="col-md-3 col-form-label text-md-right">Monto</label>
 
                             <div class="col-md-6">
                                 <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" placeholder="0,00" required autocomplete="amount">

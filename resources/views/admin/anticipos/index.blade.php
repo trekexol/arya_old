@@ -80,6 +80,7 @@
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Caja/Banco</th>
                 <th class="text-center">Fecha del Anticipo</th>
+                <th class="text-center">Moneda</th>
                 <th class="text-center">Referencia</th>
                 <th class="text-center">Monto</th>
                <th class="text-center"></th>
@@ -95,6 +96,7 @@
                     <td class="text-center">{{$anticipo->clients['name']}}</td>
                     <td class="text-center">{{$anticipo->accounts['description']}}</td>
                     <td class="text-center">{{$anticipo->date}}</td>
+                    <td class="text-center">{{$anticipo->coin}}</td>
                     <td class="text-center">{{$anticipo->reference}}</td>
                     <td class="text-right">{{number_format($anticipo->amount, 2, ',', '.')}}</td>
                    

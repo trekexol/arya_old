@@ -9,7 +9,7 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
         <div class="col-sm-1  dropdown mb-4">
-            <button class="btn btn-light" type="button"
+            <button class="btn btn-light2" type="button"
                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <div class="small"><i class="fas fa-code-branch"></i>
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="col-sm-3  dropdown mb-4">
-            <button class="btn btn-light " type="button"
+            <button class="btn btn-light2 text-dark " type="button"
                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
                 aria-expanded="false">
                 <div class="small"><i class="fas fa-bars"></i>
@@ -41,21 +41,21 @@
             </div>
         </div> 
         <div class="col-sm-3">
-            <a href="#" class="btn btn-light">
+            <a href="#" class="btn btn-light2 text-dark">
                 <div class="small"><i class="fas fa-eye" ></i>
                 Ejercicio Anterior
                 </div>
             </a>
         </div>
             <div class="col-sm-2">
-                <a href="#" class="btn btn-light">
+                <a href="#" class="btn btn-light2 text-dark">
                     <div class="small"><i class="fas fa-times" ></i>
                     Cierre de Ejercicio
                     </div>
                 </a>
             </div>
             <div class="col-sm-3">
-                <a href="{{ route('accounts.create')}}" class="btn btn-light" role="button" aria-pressed="true">
+                <a href="{{ route('accounts.create')}}" class="btn btn-light2 text-dark" role="button" aria-pressed="true">
                     
                     <div class="small"><i class="fas fa-pencil-alt" ></i>Registrar una Cuenta</div>
                     
@@ -173,7 +173,7 @@
                             
                                 <td style="text-align:right; color:black;">
                                     @if($account->code_four == 0)
-                                    <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
+                                    <a href="{{ route('accounts.createlevel',[$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>   
                                     @endif
                                 </td>
                            
