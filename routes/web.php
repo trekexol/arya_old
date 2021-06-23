@@ -658,3 +658,10 @@ Route::group(["prefix"=>'pdfnomina'],function(){
     Route::get('reciboliquidacionauto','PdfNominaController@create_recibo_liquidacion_auto')->name('nominas.create_recibo_liquidacion_auto');
     
  });
+
+ Route::group(["prefix"=>'balancegenerals'],function(){
+    Route::get('balancegeneral','ReportController@index')->name('balancegenerals');
+    Route::post('store','ReportController@store')->name('balancegenerals.store');
+    Route::get('balancepdf/{date_begin?}/{date_end?}/{level?}','ReportController@balance_pdf')->name('balancegenerals.balance_pdf');
+   
+});

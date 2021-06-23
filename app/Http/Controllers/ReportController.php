@@ -2,170 +2,91 @@
 
 namespace App\Http\Controllers;
 
-use App\Account;
-use App\BankMovement;
-use App\DetailVoucher;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+
+use App;
+use App\Account;
+use App\DetailVoucher;
 use Illuminate\Support\Facades\DB;
 
-use Carbon\Carbon;
 
-
-class AccountController extends Controller
+class ReportController extends Controller
 {
- 
-    public function __construct(){
-
-       $this->middleware('auth');
-   }
-
-   public function index()
-   {
-       $user       =   auth()->user();
-       $users_role =   $user->role_id;
-       if($users_role == '1'){
-       
-        $accounts = $this->calculation();
-
-        
-
-        }else if($users_role == '2'){
-           return view('admin.index');
-       }
-
-       return view('admin.accounts.index',compact('accounts'));
-   }
-
-
-   public function movements($id_account)
+    public function index()
     {
         
-
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-             
-            $detailvouchers = DetailVoucher::where('id_account',$id_account)->orderBy('id','desc')->get();
-            $account = Account::find($id_account);
+          //$receiptvacations = ReceiptVacation::orderBy('id', 'asc')->get();
+            $date = Carbon::now();
+            $datenow = $date->format('Y-m-d');    
+            $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
 
-         }else if($users_role == '2'){
+        }elseif($users_role == '2'){
             return view('admin.index');
         }
+
         
-        return view('admin.accounts.index_account_movement',compact('detailvouchers','account'));
+    
+        return view('admin.reports.index_balance_general',compact('datenow','detail_old'));
+      
     }
 
-    public function header_movements($id_account,$type)
+    public function store(Request $request)
     {
         
+        $date_begin = request('date_begin');
+        $date_end = request('date_end');
+        $level = request('level');
+        
+        $pdf = App::make('dompdf.wrapper');
+        
 
-        $user       =   auth()->user();
-        $users_role =   $user->role_id;
-        if($users_role == '1'){
-             
-            if($type == 'bank'){
+        return view('admin.reports.index_balance_general',compact('date_begin','date_end','level'));
+    }
 
-                $detailvouchers = BankMovement::where('id_account',$id_account)->orderBy('id','desc')->get();
+    function balance_pdf($date_begin = null,$date_end = null,$level = null){
+      
+        $pdf = App::make('dompdf.wrapper');
+
+        
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d'); 
+        $period = $date->format('Y'); 
+        $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
+
+        if(isset($date_begin)){
+            $from = $date_begin;
+        }else{
+            $from = $detail_old->created_at->format('Y-m-d');
+        }
+        if(isset($date_end)){
+            $to = $date_end;
+        }else{
+            $to = $datenow;
+        }
+        if(isset($level)){
             
-            }
-            $detailvouchers = DetailVoucher::where('id_account',$id_account)->orderBy('id','desc')->get();
-            $account = Account::find($id_account);
-
-         }else if($users_role == '2'){
-            return view('admin.index');
+        }else{
+            $level = 4;
         }
-        
-        return view('admin.accounts.index_account_movement',compact('detailvouchers','account'));
-    }
- 
-   /**
-    * Show the form for creating a new resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
-   public function create()
-   {
 
-        $date = Carbon::now();
-        $datenow = $date->format('Y');
-
-        return view('admin.accounts.create',compact('datenow'));
-   }
-
-   public function createlevel($code_one,$code_two,$code_three,$code_four,$period)
-   {
-    
-    $var = DB::table('accounts')->where('code_one', $code_one)
-                                ->where('code_two', $code_two)
-                                ->where('code_three', $code_three)
-                                ->where('code_four', $code_four)
-                                ->where('period', $period)->first();
-                            
-    if(isset($var)){          
-                     
-            if($code_one != 0){
-                
-                if($code_two != 0){
-
-
-                    if($code_three != 0){
-
-
-                        if($code_four != 0){
-
-                        }else{
-                           
-                            $level = DB::table('accounts')->where('code_one', $code_one)
-                                                        ->where('code_two', $code_two)
-                                                        ->where('code_three', $code_three)
-                                                  ->max('code_four');
-                            $var->code_four = $level + 1;
-                            $var->level = 4;
-                        
-                        }
-                    }else{
-                        
-                        $level = DB::table('accounts')->where('code_one', $code_one)
-                                                        ->where('code_two', $code_two)
-                                                  ->max('code_three');
-                        $var->code_three = $level + 1;
-                        $var->level = 3;
-                    
-                    }
-                }else{
-                    //Cuentas NIVEL 2
-                   //level trae el valor de code_two mas alto
-                    $level = DB::table('accounts')->where('code_one', $code_one)
-                                                  ->max('code_two');
-                    
-                    //luego que tenemos el valor del codigo two mas alto, le sumamos uno para crear el proximo
-                    $var->code_two = $level + 1;
-                    $var->level = 2;
-                    
-                
-                }
-            }else{
-                return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
-            }
-        
-
-        $date = Carbon::now();
-        $datenow = $date->format('Y');
+        $accounts = $this->calculation($from,$to,$level);
 
         
-       
-        return view('admin.accounts.createlevel',compact('var','datenow'));
 
-    }else{
-        return redirect('/accounts')->withDanger('No existe la Cuenta!');
-   }
+        $pdf = $pdf->loadView('admin.reports.balance_general',compact('datenow','accounts','detail_old','date_begin','date_end'));
+        return $pdf->stream();
+                 
     }
 
-    public function calculation()
+    public function calculation($date_begin,$date_end,$level)
     {
         
-    
+        //dd($date_begin);
         $accounts = Account::orderBy('code_one', 'asc')
                          ->orderBy('code_two', 'asc')
                          ->orderBy('code_three', 'asc')
@@ -195,6 +116,10 @@ class AccountController extends Controller
                                                                         ->where('accounts.code_three', $var->code_three)
                                                                         ->where('accounts.code_four', $var->code_four)
                                                                         ->where('detail_vouchers.status', 'C')
+                                                                        //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                         ->sum('debe');
                     
                                              $total_haber = DB::table('accounts')
@@ -204,6 +129,10 @@ class AccountController extends Controller
                                                                         ->where('accounts.code_three', $var->code_three)
                                                                         ->where('accounts.code_four', $var->code_four)
                                                                         ->where('detail_vouchers.status', 'C')
+                                                                        //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                         ->sum('haber');   
                                              /*---------------------------------------------------*/
                  
@@ -214,6 +143,7 @@ class AccountController extends Controller
                                                                  ->where('accounts.code_two', $var->code_two)
                                                                  ->where('accounts.code_three', $var->code_three)
                                                                  ->where('accounts.code_four', $var->code_four)
+                                                                 ->whereBetween('bank_movements.created_at', [$date_begin, $date_end])
                                                                  ->sum('amount');
                  
                                              $total_amount_bank_counterpart = DB::table('accounts')
@@ -222,6 +152,7 @@ class AccountController extends Controller
                                                                  ->where('accounts.code_two', $var->code_two)
                                                                  ->where('accounts.code_three', $var->code_three)
                                                                  ->where('accounts.code_four', $var->code_four)
+                                                                 ->whereBetween('bank_movements.created_at', [$date_begin, $date_end])
                                                                  ->sum('amount');
                                             /*---------------------------------------------------*/
                  
@@ -242,6 +173,10 @@ class AccountController extends Controller
                                                                         ->where('accounts.code_two', $var->code_two)
                                                                         ->where('accounts.code_three', $var->code_three)
                                                                         ->where('detail_vouchers.status', 'C')
+                                                                        //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                         ->sum('debe');
                     
                                             $total_haber =  DB::table('accounts')
@@ -250,6 +185,10 @@ class AccountController extends Controller
                                                                         ->where('accounts.code_two', $var->code_two)
                                                                         ->where('accounts.code_three', $var->code_three)
                                                                         ->where('detail_vouchers.status', 'C')
+                                                                        //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                         ->sum('haber');      
                                          /*---------------------------------------------------*/                               
                    
@@ -270,6 +209,10 @@ class AccountController extends Controller
                                                                             ->where('accounts.code_one', $var->code_one)
                                                                             ->where('accounts.code_two', $var->code_two)
                                                                             ->where('detail_vouchers.status', 'C')
+                                                                            //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->    whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                             ->sum('debe');
                     
                                           
@@ -278,6 +221,10 @@ class AccountController extends Controller
                                                                             ->where('accounts.code_one', $var->code_one)
                                                                             ->where('accounts.code_two', $var->code_two)
                                                                             ->where('detail_vouchers.status', 'C')
+                                                                            //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->    whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                             ->sum('haber');
                                          /*---------------------------------------------------*/
                                         
@@ -293,6 +240,10 @@ class AccountController extends Controller
                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                         ->where('accounts.code_one', $var->code_one)
                                                                         ->where('detail_vouchers.status', 'C')
+                                                                        //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                         ->sum('debe');
                     
                                          
@@ -301,6 +252,10 @@ class AccountController extends Controller
                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                         ->where('accounts.code_one', $var->code_one)
                                                                         ->where('detail_vouchers.status', 'C')
+                                                                        //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->whereRaw(
+  "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+  [$date_begin, $date_end])
                                                                         ->sum('haber');
                                      /*---------------------------------------------------*/
                  
@@ -322,200 +277,4 @@ class AccountController extends Controller
         
          return $accounts;
     }
-    
- 
-
-
-   public function store(Request $request)
-    {
-
-        $exist = DB::table('accounts')->where('code_one', request('code_one'))
-                                ->where('code_two', request('code_two'))
-                                ->where('code_three', request('code_three'))
-                                ->where('code_four', request('code_four'))
-                                ->where('period', request('period'))->first();
-
-    if(!isset($exist)){
-
-    
-            $data = request()->validate([
-                
-                
-
-                'period'            =>'required',
-                'description'       =>'required',
-                'type'              =>'required',
-                'level'             =>'required',
-                'balance_previus'   =>'required',
-               
-            ]);
-
-            $var = new Account();
-
-            $var->code_one = request('code_one');
-            $var->code_two = request('code_two');
-            $var->code_three = request('code_three');
-            $var->code_four = request('code_four');
-
-            $var->period = request('period');
-            $var->description = request('description');
-            $var->type = request('type');
-            $var->level = request('level');
-            $var->balance_previus = request('balance_previus');
-            
-           
-           
-
-            $var->status =  "1";
-        
-            $var->save();
-
-            return redirect('/accounts')->withSuccess('Registro Exitoso!');
-
-        }else{
-            return redirect('/accounts')->withDanger('La Cuenta ya existe!');
-       }
-    }
-
-
-    public function storeNewLevel(Request $request)
-    {
-
-       
-        $exist = DB::table('accounts')->where('code_one', request('code_one'))
-                                ->where('code_two', request('code_two'))
-                                ->where('code_three', request('code_three'))
-                                ->where('code_four', request('code_four'))
-                                ->where('period', request('period'))->first();
-
-    if(!isset($exist)){
-
-    
-            $data = request()->validate([
-                
-                
-
-                'period'            =>'required',
-                'description'       =>'required',
-                'type'              =>'required',
-                'level'             =>'required',
-                
-               
-            ]);
-
-            $var = new Account();
-
-            $var->code_one = request('code_one');
-            $var->code_two = request('code_two');
-            $var->code_three = request('code_three');
-            $var->code_four = request('code_four');
-
-            $var->period = request('period');
-            $var->description = request('description');
-            $var->type = request('type');
-            $var->level = request('level');
-            $var->balance_previus = 0; 
-
-            $valor_sin_formato = str_replace(',', '.', str_replace('.', '', request('balance_previus')));
-
-            $var->balance_previus =$valor_sin_formato;
-
-           
-
-            $var->status =  "1";
-        
-            $var->save();
-            
-
-            return redirect('/accounts')->withSuccess('Registro Exitoso!');
-
-        }else{
-            return redirect('/accounts')->withDanger('La Cuenta ya existe!');
-       }
-    }
-
-   /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function show($id)
-   {
-       //
-   }
-
-   /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function edit($id)
-   {
-        $var = Account::find($id);
-       
-        return view('admin.accounts.edit',compact('var'));
-  
-   }
-
-   /**
-    * Update the specified resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function update(Request $request, $id)
-   {
-
-    $vars =  Account::find($id);
-
-    $vars_status = $vars->status;
-  
-    $data = request()->validate([
-        
-       
-        'period'            =>'required',
-        'code'              =>'required',
-        'description'       =>'required',
-        'type'              =>'required',
-        'level'             =>'required',
-        'balance_previus'   =>'required',
-       
-        
-       
-    ]);
-    $var = Account::findOrFail($id);
-
-    $var->period = request('period');
-    $var->code = request('code');
-    $var->type = request('type');
-    $var->description = request('description');
-    $var->level = request('level');
-    $var->balance_previus = request('balance_previus');
-    
-
-    if(request('status') == null){
-        $var->status = $vars_status;
-    }else{
-        $var->status = request('status');
-    }
-   
-    $var->save();
-
-    return redirect('/accounts')->withSuccess('Actualizacion Exitosa!');
-    }
-
-
-   /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-   public function destroy($id)
-   {
-       //
-   }
 }
