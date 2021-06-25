@@ -48,17 +48,30 @@
 
       $controlador_level3 = true;
       $total_level3 = 0;
+
+      $description3 = null;
+      $description2 = null;
+      
        
     ?>
+
+    
+
   @foreach ($accounts as $account)
 
-    @if ($account->level == 1)
+    @if ($account->level == 1 )
       @if ($controlador_level1 == false)
+        @if(isset($description3))
         <tr>
           <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; ">Total {{ $description3 }} : </th>
           <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level3, 2, ',', '.') }}</th>
           <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
         </tr> 
+        <?php 
+          $controlador_level3 = true;
+        ?>
+        @endif
+        @if(isset($description2))
         <tr>
           <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; ">Total {{ $description2 }} : </th>
           <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level2, 2, ',', '.') }}</th>
@@ -66,8 +79,9 @@
         </tr> 
         <?php 
           $controlador_level2 = true;
-          $controlador_level3 = true;
         ?>
+        @endif
+        
         <tr>
           <th style="text-align: left; font-weight: normal; width: 58%; border-left-color: white; border-right-color: white; background:rgb(171, 224, 255); font-weight: bold; ">Total {{ $description }} : </th>
           <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level1, 2, ',', '.') }}</th>
@@ -86,13 +100,25 @@
           $controlador_level1 = false;
         ?>
       
-    @elseif ($account->level == 2)
+    @elseif ($account->level == 2 && ($level >= 2))
       @if ($controlador_level2 == false)
-        <tr>
-          <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 20px;">Total {{ $description2 }} : </th>
-          <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level2, 2, ',', '.') }}</th>
-          <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
-        </tr> 
+          @if(isset($description3))
+          <tr>
+            <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 20px;">Total {{ $description3 }} : </th>
+            <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level3, 2, ',', '.') }}</th>
+            <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
+          </tr> 
+          <?php 
+            $controlador_level3 = true;
+          ?>
+          @endif
+          @if(isset($description2))
+          <tr>
+            <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 20px;">Total {{ $description2 }} : </th>
+            <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level2, 2, ',', '.') }}</th>
+            <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
+          </tr> 
+          @endif
       @endif
       <tr>
         <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 20px;">{{ $account->description }}</th>
@@ -105,26 +131,30 @@
         //si vuelve a encontrar otra cuenta nivel 1, nos imprimira el total de la cuenta anterior nivel 1
           $controlador_level2 = false;
         ?>
-    @elseif ($account->level == 3)
+    @elseif ($account->level == 3 && ($level >= 3))
       @if ($controlador_level3 == false)
+          @if(isset($description3))
           <tr>
             <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 40px;">Total {{ $description3 }} : </th>
             <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level3, 2, ',', '.') }}</th>
             <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
+
           </tr> 
-        @endif
-      <tr>
-        <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 40px;">{{ $account->description }}</th>
-        <th style="text-align: left; font-weight: normal; width: 21%; border-color: white; font-weight: bold; padding-left: 40px;"></th>
-        <th style="text-align: left; font-weight: normal; width: 21%; border-color: white; font-weight: bold; padding-left: 40px;"></th>
-      </tr> 
+          @endif
+      @endif
+        <tr>
+          <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 40px;">{{ $account->description }}</th>
+          <th style="text-align: left; font-weight: normal; width: 21%; border-color: white; font-weight: bold; padding-left: 40px;"></th>
+          <th style="text-align: left; font-weight: normal; width: 21%; border-color: white; font-weight: bold; padding-left: 40px;"></th>
+        </tr> 
+        
       <?php 
           $description3 = $account->description;
           $total_level3 = $account->balance_previus + $account->debe - $account->haber;
         //si vuelve a encontrar otra cuenta nivel 1, nos imprimira el total de la cuenta anterior nivel 1
           $controlador_level3 = false;
         ?>
-    @else
+    @elseif($level == 4)
       <?php 
         $total_level4 = $account->balance_previus + $account->debe - $account->haber;
       ?>
@@ -136,10 +166,27 @@
     @endif
   
   @endforeach
-  
-  
+  <!-- Imprimir los ultimos totales -->
+  @if(isset($description3))
+  <tr>
+    <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; padding-left: 20px;">Total {{ $description3 }} : </th>
+    <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level3, 2, ',', '.') }}</th>
+    <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
+  </tr> 
+  @endif
+  @if(isset($description2))
+  <tr>
+    <th style="text-align: left; font-weight: normal; width: 58%; border-color: white; font-weight: bold; ">Total {{ $description2 }} : </th>
+    <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level2, 2, ',', '.') }}</th>
+    <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
+  </tr> 
+  @endif
+  <tr>
+    <th style="text-align: left; font-weight: normal; width: 58%; border-left-color: white; border-right-color: white; background:rgb(171, 224, 255); font-weight: bold; ">Total {{ $description }} : </th>
+    <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level1, 2, ',', '.') }}</th>
+    <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
+  </tr> 
 </table>
-
 
 
 </body>

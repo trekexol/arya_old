@@ -223,6 +223,7 @@ class DemoTableSeeder extends Seeder
             'id' => 1,
             'segment_id' => 2,
             'subsegment_id' => 2,
+            'unit_of_measure_id' => 1,
             'id_user' => 1,
             'code_comercial' => '1001',
             'type' => 'MERCANCIA',
@@ -238,7 +239,8 @@ class DemoTableSeeder extends Seeder
         ]);
         DB::table('inventories')->insert([
             'id' => 1,
-            'product_id' => 2,
+            'id_user' => 1,
+            'product_id' => 1,
             'code' => 1001,
             'amount' => 100,
             'status' => '1',

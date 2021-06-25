@@ -337,7 +337,7 @@ Route::group(["prefix"=>'historictransports'],function(){
 
 
 Route::group(["prefix"=>'accounts'],function(){
-    Route::get('/','AccountController@index')->name('accounts');
+    Route::get('menu/{coin?}','AccountController@index')->name('accounts');
     Route::get('register','AccountController@create')->name('accounts.create');
     Route::post('store','AccountController@store')->name('accounts.store');
     Route::get('{id}/edit','AccountController@edit')->name('accounts.edit');

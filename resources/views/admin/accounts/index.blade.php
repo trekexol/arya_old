@@ -24,7 +24,7 @@
                 <a class="dropdown-item" href="#">Todos</a>
             </div>
         </div>
-        <div class="col-sm-3  dropdown mb-4">
+        <div class="col-sm-2  dropdown mb-4">
             <button class="btn btn-light2 text-dark " type="button"
                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
                 aria-expanded="false">
@@ -40,7 +40,7 @@
                 <a class="dropdown-item" href="#">Subir Cuentas</a>
             </div>
         </div> 
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <a href="#" class="btn btn-light2 text-dark">
                 <div class="small"><i class="fas fa-eye" ></i>
                 Ejercicio Anterior
@@ -54,12 +54,20 @@
                     </div>
                 </a>
             </div>
+            
             <div class="col-sm-3">
                 <a href="{{ route('accounts.create')}}" class="btn btn-light2 text-dark" role="button" aria-pressed="true">
                     
                     <div class="small"><i class="fas fa-pencil-alt" ></i>Registrar una Cuenta</div>
                     
                 </a>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" name="coin" id="coin">
+                    <option disabled selected value="">Moneda</option>
+                    <option  value="bolivares">Bolívares</option>
+                    <option value="dolares">Dólares</option>
+                </select>
             </div>
         
     </div>
@@ -198,5 +206,11 @@
         'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
         'iDisplayLength': '50'
     });
+
+    $("#coin").on('change',function(){
+        var coin = $(this).val();
+        window.location = "{{route('accounts', '')}}"+"/"+coin;
+    });
     </script> 
+
 @endsection

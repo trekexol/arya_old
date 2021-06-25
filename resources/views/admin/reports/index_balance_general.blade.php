@@ -38,10 +38,21 @@
                             </div>
                             <div class="col-sm-2">
                                 <select class="form-control" name="level" id="level">
+                                @if (isset($level))
+                                    <option selected value="{{ $level }}">Nivel {{ $level }}</option>
+                                    <option disabled value="">---------</option>
+                                    <option value="1">Nivel 1</option>
+                                    <option value="2">Nivel 2</option>
+                                    <option value="3">Nivel 3</option>
+                                    <option  value="4">Nivel 4</option>
+                                @else
                                     <option value="1">Nivel 1</option>
                                     <option value="2">Nivel 2</option>
                                     <option value="3">Nivel 3</option>
                                     <option selected value="4">Nivel 4</option>
+                                @endif
+                                    
+                               
                                 </select>
                                 </div>
                             <div class="col-sm-1">

@@ -137,6 +137,8 @@ class FacturarController extends Controller
     
         $header_voucher->save();
 
+        $bcv = $this->search_bcv();
+
         /*Busqueda de Cuentas*/
 
         //Cuentas por Cobrar Clientes
@@ -144,7 +146,7 @@ class FacturarController extends Controller
         $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
     
         if(isset($account_cuentas_por_cobrar)){
-            $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_amount_with_iva,0);
+            $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_amount_with_iva,0);
         }
 
         //Ingresos por SubSegmento de Bienes
@@ -152,7 +154,7 @@ class FacturarController extends Controller
         $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
 
         if(isset($account_cuentas_por_cobrar)){
-            $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sin_formato_amount);
+            $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sin_formato_amount);
         }
 
         //Debito Fiscal IVA por Pagar
@@ -162,7 +164,7 @@ class FacturarController extends Controller
         if($sin_formato_amount_iva != 0){
            
             if(isset($account_cuentas_por_cobrar)){
-                $this->add_movement($header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$sin_formato_amount_iva);
+                $this->add_movement($bcv,$header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$sin_formato_amount_iva);
             }
         }
         
@@ -171,7 +173,7 @@ class FacturarController extends Controller
         $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
 
         if(isset($account_cuentas_por_cobrar)){
-            $this->add_movement($header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$sin_formato_amount);
+            $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$sin_formato_amount);
         }
 
         //Costo de Mercancia
@@ -179,7 +181,7 @@ class FacturarController extends Controller
         $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancia')->first();
 
         if(isset($account_cuentas_por_cobrar)){
-            $this->add_movement($header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sin_formato_amount,0);
+            $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sin_formato_amount,0);
         }
 
         return redirect('quotations/facturado/'.$quotation->id.'')->withSuccess('Factura Guardada con Exito!');
@@ -1025,12 +1027,14 @@ class FacturarController extends Controller
             
                 $header_voucher->save();
 
+                $bcv = $this->search_bcv();
+
             /*TERMINAR ESTO */
             if($validate_boolean1 == true){
                 $var->save();
 
               
-                    $this->add_pay_movement($payment_type,$header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
+                    $this->add_pay_movement($bcv,$payment_type,$header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
                 
 
                 //LE PONEMOS STATUS C, DE COBRADO
@@ -1040,47 +1044,51 @@ class FacturarController extends Controller
             if($validate_boolean2 == true){
                 $var2->save();
                
-                $this->add_pay_movement($payment_type2,$header_voucher->id,$var2->id_account,$quotation->id,$user_id,$var2->amount,0);
+                $this->add_pay_movement($bcv,$payment_type2,$header_voucher->id,$var2->id_account,$quotation->id,$user_id,$var2->amount,0);
                 
             }
             
             if($validate_boolean3 == true){
                 $var3->save();
 
-                $this->add_pay_movement($payment_type3,$header_voucher->id,$var3->id_account,$quotation->id,$user_id,$var3->amount,0);
+                $this->add_pay_movement($bcv,$payment_type3,$header_voucher->id,$var3->id_account,$quotation->id,$user_id,$var3->amount,0);
             
                 
             }
             if($validate_boolean4 == true){
                 $var4->save();
 
-                $this->add_pay_movement($payment_type4,$header_voucher->id,$var4->id_account,$quotation->id,$user_id,$var4->amount,0);
+                $this->add_pay_movement($bcv,$payment_type4,$header_voucher->id,$var4->id_account,$quotation->id,$user_id,$var4->amount,0);
             
             }
             if($validate_boolean5 == true){
                 $var5->save();
 
-                $this->add_pay_movement($payment_type5,$header_voucher->id,$var5->id_account,$quotation->id,$user_id,$var5->amount,0);
+                $this->add_pay_movement($bcv,$payment_type5,$header_voucher->id,$var5->id_account,$quotation->id,$user_id,$var5->amount,0);
              
             }
             if($validate_boolean6 == true){
                 $var6->save();
 
-                $this->add_pay_movement($payment_type6,$header_voucher->id,$var6->id_account,$quotation->id,$user_id,$var6->amount,0);
+                $this->add_pay_movement($bcv,$payment_type6,$header_voucher->id,$var6->id_account,$quotation->id,$user_id,$var6->amount,0);
             
             }
             if($validate_boolean7 == true){
                 $var7->save();
 
-                $this->add_pay_movement($payment_type7,$header_voucher->id,$var7->id_account,$quotation->id,$user_id,$var7->amount,0);
+                $this->add_pay_movement($bcv,$payment_type7,$header_voucher->id,$var7->id_account,$quotation->id,$user_id,$var7->amount,0);
             
             }
+
+
+            
+
 
             //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
             $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
             
             if(isset($account_cuentas_por_cobrar)){
-                $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$total_pay_form);
+                $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$total_pay_form);
             }
             
 
@@ -1157,7 +1165,7 @@ class FacturarController extends Controller
                 $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
             
                 if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$total_pay_form,0);
+                    $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$total_pay_form,0);
                 }
 
                 //Ingresos por SubSegmento de Bienes
@@ -1165,7 +1173,7 @@ class FacturarController extends Controller
                 $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
 
                 if(isset($account_subsegmento)){
-                    $this->add_movement($header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
+                    $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
                 }
 
                 //Debito Fiscal IVA por Pagar
@@ -1176,7 +1184,7 @@ class FacturarController extends Controller
                     $total_iva = ($base_imponible * $iva_percentage)/100;
 
                     if(isset($account_cuentas_por_cobrar)){
-                        $this->add_movement($header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$total_iva);
+                        $this->add_movement($bcv,$header_voucher->id,$account_debito_iva_fiscal->id,$quotation->id,$user_id,0,$total_iva);
                     }
                 }
                 
@@ -1185,7 +1193,7 @@ class FacturarController extends Controller
                 $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
 
                 if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$sub_total);
+                    $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$sub_total);
                 }
 
                 //Costo de Mercancia
@@ -1193,7 +1201,7 @@ class FacturarController extends Controller
                 $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancía')->first();
 
                 if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sub_total,0);
+                    $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sub_total,0);
                 }
                 /*----------- */
             }
@@ -1225,14 +1233,14 @@ class FacturarController extends Controller
 
 
 
-    public function add_movement($id_header,$id_account,$id_invoice,$id_user,$debe,$haber){
+    public function add_movement($bcv,$id_header,$id_account,$id_invoice,$id_user,$debe,$haber){
 
         $detail = new DetailVoucher();
 
         $detail->id_account = $id_account;
         $detail->id_header_voucher = $id_header;
         $detail->user_id = $id_user;
-
+        $detail->tasa = $bcv;
         $detail->id_invoice = $id_invoice;
 
       /*  $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', $debe));
@@ -1321,14 +1329,14 @@ class FacturarController extends Controller
 
 
 
-    public function add_pay_movement($payment_type,$header_voucher,$id_account,$quotation_id,$user_id,$amount_debe,$amount_haber){
+    public function add_pay_movement($bcv,$payment_type,$header_voucher,$id_account,$quotation_id,$user_id,$amount_debe,$amount_haber){
 
 
             //Cuentas por Cobrar Clientes
 
                 //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
                 if(isset($id_account)){
-                    $this->add_movement($header_voucher,$id_account,$quotation_id,$user_id,$amount_debe,0);
+                    $this->add_movement($bcv,$header_voucher,$id_account,$quotation_id,$user_id,$amount_debe,0);
                 
                 }//SIN DETERMINAR
                 else if($payment_type == 7){
@@ -1336,7 +1344,7 @@ class FacturarController extends Controller
                     $account_sin_determinar = Account::where('description', 'like', 'Sin determinar')->first(); 
             
                     if(isset($account_sin_determinar)){
-                        $this->add_movement($header_voucher,$account_sin_determinar->id,$quotation_id,$user_id,$amount_debe,0);
+                        $this->add_movement($bcv,$header_voucher,$account_sin_determinar->id,$quotation_id,$user_id,$amount_debe,0);
                     }
                 }//PAGO DE CONTADO
                 else if($payment_type == 2){
@@ -1344,7 +1352,7 @@ class FacturarController extends Controller
                     $account_contado = Account::where('description', 'like', 'Caja Chica')->first(); 
             
                     if(isset($account_contado)){
-                        $this->add_movement($header_voucher,$account_contado->id,$quotation_id,$user_id,$amount_debe,0);
+                        $this->add_movement($bcv,$header_voucher,$account_contado->id,$quotation_id,$user_id,$amount_debe,0);
                     }
                 }//CONTRA ANTICIPO
                 else if($payment_type == 3){
@@ -1352,7 +1360,7 @@ class FacturarController extends Controller
                     $account_contra_anticipo = Account::where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
             
                     if(isset($account_contra_anticipo)){
-                        $this->add_movement($header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
+                        $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
                     }
                 } 
                 //Tarjeta Corporativa 
@@ -1361,7 +1369,7 @@ class FacturarController extends Controller
                     $account_contra_anticipo = Account::where('description', 'like', 'Tarjeta Corporativa')->first(); 
             
                     if(isset($account_contra_anticipo)){
-                        $this->add_movement($header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
+                        $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
                     }
                 } 
 

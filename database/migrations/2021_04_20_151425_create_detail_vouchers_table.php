@@ -21,6 +21,7 @@ class CreateDetailVouchersTable extends Migration
             $table->unsignedBigInteger('id_expense')->nullable();
             $table->unsignedBigInteger('user_id');
 
+            $table->decimal('tasa',64,2);
             $table->decimal('debe',64,2);
             $table->decimal('haber',64,2);
 

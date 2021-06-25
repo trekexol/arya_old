@@ -74,16 +74,17 @@ class ReportController extends Controller
             $level = 4;
         }
 
-        $accounts = $this->calculation($from,$to,$level);
+        $accounts = $this->calculation($from,$to);
 
+       
         
 
-        $pdf = $pdf->loadView('admin.reports.balance_general',compact('datenow','accounts','detail_old','date_begin','date_end'));
+        $pdf = $pdf->loadView('admin.reports.balance_general',compact('datenow','accounts','level','detail_old','date_begin','date_end'));
         return $pdf->stream();
                  
     }
 
-    public function calculation($date_begin,$date_end,$level)
+    public function calculation($date_begin,$date_end)
     {
         
         //dd($date_begin);
