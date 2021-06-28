@@ -21,12 +21,12 @@
     <body id="page-top">
         <!-- Navigation-->
        @include('layouts.home_navbar')
-        <!-- Masthead-->
+        <!-- Masthead Bienvenido a nuestro Software Maneja las finanzas de tu empresa-->
         <header class="masthead">
             <div class="container">
                 <div class="masthead-subheading">Bienvenido a nuestro Software</div>
-                <div class="masthead-heading text-uppercase">Maneja las finanzas de tu empresa</div>
-                <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#about">Saber mas ...</a>
+                <div class="masthead-heading">Maneja las finanzas de tu empresa</div>
+                <a class="btn btn-primary  text-uppercase js-scroll-trigger" href="#about">Saber mas ...</a>
             </div>
         </header>
 

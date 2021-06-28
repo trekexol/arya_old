@@ -337,7 +337,7 @@ Route::group(["prefix"=>'historictransports'],function(){
 
 
 Route::group(["prefix"=>'accounts'],function(){
-    Route::get('menu/{coin?}','AccountController@index')->name('accounts');
+    Route::get('menu/{coin?}/{level?}','AccountController@index')->name('accounts');
     Route::get('register','AccountController@create')->name('accounts.create');
     Route::post('store','AccountController@store')->name('accounts.store');
     Route::get('{id}/edit','AccountController@edit')->name('accounts.edit');
@@ -352,6 +352,8 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::get('movementaccount/{id_account}','AccountController@movements')->name('accounts.movements');
 
     Route::get('movementheader/{id}/{type}','AccountController@header_movements')->name('accounts.header_movements');
+
+    Route::get('yearend','AccountController@year_end')->name('accounts.year_end');
 });
 
 Route::group(["prefix"=>'headervouchers'],function(){

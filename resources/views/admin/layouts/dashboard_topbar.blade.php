@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark2 topbar mb-4 static-top shadow" >
+<nav class="navbar navbar-expand navbar-dark bg-light topbar mb-4 static-top shadow" >
    
                    
                    
@@ -39,7 +39,7 @@
                                
                                       <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                           <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                          Logout
+                                          Cerrar Sesión
                                       </a>
                                   
                                 </div>

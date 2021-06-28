@@ -24,30 +24,30 @@
         
             <div>   
             <div class="dropdown-header text-dark font-weight-bold">Facturación</div>
-                <a class="dropdown-item" href="#">Nueva Cotización</a>
-                <a class="dropdown-item" href="#">Nuevo Cliente</a>
-                <a class="dropdown-item" href="#">Nuevo Vendedor</a>
+                <a class="dropdown-item" href="{{ route('quotations.createquotation') }}">Nueva Cotización</a>
+                <a class="dropdown-item" href="{{ route('clients.create') }}">Nuevo Cliente</a>
+                <a class="dropdown-item" href="{{ route('vendors.create') }}">Nuevo Vendedor</a>
             </div>
                                     
             <div>
             <div class="dropdown-header text-dark font-weight-bold">Gastos o Compras</div>
-                <a class="dropdown-item" href="#">Registrar Compra</a>
-                <a class="dropdown-item" href="#">Nuevo Proveedor</a>
-                <a class="dropdown-item" href="#">Registrar Orden de Pago</a>
-                <a class="dropdown-item" href="#">Nuevo Producto</a>
+                <a class="dropdown-item" href="{{ route('expensesandpurchases.create') }}">Registrar Compra</a>
+                <a class="dropdown-item" href="{{ route('providers.create') }}">Nuevo Proveedor</a>
+                <a class="dropdown-item" href="{{ route('directpaymentorders.create') }}">Registrar Orden de Pago</a>
+                <a class="dropdown-item" href="{{ route('products.create') }}">Nuevo Producto</a>
             </div>
 
             <div>                      
             <div class="dropdown-header text-dark font-weight-bold">Nóminas</div>
-                <a class="dropdown-item" href="#">Nueva Nómina</a>
-                <a class="dropdown-item" href="#">Registrar Concepto de Nómina</a>
-                <a class="dropdown-item" href="#">Nuevo Empleado</a>
+                <a class="dropdown-item" href="{{ route('nominas.create') }}">Nueva Nómina</a>
+                <a class="dropdown-item" href="{{ route('nominaconcepts.create') }}">Registrar Concepto de Nómina</a>
+                <a class="dropdown-item" href="{{ route('employees.create') }}">Nuevo Empleado</a>
             </div>
             <div>
             <div class="dropdown-header text-dark font-weight-bold">Transación</div>
-                <a class="dropdown-item" href="#">Registrar Depósito</a>
-                <a class="dropdown-item" href="#">Registrar Retiro</a>
-                <a class="dropdown-item" href="#">Registrar Transferencia</a>
+                <a class="dropdown-item" href="{{ route('bankmovements') }}">Registrar Depósito</a>
+                <a class="dropdown-item" href="{{ route('bankmovements') }}">Registrar Retiro</a>
+                <a class="dropdown-item" href="{{ route('bankmovements') }}">Registrar Transferencia</a>
             </div>
             
             
