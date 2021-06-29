@@ -24,7 +24,9 @@ class CreateAccountsTable extends Migration
              $table->string('type',10);
              $table->integer('level');
              $table->decimal('balance_previus',64,2);
-            
+             $table->decimal('rate',64,2)->nullable();
+             $table->string('coin',10)->nullable();
+
              $table->string('status',1);
 
              //poner mejor un unique

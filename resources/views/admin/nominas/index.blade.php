@@ -17,29 +17,29 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-3">
-        <div class="col">
-            <a href="{{ route('nominas.create_recibo_vacaciones') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
-                &nbsp Recibo de Vacaciones
-            </a>
-        </div>
-        <div class="col">
-            <a href="{{ route('nominas.create_recibo_prestaciones') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
-                &nbsp Recibo de Prestaciones
-            </a>
-        </div>
-        <div class="col">
-            <a href="{{ route('nominas.create_recibo_utilidades') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
-                &nbsp Recibo de Utilidades
-            </a>
-        </div>
-        <div class="col">
+        <div class="col-sm-2  dropdown mb-4">
+            <button class="btn btn-light2" type="button"
+                id="dropdownMenuButton" data-toggle="dropdown" >
+                <i class="fas fa-bars"></i>
+                    Recibos
+                
+            </button>
+            <div class="dropdown-menu animated--fade-in"
+                aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{ route('nominas.create_recibo_vacaciones') }}">Recibo de Vacaciones</a>
+                <a class="dropdown-item" href="{{ route('nominas.create_recibo_prestaciones') }}">Recibo de Prestaciones</a>
+                <a class="dropdown-item" href="{{ route('nominas.create_recibo_utilidades') }}">Recibo de Utilidades</a>
+            </div>
+        </div> 
+       
+        <div class="col-sm-3">
             <a href="{{ route('nominas.create_recibo_liquidacion_auto') }}" class="btn btn-light2"><i class="fas fa-print" ></i>
-                &nbsp Calcula Liquidación Auto
+                Calcula Liquidación Auto
             </a>
         </div>
-        <div class="col">
+        <div class="col-sm-3">
             <a href="#" class="btn btn-light2"><i class="fas fa-print" ></i>
-                &nbsp Crear Liquidación
+                Crear Liquidación
             </a>
         </div>
     </div>

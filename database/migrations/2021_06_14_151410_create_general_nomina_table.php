@@ -20,7 +20,8 @@ class CreateGeneralNominaTable extends Migration
             $table->date('date_end');
 
             $table->decimal('tax_unit',8,2);
-            $table->integer('days_utilities');
+            $table->integer('days_utilities_minimun');
+            $table->integer('days_utilities_maximun');
             $table->integer('vacation_bonus_days');
 
             $table->decimal('sso',8,2);

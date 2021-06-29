@@ -213,7 +213,7 @@
                             }
 
                             if(validate_cantidad != -1){
-                                alert("entro");
+                               
                                 if(description.charAt(validate_cantidad) == 'c'){
                                     $("#cantidad_form").show();
                                     document.getElementById("cantidad").value = 0;

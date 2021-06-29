@@ -148,7 +148,7 @@ class AccountController extends Controller
                 
                 }
             }else{
-                return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+                return redirect('/accounts/menu')->withDanger('El codigo uno es igual a cero!');
             }
         
 
@@ -160,7 +160,7 @@ class AccountController extends Controller
         return view('admin.accounts.createlevel',compact('var','datenow'));
 
     }else{
-        return redirect('/accounts')->withDanger('No existe la Cuenta!');
+        return redirect('/accounts/menu')->withDanger('No existe la Cuenta!');
    }
     }
 
@@ -339,11 +339,11 @@ class AccountController extends Controller
                     
                                     }
                                 }else{
-                                    return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+                                    return redirect('/accounts/menu')->withDanger('El codigo uno es igual a cero!');
                                 }
                             } 
                         }  else{
-                            return redirect('/accounts')->withDanger('No hay Cuentas');
+                            return redirect('/accounts/menu')->withDanger('No hay Cuentas');
                         }              
                  
        
@@ -587,11 +587,11 @@ class AccountController extends Controller
 
                     }
                 }else{
-                    return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
+                    return redirect('/accounts/menu')->withDanger('El codigo uno es igual a cero!');
                 }
             } 
         }else{
-            return redirect('/accounts')->withDanger('No hay Cuentas');
+            return redirect('/accounts/menu')->withDanger('No hay Cuentas');
         }              
                  
        
@@ -643,10 +643,10 @@ class AccountController extends Controller
         
             $var->save();
 
-            return redirect('/accounts')->withSuccess('Registro Exitoso!');
+            return redirect('/accounts/menu')->withSuccess('Registro Exitoso!');
 
         }else{
-            return redirect('/accounts')->withDanger('La Cuenta ya existe!');
+            return redirect('/accounts/menu')->withDanger('La Cuenta ya existe!');
        }
     }
 
@@ -700,10 +700,10 @@ class AccountController extends Controller
             $var->save();
             
 
-            return redirect('/accounts')->withSuccess('Registro Exitoso!');
+            return redirect('/accounts/menu')->withSuccess('Registro Exitoso!');
 
         }else{
-            return redirect('/accounts')->withDanger('La Cuenta ya existe!');
+            return redirect('/accounts/menu')->withDanger('La Cuenta ya existe!');
        }
     }
 
@@ -727,8 +727,10 @@ class AccountController extends Controller
    public function edit($id)
    {
         $var = Account::find($id);
+
+        $rate = $this->search_bcv();
        
-        return view('admin.accounts.edit',compact('var'));
+        return view('admin.accounts.edit',compact('var','rate'));
   
    }
 
@@ -741,45 +743,63 @@ class AccountController extends Controller
     */
    public function update(Request $request, $id)
    {
-
-    $vars =  Account::find($id);
-
-    $vars_status = $vars->status;
-  
-    $data = request()->validate([
         
-       
-        'period'            =>'required',
-        'code'              =>'required',
-        'description'       =>'required',
-        'type'              =>'required',
-        'level'             =>'required',
-        'balance_previus'   =>'required',
-       
-        
-       
-    ]);
-    $var = Account::findOrFail($id);
+        $vars =  Account::find($id);
 
-    $var->period = request('period');
-    $var->code = request('code');
-    $var->type = request('type');
-    $var->description = request('description');
-    $var->level = request('level');
-    $var->balance_previus = request('balance_previus');
+        $vars_status = $vars->status;
     
+        $data = request()->validate([
+            'description'       =>'required',
+            'balance_previus'   =>'required',
+        
+        ]);
 
-    if(request('status') == null){
-        $var->status = $vars_status;
-    }else{
-        $var->status = request('status');
+        $var = Account::findOrFail($id);
+
+        $sin_formato_balance_previus = str_replace(',', '.', str_replace('.', '', request('balance_previus')));
+        $sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
+            
+        $var->description = request('description');
+        $var->balance_previus = $sin_formato_balance_previus;
+
+        if(request('coin') != 'BsS'){
+            $var->coin = request('coin');
+            $var->rate = $sin_formato_rate;
+        }
+        
+
+        if(request('status') == null){
+            $var->status = $vars_status;
+        }else{
+            $var->status = request('status');
+        }
+    
+        $var->save();
+
+        return redirect('/accounts/menu')->withSuccess('Actualizacion Exitosa!');
     }
-   
-    $var->save();
 
-    return redirect('/accounts')->withSuccess('Actualizacion Exitosa!');
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        }else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
     }
-
 
    /**
     * Remove the specified resource from storage.

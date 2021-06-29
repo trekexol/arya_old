@@ -18,6 +18,8 @@ class CreateNominaConceptsTable extends Migration
             $table->unsignedBigInteger('id_formula_q')->nullable();
             $table->unsignedBigInteger('id_formula_m')->nullable();
             $table->unsignedBigInteger('id_formula_s')->nullable();
+            $table->unsignedBigInteger('id_account_debe')->nullable();
+            $table->unsignedBigInteger('id_account_haber')->nullable();
             $table->string('abbreviation',15);
             $table->integer('order');
             $table->string('description',60);
@@ -33,6 +35,8 @@ class CreateNominaConceptsTable extends Migration
             $table->foreign('id_formula_q')->references('id')->on('nomina_formulas');
             $table->foreign('id_formula_m')->references('id')->on('nomina_formulas');
             $table->foreign('id_formula_s')->references('id')->on('nomina_formulas');
+            $table->foreign('id_account_debe')->references('id')->on('accounts');
+            $table->foreign('id_account_haber')->references('id')->on('accounts');
             $table->timestamps();
         });
     }

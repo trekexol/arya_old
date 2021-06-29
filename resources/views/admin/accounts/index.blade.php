@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <!-- container-fluid -->
 <div class="container-fluid">
 
@@ -13,9 +12,9 @@
             <button class="btn btn-light2 text-dark " type="button"
                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
                 aria-expanded="false">
-                <div class="small"><i class="fas fa-bars"></i>
+                <i class="fas fa-bars"></i>
                 Opciones
-                </div>
+                
             </button>
             <div class="dropdown-menu animated--fade-in"
                 aria-labelledby="dropdownMenuButton">
@@ -24,18 +23,18 @@
             </div>
         </div> 
        
-            <div class="col-sm-2">
-                <a href="#" class="btn btn-light2 text-dark">
-                    <div class="small"><i class="fas fa-times" ></i>
+            <div class="col-sm-3">
+                <a href="#" class="btn btn-light2" data-toggle="modal" data-target="#cierreModal">
+                    <i class="fas fa-times" ></i>
                     Cierre de Ejercicio
-                    </div>
+                    
                 </a>
             </div>
             
             <div class="col-sm-3">
-                <a href="{{ route('accounts.create')}}" class="btn btn-light2 text-dark" role="button" aria-pressed="true">
+                <a href="{{ route('accounts.create')}}" class="btn btn-light2" role="button" aria-pressed="true">
                     
-                    <div class="small"><i class="fas fa-pencil-alt" ></i>Registrar una Cuenta</div>
+                    <i class="fas fa-pencil-alt" ></i>Registrar una Cuenta
                     
                 </a>
             </div>
@@ -118,12 +117,19 @@
                         @if($level >= $account->level)
                         <tr>
                             <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
-                            <td style="text-align:right; color:black; ">{{$account->description}}</td>
+                            <td style="text-align:right; color:black;">
+                                @if(isset($account->coin))
+                                    <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}} ({{ $account->coin }})</a>
+                                @else
+                                    <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}}</a>
+                               @endif
+                            </td>
                             <td style="text-align:right; color:black; ">{{$account->level}}</td>
                             <td style="text-align:right; color:black; ">{{$account->type}}</td>
                             
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
-                           @if ($account->status == "M")
+                                <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus * $account->rate ?? 1, 2, ',', '.')}}</td>
+                           
+                            @if ($account->status == "M")
                             <td style="text-align:right; color:black; font-weight: bold;">
                             <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
                        
@@ -151,11 +157,17 @@
                     @else
                         <tr>
                             <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
-                            <td style="text-align:right; color:black; ">{{$account->description}}</td>
+                            <td style="text-align:right; color:black; ">     
+                                @if(isset($account->coin))
+                                    <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}} ({{ $account->coin }})</a>
+                                @else
+                                    <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}}</a>
+                                @endif
+                            </td>
                             <td style="text-align:right; color:black; ">{{$account->level}}</td>
                             <td style="text-align:right; color:black; ">{{$account->type}}</td>
                             
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus, 2, ',', '.')}}</td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus * $account->rate ?? 1, 2, ',', '.')}}</td>
                             @if ($account->status == "M")
                             <td style="text-align:right; color:black; font-weight: bold;">
                             <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
@@ -189,7 +201,7 @@
     </div>
 </div>
    <!-- Logout Modal-->
-   <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+   <div class="modal fade" id="cierreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
    aria-hidden="true">
    <div class="modal-dialog" role="document">
        <div class="modal-content">
@@ -199,7 +211,7 @@
                    <span aria-hidden="true">×</span>
                </button>
            </div>
-           <div class="modal-body">Seleccione "Cerrar Ejercicio" si desea salir de Arya Software</div>
+           <div class="modal-body">Seleccione "Cerrar Ejercicio" si desea archivar sus movimientos de cuentas</div>
            <div class="modal-footer">
                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                <a class="btn btn-primary" href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -232,6 +244,16 @@
         var coin = document.getElementById("coin").value; 
         window.location = "{{route('accounts', ['',''])}}"+"/"+coin+"/"+level;
     });
+
+        $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+        if ($(".sidebar").hasClass("toggled")) {
+      $('.sidebar .collapse').collapse('hide');
+    };
+    
+
+
+
     </script> 
 
 @endsection

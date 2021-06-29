@@ -133,8 +133,12 @@ class PdfNominaController extends Controller
             $ultima_nomina = Nomina::where('id_profession',$employee->profession_id)
                                                 ->latest()->first();
 
-            $nomina_calculation = NominaCalculation::where('id_nomina',$ultima_nomina->id)->get();                                    
-         
+            if(isset($ultima_nomina)){
+                $nomina_calculation = NominaCalculation::where('id_nomina',$ultima_nomina->id)->get();                                    
+            }else{
+                return redirect('/nominas')->withDanger('El empleado no tiene ninguna nomina registrada');
+            } 
+            
             $pdf = $pdf->loadView('pdf.prestaciones',compact('employee','datenow','ultima_nomina','nomina_calculation'));
             return $pdf->stream();
     
@@ -142,6 +146,37 @@ class PdfNominaController extends Controller
             return redirect('/nominas')->withDanger('El empleado no existe');
         } 
             
+    }
+
+    function print_nomina_calculation($id_nomina,$id_employee){
+        
+        $pdf = App::make('dompdf.wrapper');
+
+        $employee = Employee::find($id_employee);
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+        
+
+        if(isset($employee)){
+
+            $nomina = Nomina::find($id_nomina);
+
+            if(isset($nomina)){
+                $nomina_calculation = NominaCalculation::where('id_nomina',$nomina->id)
+                                                        ->where('id_employee',$employee->id)->get();                                    
+            }else{
+                return redirect('/nominas')->withDanger('El empleado no tiene ninguna nomina registrada');
+            } 
+            
+            $pdf = $pdf->loadView('pdf.print_calculation',compact('employee','datenow','nomina','nomina_calculation'));
+            return $pdf->stream();
+    
+        }else{
+            return redirect('/nominas')->withDanger('El empleado no existe');
+        } 
+
+
     }
 
     function imprimirUtilidades(Request $request){

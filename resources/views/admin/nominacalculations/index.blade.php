@@ -11,26 +11,34 @@
     <div class="justify-content-left border-left-danger">
         <div class="card-body h4">
                 <div class="row py-lg-2">
-                    <div class="col-md-6">
-                        Nómina: {{ $nomina->description }} , {{ $nomina->date_format}} 
+                    <div class="col-sm-12">
+                        Nómina: {{ $nomina->description }} , {{ $nomina->date_format}} , Empleado: {{ $employee->nombres }} {{ $employee->apellidos }}
                     </div>
                 </div>
                 <div class="row py-lg-2">
-                    <div class="col-md-7">
+                    <div class="col-sm-12">
                         Tipo: {{ $nomina->type }} , {{ $nomina->date_begin }} hasta {{ $nomina->date_end ?? 'Indefinido' }}</h2>
                 
                     </div>
                     @if (Auth::user()->role_id  == '1' || Auth::user()->role_id  == '2' )
-                    <div class="col-md-2">
-                        <a href="{{ route('nominacalculations.create',[$nomina->id,$employee->id])}}"  class="btn btn-info float-md-right" role="button" aria-pressed="true">Agregar Concepto</a>
+                </div>
+        </div>
+    </div>
+                <div class="row py-lg-2">
+                    <div class="col-sm-3">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-sm-3">
+                        <a href="{{ route('nominacalculations.create',[$nomina->id,$employee->id])}}"  class="btn btn-primary float-md-right" role="button" aria-pressed="true">Agregar Concepto</a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="#" onclick="pdf();" class="btn btn-info float-md-right" role="button" aria-pressed="true">Imprimir Recibo</a>
+                    </div>
+                    <div class="col-sm-2">
                         <a href="{{ route('nominas.selectemployee',$nomina->id)}}"  class="btn btn-danger float-md-right" role="button" aria-pressed="true">Volver</a>
                     </div>
                     @endif
                 </div>
-        </div>
-    </div>
+        
     
 </div>
 
@@ -137,36 +145,7 @@
         </div>
     </div>
 </div>
-<button data-toggle="modal" data-target="#PopUpNoAutorizado">Abrir</button>
- <div class="modal" id="PopUpNoAutorizado" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header Popup">
-                <div class="col-xs-12">
-                    <h5>
-                        ENTRADA ELECTRONICA
-                        <small class="text-muted color">Almacen Planta Naco</small>
-                    </h5>
-                </div>                  
-            </div>
-            <div class="modal-body">                    
-              <div class="col-xs-4"></div>
-                <div class="col-xs-8"> 
-                  <img src="" />
-                </div>                   
-              <div class="col-sx-12 centrarTexto">
-                  <h1>Acceso no autorizado</h1>
-              </div>              
-            </div> 
-            <div class="modal-footer Popup">
-              <div class="col-xs-10 modal-edit">
-                  <h5>100 Años</h5>
-              </div>
-             
-          </div>
-        </div>
-    </div>
-  </div>
+
 @endsection
 @section('javascript')
     <script>
@@ -176,5 +155,9 @@
             'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
             'iDisplayLength': '50'
     } );
+
+    function pdf() {
+        var nuevaVentana= window.open("{{ route('nominas.print_nomina_calculation',[$nomina->id,$employee->id])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+    }
     </script>
 @endsection

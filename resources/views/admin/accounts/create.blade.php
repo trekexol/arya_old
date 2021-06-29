@@ -131,37 +131,15 @@
                             
                         </div>
 
-                      <!--  <div class="form-group row">
-                            <label for="debe" class="col-md-2 col-form-label text-md-right">Debe</label>
-
-                            <div class="col-md-4">
-                                <input id="debe" type="number" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ old('debe') }}" required autocomplete="debe">
-
-                                @error('debe')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="haber" class="col-md-2 col-form-label text-md-right">Haber</label>
-
-                            <div class="col-md-4">
-                                <input id="haber" type="number" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ old('haber') }}" required autocomplete="haber">
-
-                                @error('haber')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div> -->
-
                         <br>
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                    Registrar Cuenta
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('accounts') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                     </form>

@@ -30,43 +30,16 @@
         </div>
     @endif
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
+    <div class="card shadow mb-4 ">
+        <div class="card-body ">
             <form  method="POST"   action="{{ route('accounts.update',$var->id) }}" enctype="multipart/form-data" >
                 @method('PATCH')
                 @csrf()
                 <div class="container py-2">
-                    <div class="row">
+                    <div class="row ">
                         <div class="col-12 ">
-                            <form >
-                                <div class="form-group row">
-                                    <label for="period" class="col-md-2 col-form-label text-md-right">Periodo</label>
-        
-                                    <div class="col-md-4">
-                                        <input id="period" type="number" class="form-control @error('period') is-invalid @enderror" name="period" value="{{ $var->period }}" required autocomplete="period">
-        
-                                        @error('period')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <label for="code" class="col-md-2 col-form-label text-md-right">Código</label>
-        
-                                    <div class="col-md-4">
-                                        <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $var->code }}" required autocomplete="code" autofocus>
-        
-                                        @error('code')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-        
-                               
-                                <div class="form-group row">
-                                    <label for="description" class="col-md-2 col-form-label text-md-right">Descripción</label>
+                                <div class="form-group row ">
+                                    <label for="description" class="col-md-4 col-form-label text-md-right">Descripción</label>
         
                                     <div class="col-md-4">
                                         <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $var->description }}" required autocomplete="description">
@@ -77,42 +50,12 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    
-                                    <label for="segmento" class="col-md-2 col-form-label text-md-right">Tipo</label>
-                                    <div class="col-md-4">
-                                        <select class="form-control" id="type" name="type" title="type">
-                                            @if($var->type == 1)
-                                                <option value="Debe">Debe</option>
-                                            @else
-                                                <option value="Haber">Haber</option>
-                                            @endif
-                                            <option value="nulo">----------------</option>
-                                            
-                                            <div class="dropdown">
-                                                <option value="Debe">Debe</option>
-                                                <option value="Haber">Haber</option>
-                                            </div>
-                                            
-                                            
-                                        </select>
-                                    </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="level" class="col-md-2 col-form-label text-md-right">Nivel</label>
+                                    <label for="balance_previus" class="col-md-4 col-form-label text-md-right">Balance Previo</label>
         
                                     <div class="col-md-4">
-                                        <input id="level" type="number" class="form-control @error('level') is-invalid @enderror" name="level" value="{{ $var->level }}" required autocomplete="level">
-        
-                                        @error('level')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <label for="balance_previus" class="col-md-2 col-form-label text-md-right">Balance Previo</label>
-        
-                                    <div class="col-md-4">
-                                        <input id="balance_previus" type="number" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ $var->balance_previus }}" required autocomplete="balance_previus">
+                                        <input id="balance_previus" type="text" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ $var->balance_previus }}" required autocomplete="balance_previus">
         
                                         @error('balance_previus')
                                             <span class="invalid-feedback" role="alert">
@@ -122,33 +65,42 @@
                                     </div>
                                     
                                 </div>
-        
                                 <div class="form-group row">
-                                    <label for="debe" class="col-md-2 col-form-label text-md-right">Debe</label>
-        
+                                    <label for="segmento" class="col-md-4 col-form-label text-md-right">Moneda</label>
                                     <div class="col-md-4">
-                                        <input id="debe" type="number" class="form-control @error('debe') is-invalid @enderror" name="debe" value="{{ $var->debe }}" required autocomplete="debe">
-        
-                                        @error('debe')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <label for="haber" class="col-md-2 col-form-label text-md-right">Haber</label>
-        
-                                    <div class="col-md-4">
-                                        <input id="haber" type="number" class="form-control @error('haber') is-invalid @enderror" name="haber" value="{{ $var->haber }}" required autocomplete="haber">
-        
-                                        @error('haber')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                        <select class="form-control" id="coin" name="coin" title="coin">
+                                            @if($var->coin == '$')
+                                                <option value="$">Dolar</option>
+                                            @else
+                                                <option value="BsS">Bolivares</option>
+                                            @endif
+                                            <option value="nulo">----------------</option>
+                                            
+                                            <div class="dropdown">
+                                                <option value="$">Dolar</option>
+                                                <option value="BsS">Bolivares</option>
+                                            </div>
+                                            
+                                            
+                                        </select>
                                     </div>
                                 </div>
+                                <div class="form-group row" id="rate_form">
+                                    <label for="rate" id="rate_label" class="col-md-4 col-form-label text-md-right">Tasa del Dia</label>
+        
+                                    <div class="col-md-4">
+                                        <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $rate }}" autocomplete="rate">
+        
+                                        @error('rate')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    
+                                </div>
                                 <div class="form-group row">
-                                    <label for="segmento" class="col-md-2 col-form-label text-md-right">Status</label>
+                                    <label for="segmento" class="col-md-4 col-form-label text-md-right">Status</label>
                                     <div class="col-md-4">
                                         <select class="form-control" id="status" name="status" title="status">
                                             @if($var->status == 1)
@@ -185,13 +137,38 @@
 
 @section('validacion_usuario')
 <script>
+     
+
+    $(function(){
+        soloAlfaNumerico('description');
+    });
+
+    $(document).ready(function () {
+        $("#balance_previus").mask('000.000.000.000.000.000.000,00', { reverse: true });
+        
+    });
+    $(document).ready(function () {
+        $("#rate").mask('000.000.000.000.000.000.000,00', { reverse: true });
+        
+    });
     
-$(function(){
-    soloNumeroPunto('code');
-    soloAlfaNumerico('description');
-    
-});
+    $("#rate_form").hide();
+   
+
+    $("#coin").on('change',function(){
+        var coin = $(this).val();
+ 
+         if(coin == '$'){
+             $("#rate_form").show();
+            
+             
+         }else{
+             $("#rate_form").hide();
+            
+         }
+    });
 
 </script>
+
 @endsection
             

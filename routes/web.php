@@ -659,6 +659,8 @@ Route::group(["prefix"=>'pdfnomina'],function(){
     Route::get('reciboutilidades','PdfNominaController@create_recibo_utilidades')->name('nominas.create_recibo_utilidades');
     Route::get('reciboliquidacionauto','PdfNominaController@create_recibo_liquidacion_auto')->name('nominas.create_recibo_liquidacion_auto');
     
+    Route::get('printnominacalculation/{id_nomina}/{id_employee}','PdfNominaController@print_nomina_calculation')->name('nominas.print_nomina_calculation');
+    
  });
 
  Route::group(["prefix"=>'balancegenerals'],function(){
