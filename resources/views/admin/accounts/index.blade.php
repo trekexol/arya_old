@@ -126,26 +126,71 @@
                             </td>
                             <td style="text-align:right; color:black; ">{{$account->level}}</td>
                             <td style="text-align:right; color:black; ">{{$account->type}}</td>
-                            
-                                <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus * $account->rate ?? 1, 2, ',', '.')}}</td>
-                           
-                            @if ($account->status == "M")
-                            <td style="text-align:right; color:black; font-weight: bold;">
-                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
-                       
-                            </td>
-                            <td style="text-align:right; color:black; ">
-                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
-                            </td>
-                           @else
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}}</td>
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->haber, 2, ',', '.')}}</td>
-                           @endif
-                            
 
-                            
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
-                            
+                            <?php 
+                                $balance_new = null;
+                                if(isset($account->coin)){
+                                    $balance_new = $account->balance_previus * ($bcv ?? 1);
+                                
+                                }else if($coin == 'dolares'){
+                                    //si la moneda seleccionada fue dolares, convertimos los balances de bs a dolares segun su tasa
+                                    if(($account->balance_previus != 0) && ($account->rate != 0)){
+                                        $balance_new = $account->balance_previus / $account->rate;
+                                    }
+                                }
+                            ?>
+                                @if(isset($account->coin))
+                                    @if($account->coin == "$")
+                                        @if($coin == "dolares")
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new ?? $account->balance_previus, 2, ',', '.')}}</td>
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new ?? $account->balance_previus, 2, ',', '.')}} <br>{{number_format($account->balance_previus, 2, ',', '.')}}$</td>
+                                        @endif
+                                    @endif
+                                @else
+                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new ?? $account->balance_previus, 2, ',', '.')}}</td>
+                                @endif
+                            <!-- Cuando el status de la cuenta es M, quiere decir que tiene movimientos-->
+                            @if ($account->status == "M")
+                                @if($account->coin == "$")
+                                    @if($coin == "dolares")
+                                        <!-- Cuando quiero ver mis saldos todos en dolares-->
+                                        <td style="text-align:right; color:black; font-weight: bold;">
+                                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>                      
+                                        </td>
+                                        <td style="text-align:right; color:black; ">
+                                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                                        </td>
+                                        
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                    @else
+                                        <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en dolares-->
+                                        <td style="text-align:right; color:black; font-weight: bold;">
+                                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}} <br> {{number_format($account->dolar_debe ?? 0, 2, ',', '.')}}$</a>                      
+                                        </td>
+                                        <td style="text-align:right; color:black; ">
+                                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}<br> {{number_format($account->dolar_haber ?? 0, 2, ',', '.')}}$</a>
+                                        </td>
+                                        
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format(($balance_new ?? $account->balance_previus) + $account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($account->balance_previus + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>
+                                    @endif
+                                @else
+                                    <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en bolivares-->
+                                    <td style="text-align:right; color:black; font-weight: bold;">
+                                        <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}} </a>                      
+                                    </td>
+                                    <td style="text-align:right; color:black; ">
+                                        <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                                    </td>
+                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus + $account->debe - $account->haber, 2, ',', '.')}} </td>
+                                @endif
+                           @else
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}} </td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->haber, 2, ',', '.')}}</td>
+                           
+                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus + $account->debe - $account->haber, 2, ',', '.')}} </td>
+                            @endif
+                           
                             
                                 <td style="text-align:right; color:black; ">  
                                     @if($account->code_four == 0)
@@ -155,43 +200,90 @@
                         </tr>   
                         @endif
                     @else
-                        <tr>
-                            <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
-                            <td style="text-align:right; color:black; ">     
-                                @if(isset($account->coin))
-                                    <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}} ({{ $account->coin }})</a>
+                    <tr>
+                        <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
+                        <td style="text-align:right; color:black;">
+                            @if(isset($account->coin))
+                                <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}} ({{ $account->coin }})</a>
+                            @else
+                                <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}}</a>
+                           @endif
+                        </td>
+                        <td style="text-align:right; color:black; ">{{$account->level}}</td>
+                        <td style="text-align:right; color:black; ">{{$account->type}}</td>
+
+                        <?php 
+                            $balance_new = null;
+                            if(isset($account->coin)){
+                                $balance_new = $account->balance_previus * ($bcv ?? 1);
+                            
+                            }else if($coin == 'dolares'){
+                                //si la moneda seleccionada fue dolares, convertimos los balances de bs a dolares segun su tasa
+                                if(($account->balance_previus != 0) && ($account->rate != 0)){
+                                    $balance_new = $account->balance_previus / $account->rate;
+                                }
+                            }
+                        ?>
+                            @if(isset($account->coin))
+                                @if($account->coin == "$")
+                                    @if($coin == "dolares")
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new ?? $account->balance_previus, 2, ',', '.')}}</td>
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new ?? $account->balance_previus, 2, ',', '.')}} <br>{{number_format($account->balance_previus, 2, ',', '.')}}$</td>
+                                    @endif
+                                @endif
+                            @else
+                                <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new ?? $account->balance_previus, 2, ',', '.')}}</td>
+                            @endif
+                        <!-- Cuando el status de la cuenta es M, quiere decir que tiene movimientos-->
+                        @if ($account->status == "M")
+                            @if($account->coin == "$")
+                                @if($coin == "dolares")
+                                    <!-- Cuando quiero ver mis saldos todos en dolares-->
+                                    <td style="text-align:right; color:black; font-weight: bold;">
+                                        <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>                      
+                                    </td>
+                                    <td style="text-align:right; color:black; ">
+                                        <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                                    </td>
+                                    
+                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus + $account->debe - $account->haber, 2, ',', '.')}}</td>
                                 @else
-                                    <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}}</a>
+                                    <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en dolares-->
+                                    <td style="text-align:right; color:black; font-weight: bold;">
+                                        <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}} <br> {{number_format($account->dolar_debe ?? 0, 2, ',', '.')}}$</a>                      
+                                    </td>
+                                    <td style="text-align:right; color:black; ">
+                                        <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}<br> {{number_format($account->dolar_haber ?? 0, 2, ',', '.')}}$</a>
+                                    </td>
+                                    
+                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format(($balance_new ?? $account->balance_previus) + $account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($account->balance_previus + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>
+                                @endif
+                            @else
+                                <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en bolivares-->
+                                <td style="text-align:right; color:black; font-weight: bold;">
+                                    <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}} </a>                      
+                                </td>
+                                <td style="text-align:right; color:black; ">
+                                    <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
+                                </td>
+                                <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus + $account->debe - $account->haber, 2, ',', '.')}} </td>
+                            @endif
+                       @else
+                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}} </td>
+                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->haber, 2, ',', '.')}}</td>
+                       
+                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus + $account->debe - $account->haber, 2, ',', '.')}} </td>
+                        @endif
+                       
+                        
+                            <td style="text-align:right; color:black; ">  
+                                @if($account->code_four == 0)
+                                <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
                                 @endif
                             </td>
-                            <td style="text-align:right; color:black; ">{{$account->level}}</td>
-                            <td style="text-align:right; color:black; ">{{$account->type}}</td>
-                            
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus * $account->rate ?? 1, 2, ',', '.')}}</td>
-                            @if ($account->status == "M")
-                            <td style="text-align:right; color:black; font-weight: bold;">
-                            <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->debe, 2, ',', '.')}}</a>
+                    </tr>   
                     
-                            </td>
-                            <td style="text-align:right; color:black; ">
-                                <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold; text-decoration: underline black;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
-                            </td>
-                            @else
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}}</td>
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->haber, 2, ',', '.')}}</td>
-                            @endif
-                            
-
-                            
-                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance_previus+$account->debe-$account->haber, 2, ',', '.')}}</td>
-                            
-                            
-                                <td style="text-align:right; color:black; ">  
-                                    @if($account->code_four == 0)
-                                    <a href="accounts/register/{{$account->code_one}}/{{$account->code_two}}/{{$account->code_three}}/{{$account->code_four}}/{{$account->period}}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
-                                    @endif
-                                </td>
-                        </tr> 
                     @endif
                     @endforeach   
                 @endif
@@ -230,8 +322,7 @@
     $('#dataTable').DataTable({
         "ordering": false,
         "order": [],
-        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
-        'iDisplayLength': '50'
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     });
 
     $("#coin").on('change',function(){
@@ -248,8 +339,8 @@
         $("body").toggleClass("sidebar-toggled");
         $(".sidebar").toggleClass("toggled");
         if ($(".sidebar").hasClass("toggled")) {
-      $('.sidebar .collapse').collapse('hide');
-    };
+            $('.sidebar .collapse').collapse('hide');
+        };
     
 
 

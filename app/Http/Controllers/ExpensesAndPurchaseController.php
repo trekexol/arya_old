@@ -126,11 +126,12 @@ class ExpensesAndPurchaseController extends Controller
             $branches = Branch::orderBy('description','desc')->get();
 
             
+        $bcv = $this->search_bcv();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        return view('admin.expensesandpurchases.create',compact('datenow','provider','expense','expense_details','branches','inventory','accounts_inventory'));
+        return view('admin.expensesandpurchases.create',compact('bcv','datenow','provider','expense','expense_details','branches','inventory','accounts_inventory'));
     }
 
    
@@ -372,6 +373,8 @@ class ExpensesAndPurchaseController extends Controller
         $datenow = $date->format('Y-m-d'); 
         
         $total_pay = 0;
+
+        $bcv = $this->search_bcv();
 
         //Saber cuantos pagos vienen
         $come_pay = request('amount_of_payments');
@@ -1156,7 +1159,7 @@ class ExpensesAndPurchaseController extends Controller
                     $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                         
                     if(isset($account_cuentas_por_pagar_proveedores)){
-                            $this->add_movement($header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,$total_pay_form,0);
+                            $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,$total_pay_form,0);
                     }
 
                 /*TERMINAR ESTO */
@@ -1164,7 +1167,7 @@ class ExpensesAndPurchaseController extends Controller
                     $var->save();
 
                 
-                    $this->add_pay_movement($payment_type,$header_voucher->id,$var->id_account,$expense->id,$user_id,0,$var->amount);
+                    $this->add_pay_movement($bcv,$payment_type,$header_voucher->id,$var->id_account,$expense->id,$user_id,0,$var->amount);
                     
 
                     //LE PONEMOS STATUS C, DE COBRADO
@@ -1174,39 +1177,39 @@ class ExpensesAndPurchaseController extends Controller
                 if($validate_boolean2 == true){
                     $var2->save();
                 
-                    $this->add_pay_movement($payment_type2,$header_voucher->id,$var2->id_account,$expense->id,$user_id,0,$var2->amount);
+                    $this->add_pay_movement($bcv,$payment_type2,$header_voucher->id,$var2->id_account,$expense->id,$user_id,0,$var2->amount);
                     
                 }
                 
                 if($validate_boolean3 == true){
                     $var3->save();
 
-                    $this->add_pay_movement($payment_type3,$header_voucher->id,$var3->id_account,$expense->id,$user_id,0,$var3->amount);
+                    $this->add_pay_movement($bcv,$payment_type3,$header_voucher->id,$var3->id_account,$expense->id,$user_id,0,$var3->amount);
                 
                     
                 }
                 if($validate_boolean4 == true){
                     $var4->save();
 
-                    $this->add_pay_movement($payment_type4,$header_voucher->id,$var4->id_account,$expense->id,$user_id,0,$var4->amount);
+                    $this->add_pay_movement($bcv,$payment_type4,$header_voucher->id,$var4->id_account,$expense->id,$user_id,0,$var4->amount);
                 
                 }
                 if($validate_boolean5 == true){
                     $var5->save();
 
-                    $this->add_pay_movement($payment_type5,$header_voucher->id,$var5->id_account,$expense->id,$user_id,0,$var5->amount);
+                    $this->add_pay_movement($bcv,$payment_type5,$header_voucher->id,$var5->id_account,$expense->id,$user_id,0,$var5->amount);
                 
                 }
                 if($validate_boolean6 == true){
                     $var6->save();
 
-                    $this->add_pay_movement($payment_type6,$header_voucher->id,$var6->id_account,$expense->id,$user_id,0,$var6->amount);
+                    $this->add_pay_movement($bcv,$payment_type6,$header_voucher->id,$var6->id_account,$expense->id,$user_id,0,$var6->amount);
                 
                 }
                 if($validate_boolean7 == true){
                     $var7->save();
 
-                    $this->add_pay_movement($payment_type7,$header_voucher->id,$var7->id_account,$expense->id,$user_id,0,$var7->amount);
+                    $this->add_pay_movement($bcv,$payment_type7,$header_voucher->id,$var7->id_account,$expense->id,$user_id,0,$var7->amount);
                 
                 }
 
@@ -1249,7 +1252,7 @@ class ExpensesAndPurchaseController extends Controller
                     $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
     
                     if(isset($account_mercancia_venta)){
-                        $this->add_movement($header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sub_total,0);
+                        $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sub_total,0);
                     }
     
                     //Credito Fiscal IVA por Pagar
@@ -1258,7 +1261,7 @@ class ExpensesAndPurchaseController extends Controller
                         
                     if(isset($account_credito_iva_fiscal)){
                         if($sin_formato_amount_iva != 0){
-                            $this->add_movement($header_voucher->id,$account_credito_iva_fiscal->id,$expense->id,$user_id,$sin_formato_amount_iva,0);
+                            $this->add_movement($bcv,$header_voucher->id,$account_credito_iva_fiscal->id,$expense->id,$user_id,$sin_formato_amount_iva,0);
                         }
                     }
     
@@ -1266,7 +1269,7 @@ class ExpensesAndPurchaseController extends Controller
                     $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                     
                     if(isset($account_cuentas_por_pagar_proveedores)){
-                        $this->add_movement($header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$total_pay_form);
+                        $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$total_pay_form);
                     }
                 }
                 
@@ -1392,7 +1395,7 @@ class ExpensesAndPurchaseController extends Controller
         $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
 
         if(isset($account_mercancia_venta)){
-            $this->add_movement($header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sin_formato_amount,0);
+            $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sin_formato_amount,0);
         }
 
         //IVA credito Fiscal
@@ -1401,7 +1404,7 @@ class ExpensesAndPurchaseController extends Controller
             
         if(isset($account_credito_iva_fiscal)){
             if($sin_formato_amount_iva != 0){
-                $this->add_movement($header_voucher->id,$account_credito_iva_fiscal->id,$expense->id,$user_id,$sin_formato_amount_iva,0);
+                $this->add_movement($bcv,$header_voucher->id,$account_credito_iva_fiscal->id,$expense->id,$user_id,$sin_formato_amount_iva,0);
             }
         }
 
@@ -1409,7 +1412,7 @@ class ExpensesAndPurchaseController extends Controller
         $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                     
         if(isset($account_cuentas_por_pagar_proveedores)){
-            $this->add_movement($header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$sin_formato_amount_with_iva);
+            $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$sin_formato_amount_with_iva);
         }
         return redirect('expensesandpurchases/expensevoucher/'.$expense->id.'')->withSuccess('Gasto o Compra Guardada con Exito!');
     }
@@ -1453,50 +1456,74 @@ class ExpensesAndPurchaseController extends Controller
 
 
 
-
-    public function add_movement($id_header,$id_account,$id_expense,$id_user,$debe,$haber){
+    public function add_movement($bcv,$id_header,$id_account,$id_invoice,$id_user,$debe,$haber)
+    {
 
         $detail = new DetailVoucher();
 
         $detail->id_account = $id_account;
         $detail->id_header_voucher = $id_header;
         $detail->user_id = $id_user;
+        $detail->tasa = $bcv;
+        $detail->id_invoice = $id_invoice;
 
-        $detail->id_expense = $id_expense;
-
-      /*  $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', $debe));
+        /*  $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', $debe));
         $valor_sin_formato_haber = str_replace(',', '.', str_replace('.', '', $haber));*/
 
 
         $detail->debe = $debe;
         $detail->haber = $haber;
-       
-      
+    
+    
         $detail->status =  "C";
 
-         /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
-         
+        /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
+        
             $account = Account::findOrFail($detail->id_account);
 
             if($account->status != "M"){
                 $account->status = "M";
                 $account->save();
             }
-         
-    
+        
+
         $detail->save();
 
     }
 
 
-    public function add_pay_movement($payment_type,$header_voucher,$id_account,$id_expense,$user_id,$amount_debe,$amount_haber){
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        } else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
+    }
+
+
+
+    public function add_pay_movement($bcv,$payment_type,$header_voucher,$id_account,$id_expense,$user_id,$amount_debe,$amount_haber){
 
 
         //Cuentas por Cobrar Clientes
 
             //AGREGA EL MOVIMIENTO DE LA CUENTA CON LA QUE SE HIZO EL PAGO
             if(isset($id_account)){
-                $this->add_movement($header_voucher,$id_account,$id_expense,$user_id,$amount_debe,$amount_haber);
+                $this->add_movement($bcv,$header_voucher,$id_account,$id_expense,$user_id,$amount_debe,$amount_haber);
             
             }//SIN DETERMINAR
             else if($payment_type == 7){
@@ -1504,7 +1531,7 @@ class ExpensesAndPurchaseController extends Controller
                 $account_sin_determinar = Account::where('description', 'like', 'Sin determinar')->first(); 
         
                 if(isset($account_sin_determinar)){
-                    $this->add_movement($header_voucher,$account_sin_determinar->id,$id_expense,$user_id,$amount_debe,$amount_haber);
+                    $this->add_movement($bcv,$header_voucher,$account_sin_determinar->id,$id_expense,$user_id,$amount_debe,$amount_haber);
                 }
             }//PAGO DE CONTADO
             else if($payment_type == 2){
@@ -1512,7 +1539,7 @@ class ExpensesAndPurchaseController extends Controller
                 $account_contado = Account::where('description', 'like', 'Caja Chica')->first(); 
         
                 if(isset($account_contado)){
-                    $this->add_movement($header_voucher,$account_contado->id,$id_expense,$user_id,$amount_debe,$amount_haber);
+                    $this->add_movement($bcv,$header_voucher,$account_contado->id,$id_expense,$user_id,$amount_debe,$amount_haber);
                 }
             }//CONTRA ANTICIPO
             else if($payment_type == 3){
@@ -1520,7 +1547,7 @@ class ExpensesAndPurchaseController extends Controller
                 $account_contra_anticipo = Account::where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
         
                 if(isset($account_contra_anticipo)){
-                    $this->add_movement($header_voucher,$account_contra_anticipo->id,$id_expense,$user_id,$amount_debe,$amount_haber);
+                    $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$id_expense,$user_id,$amount_debe,$amount_haber);
                 }
             } 
             //Tarjeta Corporativa 
@@ -1529,7 +1556,7 @@ class ExpensesAndPurchaseController extends Controller
                 $account_contra_anticipo = Account::where('description', 'like', 'Tarjeta Corporativa')->first(); 
         
                 if(isset($account_contra_anticipo)){
-                    $this->add_movement($header_voucher,$account_contra_anticipo->id,$id_expense,$user_id,$amount_debe,$amount_haber);
+                    $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$id_expense,$user_id,$amount_debe,$amount_haber);
                 }
             } 
 

@@ -146,7 +146,7 @@
                             <div class="col-md-2">
                                 <a onclick="pdf();" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <a onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
                             </div>
                             

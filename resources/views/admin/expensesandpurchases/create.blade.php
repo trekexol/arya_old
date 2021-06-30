@@ -220,8 +220,11 @@
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="price" >Precio</label>
-                                        <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $inventory->products['price_buy']  ?? '' }}"  required autocomplete="price">
-        
+                                        @if(isset($inventory->products['price_buy']))
+                                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $inventory->products['price_buy'] * ($bcv ?? 1)  }}"  required autocomplete="price">
+                                        @else
+                                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" readonly required autocomplete="price">
+                                        @endif
                                         @error('price')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

@@ -8,17 +8,17 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <h2>Listado de Comprobantes Contables detallados</h2>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-eye" ></i>
-                &nbsp Plan de Cuentas
+                 Plan de Cuentas
             </a>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <a href="{{ route('expensesandpurchases.create_expense_voucher',$expense->id) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
-                &nbsp Volver a la Compra
+                 Volver a la Compra
             </a>
         </div>
     </div>

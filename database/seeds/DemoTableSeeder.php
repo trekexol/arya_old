@@ -245,5 +245,23 @@ class DemoTableSeeder extends Seeder
             'amount' => 100,
             'status' => '1',
         ]);
+        DB::table('providers')->insert([
+            'id' => 1,
+            'code_provider' => '1000',
+            'razon_social' => 'Proveedor Prueba',
+            'direction' => 'Chacaito',
+            'city' => 'Caracas',
+            'country' => 'Venezuela',
+            'phone1' => '0414 216-5165',
+            'phone2' => '0212 651-5162',
+            'has_credit' => 1,
+            'days_credit' => 1,
+            'amount_max_credit' => 9999999999.99,
+            'porc_retencion_iva' => 0.00,
+            'retiene_islr' => 0,
+            'balance' => 0.00,
+            'select_balance' => 0,
+            'status' => '1',
+        ]);
     }
 }

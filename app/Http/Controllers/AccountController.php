@@ -30,13 +30,22 @@ class AccountController extends Controller
         if($coin == null){
             $coin = 'bolivares';
         }
-        $accounts = $this->calculation($coin);
+            $accounts = $this->calculation($coin);
 
+
+        if(($coin == null) || ($coin == 'bolivares')){
+            $bcv = $this->search_bcv();
+        }else{
+            $bcv = null;
+        }
+            
+
+        
         }else if($users_role == '2'){
            return view('admin.index');
        }
 
-       return view('admin.accounts.index',compact('accounts','coin','level'));
+       return view('admin.accounts.index',compact('accounts','coin','level','bcv'));
    }
 
 
@@ -398,6 +407,30 @@ class AccountController extends Controller
                                                     d.status = ?
                                                     LIMIT 1'
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+
+                                    $total_dolar_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                                    FROM accounts a
+                                                    INNER JOIN detail_vouchers d 
+                                                        ON d.id_account = a.id
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ? AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ? AND
+                                                    d.status = ?
+                                                    LIMIT 1'
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+
+                                    $total_dolar_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS dolar
+                                                    FROM accounts a
+                                                    INNER JOIN detail_vouchers d 
+                                                        ON d.id_account = a.id
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ? AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ? AND
+                                                    d.status = ?
+                                                    LIMIT 1'
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
                                 
                                     }else{
                                         $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
@@ -427,9 +460,18 @@ class AccountController extends Controller
                                     }
                                     $total_debe = $total_debe[0]->debe;
                                     $total_haber = $total_haber[0]->haber;
+                                    if(isset($total_dolar_debe[0]->dolar)){
+                                        $total_dolar_debe = $total_dolar_debe[0]->dolar;
+                                        $var->dolar_debe = $total_dolar_debe;
+                                    }
+                                    if(isset($total_dolar_haber[0]->dolar)){
+                                        $total_dolar_haber = $total_dolar_haber[0]->dolar;
+                                        $var->dolar_haber = $total_dolar_haber;
+                                    }
                                 
                                     $var->debe = $total_debe;
                                     $var->haber = $total_haber;
+                                    
                             }else{          
                             
                                 if($coin == 'bolivares'){
@@ -764,9 +806,9 @@ class AccountController extends Controller
 
         if(request('coin') != 'BsS'){
             $var->coin = request('coin');
-            $var->rate = $sin_formato_rate;
+            
         }
-        
+        $var->rate = $sin_formato_rate;
 
         if(request('status') == null){
             $var->status = $vars_status;

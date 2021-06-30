@@ -278,7 +278,7 @@
                                                 @endif
                                                 
                                                 <td style="text-align: right">{{ $var->amount_quotation}}</td>
-                                                <td style="text-align: right">{{number_format($var->price, 2, ',', '.')}}</td>
+                                                <td style="text-align: right">{{number_format($var->price * ($bcv ?? 1), 2, ',', '.')}}</td>
                                                 <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>
                                                 @if(isset($bcv))
                                                     <td style="text-align: right">{{number_format($product_Bs, 2, ',', '.')}}</td>
@@ -372,8 +372,7 @@
         $('#dataTable').dataTable( {
         "ordering": false,
         "order": [],
-            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
-            'iDisplayLength': '50'
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     } );
     </script>
     <script>
@@ -460,7 +459,11 @@
                 }
             })
         }
-        
+        $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+        if ($(".sidebar").hasClass("toggled")) {
+            $('.sidebar .collapse').collapse('hide');
+        };
 
     </script>
 @endsection

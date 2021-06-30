@@ -152,7 +152,7 @@
         
     });
     
-    $("#rate_form").hide();
+    /*$("#rate_form").hide();
    
 
     $("#coin").on('change',function(){
@@ -166,7 +166,7 @@
              $("#rate_form").hide();
             
          }
-    });
+    });*/
 
 </script>
 
