@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class FacturarController extends Controller
 {
-    public function createfacturar($id_quotation)
+    public function createfacturar($id_quotation,$coin = null)
     {
          $quotation = null;
              
@@ -78,11 +78,20 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
-             $bcv = $this->search_bcv();
+             if(isset($coin)){
+                 if($coin == 'bolivares'){
+                    $bcv = $this->search_bcv();
+                 }else{
+                     $bcv = null;
+                 }
+             }else{
+                $bcv = $this->search_bcv();
+             }
+             
              
              
      
-             return view('admin.quotations.createfacturar',compact('quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','bcv','anticipos_sum'));
+             return view('admin.quotations.createfacturar',compact('coin','quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','bcv','anticipos_sum'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -225,7 +234,7 @@ class FacturarController extends Controller
         $quotation = Quotation::findOrFail(request('id_quotation'));
 
 
-      
+        
 
 
         $quotation_status = $quotation->status;
@@ -249,6 +258,8 @@ class FacturarController extends Controller
 
         $user_id = request('user_id');
 
+        
+
         /*Validar cuales son los pagos a guardar */
             $validate_boolean1 = false;
             $validate_boolean2 = false;
@@ -260,6 +271,9 @@ class FacturarController extends Controller
 
         //-----------------------
 
+        $bcv = $this->search_bcv();
+
+        $coin = request('coin');
         
 
      
@@ -350,6 +364,9 @@ class FacturarController extends Controller
                         $var->payment_type = request('payment_type');
                         $var->amount = $valor_sin_formato_amount_pay;
                         
+                        if($coin == 'dolares'){
+                            $var->amount = $var->amount * $bcv;
+                        }
                         
                         $var->status =  1;
                     
@@ -455,6 +472,9 @@ class FacturarController extends Controller
                     $var2->payment_type = request('payment_type2');
                     $var2->amount = $valor_sin_formato_amount_pay2;
                     
+                    if($coin == 'dolares'){
+                        $var2->amount = $var2->amount * $bcv;
+                    }
                     
                     $var2->status =  1;
                 
@@ -560,6 +580,9 @@ class FacturarController extends Controller
                             $var3->payment_type = request('payment_type3');
                             $var3->amount = $valor_sin_formato_amount_pay3;
                             
+                            if($coin == 'dolares'){
+                                $var3->amount = $var3->amount * $bcv;
+                            }
                             
                             $var3->status =  1;
                         
@@ -665,6 +688,9 @@ class FacturarController extends Controller
                             $var4->payment_type = request('payment_type4');
                             $var4->amount = $valor_sin_formato_amount_pay4;
                             
+                            if($coin == 'dolares'){
+                                $var4->amount = $var4->amount * $bcv;
+                            }
                             
                             $var4->status =  1;
                         
@@ -770,6 +796,9 @@ class FacturarController extends Controller
                         $var5->payment_type = request('payment_type5');
                         $var5->amount = $valor_sin_formato_amount_pay5;
                         
+                        if($coin == 'dolares'){
+                            $var5->amount = $var5->amount * $bcv;
+                        }
                         
                         $var5->status =  1;
                     
@@ -875,7 +904,10 @@ class FacturarController extends Controller
                         $var6->payment_type = request('payment_type6');
                         $var6->amount = $valor_sin_formato_amount_pay6;
                         
-                        
+                        if($coin == 'dolares'){
+                            $var6->amount = $var6->amount * $bcv;
+                        }
+
                         $var6->status =  1;
                     
                         $total_pay += $valor_sin_formato_amount_pay6;
@@ -980,6 +1012,9 @@ class FacturarController extends Controller
                         $var7->payment_type = request('payment_type7');
                         $var7->amount = $valor_sin_formato_amount_pay7;
                         
+                        if($coin == 'dolares'){
+                            $var7->amount = $var7->amount * $bcv;
+                        }
                         
                         $var7->status =  1;
                     
@@ -1027,13 +1062,12 @@ class FacturarController extends Controller
             
                 $header_voucher->save();
 
-                $bcv = $this->search_bcv();
+                
 
             /*TERMINAR ESTO */
             if($validate_boolean1 == true){
                 $var->save();
 
-              
                     $this->add_pay_movement($bcv,$payment_type,$header_voucher->id,$var->id_account,$quotation->id,$user_id,$var->amount,0);
                 
 
@@ -1043,6 +1077,8 @@ class FacturarController extends Controller
             
             if($validate_boolean2 == true){
                 $var2->save();
+
+                
                
                 $this->add_pay_movement($bcv,$payment_type2,$header_voucher->id,$var2->id_account,$quotation->id,$user_id,$var2->amount,0);
                 
@@ -1050,6 +1086,8 @@ class FacturarController extends Controller
             
             if($validate_boolean3 == true){
                 $var3->save();
+
+                
 
                 $this->add_pay_movement($bcv,$payment_type3,$header_voucher->id,$var3->id_account,$quotation->id,$user_id,$var3->amount,0);
             
@@ -1080,7 +1118,9 @@ class FacturarController extends Controller
             
             }
 
-
+            if($coin == 'dolares'){
+                $total_pay_form = $total_pay_form * $bcv;
+            }
             
 
 
@@ -1099,13 +1139,21 @@ class FacturarController extends Controller
 
             $sin_formato_base_imponible = request('base_imponible_form');
             $sin_formato_amount = request('sub_total_form');
+            $iva_percentage = request('iva_form');
+
+            if($coin == 'dolares'){
+                $sin_formato_amount_iva = $sin_formato_amount_iva * $bcv;
+                $sin_formato_amount_with_iva = $sin_formato_amount_with_iva * $bcv;
+                $sin_formato_base_imponible = $sin_formato_base_imponible * $bcv;
+                $sin_formato_amount = $sin_formato_amount * $bcv;
+            }
             
             $quotation->base_imponible = $sin_formato_base_imponible;
             $quotation->amount =  $sin_formato_amount;
             $quotation->amount_iva =  $sin_formato_amount_iva;
             $quotation->amount_with_iva =  $sin_formato_amount_with_iva;
          
-            $iva_percentage = request('iva_form');
+            
         
             /*Modifica la cotizacion */
                 $quotation->date_billing = $datenow;
@@ -1142,6 +1190,10 @@ class FacturarController extends Controller
 
             $base_imponible = request('base_imponible_form');
 
+            if($coin == 'dolares'){
+                $sub_total = $sub_total * $bcv;
+                $base_imponible = $base_imponible * $bcv;
+            }
            
             if($quotation_status != 'C'){
 

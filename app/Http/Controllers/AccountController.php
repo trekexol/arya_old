@@ -369,9 +369,11 @@ class AccountController extends Controller
                          ->orderBy('code_three', 'asc')
                          ->orderBy('code_four', 'asc')
                          ->get();
+        $details = DetailVoucher::first();
 
                        
         if(isset($accounts)) {
+            if(isset($details)) {
             foreach ($accounts as $var) 
             {
                 if($var->code_one != 0)
@@ -632,6 +634,7 @@ class AccountController extends Controller
                     return redirect('/accounts/menu')->withDanger('El codigo uno es igual a cero!');
                 }
             } 
+        } 
         }else{
             return redirect('/accounts/menu')->withDanger('No hay Cuentas');
         }              

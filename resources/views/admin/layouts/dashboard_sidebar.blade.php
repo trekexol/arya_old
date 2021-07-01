@@ -5,8 +5,8 @@
              <div class="sidebar-brand-icon">
             
             </div>
-            <div class="sidebar-brand-text mx-3">
-                <img src="{{asset('img/logo.png')}}" style="width: 140px;height:60px;" alt="Google">
+            <div class="sidebar-brand-text mx-3 ">
+                <img src="{{asset('img/logo.png')}}"  style="width: 120px;height:50px;" alt="Google">
                 
             </div>
         

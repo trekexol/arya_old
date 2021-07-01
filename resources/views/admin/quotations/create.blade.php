@@ -126,10 +126,12 @@
 
                             <div class="col-md-2">
                                 <select class="form-control" name="coin" id="coin">
-                                    <option value="Dolares">Dolares</option>
-                                    <option value="Bolivares">Bolívares</option>
-                                    
-                                    
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -138,6 +140,8 @@
                             @csrf
                             <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
                             <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
+                            <input id="coin" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares' }}" readonly required autocomplete="coin">
+                            <input id="bcv" type="hidden" class="form-control @error('bcv') is-invalid @enderror" name="bcv" value="{{ $bcv }}" readonly required autocomplete="bcv">
                        
                                 <div class="form-row col-md-12">
                                     <div class="form-group col-md-2">
@@ -149,7 +153,7 @@
                                         
                                         <a href="" title="Buscar Producto Por Codigo" onclick="searchCode()"><i class="fa fa-search"></i></a>  
                                     
-                                            <a href="{{ route('quotations.selectproduct',$quotation->id) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                                            <a href="{{ route('quotations.selectproduct',[$quotation->id,$coin]) }}" title="Productos"><i class="fa fa-eye"></i></a>  
                                         
                                     </div>
                                     
@@ -321,7 +325,7 @@
                             <div class="form-group row mb-0">
                                 @if(!isset($quotation->date_delivery_note))
                                     <div class="col-md-4">
-                                        <a onclick="deliveryNote()" id="btnNote" name="btnfacturar" class="btn btn-info" title="facturar">Procesar como Nota de Entrega</a>  
+                                        <!--<a onclick="deliveryNote()" id="btnNote" name="btnfacturar" class="btn btn-info" title="facturar">Procesar como Nota de Entrega</a>  -->
                                         <a onclick="deliveryNoteSend()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
                                     </div>
                                 @else
@@ -329,7 +333,7 @@
                                     </div>
                                 @endif
                                 <div class="col-md-4">
-                                    <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                                    <a href="{{ route('quotations.createfacturar',[$quotation->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
                                 </div>
                                
                             </div>
@@ -376,11 +380,12 @@
     } );
     </script>
     <script>
-    var coin = "Bolivares";
+    //var coin = "bolivares";
 
     $("#coin").on('change',function(){
         
          coin = $(this).val();
+         window.location = "{{route('quotations.create', [$quotation->id,''])}}"+"/"+coin;
        
     });
 
@@ -414,14 +419,14 @@
 
 @section('consulta')
     <script>
-        $("#formcoin").hide();
+       /* $("#formcoin").hide();
         $("#btnSendNote").hide();
 
         function deliveryNote(){
             $("#formcoin").show();
             $("#btnSendNote").show();
             $("#btnNote").hide();
-        }
+        }*/
 
         function searchCode(){
             
@@ -441,7 +446,7 @@
                         response.forEach((item, index, object)=>{
                             let {id,description,date} = item;
                           
-                           window.location = "{{route('quotations.createproduct', [$quotation->id,''])}}"+"/"+id;
+                           window.location = "{{route('quotations.createproduct', [$quotation->id,$coin,''])}}"+"/"+id;
                            //inputDescription.value = description;
                            //inputDate.value = date;
                         });

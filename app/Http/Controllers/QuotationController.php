@@ -112,7 +112,7 @@ class QuotationController extends Controller
 
 
 
-    public function create($id_quotation)
+    public function create($id_quotation,$coin = null)
     {
             $quotation = null;
                 
@@ -133,10 +133,17 @@ class QuotationController extends Controller
                 
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');  
+
+                if(($coin == 'bolivares') || (!isset($coin)) ){
+                    $bcv = $this->search_bcv();
+                    $coin = 'bolivares';
+                }else{
+                    $bcv = null;
+                    $coin = 'dolares';
+                }
                 
-                $bcv = $this->search_bcv();
         
-                return view('admin.quotations.create',compact('quotation','inventories_quotations','datenow','bcv'));
+                return view('admin.quotations.create',compact('quotation','inventories_quotations','datenow','bcv','coin'));
             }else{
                 return redirect('/quotations')->withDanger('La cotizacion no existe');
             } 
@@ -169,7 +176,7 @@ class QuotationController extends Controller
     }
 
 
-    public function createproduct($id_quotation,$id_inventory)
+    public function createproduct($id_quotation,$coin = null,$id_inventory)
     {
         $quotation = null;
                 
@@ -196,9 +203,14 @@ class QuotationController extends Controller
                     $date = Carbon::now();
                     $datenow = $date->format('Y-m-d');    
 
-                    $bcv = $this->search_bcv();
 
-                    return view('admin.quotations.create',compact('quotation','inventories_quotations','inventory','bcv','datenow'));
+                    if(($coin == 'bolivares') || (!isset($coin)) ){
+                        $bcv = $this->search_bcv();
+                    }else{
+                        $bcv = null;
+                    }
+
+                    return view('admin.quotations.create',compact('quotation','inventories_quotations','inventory','bcv','datenow','coin'));
 
                 }else{
                     return redirect('/quotations')->withDanger('El Producto no existe');
@@ -209,11 +221,16 @@ class QuotationController extends Controller
 
     }
 
-    public function selectproduct($id_quotation)
+    public function selectproduct($id_quotation,$coin = null)
     {
             $inventories     = Inventory::all();
+            $bcv = $this->search_bcv();
+            if(!isset($coin)){
+                $coin = 'bolivares';
+                
+            }
         
-            return view('admin.quotations.selectinventary',compact('inventories','id_quotation'));
+            return view('admin.quotations.selectinventary',compact('inventories','id_quotation','coin','bcv'));
     }
 
 
@@ -342,17 +359,30 @@ class QuotationController extends Controller
         
         ]);
 
+        dd($request);
         $var = new QuotationProduct();
 
         $var->id_quotation = request('id_quotation');
         
         $var->id_inventory = request('id_inventory');
 
+        $coin = request('coin');
+
+        $bcv = request('bcv');
+
         if($var->id_inventory == -1){
             return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
         }
 
         $amount_sin_formato = str_replace(',', '.', str_replace('.', '',request('amount')));
+        $cost_sin_formato = str_replace(',', '.', str_replace('.', '',request('cost')));
+
+
+        if($coin == 'dolares'){
+            $cost_sin_formato = $amount_sin_formato * $bcv;
+        }else{
+            //$cost_sin_formato
+        }
 
         $var->amount = $amount_sin_formato;
 

@@ -208,10 +208,12 @@
                         </div>
                         
             </form>           
-            <form method="POST" action="{{ route('quotations.storefactura') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('quotations.storefactura',$coin) }}" enctype="multipart/form-data">
                 @csrf   
 
                         <input type="hidden" name="id_quotation" value="{{$quotation->id}}" readonly>
+
+                        <input type="hidden" name="coin" value="{{$coin}}" readonly>
 
                         <!--CANTIDAD DE PAGOS QUE QUIERO ENVIAR-->
                         <input type="hidden" id="amount_of_payments" name="amount_of_payments"  readonly>

@@ -58,13 +58,17 @@
                     @foreach ($inventories as $var)
                         <tr>
                             <td>
-                                <a href="{{ route('quotations.createproduct',[$id_quotation,$var->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                                <a href="{{ route('quotations.createproduct',[$id_quotation,$coin,$var->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{ $var->code }}</td>
                             <td>{{ $var->products['description']}}</td>
                             <td style="text-align: right">{{ $var->amount }}</td> 
-                            <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
-                            
+                            @if($coin == 'bolivares')
+                                <td style="text-align: right">{{number_format($var->products['price'] * $bcv, 2, ',', '.')}}</td>
+                            @else
+                                <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
+                            @endif
+                           
                             
                             
                             <td>{{ $var->products['photo_product']}}</td> 
