@@ -99,26 +99,7 @@
                                     </div>
                                     
                                 </div>
-                                <div class="form-group row">
-                                    <label for="segmento" class="col-md-4 col-form-label text-md-right">Status</label>
-                                    <div class="col-md-4">
-                                        <select class="form-control" id="status" name="status" title="status">
-                                            @if($var->status == 1)
-                                                <option value="1">Activo</option>
-                                            @else
-                                                <option value="0">Inactivo</option>
-                                            @endif
-                                            <option value="nulo">----------------</option>
-                                            
-                                            <div class="dropdown">
-                                                <option value="1">Activo</option>
-                                                <option value="0">Inactivo</option>
-                                            </div>
-                                            
-                                            
-                                        </select>
-                                    </div>
-                                </div>
+                                
                             
                                 <br>
                                 <div class="form-group row mb-0">

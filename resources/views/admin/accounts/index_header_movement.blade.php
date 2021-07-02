@@ -8,12 +8,17 @@
 
     <!-- Page Heading -->
     <div class="row py-lg-2">
-        <div class="col-sm-8">
-            <h2>Listado de Comprobantes Contables detallados de la cuenta: Nº {{ $account->code_one }}.{{ $account->code_two }}.{{ $account->code_three }}.{{ $account->code_four }} / {{ $account->description }}</h2>
+        <div class="col-sm-7 h4">
+            Listado de Comprobantes Contables detallados <br>de {{ $type }}({{ $var->id }})
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-eye" ></i>
-                &nbsp Plan de Cuentas
+                Plan de Cuentas
+            </a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ route('accounts.movements',$id_account) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
+                Volver
             </a>
         </div>
        
@@ -27,10 +32,7 @@
 @include('admin.layouts.danger')    {{-- EDITAR --}}
 @include('admin.layouts.delete')    {{-- DELELTE --}}
 {{-- VALIDACIONES-RESPUESTA --}}
-
 <div class="card shadow mb-4">
-   
-   
     <div class="card-body">
         <div class="table-responsive">
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -59,17 +61,26 @@
 
                     @if(isset($var->id_bank_voucher))
                         <td>Bancario</td>
+                        <td>
+                        {{ $var->id_bank_voucher }}
+                        </td>
                     @elseif(isset($var->id_invoice))
                         <td>Factura</td>
+                        <td>
+                        {{ $var->id_invoice }}
+                        </td>
                     @elseif(isset($var->id_expense))
                         <td>Gasto o Compra</td>
-                    @else 
+                        <td>
+                        {{ $var->id_expense }}
+                        </td>
+                    @elseif(isset($var->id_header_voucher)) 
                         <td>Otro</td>
+                        <td>
+                        {{ $var->id_header_voucher }}
+                        </td>
                     @endif
                     
-
-                    <td>{{$var->id_header_voucher ?? $var->id_bank_voucher ?? $var->id_invoice ?? $var->id_expense ?? ''}}</td>
-                    <a href="{{ route('') }}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
                                    
                     @if(isset($var->id_bank_voucher))
                       
@@ -86,10 +97,22 @@
                         <td>{{$var->headers['description'] ?? ''}}</td>
                     @endif
                    
-                    <td>{{$var->debe}}</td>
-                    <td>{{$var->haber}}</td>
-
-                 
+                    @if(isset($var->accounts['coin']))
+                        @if(($var->debe != 0) && ($var->tasa))
+                            <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}<br>{{number_format($var->debe/$var->tasa, 2, ',', '.')}}{{ $var->accounts['coin'] }}</td>
+                        @else
+                            <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
+                        @endif
+                        @if($var->haber != 0 && ($var->tasa))
+                            <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}<br>{{number_format($var->haber/$var->tasa, 2, ',', '.')}}{{ $var->accounts['coin'] }}</td>
+                        @else
+                            <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
+                        @endif
+                    @else
+                        <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
+                        <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
+                    @endif
+                    
                     </tr>
                     @endforeach
                 @endif
@@ -105,8 +128,7 @@
     $('#dataTable').DataTable({
         "ordering": false,
         "order": [],
-        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
-        'iDisplayLength': '50'
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     });
     </script> 
 @endsection

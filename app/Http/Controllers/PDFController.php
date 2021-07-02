@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class PDFController extends Controller
 {
 
-    function imprimirFactura($id_quotation){
+    function imprimirFactura($id_quotation,$coin = null){
       
 
         $pdf = App::make('dompdf.wrapper');
@@ -40,6 +40,9 @@ class PDFController extends Controller
 
                  foreach($payment_quotations as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                    if($coin = 'dolares'){
+                        $var->amount = $var->amount / $var->rate;
+                    }
                  }
 
 
@@ -83,7 +86,11 @@ class PDFController extends Controller
                  $quotation->base_imponible = $base_imponible;
                  $quotation->ventas_exentas = $ventas_exentas;
 
-                 $bcv = $this->search_bcv();
+                 if(($coin == 'bolivares') || (!isset($coin)) ){
+                    $bcv = $this->search_bcv();
+                }else{
+                    $bcv = null;
+                }
                 
                  $pdf = $pdf->loadView('pdf.factura',compact('quotation','inventories_quotations','payment_quotations','bcv'));
                  return $pdf->stream();
@@ -250,7 +257,7 @@ class PDFController extends Controller
     }
 
 
-    function imprimirFactura_media($id_quotation){
+    function imprimirFactura_media($id_quotation,$coin = null){
       
 
         $pdf = App::make('dompdf.wrapper');
@@ -272,6 +279,9 @@ class PDFController extends Controller
 
                  foreach($payment_quotations as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                    if($coin = 'dolares'){
+                        $var->amount = $var->amount / $var->rate;
+                    }
                  }
 
 
@@ -315,7 +325,11 @@ class PDFController extends Controller
                  $quotation->base_imponible = $base_imponible;
                  $quotation->ventas_exentas = $ventas_exentas;
 
-                 $bcv = $this->search_bcv();
+                    if(($coin == 'bolivares') || (!isset($coin)) ){
+                        $bcv = $this->search_bcv();
+                    }else{
+                        $bcv = null;
+                    }
 
                 
                  $pdf = $pdf->loadView('pdf.factura_media',compact('quotation','inventories_quotations','payment_quotations','bcv'));

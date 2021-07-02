@@ -21,6 +21,7 @@ class CreateQuotationPaymentsTable extends Migration
 
             $table->integer('payment_type');
             $table->decimal('amount',64,2);
+            $table->decimal('rate',64,2);
             $table->integer('credit_days')->nullable();
             $table->integer('reference')->nullable();
 

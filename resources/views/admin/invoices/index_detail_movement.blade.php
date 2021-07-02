@@ -17,7 +17,7 @@
             </a>
         </div>
         <div class="col-sm-3">
-            <a href="{{ route('quotations.createfacturado',$quotation->id) }}" class="btn btn-light"><i class="fas fa-undo" ></i>
+            <a href="{{ route('quotations.createfacturado',[$quotation->id,$coin]) }}" class="btn btn-light"><i class="fas fa-undo" ></i>
                 &nbsp Volver a la Factura
             </a>
         </div>
@@ -64,9 +64,22 @@
                     <td class="text-center font-weight-bold">{{$var->id_invoice}}</td>
                     <td class="font-weight-bold">{{$var->headers['description']}} fact({{ $var->id_invoice }}) / {{$var->accounts['description']}}</td>
 
-                    <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
-                    <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
-
+                    @if ($coin == 'bolivares')
+                        <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
+                        <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
+                    @else
+                        @if(($var->debe != 0) && ($var->tasa))
+                            <td class="text-right font-weight-bold">{{number_format($var->debe  / $var->tasa, 2, ',', '.')}}</td>
+                        @else
+                            <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
+                        @endif
+                        @if($var->haber != 0 && ($var->tasa))
+                            <td class="text-right font-weight-bold">{{number_format($var->haber / $var->tasa, 2, ',', '.')}}</td>
+                        @else
+                            <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
+                        @endif
+                    @endif
+                   
                  
                     </tr>
                     @endforeach

@@ -367,6 +367,8 @@ class FacturarController extends Controller
                         if($coin == 'dolares'){
                             $var->amount = $var->amount * $bcv;
                         }
+
+                        $var->rate = $bcv;
                         
                         $var->status =  1;
                     
@@ -475,6 +477,7 @@ class FacturarController extends Controller
                     if($coin == 'dolares'){
                         $var2->amount = $var2->amount * $bcv;
                     }
+                    $var2->rate = $bcv;
                     
                     $var2->status =  1;
                 
@@ -583,6 +586,7 @@ class FacturarController extends Controller
                             if($coin == 'dolares'){
                                 $var3->amount = $var3->amount * $bcv;
                             }
+                            $var3->rate = $bcv;
                             
                             $var3->status =  1;
                         
@@ -691,6 +695,7 @@ class FacturarController extends Controller
                             if($coin == 'dolares'){
                                 $var4->amount = $var4->amount * $bcv;
                             }
+                            $var4->rate = $bcv;
                             
                             $var4->status =  1;
                         
@@ -799,6 +804,8 @@ class FacturarController extends Controller
                         if($coin == 'dolares'){
                             $var5->amount = $var5->amount * $bcv;
                         }
+
+                        $var5->rate = $bcv;
                         
                         $var5->status =  1;
                     
@@ -908,6 +915,8 @@ class FacturarController extends Controller
                             $var6->amount = $var6->amount * $bcv;
                         }
 
+                        $var6->rate = $bcv;
+
                         $var6->status =  1;
                     
                         $total_pay += $valor_sin_formato_amount_pay6;
@@ -1015,6 +1024,7 @@ class FacturarController extends Controller
                         if($coin == 'dolares'){
                             $var7->amount = $var7->amount * $bcv;
                         }
+                        $var7->rate = $bcv;
                         
                         $var7->status =  1;
                     
@@ -1197,8 +1207,6 @@ class FacturarController extends Controller
            
             if($quotation_status != 'C'){
 
-            
-              
                 $header_voucher  = new HeaderVoucher();
 
 
@@ -1269,7 +1277,7 @@ class FacturarController extends Controller
                     }
                     /*------------------------------------------------- */
 
-                    return redirect('quotations/facturado/'.$quotation->id.'')->withSuccess('Factura Guardada con Exito!');
+                    return redirect('quotations/facturado/'.$quotation->id.'/'.$coin.'')->withSuccess('Factura Guardada con Exito!');
 
            
         }else{
@@ -1429,21 +1437,12 @@ class FacturarController extends Controller
 
 
 
-    public function createfacturado($id_quotation)
+    public function createfacturado($id_quotation,$coin = null)
     {
          $quotation = null;
              
          if(isset($id_quotation)){
              $quotation = Quotation::where('date_billing', '<>', null)->find($id_quotation);
-          /* $quotation = DB::table('clients')
-                                    ->join('quotations', 'quotations.id_client', '=', 'clients.id')
-                                    ->where('quotations.id', '=',$id_quotation)
-                                    ->where('date_billing', '<>', null)
-                                    ->select('quotations.*','clients.cedula_rif as cedula_client')
-                                   
-                                   ->first();
-
-                                   dd($quotation);*/
                                  
          }
  
@@ -1485,10 +1484,14 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
-             $bcv = $this->search_bcv();
+                if(($coin == 'bolivares') || (!isset($coin)) ){
+                    $bcv = $this->search_bcv();
+                }else{
+                    $bcv = null;
+                }
 
              
-             return view('admin.quotations.createfacturado',compact('quotation','payment_quotations', 'datenow','bcv'));
+             return view('admin.quotations.createfacturado',compact('quotation','payment_quotations', 'datenow','bcv','coin'));
             }else{
              return redirect('/invoices')->withDanger('La factura no existe');
          } 

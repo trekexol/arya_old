@@ -172,7 +172,7 @@
                             </div>
                            
                             <div class="col-md-3">
-                                <a href="{{ route('invoices.movement',$quotation->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
+                                <a href="{{ route('invoices.movement',[$quotation->id,$coin]) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
                            
                             <div class="col-md-2">
@@ -195,12 +195,12 @@
     <script type="text/javascript">
             function pdf() {
                 
-                var nuevaVentana= window.open("{{ route('pdf',$quotation->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+                var nuevaVentana= window.open("{{ route('pdf',[$quotation->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
             function pdf_media() {
                 
-                var nuevaVentana2= window.open("{{ route('pdf.media',$quotation->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+                var nuevaVentana2= window.open("{{ route('pdf.media',[$quotation->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
            

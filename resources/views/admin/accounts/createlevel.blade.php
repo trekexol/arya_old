@@ -98,7 +98,27 @@
                             </div>
                             
                         </div>
-                        
+                        <div class="form-group row">
+                            <label for="segmento" class="col-md-2 col-form-label text-md-right">Moneda</label>
+                            <div class="col-md-4">
+                                <select class="form-control" id="coin" name="coin" title="coin">
+                                    <option value="BsS">Bolivares</option>
+                                    <option value="$">Dolar</option>
+                                </select>
+                            </div>
+                            <label for="rate" id="rate_label" class="col-md-2 col-form-label text-md-right">Tasa del Dia</label>
+
+                            <div class="col-md-4">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $rate }}" autocomplete="rate">
+
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                       
                         <br>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -122,7 +142,11 @@
 <script>
 
 $(document).ready(function () {
-    $("#balance_previus").mask('000.000.000.000.000,00', { reverse: true });
+    $("#balance_previus").mask('000.000.000.000.000.000.000,00', { reverse: true });
+});
+
+$(document).ready(function () {
+    $("#rate").mask('000.000.000.000.000.000.000,00', { reverse: true });
 });
 
 

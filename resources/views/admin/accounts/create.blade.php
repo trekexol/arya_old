@@ -26,7 +26,7 @@
                 <div class="card-header text-center font-weight-bold h3">Registro de Cuentas</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('accounts.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('accounts.store') }}" enctype="multipart/form-data" onsubmit="return validacion()">
                         @csrf
                        
                        
@@ -73,7 +73,7 @@
                             <label for="period" class="col-md-2 col-form-label text-md-right">Periodo</label>
 
                             <div class="col-md-2">
-                                <input id="period" type="number" class="form-control @error('period') is-invalid @enderror" name="period" value="{{ $datenow }}" required autocomplete="period">
+                                <input id="period" type="text" class="form-control @error('period') is-invalid @enderror" name="period" value="{{ $datenow }}" required autocomplete="period">
 
                                 @error('period')
                                     <span class="invalid-feedback" role="alert">
@@ -109,7 +109,7 @@
                             <label for="level" class="col-md-2 col-form-label text-md-right">Nivel</label>
 
                             <div class="col-md-4">
-                                <input id="level" type="number" class="form-control @error('level') is-invalid @enderror" name="level" value="{{ old('level') }}" required autocomplete="level">
+                                <input id="level" type="text" class="form-control @error('level') is-invalid @enderror" name="level" value="{{ old('level') }}" required autocomplete="level">
 
                                 @error('level')
                                     <span class="invalid-feedback" role="alert">
@@ -120,7 +120,7 @@
                             <label for="balance_previus" class="col-md-2 col-form-label text-md-right">Saldo Anterior</label>
 
                             <div class="col-md-4">
-                                <input id="balance_previus" type="number" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ old('balance_previus') }}" required autocomplete="balance_previus">
+                                <input id="balance_previus" type="text" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ old('balance_previus') }}" required autocomplete="balance_previus">
 
                                 @error('balance_previus')
                                     <span class="invalid-feedback" role="alert">
@@ -130,7 +130,26 @@
                             </div>
                             
                         </div>
+                        <div class="form-group row">
+                            <label for="segmento" class="col-md-2 col-form-label text-md-right">Moneda</label>
+                            <div class="col-md-4">
+                                <select class="form-control" id="coin" name="coin" title="coin">
+                                    <option value="BsS">Bolivares</option>
+                                    <option value="$">Dolar</option>
+                                </select>
+                            </div>
+                            <label for="rate" id="rate_label" class="col-md-2 col-form-label text-md-right">Tasa del Dia</label>
 
+                            <div class="col-md-4">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $rate }}" autocomplete="rate">
+
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                         <br>
                         <div class="form-group row mb-0">
                             <div class="col-md-3 offset-md-4">
@@ -153,7 +172,7 @@
 @section('validacion')
     <script>    
 	 $(document).ready(function () {
-            $("#code_one").mask('000', { reverse: true });
+            $("#code_one").mask('00', { reverse: true });
             
     });
     $(document).ready(function () {
@@ -168,7 +187,37 @@
             $("#code_four").mask('000', { reverse: true });
             
     });
+    $(document).ready(function () {
+            $("#level").mask('0', { reverse: true });
+            
+    });
+    $(document).ready(function () {
+            $("#period").mask('0000', { reverse: true });
+            
+    });
         
+    $(document).ready(function () {
+        $("#balance_previus").mask('000.000.000.000.000.000.000,00', { reverse: true });
+    });
+
+    $(document).ready(function () {
+        $("#rate").mask('000.000.000.000.000.000.000,00', { reverse: true });
+    });
+
+    function validacion() {
+
+        let level = document.getElementById("level").value; 
+
+        if ((level > 0) && (level < 5)) {
+          
+            return true;
+        }
+        else {
+            alert('El nivel debe estar entre 1 y 4');
+            return false;
+        }
+    }
+
 
     </script>
 @endsection

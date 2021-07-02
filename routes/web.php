@@ -349,9 +349,9 @@ Route::group(["prefix"=>'accounts'],function(){
 
     Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}/{period}','AccountController@createlevel')->name('accounts.createlevel');
     
-    Route::get('movementaccount/{id_account}','AccountController@movements')->name('accounts.movements');
+    Route::get('movementaccount/{id_account}/{coin?}','AccountController@movements')->name('accounts.movements');
 
-    Route::get('movementheader/{id}/{type}','AccountController@header_movements')->name('accounts.header_movements');
+    Route::get('movementheader/{id}/{type}/{id_account}','AccountController@header_movements')->name('accounts.header_movements');
 
     Route::get('yearend','AccountController@year_end')->name('accounts.year_end');
 });
@@ -413,7 +413,7 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::get('facturar/{id_quotation}/{coin?}','FacturarController@createfacturar')->name('quotations.createfacturar');
 
     Route::post('storefactura','FacturarController@storefactura')->name('quotations.storefactura');
-    Route::get('facturado/{id_quotation}','FacturarController@createfacturado')->name('quotations.createfacturado');
+    Route::get('facturado/{id_quotation}/{coin?}','FacturarController@createfacturado')->name('quotations.createfacturado');
 
     Route::get('listinventory/{var?}','QuotationController@listinventory')->name('quotations.listinventory');
 
@@ -498,17 +498,17 @@ Route::group(["prefix"=>'nominacalculations'],function(){
 Route::group(["prefix"=>'invoices'],function(){
     Route::get('/','InvoiceController@index')->name('invoices');
 
-    Route::get('movementinvoice/{id_invoice}','InvoiceController@movementsinvoice')->name('invoices.movement');
+    Route::get('movementinvoice/{id_invoice}/{coin?}','InvoiceController@movementsinvoice')->name('invoices.movement');
     
    
  });
 
  Route::group(["prefix"=>'pdf'],function(){
-    Route::get('factura/{id_quotation}','PDFController@imprimirfactura')->name('pdf');
+    Route::get('factura/{id_quotation}/{coin?}','PDFController@imprimirfactura')->name('pdf');
     Route::get('deliverynote/{id_quotation}/{iva}','PDFController@deliverynote')->name('pdf.deliverynote');
     Route::get('inventory','PDFController@imprimirinventory')->name('pdf.inventory');
 
-    Route::get('facturamedia/{id_quotation}','PDFController@imprimirfactura_media')->name('pdf.media');
+    Route::get('facturamedia/{id_quotation}/{coin?}','PDFController@imprimirfactura_media')->name('pdf.media');
 
     Route::get('expense/{id_expense}','PDFController@imprimirExpense')->name('pdf.expense');
 

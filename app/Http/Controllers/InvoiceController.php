@@ -25,7 +25,7 @@ class InvoiceController extends Controller
         return view('admin.invoices.index',compact('quotations'));
     }
 
-    public function movementsinvoice($id_invoice)
+    public function movementsinvoice($id_invoice,$coin = null)
     {
         
 
@@ -35,11 +35,16 @@ class InvoiceController extends Controller
             $quotation = Quotation::find($id_invoice);
             $detailvouchers = DetailVoucher::where('id_invoice',$id_invoice)->get();
 
+            if(!isset($coin)){
+                $coin = 'bolivares';
+            }
+
+           
          }elseif($users_role == '2'){
             return view('admin.index');
         }
         
-        return view('admin.invoices.index_detail_movement',compact('detailvouchers','quotation'));
+        return view('admin.invoices.index_detail_movement',compact('detailvouchers','quotation','coin'));
     }
  
 }
