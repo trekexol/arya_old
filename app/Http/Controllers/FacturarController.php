@@ -55,6 +55,7 @@ class FacturarController extends Controller
 
              $total= 0;
              $base_imponible= 0;
+             $price_cost_total= 0;
 
              foreach($inventories_quotations as $var){
                  //Se calcula restandole el porcentaje de descuento (discount)
@@ -70,6 +71,9 @@ class FacturarController extends Controller
                     $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
 
                 }
+
+                //me suma todos los precios de costo de los productos
+                $price_cost_total += $var->price_buy * $var->amount_quotation;
              }
 
              $quotation->total_factura = $total;
@@ -91,7 +95,7 @@ class FacturarController extends Controller
              
              
      
-             return view('admin.quotations.createfacturar',compact('coin','quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','bcv','anticipos_sum'));
+             return view('admin.quotations.createfacturar',compact('price_cost_total','coin','quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','bcv','anticipos_sum'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -274,6 +278,8 @@ class FacturarController extends Controller
         $bcv = $this->search_bcv();
 
         $coin = request('coin');
+
+        $price_cost_total = request('price_cost_total') * $bcv;
         
 
      
@@ -1253,7 +1259,7 @@ class FacturarController extends Controller
                 $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
 
                 if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$sub_total);
+                    $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
                 }
 
                 //Costo de Mercancia
@@ -1261,7 +1267,7 @@ class FacturarController extends Controller
                 $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancía')->first();
 
                 if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$sub_total,0);
+                    $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
                 }
                 /*----------- */
             }

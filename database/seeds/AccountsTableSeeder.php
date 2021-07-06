@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +28,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 1,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -40,6 +44,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -53,6 +60,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -66,6 +76,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -79,6 +92,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -92,6 +108,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -105,6 +124,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -118,6 +140,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -131,6 +156,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -144,6 +172,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -157,6 +188,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -170,6 +204,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -183,6 +220,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -196,6 +236,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -209,6 +252,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -222,6 +268,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -235,6 +284,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -248,6 +300,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -261,6 +316,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -274,6 +332,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -287,6 +348,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -300,6 +364,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -313,6 +380,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -326,6 +396,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -339,6 +412,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -352,6 +428,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -365,6 +444,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -378,6 +460,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -391,6 +476,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -404,6 +492,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -417,6 +508,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -430,6 +524,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -443,6 +540,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -456,6 +556,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -469,6 +572,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -482,6 +588,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -495,6 +604,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -508,6 +620,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -521,6 +636,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -534,6 +652,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -547,6 +668,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -560,6 +684,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -573,6 +700,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -586,6 +716,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -599,6 +732,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -612,6 +748,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -625,6 +764,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -638,6 +780,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -651,6 +796,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -664,6 +812,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -677,6 +828,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -690,6 +844,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -703,6 +860,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -716,6 +876,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -729,6 +892,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -742,6 +908,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -755,6 +924,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -768,6 +940,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 1,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -781,6 +956,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -794,6 +972,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -807,6 +988,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -820,6 +1004,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -833,6 +1020,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -846,6 +1036,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -859,6 +1052,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -872,6 +1068,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -885,6 +1084,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -898,6 +1100,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -911,6 +1116,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -924,6 +1132,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -937,6 +1148,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -950,6 +1164,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -963,6 +1180,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -976,6 +1196,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -989,6 +1212,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -1002,6 +1228,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -1015,6 +1244,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -1028,6 +1260,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -1041,6 +1276,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -1054,6 +1292,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -1067,6 +1308,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             
@@ -1080,6 +1324,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1092,6 +1339,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1104,6 +1354,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1116,6 +1369,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1128,6 +1384,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1140,6 +1399,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1152,6 +1414,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1164,6 +1429,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1176,6 +1444,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1188,6 +1459,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1200,6 +1474,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1212,6 +1489,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1224,6 +1504,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1236,6 +1519,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1248,6 +1534,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 2,
@@ -1260,6 +1549,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1272,6 +1564,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 1,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1284,6 +1579,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1296,6 +1594,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1308,6 +1609,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1320,6 +1624,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1332,6 +1639,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1344,6 +1654,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1356,6 +1669,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1368,6 +1684,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1380,6 +1699,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1392,6 +1714,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1404,6 +1729,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1416,6 +1744,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1428,6 +1759,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1440,6 +1774,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1452,6 +1789,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 3,
@@ -1464,6 +1804,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1476,6 +1819,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 1,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1488,6 +1834,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1500,6 +1849,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1512,6 +1864,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1524,6 +1879,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1536,6 +1894,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1548,6 +1909,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1560,6 +1924,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1572,6 +1939,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1584,6 +1954,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1596,6 +1969,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1608,6 +1984,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1620,6 +1999,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1632,6 +2014,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1644,6 +2029,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 4,
@@ -1656,6 +2044,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1668,6 +2059,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 1,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1680,6 +2074,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1692,6 +2089,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1704,6 +2104,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1716,6 +2119,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1728,6 +2134,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1740,6 +2149,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1752,6 +2164,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1764,6 +2179,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 5,
@@ -1776,6 +2194,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1788,6 +2209,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 1,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1800,6 +2224,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 2,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1812,6 +2239,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1824,6 +2254,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1836,6 +2269,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1848,6 +2284,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1860,6 +2299,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1872,6 +2314,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1884,6 +2329,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1896,6 +2344,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1908,6 +2359,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1920,6 +2374,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1932,6 +2389,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1944,6 +2404,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1956,6 +2419,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1968,6 +2434,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1980,6 +2449,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -1992,6 +2464,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2004,6 +2479,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2016,6 +2494,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2028,6 +2509,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2040,6 +2524,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2052,6 +2539,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2064,6 +2554,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2076,6 +2569,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2088,6 +2584,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2100,6 +2599,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2112,6 +2614,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2124,6 +2629,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2136,6 +2644,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2148,6 +2659,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2160,6 +2674,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2172,6 +2689,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2184,6 +2704,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2196,6 +2719,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2208,6 +2734,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2220,6 +2749,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2232,6 +2764,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2244,6 +2779,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2256,6 +2794,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2268,6 +2809,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2280,6 +2824,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2292,6 +2839,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2304,6 +2854,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2316,6 +2869,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2328,6 +2884,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2340,6 +2899,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2352,6 +2914,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2364,6 +2929,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2376,6 +2944,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2388,6 +2959,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2400,6 +2974,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2412,6 +2989,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2424,6 +3004,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2436,6 +3019,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2448,6 +3034,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2460,6 +3049,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2472,6 +3064,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2484,6 +3079,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2496,6 +3094,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2508,6 +3109,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2520,6 +3124,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2532,6 +3139,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2544,6 +3154,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2556,6 +3169,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2568,6 +3184,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2580,6 +3199,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2592,6 +3214,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2604,6 +3229,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2616,6 +3244,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2628,6 +3259,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2640,6 +3274,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2652,6 +3289,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2664,6 +3304,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2676,6 +3319,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2688,6 +3334,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2700,6 +3349,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 3,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('accounts')->insert([
             'code_one' => 6,
@@ -2712,6 +3364,9 @@ class AccountsTableSeeder extends Seeder
             'level' => 4,
             'balance_previus' => 0,
             'status' => '1',
+            'rate' => 0,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
     }
 }

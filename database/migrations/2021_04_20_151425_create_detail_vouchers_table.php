@@ -26,6 +26,9 @@ class CreateDetailVouchersTable extends Migration
             $table->decimal('haber',64,2);
 
             $table->string('status',1);
+            $table->string('date_end')->nullable();
+
+
             $table->foreign('id_account')->references('id')->on('accounts');
             $table->foreign('id_header_voucher')->references('id')->on('header_vouchers');
             $table->foreign('id_invoice')->references('id')->on('quotations');

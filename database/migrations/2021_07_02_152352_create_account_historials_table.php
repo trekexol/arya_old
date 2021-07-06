@@ -21,10 +21,13 @@ class CreateAccountHistorialsTable extends Migration
             $table->date('date_end');
 
             $table->integer('period');
-            $table->decimal('previous_balance',64,2);
+            $table->decimal('balance_previous',64,2);
+            $table->decimal('balance_current',64,2);
             $table->decimal('debe',64,2);
             $table->decimal('haber',64,2);
-            $table->decimal('current_balance',64,2);
+            $table->decimal('debe_coin',64,2)->nullable();
+            $table->decimal('haber_coin',64,2)->nullable();
+            
 
             $table->decimal('rate',64,2)->nullable();
             $table->string('coin',10)->nullable();

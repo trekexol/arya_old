@@ -215,6 +215,9 @@
 
                         <input type="hidden" name="coin" value="{{$coin}}" readonly>
 
+                        <!--Precio de costo de todos los productos-->
+                        <input type="hidden" name="price_cost_total" value="{{$price_cost_total}}" readonly>
+
                         <!--CANTIDAD DE PAGOS QUE QUIERO ENVIAR-->
                         <input type="hidden" id="amount_of_payments" name="amount_of_payments"  readonly>
 

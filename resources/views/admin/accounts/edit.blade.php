@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="balance_previus" class="col-md-4 col-form-label text-md-right">Balance Previo</label>
+                                    <label for="balance_previus" class="col-md-4 col-form-label text-md-right">Saldo Anterior</label>
         
                                     <div class="col-md-4">
                                         <input id="balance_previus" type="text" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ $var->balance_previus }}" required autocomplete="balance_previus">
@@ -86,17 +86,30 @@
                                     </div>
                                 </div>
                                 <div class="form-group row" id="rate_form">
-                                    <label for="rate" id="rate_label" class="col-md-4 col-form-label text-md-right">Tasa del Dia</label>
-        
-                                    <div class="col-md-4">
-                                        <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $rate }}" autocomplete="rate">
-        
-                                        @error('rate')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                                    @if (isset($var->rate) && ($var->rate != 0))
+                                        <label for="rate" id="rate_label" class="col-md-4 col-form-label text-md-right">Tasa Guardada de la Cuenta</label>
+                                        <div class="col-md-4">
+                                            <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $var->rate }}" autocomplete="rate">
+            
+                                            @error('rate')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    @else
+                                        <label for="rate" id="rate_label" class="col-md-4 col-form-label text-md-right">Tasa del Dia</label>                           
+                                        <div class="col-md-4">
+                                            <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $rate }}" autocomplete="rate">
+            
+                                            @error('rate')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>   
+                                    @endif
+                                    
                                     
                                 </div>
                                 

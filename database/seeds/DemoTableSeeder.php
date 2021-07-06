@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -31,29 +32,39 @@ class DemoTableSeeder extends Seeder
             'rate_petro' => 9000000.00,
             'foto_company' => 'default',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('professions')->insert([
             'name' => 'Administrador',
             'description' => 'Supervisa el area administrativa',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('professions')->insert([
             'name' => 'Secretaria',
             'description' => 'Se encarga de la parte administrativa',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('positions')->insert([
             'id' => 1,
             'name' => 'Ingeniero',
             'description' => 'Se encarga del sistema',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('positions')->insert([
             'id' => 2,
             'name' => 'Contador',
             'description' => 'Se encarga de las finanzas',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('unit_of_measures')->insert([
@@ -61,32 +72,44 @@ class DemoTableSeeder extends Seeder
             'code' => 'Kgs',
             'description' => 'Kilogramos',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('unit_of_measures')->insert([
             'id' => 2,
             'code' => 'Lts',
             'description' => 'Litros',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('modelos')->insert([
             'id' => 1,
             'description' => 'Chevrolet',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('modelos')->insert([
             'id' => 2,
             'description' => 'Toyota',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('colors')->insert([
             'id' => 1,
             'description' => 'Negro',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('colors')->insert([
             'id' => 2,
             'description' => 'Blanco',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('transports')->insert([
             'modelo_id' => 1,
@@ -95,45 +118,61 @@ class DemoTableSeeder extends Seeder
             'type' => 'Carro',
             'placa' => 'ABF22N',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('segments')->insert([
             'id' => 1,
             'description' => 'Bebidas',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('segments')->insert([
             'id' => 2,
             'description' => 'Alimentos',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('subsegments')->insert([
             'id' => 1,
             'segment_id' => 1,
             'description' => 'Refrescos',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('subsegments')->insert([
             'id' => 2,
             'segment_id' => 2,
             'description' => 'Lata',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('salary_types')->insert([
             'id' => 1,
             'name' => 'Alto',
             'description' => '600 a 800',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('salary_types')->insert([
             'id' => 2,
             'name' => 'Medio',
             'description' => '400 a 600',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
        
         DB::table('comision_types')->insert([
             'description' => 'Comision 1',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('branches')->insert([
@@ -148,6 +187,8 @@ class DemoTableSeeder extends Seeder
             'phone_contact' => '0414-2351562',
             'observation' => 'Ninguna',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('academiclevels')->insert([
@@ -155,12 +196,16 @@ class DemoTableSeeder extends Seeder
             'name' => 'Licenciado',
             'description' => 'Graduado Universitario',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('academiclevels')->insert([
             'id' => 2,
             'name' => 'Bachiller',
             'description' => 'Finalizo Bachillerato',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('employees')->insert([
             'id' => 1,
@@ -184,6 +229,8 @@ class DemoTableSeeder extends Seeder
             'acumulado_utilidades' => 0,
             'amount_utilities' => 'Ma',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('Vendors')->insert([
             'id' => 1,
@@ -200,6 +247,8 @@ class DemoTableSeeder extends Seeder
             'phone2' => '0412 255-1545',
             'comision' => 0,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('clients')->insert([
             'id' => 1,
@@ -218,6 +267,8 @@ class DemoTableSeeder extends Seeder
             'percentage_retencion_iva' => 12,
             'percentage_retencion_islr' => 10,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('products')->insert([
             'id' => 1,
@@ -236,6 +287,8 @@ class DemoTableSeeder extends Seeder
             'islr' => 0,
             'special_impuesto' => 0,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('inventories')->insert([
             'id' => 1,
@@ -244,6 +297,8 @@ class DemoTableSeeder extends Seeder
             'code' => 1001,
             'amount' => 100,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('providers')->insert([
             'id' => 1,
@@ -262,6 +317,8 @@ class DemoTableSeeder extends Seeder
             'balance' => 0.00,
             'select_balance' => 0,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
     }
 }

@@ -189,11 +189,10 @@ class AccountController extends Controller
                          ->orderBy('code_three', 'asc')
                          ->orderBy('code_four', 'asc')
                          ->get();
-        $details = DetailVoucher::first();
-
+        
                        
         if(isset($accounts)) {
-            if(isset($details)) {
+            
             foreach ($accounts as $var) 
             {
                 if($var->code_one != 0)
@@ -253,6 +252,8 @@ class AccountController extends Controller
                                                     d.status = ?
                                                     LIMIT 1'
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+
+                                                    $var->balance =  $var->balance_previus;
                                 
                                     }else{
                                         $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
@@ -278,7 +279,9 @@ class AccountController extends Controller
                                         d.status = ?
                                         LIMIT 1'
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
-                    
+
+                                        if(($var->balance_previus != 0) && ($var->rate !=0))
+                                        $var->balance =  $var->balance_previus / $var->rate;
                                     }
                                     $total_debe = $total_debe[0]->debe;
                                     $total_haber = $total_haber[0]->haber;
@@ -293,6 +296,9 @@ class AccountController extends Controller
                                 
                                     $var->debe = $total_debe;
                                     $var->haber = $total_haber;
+
+                                   
+                                    
                                     
                             }else{          
                             
@@ -319,6 +325,14 @@ class AccountController extends Controller
                                                 d.status = ?
                                                 LIMIT 1'
                                                 , [$var->code_one,$var->code_two,$var->code_three,'C']);
+
+                                $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ?  AND
+                                            a.code_three = ?
+                                            LIMIT 1'
+                                            , [$var->code_one,$var->code_two,$var->code_three]);
                                 
                                 }else{
                                         $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
@@ -345,12 +359,25 @@ class AccountController extends Controller
                                         LIMIT 1'
                                         , [$var->code_one,$var->code_two,$var->code_three,'C']);
                         
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ? AND
+                                            a.code_three = ?
+                                            LIMIT 1'
+                                            , [$var->code_one,$var->code_two,$var->code_three]);
+
                                     }
                                     $total_debe = $total_debe[0]->debe;
                                     $total_haber = $total_haber[0]->haber;
                                 
                                     $var->debe = $total_debe;
                                     $var->haber = $total_haber;
+
+                                    
+
+                                    $total_balance = $total_balance[0]->balance;
+                                    $var->balance = $total_balance;
                                       
                                             
                             }           
@@ -376,6 +403,13 @@ class AccountController extends Controller
                                                 LIMIT 1'
                                                 , [$var->code_one,$var->code_two,'C']);
                                 
+                                $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ?
+                                            LIMIT 1'
+                                            , [$var->code_one,$var->code_two]);
+                                
                                 }else{
                                     $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
                                     FROM accounts a
@@ -396,13 +430,25 @@ class AccountController extends Controller
                                     d.status = ?
                                     LIMIT 1'
                                     , [$var->code_one,$var->code_two,'C']);
+
+                                    $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ?
+                                            LIMIT 1'
+                                            , [$var->code_one,$var->code_two]);
                     
                                 }
+                                
                                 $total_debe = $total_debe[0]->debe;
                                 $total_haber = $total_haber[0]->haber;
                                 $var->debe = $total_debe;
                                 $var->haber = $total_haber;
-                        
+
+                                
+
+                                $total_balance = $total_balance[0]->balance;
+                                $var->balance = $total_balance;
                         }
                     }else{
                         if($coin == 'bolivares'){
@@ -422,6 +468,12 @@ class AccountController extends Controller
                                             d.status = ?
                                             LIMIT 1'
                                             , [$var->code_one,'C']);
+
+                            $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ?
+                                            LIMIT 1'
+                                            , [$var->code_one]);
                             
                             }else{
                                 $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
@@ -441,20 +493,29 @@ class AccountController extends Controller
                                 d.status = ?
                                 LIMIT 1'
                                 , [$var->code_one,'C']);
+
+                                $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ?
+                                            LIMIT 1'
+                                            , [$var->code_one]);
                 
                             }
                             $total_debe = $total_debe[0]->debe;
                             $total_haber = $total_haber[0]->haber;
                             $var->debe = $total_debe;
                             $var->haber = $total_haber;
-                    
+
+                            $total_balance = $total_balance[0]->balance;
+
+                            $var->balance = $total_balance;
 
                     }
                 }else{
                     return redirect('/accounts/menu')->withDanger('El codigo uno es igual a cero!');
                 }
             } 
-        } 
+        
         }else{
             return redirect('/accounts/menu')->withDanger('No hay Cuentas');
         }              
@@ -658,38 +719,71 @@ class AccountController extends Controller
 
     public function year_end()
    {
+      
         $coin = 'bolivares';
 
         $accounts = $this->calculation($coin);
 
         $date = Carbon::now();
         $datenow = $date->format('Y');
+        $datenow2 = $date->format('Y-m-d');
+        $last_detail = DetailVoucher::where('status', 'C')->orderBy('id', 'asc')->first();
 
-        $last_detail = DetailVoucher::where('status','not like','F')->first();
+        //Verifica que existan movimientos con los cuales hacer el cierre
+        if(isset($last_detail)){
+            //Verifica que no se haga el cierre 2 veces un mismo dia
+            if(var_dump($last_detail->date_end != $datenow2)){
 
-        foreach($accounts as $account){ 
+                foreach($accounts as $account){ 
+                    
+                    $var = new AccountHistorial();
+
+                    $var_account = Account::findOrFail($account->id);
+
+
+                    $var->id_account =  $account->id;
+                    $var->period =  $datenow;
+                    $var->date_begin = $last_detail->created_at->format('Y-m-d');
+                    $var->date_end = $datenow2;
+
+                    $var->balance_previous = $account->balance_previus;
+
+                    if(isset($account->coin)){
+                        $var->balance_current = $account->balance_previus + $account->dolar_debe - $account->dolar_haber;
+                        $var->coin =  $account->coin;
+                    }else{
+                        $var->balance_current = $account->balance_previus + $account->debe - $account->haber;
+                        $var->coin =  $coin;
+                    }
+
+                        $var->debe =  $account->debe ?? 0;
+                        $var->haber =  $account->haber ?? 0;
+                        $var->debe_coin =  $account->dolar_debe ?? 0;
+                        $var->haber_coin =  $account->dolar_haber ?? 0;
+                
+                    $var->status =  "F";
+                
+                    $var->save();
+
+                    $var_account->balance_previus = $var->balance_current;
+                    $var_account->save();
+
+                }
             
-            $var = new AccountHistorial();
+                DetailVoucher::where('status', 'C')
+                        ->update(['status' => 'F' , 'date_end' => $datenow2]);
 
-            $var->id_account =  $account->id;
-            $var->period =  $datenow;
+                
+                return redirect('/accounts/menu')->withSuccess('Se realizo el Cierre Exitosamente!');
 
+    }else{
+        return redirect('/accounts/menu')->withDanger('No se puede realizar el cierre en un mismo dia!');
+    }
 
-            if(isset($account->coin)){
-                $var->balance_previus = $account->balance_previus + $account->dolar_debe - $account->dolar_haber;
-            }else{
-                $var->balance_previus = $account->balance_previus + $account->debe - $account->haber;
-            }
-           
-            $var->status =  "F";
-        
-            $var->save();
-
-        }
-       
-
-        return view('admin.accounts.create',compact('datenow','rate'));
+   }else{
+        return redirect('/accounts/menu')->withDanger('No hay movimientos para realizar un cierre!');
    }
+}
 
 
 

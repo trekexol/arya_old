@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,16 +17,22 @@ class RateTypeTableSeeder extends Seeder
             
             'description' => 'AUTOMATICA',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('rate_types')->insert([
             
             'description' => 'FIJA',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('rate_types')->insert([
             
             'description' => 'SIN TASA',
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -24,6 +25,8 @@ class NominaConceptTableSeeder extends Seeder
             'maximum' => 999999999999999999.99,
            
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -39,6 +42,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_m' => 3,
             'id_formula_s' => 3,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -52,6 +57,8 @@ class NominaConceptTableSeeder extends Seeder
             'maximum' => 999999999999999999.99,
             'id_formula_m' => 6,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -67,6 +74,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_m' => 7,
             'id_formula_s' => 7,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -79,6 +88,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -91,6 +102,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -103,6 +116,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -115,6 +130,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -130,6 +147,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_m' => 8,
             'id_formula_s' => 8,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -145,6 +164,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_m' => 9,
             'id_formula_s' => 9,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -158,6 +179,8 @@ class NominaConceptTableSeeder extends Seeder
             'maximum' => 999999999999999999.99,
             'id_formula_m' => 10,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -170,6 +193,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -185,6 +210,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_m' => 11,
             'id_formula_s' => 11,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -197,6 +224,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -212,6 +241,8 @@ class NominaConceptTableSeeder extends Seeder
            
             'id_formula_q' => 12,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -224,6 +255,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -236,6 +269,8 @@ class NominaConceptTableSeeder extends Seeder
             'minimum' => 0,
             'maximum' => 999999999999999999.99,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -251,6 +286,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_s' => 6,
             'id_formula_q' => 6,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -266,6 +303,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_s' => 2,
             'id_formula_q' => 1,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -279,6 +318,8 @@ class NominaConceptTableSeeder extends Seeder
             'maximum' => 999999999999999999.99,
             'id_formula_m' => 13,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -294,6 +335,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_s' => 15,
             'id_formula_q' => 14,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -307,6 +350,8 @@ class NominaConceptTableSeeder extends Seeder
             'maximum' => 999999999999999999.99,
             'id_formula_m' => 16,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -322,6 +367,8 @@ class NominaConceptTableSeeder extends Seeder
             'id_formula_s' => 5,
             'id_formula_q' => 4,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('nomina_concepts')->insert([
             
@@ -335,6 +382,8 @@ class NominaConceptTableSeeder extends Seeder
             'maximum' => 999999999999999999.99,
             'id_formula_m' => 6,
             'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
     }
 }

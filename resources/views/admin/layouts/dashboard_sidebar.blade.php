@@ -1,12 +1,10 @@
 <ul  class="navbar-nav  bg-gradient-secondary2 sidebar sidebar-dark accordion" id="accordionSidebar">
     <!--style="width:200px !important;"-->
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-left"  href="{{ route('home') }}">
-             <div class="sidebar-brand-icon">
+    <a class="sidebar-brand d-flex align-items-center" href="{{ route('home') }}">
             
-            </div>
-            <div class="sidebar-brand-text mx-3 ">
-                <img src="{{asset('img/logo.png')}}"  style="width: 120px;height:50px;" alt="Google">
+            <div class="sidebar-brand-text float-left">
+                <img src="{{asset('img/logo.png')}}"  style="width: 100px;height:50px;" alt="Google">
                 
             </div>
         
