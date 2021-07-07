@@ -34,6 +34,7 @@ class DeliveryNoteController extends Controller
 
     public function createdeliverynote($id_quotation,$coin)
     {
+        
          $quotation = null;
              
          if(isset($id_quotation)){
@@ -80,11 +81,19 @@ class DeliveryNoteController extends Controller
              $datenow = $date->format('Y-m-d');    
 
 
-             $bcv = $this->search_bcv();
-
+             if(isset($coin)){
+                if($coin == 'bolivares'){
+                   $bcv = $this->search_bcv();
+                }else{
+                    $bcv = null;
+                }
+            }else{
+               $bcv = $this->search_bcv();
+            }
+            
              
      
-             return view('admin.quotations.createdeliverynote',compact('quotation','datenow','bcv'));
+             return view('admin.quotations.createdeliverynote',compact('coin','quotation','datenow','bcv'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 

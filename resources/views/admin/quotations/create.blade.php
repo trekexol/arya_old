@@ -30,9 +30,7 @@
                 <div class="card-body" >
                    
                        
-                        <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
                        
-                        
                         <div class="form-group row">
                             <label for="date_quotation" class="col-md-2 col-form-label text-md-right">Fecha de Cotización:</label>
                             <div class="col-md-4">
@@ -121,6 +119,15 @@
                             </div>
 
                         </div>
+                        <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
+                            @csrf
+                            <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
+                            <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
+                            <input id="coin" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares' }}" readonly required autocomplete="coin">
+                            <input id="bcv" type="hidden" class="form-control @error('bcv') is-invalid @enderror" name="bcv" value="{{ $bcv ?? $bcv_quotation_product }}" readonly required autocomplete="bcv">
+                            <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
+                       
+                        
                         <div class="form-group row" id="formcoin">
                             <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
 
@@ -134,15 +141,21 @@
                                     @endif
                                 </select>
                             </div>
+                            <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
+                            <div class="col-md-2">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <a href="#" onclick="refreshrate()" title="tasa"><i class="fa fa-redo-alt"></i></a>  
+                                        
                         </div>
                         <br>
-                        <form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
-                            @csrf
-                            <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
-                            <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
-                            <input id="coin" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares' }}" readonly required autocomplete="coin">
-                            <input id="bcv" type="hidden" class="form-control @error('bcv') is-invalid @enderror" name="bcv" value="{{ $bcv ?? $bcv_quotation_product }}" readonly required autocomplete="bcv">
                        
+                            
                                 <div class="form-row col-md-12">
                                     <div class="form-group col-md-2">
                                         <label for="description" >Código</label>
@@ -268,8 +281,12 @@
 
                                             $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
 
-                                                if(isset($bcv)){
-                                                    $product_Bs = $total_less_percentage * $bcv;
+                                                if($coin == 'bolivares'){
+                                                    $var->rate = null;
+                                                }
+
+                                                if(isset($var->rate)){
+                                                    $product_Bs = $total_less_percentage / $var->rate;
                                                 }
                                             
                                             ?>
@@ -282,9 +299,9 @@
                                                 @endif
                                                 
                                                 <td style="text-align: right">{{ $var->amount_quotation}}</td>
-                                                <td style="text-align: right">{{number_format($var->price * ($bcv ?? 1), 2, ',', '.')}}</td>
+                                                <td style="text-align: right">{{number_format($var->price / ($var->rate ?? 1), 2, ',', '.')}}</td>
                                                 <td style="text-align: right">{{number_format($var->discount, 0, '', '.')}}%</td>
-                                                @if(isset($bcv))
+                                                @if(isset($var->rate))
                                                     <td style="text-align: right">{{number_format($product_Bs, 2, ',', '.')}}</td>
                                                 @else
                                                     <td style="text-align: right">{{number_format($total_less_percentage, 2, ',', '.')}}</td>
@@ -295,15 +312,15 @@
                                                     
                                                 ?>
                                                     <td style="text-align: right">
-                                                    <a href="{{ route('quotations.productedit',$var->quotation_products_id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                    <a href="{{ route('quotations.productedit',[$var->quotation_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                                                     </td>
                                             
                                                 </tr>
                                             @endforeach
 
                                             <?php
-                                                if(isset($bcv)){
-                                                    $suma = $suma * $bcv;
+                                                if(isset($var->rate)){
+                                                    $suma = $suma / $var->rate;
                                                 }
                                             ?>
                                             <tr>
@@ -333,7 +350,11 @@
                                     </div>
                                 @endif
                                 <div class="col-md-4">
-                                    <a href="{{ route('quotations.createfacturar',[$quotation->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                                    @if($suma == 0)
+                                        <a onclick="validate()" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                                    @else
+                                        <a href="{{ route('quotations.createfacturar',[$quotation->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Facturar</a>  
+                                    @endif
                                 </div>
                                
                             </div>
@@ -367,6 +388,10 @@
             $("#total").mask('000.000.000.000.000,00', { reverse: true });
             
         });
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
     </script> 
 
 @endsection         
@@ -380,19 +405,32 @@
     } );
     </script>
     <script>
-    //var coin = "bolivares";
+    
 
     $("#coin").on('change',function(){
         
          coin = $(this).val();
          window.location = "{{route('quotations.create', [$quotation->id,''])}}"+"/"+coin;
+            
        
     });
 
     function deliveryNoteSend() {
        
-       window.location = "{{route('quotations.createdeliverynote', [$quotation->id,''])}}"+"/"+coin;
-                          
+            window.location = "{{route('quotations.createdeliverynote', [$quotation->id,$coin])}}";
+            
+    }
+
+    function refreshrate() {
+       
+        let rate = document.getElementById("rate").value; 
+        window.location = "{{ route('quotations.refreshrate',[$quotation->id,$coin,'']) }}"+"/"+rate;
+       
+    }
+
+    function validate() {
+       
+        alert('Debe ingresar al menos un producto para poder facturar');           
     }
 
 
@@ -447,17 +485,12 @@
                             let {id,description,date} = item;
                           
                            window.location = "{{route('quotations.createproduct', [$quotation->id,$coin,''])}}"+"/"+id;
-                           //inputDescription.value = description;
-                           //inputDate.value = date;
+                           
                         });
                     }else{
                         alert('No se Encontro este numero de Referencia');
                     }
-                    //console.clear();
-                    // console.log(htmlOptions);
                    
-                   
-                
                 },
                 error:(xhr)=>{
                     alert('Presentamos Inconvenientes');

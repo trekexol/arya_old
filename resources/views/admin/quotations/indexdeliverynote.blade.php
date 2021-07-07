@@ -83,7 +83,7 @@
                         <tr>
                             <td >
                                 
-                            <a href="{{ route('quotations.createfacturar',$quotation->id ?? -1)}}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                            <a href="{{ route('quotations.createfacturar',[$quotation->id,$quotation->coin])}}" title="Seleccionar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{$quotation->serie}}</td>
                             <td>{{ $quotation->clients['name']}}</td>

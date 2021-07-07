@@ -193,7 +193,7 @@
 
         
 
-        var nuevaVentana= window.open("{{ route('pdf.deliverynote',[$quotation->id,''])}}"+"/"+inputIva,"ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+        var nuevaVentana= window.open("{{ route('pdf.deliverynote',[$quotation->id,$coin,''])}}"+"/"+inputIva,"ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
  
     }
 

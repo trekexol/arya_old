@@ -94,12 +94,13 @@ class ExpensesAndPurchaseController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');  
         
+       
         
 
         return view('admin.expensesandpurchases.createexpense',compact('datenow','provider'));
     }
 
-    public function create_expense_detail($id_expense = null,$id_inventory = null)
+    public function create_expense_detail($id_expense,$coin,$id_inventory = null)
     {
         $expense = null;
         $provider = null;
@@ -126,12 +127,21 @@ class ExpensesAndPurchaseController extends Controller
             $branches = Branch::orderBy('description','desc')->get();
 
             
+            
         $bcv = $this->search_bcv();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        return view('admin.expensesandpurchases.create',compact('bcv','datenow','provider','expense','expense_details','branches','inventory','accounts_inventory'));
+        if(($coin == 'bolivares') || (!isset($coin)) ){
+            $bcv = $this->search_bcv();
+            $coin = 'bolivares';
+        }else{
+            $bcv = null;
+            $coin = 'dolares';
+        }
+
+        return view('admin.expensesandpurchases.create',compact('coin','bcv','datenow','provider','expense','expense_details','branches','inventory','accounts_inventory'));
     }
 
    
@@ -259,11 +269,11 @@ class ExpensesAndPurchaseController extends Controller
     }
     
     
-    public function selectinventary($id_expense)
+    public function selectinventary($id_expense,$coin)
     {
             $inventories     = Inventory::all();
         
-            return view('admin.expensesandpurchases.selectinventary',compact('inventories','id_expense'));
+            return view('admin.expensesandpurchases.selectinventary',compact('coin','inventories','id_expense'));
     }
     
 
@@ -300,7 +310,7 @@ class ExpensesAndPurchaseController extends Controller
     
         $var->save();
 
-        return redirect('expensesandpurchases/register/'.$var->id.'')->withSuccess('Gasto o Compra Resgistrada Correctamente!');
+        return redirect('expensesandpurchases/register/'.$var->id.'/bolivares')->withSuccess('Gasto o Compra Resgistrada Correctamente!');
     }
 
 

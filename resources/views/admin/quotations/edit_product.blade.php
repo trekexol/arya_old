@@ -33,14 +33,33 @@
                     </div>
                    
                     <div class="form-group row">
-                        <label for="cost" class="col-md-2 col-form-label text-md-right">Precio</label>
+                        <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+
                         <div class="col-md-3">
-                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($inventory->products['price'] * ($bcv ?? 1), 2, ',', '.')}}" readonly required autocomplete="cost">
-                        </div>  
+                            <select class="form-control" name="coin" id="coin">
+                                <option value="bolivares">Bolívares</option>
+                                @if($coin == 'dolares')
+                                    <option selected value="dolares">Dolares</option>
+                                @else 
+                                    <option value="dolares">Dolares</option>
+                                @endif
+                            </select>
+                        </div>
                         <label for="amount" class="col-md-3 col-form-label text-md-right">Cantidad En Inventario</label>
                         <div class="col-md-3">
                             <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ $inventory->amount }}" readonly required autocomplete="amount">
                         </div> 
+                    </div>
+                    <div class="form-group row">
+                        <label for="price" class="col-md-2 col-form-label text-md-right">Precio</label>
+                        <div class="col-md-3">
+                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ number_format($quotation_product->price / ($rate ?? 1), 2, ',', '.')}}"  required autocomplete="price">
+                        </div>  
+                        <label for="rate" class="col-md-3 col-form-label text-md-right">Tasa</label>
+                        <div class="col-md-3">
+                            <input id="rate" type="text" readonly class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ number_format($quotation_product->rate, 2, ',', '.')}}"  required autocomplete="rate">
+                        </div>  
+                        
                     </div>
                     
                     
@@ -78,19 +97,20 @@
                                          @enderror
                                      </div>
                                 </div>
-                               
+                            
                                 <br>
                                 <div class="form-group row mb-0">
-                                    <div class="col-md-3 offset-md-4">
+                                    <div class="col-md-4 offset-md-4">
                                         <button type="submit" class="btn btn-info">
                                            Actualizar Producto Cotizado
                                         </button>
                                     </div>
+                                </form>
                                     <div class="col-md-2">
-                                        <a href="{{ route('quotations.create',$quotation_product->id_quotation) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                        <a href="{{ route('quotations.create',[$quotation_product->id_quotation,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                                     </div>
                                 </div>
-                            </form>
+                            
                         </div>
                     </div>
                 </div>
@@ -105,6 +125,14 @@
         });
         $(document).ready(function () {
             $("#amount").mask('000000000000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#price").mask('000.000.000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000.000.000.000,00', { reverse: true });
             
         });
 

@@ -389,7 +389,7 @@ Route::group(["prefix"=>'detailvouchers'],function(){
 
 Route::group(["prefix"=>'quotations'],function(){
     Route::get('/','QuotationController@index')->name('quotations');
-    Route::get('register/{id_quotation}/{coin?}','QuotationController@create')->name('quotations.create');
+    Route::get('register/{id_quotation}/{coin}','QuotationController@create')->name('quotations.create');
     Route::post('store','QuotationController@store')->name('quotations.store');
     Route::get('{id}/edit','QuotationController@edit')->name('quotations.edit');
     Route::delete('{id}/delete','QuotationController@destroy')->name('quotations.delete');
@@ -404,16 +404,16 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::get('selectvendor/{id_client}','QuotationController@selectvendor')->name('quotations.selectvendor');
 
 
-    Route::get('selectproduct/{id_quotation}/{coin?}','QuotationController@selectproduct')->name('quotations.selectproduct');
-    Route::get('registerproduct/{id_quotation}/{coin?}/{id_product}','QuotationController@createproduct')->name('quotations.createproduct');
+    Route::get('selectproduct/{id_quotation}/{coin}','QuotationController@selectproduct')->name('quotations.selectproduct');
+    Route::get('registerproduct/{id_quotation}/{coin}/{id_product}','QuotationController@createproduct')->name('quotations.createproduct');
 
     
     Route::post('storeproduct','QuotationController@storeproduct')->name('quotations.storeproduct');
 
-    Route::get('facturar/{id_quotation}/{coin?}','FacturarController@createfacturar')->name('quotations.createfacturar');
+    Route::get('facturar/{id_quotation}/{coin}','FacturarController@createfacturar')->name('quotations.createfacturar');
 
     Route::post('storefactura','FacturarController@storefactura')->name('quotations.storefactura');
-    Route::get('facturado/{id_quotation}/{coin?}','FacturarController@createfacturado')->name('quotations.createfacturado');
+    Route::get('facturado/{id_quotation}/{coin}','FacturarController@createfacturado')->name('quotations.createfacturado');
 
     Route::get('listinventory/{var?}','QuotationController@listinventory')->name('quotations.listinventory');
 
@@ -422,14 +422,15 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::get('indexnotasdeentrega/','DeliveryNoteController@index')->name('quotations.indexdeliverynote');
 
-    Route::get('quotationproduct/{id}/edit','QuotationController@editquotationproduct')->name('quotations.productedit');
-    Route::patch('quotationproduct/{id}/update','QuotationController@updatequotationproduct')->name('quotations.productupdate');
+    Route::get('quotationproduct/{id}/{coin}/edit','QuotationController@editquotationproduct')->name('quotations.productedit');
+    Route::patch('productupdate/{id}/update','QuotationController@updatequotationproduct')->name('quotations.productupdate');
 
     Route::post('storefacturacredit','FacturarController@storefacturacredit')->name('quotations.storefacturacredit');
 
 
     Route::get('facturarafter/{id_quotation}','FacturarController@createfacturar_after')->name('quotations.createfacturar_after');
 
+    Route::get('refreshrate/{id_quotation}/{coin}/{rate}','QuotationController@refreshrate')->name('quotations.refreshrate');
    
 });
 
@@ -505,7 +506,7 @@ Route::group(["prefix"=>'invoices'],function(){
 
  Route::group(["prefix"=>'pdf'],function(){
     Route::get('factura/{id_quotation}/{coin?}','PDFController@imprimirfactura')->name('pdf');
-    Route::get('deliverynote/{id_quotation}/{iva}','PDFController@deliverynote')->name('pdf.deliverynote');
+    Route::get('deliverynote/{id_quotation}/{coin}/{iva}','PDFController@deliverynote')->name('pdf.deliverynote');
     Route::get('inventory','PDFController@imprimirinventory')->name('pdf.inventory');
 
     Route::get('facturamedia/{id_quotation}/{coin?}','PDFController@imprimirfactura_media')->name('pdf.media');
@@ -570,7 +571,7 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
 
     Route::get('selectprovider','ExpensesAndPurchaseController@selectprovider')->name('expensesandpurchases.selectprovider');
 
-    Route::get('register/{id_expense?}/{id_inventory?}','ExpensesAndPurchaseController@create_expense_detail')->name('expensesandpurchases.create_detail');
+    Route::get('register/{id_expense}/{coin}/{id_inventory?}','ExpensesAndPurchaseController@create_expense_detail')->name('expensesandpurchases.create_detail');
     
     Route::get('listaccount/{type_var?}','ExpensesAndPurchaseController@listaccount')->name('expensesandpurchases.listaccount');
 
@@ -584,7 +585,7 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
 
     Route::post('storeexpensecredit', 'ExpensesAndPurchaseController@store_expense_credit')->name('expensesandpurchases.store_expense_credit');
 
-    Route::get('selectinventary/{id_expense}','ExpensesAndPurchaseController@selectinventary')->name('expensesandpurchases.selectinventary');
+    Route::get('selectinventary/{id_expense}/{coin}','ExpensesAndPurchaseController@selectinventary')->name('expensesandpurchases.selectinventary');
 
     Route::get('expensevoucher/{id_expense}','ExpensesAndPurchaseController@create_expense_voucher')->name('expensesandpurchases.create_expense_voucher');
 

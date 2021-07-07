@@ -66,7 +66,7 @@
                     @foreach ($expensesandpurchases as $expensesandpurchase)
                         <tr>
                             <td>
-                            <a href="{{ route('expensesandpurchases.create_detail',$expensesandpurchase->id) }}" title="Seleccionar"><i class="fa fa-check" style="color: orange;"></i></a>
+                            <a href="{{ route('expensesandpurchases.create_detail',[$expensesandpurchase->id,'bolivares']) }}" title="Seleccionar"><i class="fa fa-check" style="color: orange;"></i></a>
                             </td>
                             <td>{{$expensesandpurchase->invoice}}</td>
                             <td>{{$expensesandpurchase->serie}}</td>

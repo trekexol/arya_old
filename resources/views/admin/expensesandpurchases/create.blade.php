@@ -148,7 +148,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-1">
-                                            <a id="btn_code_inventary" href="{{ route('expensesandpurchases.selectinventary',$expense->id) }}" title="Buscar un Producto del Inventario"><i class="fa fa-eye"></i></a>  
+                                            <a id="btn_code_inventary" href="{{ route('expensesandpurchases.selectinventary',[$expense->id,$coin]) }}" title="Buscar un Producto del Inventario"><i class="fa fa-eye"></i></a>  
                                         </div>
                                     
                                 </div>
@@ -171,6 +171,20 @@
                                             </span>
                                         @endif
                                     </div>
+                                   
+                                    <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+        
+                                    <div class="col-md-2">
+                                        <select class="form-control" name="coin" id="coin">
+                                            <option value="bolivares">Bolívares</option>
+                                            @if($coin == 'dolares')
+                                                <option selected value="dolares">Dolares</option>
+                                            @else 
+                                                <option value="dolares">Dolares</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                    
                                 </div>
                                 <br>
                                 <div class="form-row">
@@ -336,7 +350,18 @@
             'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
             'iDisplayLength': '50'
     } );
+    
     </script>
+    
+        <script>
+            $("#coin").on('change',function(){
+                
+                coin = $(this).val();
+                window.location = "{{route('expensesandpurchases.create_detail', [$expense->id,'',''])}}"+"/"+coin+"/"+"{{ $inventory->id ?? '' }}";
+            
+        });
+        </script>
+   
     <script>
         $("#code_inventary_label").hide();
         $("#code_inventary").hide();

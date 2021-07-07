@@ -112,7 +112,7 @@ class QuotationController extends Controller
 
 
 
-    public function create($id_quotation,$coin = null)
+    public function create($id_quotation,$coin)
     {
             $quotation = null;
                 
@@ -126,7 +126,7 @@ class QuotationController extends Controller
                                 ->join('inventories', 'products.id', '=', 'inventories.product_id')
                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                 ->where('quotation_products.id_quotation',$id_quotation)
-                                ->select('products.*','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
+                                ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
                                 'quotation_products.amount as amount_quotation')
                                 ->get(); 
             
@@ -137,7 +137,7 @@ class QuotationController extends Controller
                 //esto es para que siempre se pueda guardar la tasa en la base de datos
                 $bcv_quotation_product = $this->search_bcv();
 
-                if(($coin == 'bolivares') || (!isset($coin)) ){
+                if(($coin == 'bolivares') ){
                     $bcv = $this->search_bcv();
                     $coin = 'bolivares';
                 }else{
@@ -179,7 +179,7 @@ class QuotationController extends Controller
     }
 
 
-    public function createproduct($id_quotation,$coin = null,$id_inventory)
+    public function createproduct($id_quotation,$coin,$id_inventory)
     {
         $quotation = null;
                 
@@ -194,7 +194,7 @@ class QuotationController extends Controller
                                 ->join('inventories', 'products.id', '=', 'inventories.product_id')
                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                 ->where('quotation_products.id_quotation',$id_quotation)
-                                ->select('products.*','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
+                                ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id as quotation_products_id','inventories.code as code','quotation_products.discount as discount',
                                 'quotation_products.amount as amount_quotation')
                                 ->get(); 
                 
@@ -207,7 +207,7 @@ class QuotationController extends Controller
                     $datenow = $date->format('Y-m-d');    
                     $bcv_quotation_product = $this->search_bcv();
 
-                    if(($coin == 'bolivares') || (!isset($coin)) ){
+                    if(($coin == 'bolivares')){
                         $bcv = $this->search_bcv();
                     }else{
                         $bcv = null;
@@ -387,6 +387,7 @@ class QuotationController extends Controller
                 $cost_sin_formato = ($cost * $amount) * $bcv;
             }else{
                 $cost_sin_formato = str_replace(',', '.', str_replace('.', '',request('cost')));
+                $cost_sin_formato = $cost_sin_formato;
             }
 
             $var->price = $cost_sin_formato;
@@ -427,15 +428,12 @@ class QuotationController extends Controller
     {
             $quotation = quotation::find($id);
         
-            /*$segments    = Segment::all();
-            $subsegments  = Subsegment::all();
-        
-            $unitofmeasures   = UnitOfMeasure::all();*/
+            
         
             return view('admin.quotations.edit',compact('quotation','segments','subsegments','unitofmeasures'));
     
     }
-    public function editquotationproduct($id)
+    public function editquotationproduct($id,$coin = null)
     {
             $quotation_product = QuotationProduct::find($id);
         
@@ -445,7 +443,17 @@ class QuotationController extends Controller
 
                 $bcv = $this->search_bcv();
 
-                return view('admin.quotations.edit_product',compact('quotation_product','inventory','bcv'));
+                if(!isset($coin)){
+                    $coin = 'bolivares';
+                }
+
+                if($coin == 'bolivares'){
+                    $rate = null;
+                }else{
+                    $rate = $quotation_product->rate;
+                }
+
+                return view('admin.quotations.edit_product',compact('rate','coin','quotation_product','inventory','bcv'));
             }else{
                 return redirect('/quotations')->withDanger('No se Encontro el Producto!');
             }
@@ -544,6 +552,7 @@ class QuotationController extends Controller
         public function updatequotationproduct(Request $request, $id)
         { 
 
+            
             $data = request()->validate([
                 
                 'amount'         =>'required',
@@ -552,6 +561,18 @@ class QuotationController extends Controller
             ]);
         
             $var = QuotationProduct::findOrFail($id);
+
+            $sin_formato_price = str_replace(',', '.', str_replace('.', '', request('price')));
+            $sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
+
+            $coin = request('coin');
+            $var->rate = $sin_formato_rate;
+
+            if($coin == 'bolivares'){
+                $var->price = $sin_formato_price;
+            }else{
+                $var->price = $sin_formato_price * $sin_formato_rate;
+            }
         
             $var->amount = request('amount');
         
@@ -560,8 +581,15 @@ class QuotationController extends Controller
         
             $var->save();
         
-            return redirect('/quotations/register/'.$var->id_quotation.'')->withSuccess('Actualizacion Exitosa!');
+            return redirect('/quotations/register/'.$var->id_quotation.'/'.$coin.'')->withSuccess('Actualizacion Exitosa!');
         
+        }
+
+
+        public function refreshrate($id_quotation,$coin,$rate)
+        { 
+           
+            
         }
 
     /**

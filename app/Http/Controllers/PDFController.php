@@ -40,7 +40,7 @@ class PDFController extends Controller
 
                  foreach($payment_quotations as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
-                    if($coin = 'dolares'){
+                    if($coin == 'dolares'){
                         $var->amount = $var->amount / $var->rate;
                     }
                  }
@@ -49,7 +49,7 @@ class PDFController extends Controller
                  $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.id_quotation',$quotation->id)
-                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
                                                             'quotation_products.amount as amount_quotation')
                                                             ->get(); 
 
@@ -80,17 +80,18 @@ class PDFController extends Controller
                     }
                 }
     
-               
-    
                  $quotation->sub_total_factura = $total;
                  $quotation->base_imponible = $base_imponible;
                  $quotation->ventas_exentas = $ventas_exentas;
+                 
 
-                 if(($coin == 'bolivares') || (!isset($coin)) ){
-                    $bcv = $this->search_bcv();
-                }else{
+                if($coin == 'bolivares'){
                     $bcv = null;
+                    
+                }else{
+                    $bcv = $this->search_bcv();
                 }
+
                 
                  $pdf = $pdf->loadView('pdf.factura',compact('quotation','inventories_quotations','payment_quotations','bcv'));
                  return $pdf->stream();
@@ -105,7 +106,7 @@ class PDFController extends Controller
     }
 
 
-    function deliverynote($id_quotation,$iva){
+    function deliverynote($id_quotation,$coin,$iva){
       
 
         $pdf = App::make('dompdf.wrapper');
@@ -186,6 +187,10 @@ class PDFController extends Controller
                             $quotation->sub_total_factura = $total;
                             $quotation->base_imponible = $base_imponible;
                             $quotation->ventas_exentas = $ventas_exentas;
+
+                if($quotation->coin == 'dolares'){
+                    $bcv = null;
+                }
 
                 
                  $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','inventories_quotations','bcv'));
