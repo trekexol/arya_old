@@ -86,7 +86,7 @@ class FacturarController extends Controller
                  if($coin == 'bolivares'){
                     $bcv = null;
                  }else{
-                     $bcv = $this->search_bcv();
+                     $bcv = $quotation->bcv;
                  }
              }else{
                 $bcv = null;
@@ -211,7 +211,7 @@ class FacturarController extends Controller
             $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
         }
 
-        return redirect('quotations/facturado/'.$quotation->id.'')->withSuccess('Factura Guardada con Exito!');
+        return redirect('quotations/facturado/'.$quotation->id.'/'.$quotation->coin.'')->withSuccess('Factura Guardada con Exito!');
     }
 
 
@@ -1207,7 +1207,7 @@ class FacturarController extends Controller
 
                 $quotation->amount_with_iva = $total_pay_form;
 
-                $quotation->bcv = $bcv;
+                
 
                 $quotation->save();
 
@@ -1225,7 +1225,7 @@ class FacturarController extends Controller
                 $base_imponible = $base_imponible * $bcv;
             }
            
-            if($quotation_status != 'C'){
+            if(($quotation_status != 'C') && ($quotation_status != 'P')){
 
                 $header_voucher  = new HeaderVoucher();
 
@@ -1457,7 +1457,7 @@ class FacturarController extends Controller
 
 
 
-    public function createfacturado($id_quotation,$coin = null)
+    public function createfacturado($id_quotation,$coin)
     {
          $quotation = null;
              
@@ -1474,7 +1474,7 @@ class FacturarController extends Controller
                 $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                                 ->where('quotation_products.id_quotation',$quotation->id)
-                                                                ->select('products.*','quotation_products.discount as discount',
+                                                                ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
                                                                 'quotation_products.amount as amount_quotation')
                                                                 ->get(); 
 
@@ -1504,17 +1504,15 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
-                if(($coin == 'bolivares') || !(isset($coin)) ){
-                    $bcv = $this->search_bcv();
-                    $coin = 'bolivares';
+             if(isset($coin)){
+                if($coin == 'bolivares'){
+                   $bcv = null;
                 }else{
-                    $bcv = null;
+                    $bcv = $quotation->bcv;
                 }
-
-                if($quotation->coin == 'dolares'){
-                    $bcv = null;
-                }
-
+            }else{
+               $bcv = null;
+            }
              
              return view('admin.quotations.createfacturado',compact('quotation','payment_quotations', 'datenow','bcv','coin'));
             }else{
@@ -1524,7 +1522,7 @@ class FacturarController extends Controller
     }
 
 
-    public function createfacturar_after($id_quotation,$coin = null)
+    public function createfacturar_after($id_quotation,$coin)
     {
          $quotation = null;
              
@@ -1587,15 +1585,16 @@ class FacturarController extends Controller
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
+             
              if(isset($coin)){
-                if($coin == 'bolivares'){
-                   $bcv = $this->search_bcv();
-                }else{
+                 if($coin == 'bolivares'){
                     $bcv = null;
-                }
-            }else{
-               $bcv = $this->search_bcv();
-            }
+                 }else{
+                     $bcv = $quotation->bcv;
+                 }
+             }else{
+                $bcv = null;
+             }
 
 
              return view('admin.quotations.createfacturar_after',compact('price_cost_total','coin','quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','anticipos_sum','bcv'));

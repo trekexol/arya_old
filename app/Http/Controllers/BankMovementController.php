@@ -10,6 +10,7 @@ use App\Account;
 use App\BankVoucher;
 use App\Client;
 use App\DetailVoucher;
+use App\HeaderVoucher;
 use App\Segment;
 use App\Subsegment;
 use App\UnitOfMeasure;
@@ -131,7 +132,7 @@ class BankMovementController extends Controller
    
     public function store(Request $request)
     {
-
+        //DEPOSITOS
 
         $data = request()->validate([
             
@@ -341,6 +342,9 @@ class BankMovementController extends Controller
         $account = request('id_account');
         $contrapartida = request('id_counterpart');
 
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');   
+
         if($account != $contrapartida){
 
             $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
@@ -348,22 +352,22 @@ class BankMovementController extends Controller
             $check_amount = $this->check_amount($account);
 
             if($check_amount->saldo_actual >= $amount){
-                $var = new BankVoucher();
-
-                $var->id_user = request('user_id');
-                $var->description = request('description');
-                $var->type_movement = request('type_movement');
-                $var->date = request('date');
-                $var->reference = request('reference');
-                $var->status =  1;
+               
+                $header = new HeaderVoucher();
+                
+                $header->description = "Deposito";
+                $header->date = $datenow;
+                
             
-                $var->save();
+                $header->status =  "1";
+            
+                $header->save();
 
 
                 $movement = new DetailVoucher();
 
                 $movement->id_account = $account;
-                $movement->id_bank_voucher = $var->id;
+                
                 $movement->user_id = request('user_id');
                 $movement->debe = 0;
                 $movement->haber = $amount;
@@ -564,17 +568,17 @@ class BankMovementController extends Controller
         $var = Account::find($id_account);
 
                       
-       if(isset($var)) {
+        if(isset($var)) {
                
-               if($var->code_one != 0){
+            if($var->code_one != 0){
                    
-                   if($var->code_two != 0){
+                if($var->code_two != 0){
    
    
-                       if($var->code_three != 0){
+                    if($var->code_three != 0){
    
    
-                           if($var->code_four != 0){
+                        if($var->code_four != 0){
                              
                             /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
                             $total_debe = DB::table('accounts')
@@ -601,91 +605,12 @@ class BankMovementController extends Controller
                                 $var->haber = $total_haber;
                                 $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
 
-                           }else{
-                              
-                             
-                         
-                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
-                           $total_debe = DB::table('accounts')
-                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
-                                                       ->where('accounts.code_one', $var->code_one)
-                                                       ->where('accounts.code_two', $var->code_two)
-                                                       ->where('accounts.code_three', $var->code_three)
-                                                       ->where('detail_vouchers.status', 'C')
-                                                       ->sum('debe');
-   
-                           $total_haber =  DB::table('accounts')
-                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
-                                                       ->where('accounts.code_one', $var->code_one)
-                                                       ->where('accounts.code_two', $var->code_two)
-                                                       ->where('accounts.code_three', $var->code_three)
-                                                       ->where('detail_vouchers.status', 'C')
-                                                       ->sum('haber');      
-                        /*---------------------------------------------------*/                               
-  
-                        
-                            $var->debe = $total_debe;
-                            $var->haber = $total_haber;       
-                            $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
-                                  
-                   }
-                       }else{
-                           
-                      
-                        /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                   
-                           $total_debe = DB::table('accounts')
-                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
-                                                           ->where('accounts.code_one', $var->code_one)
-                                                           ->where('accounts.code_two', $var->code_two)
-                                                           ->where('detail_vouchers.status', 'C')
-                                                           ->sum('debe');
-   
-                         
-                           $total_haber = DB::table('accounts')
-                                                           ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
-                                                           ->where('accounts.code_one', $var->code_one)
-                                                           ->where('accounts.code_two', $var->code_two)
-                                                           ->where('detail_vouchers.status', 'C')
-                                                           ->sum('haber');
-                      
-
-                            $var->debe = $total_debe;
-                            $var->haber = $total_haber;
-                            $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
-                                  
-                       }
-                   }else{
-                       //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
-                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
-                            $total_debe = DB::table('accounts')
-                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
-                                                       ->where('accounts.code_one', $var->code_one)
-                                                       ->where('detail_vouchers.status', 'C')
-                                                       ->sum('debe');
-   
-                        
-                          
-                           $total_haber = DB::table('accounts')
-                                                       ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
-                                                       ->where('accounts.code_one', $var->code_one)
-                                                       ->where('detail_vouchers.status', 'C')
-                                                       ->sum('haber');
-                   
-
-
-                       
-                            $var->debe = $total_debe;
-                            $var->haber = $total_haber;           
-                            $var->saldo_actual = ($var->balance_previus + $var->debe) - $var->haber;
-                                  
-                   }
-               }else{
-                   return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
-               }
-           } 
-       
-      
-       
+                        }
+                    }
+                }             
+            }
+        }
+        
         return $var;
     }
    

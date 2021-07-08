@@ -50,7 +50,7 @@ class DeliveryNoteController extends Controller
             $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.id_quotation',$quotation->id)
-                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
                                                             'quotation_products.amount as amount_quotation')
                                                             ->get(); 
 
@@ -81,14 +81,11 @@ class DeliveryNoteController extends Controller
              $datenow = $date->format('Y-m-d');    
 
 
-             if(isset($coin)){
-                if($coin == 'bolivares'){
-                   $bcv = $this->search_bcv();
-                }else{
-                    $bcv = null;
-                }
+             if($coin == 'bolivares'){
+                $bcv = null;
+                
             }else{
-               $bcv = $this->search_bcv();
+                $bcv = $quotation->bcv;
             }
             
              

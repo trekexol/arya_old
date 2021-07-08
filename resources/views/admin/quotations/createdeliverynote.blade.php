@@ -54,7 +54,7 @@
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
                             <div class="col-md-4">
-                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($quotation->total_factura * ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
+                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($quotation->total_factura / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
     
                                 @error('total_factura')
                                     <span class="invalid-feedback" role="alert">
@@ -64,7 +64,7 @@
                             </div>
                             <label for="base_imponible" class="col-md-2 col-form-label text-md-right">Base Imponible:</label>
                             <div class="col-md-3">
-                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($quotation->base_imponible * ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
+                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($quotation->base_imponible / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
                                 @error('base_imponible')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -106,7 +106,20 @@
                             </div>
                             
                         </div>
-                       
+                        <div class="form-group row">
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
                         
                         <br>
                         <div class="form-group row">
@@ -115,8 +128,11 @@
                             <div class="col-md-4">
                                 <a onclick="pdf();" id="btnfacturar" name="btnfacturar" class="btn btn-info" title="facturar">Guardar e Imprimir Nota de Entrega</a>  
                             </div>
+                            <div class="col-md-3">
+                                <a href="{{ route('quotations.indexdeliverynote') }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Ver Notas de Entrega</a>  
+                            </div>
                           <div class="col-md-2">
-                                <a href="{{ route('quotations.indexdeliverynote') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                <a href="{{ route('quotations.create',[$quotation->id,$coin ?? 'bolivares']) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
                         </div>
                         
@@ -131,7 +147,10 @@
 
 @section('consulta')
 <script type="text/javascript">
-   
+   $("#coin").on('change',function(){
+                coin = $(this).val();
+                window.location = "{{route('quotations.createdeliverynote', [$quotation->id,''])}}"+"/"+coin;
+            });
 
     $("#iva").on('change',function(){
                 //calculate();
@@ -140,12 +159,12 @@
 
                 //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
 
-                let totalFactura = "<?php echo $quotation->total_factura  * ($bcv ?? 1)?>";       
+                let totalFactura = "<?php echo $quotation->total_factura  / ($bcv ?? 1)?>";       
 
                 //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-                let totalBaseImponible = "<?php echo $quotation->base_imponible  * ($bcv ?? 1)?>";
+                let totalBaseImponible = "<?php echo $quotation->base_imponible  / ($bcv ?? 1)?>";
 
-                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible  * ($bcv ?? 1); ?>") / 100;  
+                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible  / ($bcv ?? 1); ?>") / 100;  
                 
 
                 
@@ -163,7 +182,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -176,7 +195,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("grand_total").value = grand_totalformat;
 
@@ -202,12 +221,12 @@
 
         //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
 
-        let totalFactura = "<?php echo $quotation->total_factura  * ($bcv ?? 1)?>";       
+        let totalFactura = "<?php echo $quotation->total_factura  / ($bcv ?? 1)?>";       
 
         //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-        let totalBaseImponible = "<?php echo $quotation->base_imponible  * ($bcv ?? 1)?>";
+        let totalBaseImponible = "<?php echo $quotation->base_imponible  / ($bcv ?? 1)?>";
 
-        let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible  * ($bcv ?? 1); ?>") / 100;  
+        let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible  / ($bcv ?? 1); ?>") / 100;  
 
 
         /*-----------------------------------*/
@@ -227,7 +246,7 @@
 
         var total_iva_exento =  parseFloat(totalIvaMenos);
 
-        var iva_format = total_iva_exento.toLocaleString('de-DE');
+        var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
         //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
         //------------------------------
@@ -239,7 +258,7 @@
         // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
         var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-        var grand_totalformat = grand_total.toLocaleString('de-DE');
+        var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
         document.getElementById("grand_total").value = grand_totalformat;

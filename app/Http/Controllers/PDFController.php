@@ -84,12 +84,12 @@ class PDFController extends Controller
                  $quotation->base_imponible = $base_imponible;
                  $quotation->ventas_exentas = $ventas_exentas;
                  
-
+                
                 if($coin == 'bolivares'){
                     $bcv = null;
                     
                 }else{
-                    $bcv = $this->search_bcv();
+                    $bcv = $quotation->bcv;
                 }
 
                 
@@ -110,11 +110,7 @@ class PDFController extends Controller
       
 
         $pdf = App::make('dompdf.wrapper');
-        $bcv = $this->search_bcv();
-
-
-      //  $id_quotation = request('id_quotation');
-        
+    
              $quotation = null;
                  
              if(isset($id_quotation)){
@@ -127,11 +123,7 @@ class PDFController extends Controller
                     $quotation->iva_percentage = $iva;
    
                     $quotation->date_delivery_note = $datenow;
-   
-                    if(isset($bcv)){
-                       $quotation->bcv = $bcv;
-                    }
-   
+
                     $quotation->save();
    
                     $this->discount_inventory($id_quotation);
@@ -148,49 +140,53 @@ class PDFController extends Controller
      
              if(isset($quotation)){
                
-                            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
-                                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
-                                                                            ->where('quotation_products.id_quotation',$quotation->id)
-                                                                            ->select('products.*','quotation_products.discount as discount',
-                                                                            'quotation_products.amount as amount_quotation')
-                                                                            ->get(); 
+                    $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                                    ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                                    ->where('quotation_products.id_quotation',$quotation->id)
+                                                                    ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
+                                                                    'quotation_products.amount as amount_quotation')
+                                                                    ->get(); 
 
 
-                            $total= 0;
-                            $base_imponible= 0;
-                            $ventas_exentas= 0;
-                            foreach($inventories_quotations as $var){
-                            //Se calcula restandole el porcentaje de descuento (discount)
-                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+                    $total= 0;
+                    $base_imponible= 0;
+                    $ventas_exentas= 0;
+                    foreach($inventories_quotations as $var){
+                    //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                            $total += ($var->price * $var->amount_quotation) - $percentage;
-                            //----------------------------- 
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
+                    //----------------------------- 
 
-                            if($var->exento == 0){
+                    if($var->exento == 0){
 
-                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                            $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
 
-                            }
-                            if($var->exento == 1){
+                    }
+                    if($var->exento == 1){
 
-                            $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
 
-                            $ventas_exentas += ($var->price * $var->amount_quotation) - $percentage; 
+                    $ventas_exentas += ($var->price * $var->amount_quotation) - $percentage; 
 
-                            }
-                            }
+                    }
+                    }
 
 
 
-                            $quotation->sub_total_factura = $total;
-                            $quotation->base_imponible = $base_imponible;
-                            $quotation->ventas_exentas = $ventas_exentas;
+                    $quotation->sub_total_factura = $total;
+                    $quotation->base_imponible = $base_imponible;
+                    $quotation->ventas_exentas = $ventas_exentas;
 
-                if($quotation->coin == 'dolares'){
-                    $bcv = null;
-                }
+                    if($coin == 'bolivares'){
+                        $bcv = null;
+                        
+                    }else{
+                        $bcv = $quotation->bcv;
+                    }
+    
 
                 
                  $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','inventories_quotations','bcv'));
@@ -284,7 +280,7 @@ class PDFController extends Controller
 
                  foreach($payment_quotations as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
-                    if($coin = 'dolares'){
+                    if($coin == 'dolares'){
                         $var->amount = $var->amount / $var->rate;
                     }
                  }
@@ -293,7 +289,7 @@ class PDFController extends Controller
                  $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.id_quotation',$quotation->id)
-                                                            ->select('products.*','quotation_products.discount as discount',
+                                                            ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
                                                             'quotation_products.amount as amount_quotation')
                                                             ->get(); 
 
@@ -329,13 +325,15 @@ class PDFController extends Controller
                  $quotation->sub_total_factura = $total;
                  $quotation->base_imponible = $base_imponible;
                  $quotation->ventas_exentas = $ventas_exentas;
+                 
+                 if($coin == 'bolivares'){
+                    $bcv = null;
+                    
+                }else{
+                    $bcv = $quotation->bcv;
+                }
 
-                    if(($coin == 'bolivares') || (!isset($coin)) ){
-                        $bcv = $this->search_bcv();
-                    }else{
-                        $bcv = null;
-                    }
-
+                
                 
                  $pdf = $pdf->loadView('pdf.factura_media',compact('quotation','inventories_quotations','payment_quotations','bcv'));
                  return $pdf->stream();

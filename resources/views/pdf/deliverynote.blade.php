@@ -115,13 +115,13 @@
 
       $total_less_percentage = ($var->price * $var->amount_quotation) - $percentage;
 
-      $total_less_percentage = $total_less_percentage * ($bcv ?? 1);
+      $total_less_percentage = $total_less_percentage / ($bcv ?? 1);
       ?>
     <tr>
       <th style="text-align: center; font-weight: normal;">{{ $var->code_comercial }}</th>
       <th style="text-align: center; font-weight: normal;">{{ $var->description }}</th>
       <th style="text-align: center; font-weight: normal;">{{ number_format($var->amount_quotation, 0, '', '.') }}</th>
-      <th style="text-align: center; font-weight: normal;">{{ number_format($var->price * ($bcv ?? 1), 2, ',', '.')  }}</th>
+      <th style="text-align: center; font-weight: normal;">{{ number_format($var->price / ($bcv ?? 1), 2, ',', '.')  }}</th>
       <th style="text-align: center; font-weight: normal;">{{ $var->discount }}%</th>
       <th style="text-align: right; font-weight: normal;">{{ number_format($total_less_percentage, 2, ',', '.') }}</th>
     </tr> 
@@ -136,23 +136,23 @@
 
   $total_petro = $total / 159765192.04;
 
-  $iva = $iva * ($bcv ?? 1);
+  $iva = $iva / ($bcv ?? 1);
 
-  $total = $total * ($bcv ?? 1);
+  $total = $total / ($bcv ?? 1);
 ?>
 
 <table style="width: 100%;">
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Sub Total</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->sub_total_factura * ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->sub_total_factura / ($bcv ?? 1), 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Base Imponible</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->base_imponible * ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->base_imponible / ($bcv ?? 1), 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Ventas Exentas</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->ventas_exentas * ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->ventas_exentas / ($bcv ?? 1), 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>

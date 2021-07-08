@@ -136,12 +136,12 @@ class QuotationController extends Controller
 
                 //esto es para que siempre se pueda guardar la tasa en la base de datos
                 $bcv_quotation_product = $this->search_bcv();
-
+                $bcv = $this->search_bcv();
                 if(($coin == 'bolivares') ){
-                    $bcv = $this->search_bcv();
+                    
                     $coin = 'bolivares';
                 }else{
-                    $bcv = null;
+                    //$bcv = null;
                     $coin = 'dolares';
                 }
                 
@@ -329,12 +329,16 @@ class QuotationController extends Controller
         
                 $var->observation = request('observation');
                 $var->note = request('note');
+
+                $bcv = $this->search_bcv();
+
+                $var->bcv = $bcv;
         
                 $var->status =  1;
             
                 $var->save();
         
-                return redirect('quotations/register/'.$var->id.'');
+                return redirect('quotations/register/'.$var->id.'/bolivares');
 
             }else{
                 return redirect('/quotations/registerquotation/'.$id_client.'')->withDanger('Debe Buscar un Vendedor');
@@ -371,23 +375,22 @@ class QuotationController extends Controller
 
             $coin = request('coin');
 
-            $bcv = request('bcv');
+            $quotation = Quotation::find($var->id_quotation);
 
-            $var->rate = $bcv;
+            $var->rate = $quotation->bcv;
 
             if($var->id_inventory == -1){
                 return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
             }
 
             $amount = request('amount');
-            $cost = request('cost');
+            $cost = str_replace(',', '.', str_replace('.', '',request('cost')));
             
 
             if($coin == 'dolares'){
-                $cost_sin_formato = ($cost * $amount) * $bcv;
+                $cost_sin_formato = ($cost) * $var->rate;
             }else{
-                $cost_sin_formato = str_replace(',', '.', str_replace('.', '',request('cost')));
-                $cost_sin_formato = $cost_sin_formato;
+                $cost_sin_formato = $cost;
             }
 
             $var->price = $cost_sin_formato;
@@ -588,8 +591,20 @@ class QuotationController extends Controller
 
         public function refreshrate($id_quotation,$coin,$rate)
         { 
-           
+            $sin_formato_rate = str_replace(',', '.', str_replace('.', '', $rate));
+
+
+            QuotationProduct::where('id_quotation',$id_quotation)
+                                    ->update(['rate' => $sin_formato_rate]);
+        
+
+            Quotation::where('id',$id_quotation)
+                                    ->update(['bcv' => $sin_formato_rate]);
+
             
+            
+            return redirect('/quotations/register/'.$id_quotation.'/'.$coin.'')->withSuccess('Actualizacion de Tasa Exitosa!');
+        
         }
 
     /**

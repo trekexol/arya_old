@@ -54,7 +54,7 @@
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
                             <div class="col-md-4">
-                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($quotation->total_factura * ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
+                                <input id="total_factura" type="text" class="form-control @error('total_factura') is-invalid @enderror" name="total_factura" value="{{ number_format($quotation->total_factura / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="total_factura">
     
                                 @error('total_factura')
                                     <span class="invalid-feedback" role="alert">
@@ -64,7 +64,7 @@
                             </div>
                             <label for="base_imponible" class="col-md-2 col-form-label text-md-right">Base Imponible:</label>
                             <div class="col-md-3">
-                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($quotation->base_imponible * ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
+                                <input id="base_imponible" type="text" class="form-control @error('base_imponible') is-invalid @enderror" name="base_imponible" value="{{ number_format($quotation->base_imponible / ($bcv ?? 1), 2, ',', '.') ?? 0 }}" readonly required autocomplete="base_imponible">
                                 @error('base_imponible')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -95,7 +95,7 @@
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
                             <div class="col-md-4">
-                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ number_format($quotation->iva_amount  * ($bcv ?? 1), 2, ',', '.') ?? old('grand_total') }}" readonly required autocomplete="grand_total"> 
+                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ number_format($quotation->iva_amount  / ($bcv ?? 1), 2, ',', '.') ?? old('grand_total') }}" readonly required autocomplete="grand_total"> 
                            
                                 @error('grand_total')
                                     <span class="invalid-feedback" role="alert">
@@ -160,7 +160,20 @@
                             @endif
                             
                         </div>
-           
+                        <div class="form-group row">
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
                         <br>
                         <div class="form-group row">
                            
@@ -193,6 +206,11 @@
 
 
     <script type="text/javascript">
+
+            $("#coin").on('change',function(){
+                coin = $(this).val();
+                window.location = "{{route('quotations.createfacturado', [$quotation->id,''])}}"+"/"+coin;
+            });
             function pdf() {
                 
                 var nuevaVentana= window.open("{{ route('pdf',[$quotation->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
@@ -211,12 +229,12 @@
 
                 //let totalIva = (inputIva * "<?php echo $quotation->total_factura; ?>") / 100;  
 
-                let totalFactura = "<?php echo $quotation->total_factura * ($bcv ?? 1) ?>";       
+                let totalFactura = "<?php echo $quotation->total_factura / ($bcv ?? 1) ?>";       
 
                 //AQUI VAMOS A SACAR EL MONTO DEL IVA DE LOS QUE ESTAN EXENTOS, PARA LUEGO RESTARSELO AL IVA TOTAL
-                let totalBaseImponible = "<?php echo $quotation->base_imponible * ($bcv ?? 1) ?>";
+                let totalBaseImponible = "<?php echo $quotation->base_imponible / ($bcv ?? 1) ?>";
 
-                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible * ($bcv ?? 1); ?>") / 100;  
+                let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible / ($bcv ?? 1); ?>") / 100;  
 
                
 

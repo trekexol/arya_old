@@ -115,7 +115,7 @@
                             </div>
                             <label  class="col-md-2 col-form-label text-md-right"><h6>Total de la<br> Cotización:</h6></label>
                             <div class="col-md-2 col-form-label text-md-left">
-                                <label for="description" id="total"><h3></h3></label>
+                                <label for="totallabel" id="total"><h3></h3></label>
                             </div>
 
                         </div>
@@ -123,7 +123,7 @@
                             @csrf
                             <input id="id_quotation" type="hidden" class="form-control @error('id_quotation') is-invalid @enderror" name="id_quotation" value="{{ $quotation->id ?? -1}}" readonly required autocomplete="id_quotation">
                             <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
-                            <input id="coin" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares' }}" readonly required autocomplete="coin">
+                            <input id="coinhidden" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares' }}" readonly required autocomplete="coin">
                             <input id="bcv" type="hidden" class="form-control @error('bcv') is-invalid @enderror" name="bcv" value="{{ $bcv ?? $bcv_quotation_product }}" readonly required autocomplete="bcv">
                             <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
                        
@@ -143,15 +143,18 @@
                             </div>
                             <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
                             <div class="col-md-2">
-                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $quotation->bcv ?? $bcv }}" required autocomplete="rate">
                                 @error('rate')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <a href="#" onclick="refreshrate()" title="tasa"><i class="fa fa-redo-alt"></i></a>  
-                                        
+                            <a href="#" onclick="refreshrate()" title="tasaactual"><i class="fa fa-redo-alt"></i></a>  
+                            <label  class="col-md-2 col-form-label text-md-right h6">Tasa actual:</label>
+                            <div class="col-md-2 col-form-label text-md-left">
+                                <label for="tasaactual" id="tasaacutal">{{ number_format($bcv, 2, ',', '.')}}</label>
+                            </div>
                         </div>
                         <br>
                        
@@ -217,10 +220,10 @@
                                                 $product_Bs = $inventory->products['price'] * $bcv;
                                             ?>
                                             <label for="cost" >Precio</label>
-                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($product_Bs, 2, ',', '.') ?? '' }}" readonly required autocomplete="cost">
+                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($product_Bs, 2, ',', '.') ?? '' }}"  required autocomplete="cost">
                                         @else
                                             <label for="cost" >Precio</label>
-                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price']  ?? '' }}" readonly required autocomplete="cost">
+                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price']  ?? '' }}"  required autocomplete="cost">
                                         @endif
 
                                         
@@ -342,8 +345,11 @@
                             <div class="form-group row mb-0">
                                 @if(!isset($quotation->date_delivery_note))
                                     <div class="col-md-4">
-                                        <!--<a onclick="deliveryNote()" id="btnNote" name="btnfacturar" class="btn btn-info" title="facturar">Procesar como Nota de Entrega</a>  -->
-                                        <a onclick="deliveryNoteSend()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
+                                        @if($suma == 0)
+                                            <a onclick="validate()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
+                                        @else
+                                            <a onclick="deliveryNoteSend()" id="btnSendNote" name="btnfacturar" class="btn btn-info" title="facturar">Nota de Entrega</a>  
+                                        @endif
                                     </div>
                                 @else
                                     <div class="col-md-1">
@@ -379,10 +385,10 @@
             $("#amount_product").mask('00000', { reverse: true });
             
         });
-
-       // document.querySelector('#total').innerText = {{number_format($suma, 2, ',', '.')}};
-       
-        document.querySelector('#total').innerText = {{$suma * 100}};
+        
+        let sum = "<?php echo number_format($suma, 2, ',', '.') ?>";
+      
+        document.querySelector('#total').innerText = sum.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;
 
         $(document).ready(function () {
             $("#total").mask('000.000.000.000.000,00', { reverse: true });
@@ -392,28 +398,27 @@
             $("#rate").mask('000.000.000.000.000,00', { reverse: true });
             
         });
+        $(document).ready(function () {
+            $("#cost").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+       
     </script> 
 
 @endsection         
 
 @section('validacion')
     <script>
-        $('#dataTable').dataTable( {
+     $('#dataTable').dataTable( {
         "ordering": false,
         "order": [],
             'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     } );
-    </script>
-    <script>
-    
 
-    $("#coin").on('change',function(){
-        
-         coin = $(this).val();
-         window.location = "{{route('quotations.create', [$quotation->id,''])}}"+"/"+coin;
-            
-       
-    });
+        $("#coin").on('change',function(){
+            coin = $(this).val();
+            window.location = "{{route('quotations.create', [$quotation->id,''])}}"+"/"+coin;
+        });
 
     function deliveryNoteSend() {
        
@@ -430,7 +435,7 @@
 
     function validate() {
        
-        alert('Debe ingresar al menos un producto para poder facturar');           
+        alert('Debe ingresar al menos un producto para poder continuar');           
     }
 
 
