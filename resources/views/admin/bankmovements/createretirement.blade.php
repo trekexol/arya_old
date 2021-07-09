@@ -57,7 +57,41 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="form-group row">
+                                    
+                            <label for="beneficiario" class="col-md-2 col-form-label text-md-right">Beneficiario:</label>
+                        
+                            <div class="col-md-4">
+                            <select id="beneficiario"  name="beneficiario" class="form-control" >
+                                <option value="">Seleccione un Beneficiario</option>
+                               
+                                    <option value="Cliente" {{ old('Beneficiario') == 'Cliente' ? 'selected' : '' }}>
+                                        Cliente
+                                    </option>
+                                    <option value="Vendedor" {{ old('Beneficiario') == 'Vendedor' ? 'selected' : '' }}>
+                                        Vendedor
+                                    </option>
+                                </select>
+
+                                @if ($errors->has('beneficiario_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('beneficiario_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                        
+                          <div class="col-md-4">
+                                <select  id="subbeneficiario"  name="Subbeneficiario" class="form-control">
+                                    <option value="">Seleccionar</option>
+                                </select>
+
+                                @if ($errors->has('subbeneficiario_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('subbeneficiario_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>  
                        
                         <div class="form-group row">
                             
@@ -85,40 +119,24 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                                    
-                            <label for="beneficiario" class="col-md-2 col-form-label text-md-right">Beneficiario:</label>
-                        
-                            <div class="col-md-4">
-                            <select id="beneficiario"  name="beneficiario" class="form-control" required>
-                                <option value="">Seleccione un Beneficiario</option>
-                               
-                                    <option value="Cliente" {{ old('Beneficiario') == 'Cliente' ? 'selected' : '' }}>
-                                        Cliente
-                                    </option>
-                                    <option value="Vendedor" {{ old('Beneficiario') == 'Vendedor' ? 'selected' : '' }}>
-                                        Vendedor
-                                    </option>
-                                </select>
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
 
-                                @if ($errors->has('beneficiario_id'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('beneficiario_id') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                       
-                          <div class="col-md-4">
-                                <select  id="subbeneficiario"  name="Subbeneficiario" class="form-control" required>
-                                    <option value="">Seleccionar</option>
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option selected value="bolivares">Bolívares</option>
+                                    <option value="dolares">Dolares</option>
                                 </select>
-
-                                @if ($errors->has('subbeneficiario_id'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('subbeneficiario_id') }}</strong>
-                                    </span>
-                                @endif
                             </div>
-                        </div>  
+                            <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
+                            <div class="col-md-3">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group row">
                             
                             <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Retiro:</label>
@@ -206,6 +224,14 @@
             $("#amount").mask('00.000.000.000.000,00', { reverse: true });
             
         });
+        $(document).ready(function () {
+            $("#reference").mask('0000000000000000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
     </script> 
 
 @endsection    
@@ -252,10 +278,14 @@
             })
         }
 
-        $("#subbeneficiario").on('change',function(){
+            $("#subbeneficiario").on('change',function(){
                 var subbeneficiario_id = $(this).val();
                 var beneficiario_id    = document.getElementById("beneficiario").value;
                 
+                var e = document.getElementById("subbeneficiario");
+                var text = e.options[e.selectedIndex].text;
+
+                document.getElementById("description").value = text;
             });
 
         

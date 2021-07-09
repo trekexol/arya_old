@@ -85,6 +85,25 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option selected value="bolivares">Bolívares</option>
+                                    <option value="dolares">Dolares</option>
+                                </select>
+                            </div>
+                            <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
+                            <div class="col-md-3">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             
                             <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Depósito</label>
 
@@ -169,6 +188,14 @@
     <script>
         $(document).ready(function () {
             $("#amount").mask('00.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#reference").mask('0000000000000000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000,00', { reverse: true });
             
         });
     </script> 

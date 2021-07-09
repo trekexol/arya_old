@@ -9,7 +9,7 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
         <div class="col-sm-7 h4">
-            Listado de Comprobantes Contables detallados <br>de {{ $type }}({{ $var->id }})
+            Listado de Comprobantes Contables detallados <br>de {{ $type }} {{ $var->id ?? '' }}
         </div>
         <div class="col-sm-3">
             <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-eye" ></i>
@@ -39,6 +39,8 @@
             <thead>
             <tr>
                 <th>Fecha</th>
+                <th>Nº</th>
+                <th>Cuenta</th>
                 <th>Tipo de Movimiento</th>
                 
                 <th>Referencia</th>
@@ -57,14 +59,12 @@
                 @else
                     @foreach ($detailvouchers as $var)
                     <tr>
-                    <td>{{$var->headers['date'] ?? $var->banks['date'] ?? ''}}</td>
-
-                    @if(isset($var->id_bank_voucher))
-                        <td>Bancario</td>
-                        <td>
-                        {{ $var->id_bank_voucher }}
-                        </td>
-                    @elseif(isset($var->id_invoice))
+                    <td>{{$var->headers['date'] ?? ''}}</td>
+                    
+                    <td>{{$var->accounts['code_one'] ?? ''}}.{{$var->accounts['code_two'] ?? ''}}.{{$var->accounts['code_three'] ?? ''}}.{{$var->accounts['code_four'] ?? ''}}</td>
+                    <td>{{$var->accounts['description'] ?? ''}}</td>
+                    
+                    @if(isset($var->id_invoice))
                         <td>Factura</td>
                         <td>
                         {{ $var->id_invoice }}
@@ -82,10 +82,8 @@
                     @endif
                     
                                    
-                    @if(isset($var->id_bank_voucher))
-                      
-                        <td>{{$var->banks['description'] ?? ''}}</td>
-                    @elseif (isset($var->id_invoice))
+                   
+                    @if (isset($var->id_invoice))
                         
                         <td>{{$var->headers['description'] ?? ''}} fact({{ $var->id_invoice }}) / {{$var->accounts['description'] ?? ''}}</td>
                     

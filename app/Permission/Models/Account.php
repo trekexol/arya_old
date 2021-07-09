@@ -17,9 +17,6 @@ class Account extends Model
         return $this->belongsToMany('App\DetailVoucher')->withTimesTamps();
     }
 
-    public function bankmovements(){
-        return $this->belongsToMany('App\BankMovement')->withTimesTamps();
-    }
 
     public function quotationpayments(){
         return $this->belongsToMany('App\QuotationPayment')->withTimesTamps();

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-06-2021 a las 20:53:41
+-- Tiempo de generación: 09-07-2021 a las 21:11:00
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.4.9
 
@@ -36,6 +36,14 @@ CREATE TABLE `academiclevels` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `academiclevels`
+--
+
+INSERT INTO `academiclevels` (`id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Licenciado', 'Graduado Universitario', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32'),
+(2, 'Bachiller', 'Finalizo Bachillerato', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
+
 -- --------------------------------------------------------
 
 --
@@ -52,7 +60,9 @@ CREATE TABLE `accounts` (
   `description` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `level` int(11) NOT NULL,
-  `balance_previus` decimal(15,2) NOT NULL,
+  `balance_previus` decimal(64,2) NOT NULL,
+  `rate` decimal(64,2) DEFAULT NULL,
+  `coin` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -62,28 +72,250 @@ CREATE TABLE `accounts` (
 -- Volcado de datos para la tabla `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `code_one`, `code_two`, `code_three`, `code_four`, `period`, `description`, `type`, `level`, `balance_previus`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 0, 0, 0, 2021, 'ACTIVO', 'Debe', 1, '110360000.00', '1', '2021-04-28 15:02:18', '2021-05-17 19:03:05'),
-(2, 1, 1, 0, 0, 2021, 'CORRIENTE', 'Debe', 2, '110360000.00', '1', '2021-04-28 15:13:57', '2021-04-28 15:13:57'),
-(3, 1, 1, 1, 0, 2021, 'Efectivo y Equivalente de Efectivo', 'Debe', 3, '-2000000.00', 'M', '2021-04-28 15:14:21', '2021-05-20 19:48:57'),
-(4, 1, 1, 1, 1, 2021, 'Caja Chica', 'Debe', 4, '0.00', 'M', '2021-04-28 15:14:38', '2021-05-20 19:48:57'),
-(5, 1, 1, 2, 0, 2021, 'Bancos', 'Debe', 3, '18960000.00', 'M', '2021-04-28 15:15:09', '2021-06-02 13:22:07'),
-(6, 1, 1, 2, 1, 2021, 'Banco Banesco', 'Debe', 4, '30000000.00', 'M', '2021-04-28 15:15:25', '2021-05-24 13:33:32'),
-(7, 1, 1, 2, 2, 2021, 'Punto de Venta prueba', 'Debe', 4, '60000.00', 'M', '2021-05-05 18:44:35', '2021-05-28 16:02:29'),
-(8, 1, 1, 2, 3, 2021, 'Punto de Venta', 'Debe', 4, '12300000.00', 'M', '2021-05-05 18:46:20', '2021-05-24 13:33:32'),
-(9, 6, 1, 5, 0, 2021, 'Gastos de Inventario', 'Debe', 3, '0.00', '1', '2021-05-13 17:06:40', '2021-05-13 17:06:40'),
-(10, 6, 1, 5, 1, 2021, 'Gastos de ajuste de inventario', 'Debe', 4, '0.00', 'M', '2021-05-13 17:07:03', '2021-06-02 13:22:07'),
-(11, 1, 1, 3, 0, 2021, 'Cuentas por Cobrar', 'Debe', 3, '0.00', '1', '2021-05-17 13:15:56', '2021-05-17 13:15:56'),
-(12, 1, 1, 3, 1, 2021, 'Cuentas por Cobrar Clientes', 'Debe', 4, '0.00', 'M', '2021-05-17 13:17:02', '2021-05-24 13:33:32'),
-(13, 4, 1, 1, 1, 2021, 'Ingresos por SubSegmento de Bienes', 'Debe', 4, '0.00', 'M', '2021-05-17 13:53:05', '2021-05-24 13:33:33'),
-(14, 2, 1, 1, 4, 2021, 'Debito Fiscal IVA por Pagar', 'Debe', 4, '0.00', 'M', '2021-05-17 13:56:38', '2021-05-24 13:33:33'),
-(15, 1, 1, 8, 1, 2021, 'Mercancia para la Venta', 'Debe', 4, '0.00', 'M', '2021-05-17 13:57:06', '2021-05-24 13:33:33'),
-(16, 5, 1, 1, 1, 2021, 'Costo de Mercancia', 'Debe', 4, '0.00', 'M', '2021-05-17 13:57:31', '2021-05-24 13:33:33'),
-(17, 1, 1, 1, 13, 2021, 'Sin determinar', 'Debe', 4, '0.00', 'M', '2021-05-20 13:47:10', '2021-05-28 16:45:59'),
-(18, 1, 1, 6, 1, 2021, 'Anticipos a Proveedores Nacionales', 'Debe', 4, '0.00', 'M', '2021-05-20 15:18:02', '2021-05-28 15:34:07'),
-(19, 1, 1, 1, 6, 2021, 'Tarjeta Corporativa', 'Debe', 4, '0.00', '1', '2021-05-20 16:08:32', '2021-05-20 16:09:04'),
-(20, 2, 1, 4, 1, 2021, 'Cuentas por Pagar Proveedores', 'Debe', 4, '0.00', 'M', '2021-05-28 14:08:30', '2021-05-28 14:30:51'),
-(21, 1, 1, 7, 1, 2021, 'IVA Credito Fiscal', 'Debe', 4, '0.00', 'M', '2021-05-28 15:17:17', '2021-05-28 16:42:45');
+INSERT INTO `accounts` (`id`, `code_one`, `code_two`, `code_three`, `code_four`, `period`, `description`, `type`, `level`, `balance_previus`, `rate`, `coin`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 0, 0, 0, 0, 'ACTIVO', 'Debe', 1, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(2, 1, 1, 0, 0, 0, 'CORRIENTE', 'Debe', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(3, 1, 1, 1, 0, 0, 'Efectivo y Equivalente de Efectivo', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(4, 1, 1, 1, 1, 0, 'Caja Chica', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(5, 1, 1, 1, 3, 0, 'Ticket Alimentacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(6, 1, 1, 1, 4, 0, 'Cheque', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(7, 1, 1, 1, 6, 0, 'Tarjeta Corporativa', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(8, 1, 1, 1, 9, 0, 'Caja Chica Chofer', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(9, 1, 1, 1, 10, 0, 'Caja Chica Oficina', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(10, 1, 1, 1, 12, 0, 'Caja Internacional', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(11, 1, 1, 1, 13, 0, 'Sin determinar', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(12, 1, 1, 1, 14, 0, 'Punto de Venta Banco Banesco', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(13, 1, 1, 2, 0, 0, 'Bancos', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(14, 1, 1, 2, 2, 0, 'Banco Banesco', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(15, 1, 1, 2, 3, 0, 'Banco Exterior', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(16, 1, 1, 2, 4, 0, 'Banco del Tesoro', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(17, 1, 1, 2, 5, 0, 'Banco Mercantil', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(18, 1, 1, 2, 6, 0, 'Banco Nacional de Credito', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(19, 1, 1, 2, 7, 0, 'Banco Banplus', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(20, 1, 1, 3, 0, 0, 'Cuentas por Cobrar', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(21, 1, 1, 3, 1, 0, 'Cuentas por Cobrar Clientes', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(22, 1, 1, 3, 2, 0, 'Cuentas por Cobrar Empleados', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(23, 1, 1, 3, 3, 0, 'Cuentas por Cobrar Accionistas', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(24, 1, 1, 3, 4, 0, 'Cuentas por Cobrar Inter-compañías', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(25, 1, 1, 4, 0, 0, 'Inversiones Temporales', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(26, 1, 1, 5, 0, 0, 'Otros Activos Financieros', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(27, 1, 1, 6, 0, 0, 'Anticipos a Proveedores', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(28, 1, 1, 6, 1, 0, 'Anticipos a Proveedores Nacionales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(29, 1, 1, 6, 2, 0, 'Anticipos a Proveedores Internacionales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(30, 1, 1, 7, 0, 0, 'Tributos por Descontar', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(31, 1, 1, 7, 1, 0, 'IVA (Credito Fiscal)', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(32, 1, 1, 7, 2, 0, 'IVA Retenido por Terceros', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(33, 1, 1, 7, 3, 0, 'Impuesto Sobre la Renta Retenido por Tercero', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(34, 1, 1, 7, 4, 0, 'ISLR Pagado en Declaración Anticipada', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(35, 1, 1, 7, 5, 0, 'Impuesto Sobre la Renta (Diferido Activo)', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(36, 1, 1, 7, 6, 0, 'Impuestos Municipales en Declaración Estimada', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(37, 1, 1, 7, 7, 0, 'Impuestos Retenidos Agentes SENIAT', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(38, 1, 1, 8, 0, 0, 'Inventario', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(39, 1, 1, 8, 1, 0, 'Mercancia para la Venta', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(40, 1, 1, 8, 2, 0, 'Materiales y articulo de Oficina', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(41, 1, 1, 8, 3, 0, 'Maquinaria y Equipo', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(42, 1, 2, 0, 0, 0, 'ACTIVO FIJO', 'Debe', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(43, 1, 2, 1, 0, 0, 'Propiedad, Planta y Equipo', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(44, 1, 2, 1, 1, 0, 'Mobiliario y Equipos de Oficina', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(45, 1, 2, 1, 2, 0, 'Depreciación Acumulada Mobiliario y Equipos de Oficina', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(46, 1, 2, 1, 3, 0, 'Herramientas y Maquinaria de Trabajo', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(47, 1, 2, 1, 4, 0, 'Depreciación Acumulada Herramientas y Equipos de Trabajo', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(48, 1, 2, 1, 5, 0, 'Vehiculos', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(49, 1, 2, 1, 6, 0, 'Depreciación Acumulada Vehículo', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(50, 1, 2, 1, 7, 0, 'Inmueble', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(51, 1, 2, 1, 8, 0, 'Depreciación Acumulada Inmueble', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(52, 1, 2, 1, 9, 0, 'Otros Activos Depreciables', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(53, 1, 2, 1, 10, 0, 'Depreciacion Acumulada Otros Activos Depreciables', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(54, 1, 2, 1, 11, 0, 'Terreno', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(55, 1, 2, 1, 12, 0, 'Equipos de Computacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(56, 1, 2, 2, 0, 0, 'Otras Inversiones', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(57, 1, 2, 2, 1, 0, 'Inversiones en Acciones', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(58, 2, 0, 0, 0, 0, 'PASIVO', 'Haber', 1, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(59, 2, 1, 0, 0, 0, 'CORRIENTE', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:25', '2021-07-09 19:10:25'),
+(60, 2, 1, 1, 0, 0, 'Impuestos Tributarios por Pagar', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(61, 2, 1, 1, 1, 0, 'Impuesto Sobre la Renta por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(62, 2, 1, 1, 2, 0, 'Impuesto Sobre la Renta por Enterar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(63, 2, 1, 1, 3, 0, 'Impuesto sobre la Renta Diferido de Pasivos', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(64, 2, 1, 1, 4, 0, 'Debito Fiscal IVA por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(65, 2, 1, 1, 5, 0, 'Debitos Fiscales IVA por Enterar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(66, 2, 1, 1, 6, 0, 'Impuesto Municipal por pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(67, 2, 1, 1, 7, 0, 'IVA por pagar retenido', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(68, 2, 1, 2, 0, 0, 'Impuestos Parafiscales por Pagar', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(69, 2, 1, 2, 1, 0, 'Aportes al Seguro Social Obligatorio por pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(70, 2, 1, 2, 2, 0, 'Aportes al Sistema de Paro Forzoso por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(71, 2, 1, 2, 3, 0, 'Aportes al INCES por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(72, 2, 1, 2, 4, 0, 'Aportes al Fondo de Ahorro Obligatorio para la Vivienda por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(73, 2, 1, 2, 5, 0, 'Aporte para la Ciencia y tecnologia por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(74, 2, 1, 2, 6, 0, 'Responsabilidad Social Por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(75, 2, 1, 2, 7, 0, 'Otros Aportes Institucionales por Pagar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(76, 2, 1, 3, 0, 0, 'Provisiones Personal', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(77, 2, 1, 3, 1, 0, 'Prestaciones Sociales', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(78, 2, 1, 3, 2, 0, 'Bono Vacacional', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(79, 2, 1, 3, 3, 0, 'Vacaciones', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(80, 2, 1, 3, 4, 0, 'Utilidades', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(81, 2, 1, 3, 5, 0, 'Otras provisiones', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(82, 2, 1, 4, 0, 0, 'Cuentas por Pagar Comerciales', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(83, 2, 1, 4, 1, 0, 'Cuentas por Pagar Proveedores', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(84, 2, 1, 4, 2, 0, 'Cuentas por Pagar Accionistas', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(85, 2, 1, 4, 3, 0, 'Cuentas por Pagar Intercompañias', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(86, 2, 1, 4, 4, 0, 'Descuentos en Pago', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(87, 2, 1, 5, 0, 0, 'Creditos Bancarios por Pagar', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(88, 2, 1, 5, 1, 0, 'Credito Banco 1', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(89, 2, 2, 0, 0, 0, 'NO CORRIENTES LARGO PLAZO', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(90, 2, 2, 1, 0, 0, 'Cuentas por Pagar Accionistas', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(91, 2, 2, 2, 0, 0, 'Cuentas por Pagar Intercompañias', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(92, 2, 2, 3, 0, 0, 'Creditos por Pagar Largo Plazo', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(93, 2, 2, 4, 0, 0, 'Otros Pasivos', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(94, 2, 2, 4, 1, 0, 'Pasivos sin identificar', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(95, 2, 2, 5, 0, 0, 'Anticipos Clientes', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(96, 2, 2, 5, 1, 0, 'Anticipos Clientes Nacionales', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(97, 2, 2, 5, 2, 0, 'Anticipos Clientes Internacionales', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(98, 3, 0, 0, 0, 0, 'CAPITAL', 'Haber', 1, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(99, 3, 1, 0, 0, 0, 'CAPITAL SOCIAL', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(100, 3, 1, 1, 0, 0, 'Capital Social Suscrito y Pagado', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(101, 3, 1, 1, 1, 0, 'Accionista 1', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(102, 3, 1, 1, 2, 0, 'Accionista 2', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(103, 3, 1, 2, 0, 0, 'Capital Social Suscripto y No Pagado', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:26', '2021-07-09 19:10:26'),
+(104, 3, 1, 2, 1, 0, 'Accionista A', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(105, 3, 2, 0, 0, 0, 'FONDOS Y RESERVAS', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(106, 3, 2, 1, 0, 0, 'Reservas', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(107, 3, 2, 1, 1, 0, 'Reserva Legal', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(108, 3, 2, 1, 2, 0, 'Reserva por Revalorizacion de Activos', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(109, 3, 3, 0, 0, 0, 'SUPERAVIT O DEFICIT', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(110, 3, 3, 1, 0, 0, 'SUPERAVIT O DEFICIT', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(111, 3, 3, 1, 1, 0, 'SUPERAVIT O DEFICIT', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(112, 3, 4, 0, 0, 0, 'UTILIDADES NO DISTRIBUIDAS', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(113, 3, 4, 1, 0, 0, 'Utilidad de Ejercicios Anteriores', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(114, 3, 4, 1, 1, 0, 'Utilidad de Ejercicios Anteriores', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(115, 4, 0, 0, 0, 0, 'INGRESOS', 'Haber', 1, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(116, 4, 1, 0, 0, 0, 'INGRESO POR VENTAS DE BIENES', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(117, 4, 1, 1, 0, 0, 'Ingresos por Segmento de Bienes', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(118, 4, 1, 1, 1, 0, 'Ingresos por Sub-Segmento de Bienes', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(119, 4, 2, 0, 0, 0, 'INGRESOS POR SERVICIOS', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(120, 4, 2, 1, 0, 0, 'Ingresos por Segmento de Servicios', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(121, 4, 2, 1, 1, 0, 'Ingresos por Sub-Segmento de Servicios', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(122, 4, 3, 0, 0, 0, 'OTROS INGRESOS', 'Haber', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(123, 4, 3, 1, 0, 0, 'Otros Ingresos', 'Haber', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(124, 4, 3, 1, 1, 0, 'Ingresos Por bonificaciones', 'Haber', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(125, 4, 3, 1, 3, 0, 'Ingreso Sin Identificar', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(126, 4, 3, 1, 4, 0, 'Ingreso Financiero', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(127, 4, 3, 1, 5, 0, 'Ingreso por Indemnizacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(128, 4, 3, 1, 6, 0, 'Ingresos en el Extranjero', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(129, 4, 3, 1, 7, 0, 'Ingreso por Venta de Servicio', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(130, 4, 3, 1, 8, 0, 'Venta en linea', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(131, 5, 0, 0, 0, 0, 'EGRESOS', 'Debe', 1, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(132, 5, 1, 0, 0, 0, 'COSTOS', 'Debe', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(133, 5, 1, 1, 0, 0, 'Costo de Ventas', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(134, 5, 1, 1, 1, 0, 'Costo de Mercancía', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(135, 5, 1, 1, 2, 0, 'Gastos de importacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(136, 5, 1, 1, 3, 0, 'Gastos de aduanas', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(137, 5, 1, 1, 4, 0, 'Gastos de aranceles', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(138, 5, 1, 1, 5, 0, 'Gastos de Transporte de Mercancia', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(139, 5, 1, 1, 6, 0, 'Desaduanaje', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(140, 5, 1, 1, 7, 0, 'Gastos de Exportacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(141, 6, 0, 0, 0, 0, 'GASTOS', 'Debe', 1, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(142, 6, 1, 0, 0, 0, 'GASTOS OPERACIONALES', 'Debe', 2, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(143, 6, 1, 1, 0, 0, 'Gastos de Personal', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(144, 6, 1, 1, 1, 0, 'Sueldos y Salarios', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(145, 6, 1, 1, 2, 0, 'Bono de Alimentacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(146, 6, 1, 1, 3, 0, 'Utilidades', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(147, 6, 1, 1, 4, 0, 'Prestaciones Sociales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(148, 6, 1, 1, 5, 0, 'Capacitacion del Personal', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(149, 6, 1, 1, 6, 0, 'Uniformes', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:27', '2021-07-09 19:10:27'),
+(150, 6, 1, 1, 7, 0, 'Bonos especiales por Eficiencia', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(151, 6, 1, 1, 8, 0, 'Seguro H.C. al Personal', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(152, 6, 1, 1, 9, 0, 'Otros Beneficios al Personal', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(153, 6, 1, 1, 10, 0, 'Viáticos', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(154, 6, 1, 1, 11, 0, 'Bono Vacacional', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(155, 6, 1, 1, 12, 0, 'Vacaciones', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(156, 6, 1, 1, 14, 0, 'IVVS', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(157, 6, 1, 1, 15, 0, 'LIQUIDACION', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(158, 6, 1, 2, 0, 0, 'Gastos por Tributos Parafiscales', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(159, 6, 1, 2, 1, 0, 'Aportes al Seguro Social Obligatorio', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(160, 6, 1, 2, 2, 0, 'Aportes al Sistema de Paro Forzoso', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(161, 6, 1, 2, 3, 0, 'Aportes al INCE', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(162, 6, 1, 2, 4, 0, 'Aportes al Fondo de Ahorro Obligatorio', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(163, 6, 1, 2, 5, 0, 'Aportes y para la Ciencia y tecnología', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(164, 6, 1, 2, 6, 0, 'Responsabilidad Social', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(165, 6, 1, 2, 7, 0, 'Otros Aportes Institucionales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(166, 6, 1, 2, 8, 0, 'Aportes a franqueo postal', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(167, 6, 1, 2, 9, 0, 'Impuestos Sobre la Renta', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(168, 6, 1, 3, 0, 0, 'Gastos por Tributos Municipales', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(169, 6, 1, 3, 1, 0, 'Impuesto sobre Actividades Economicas', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(170, 6, 1, 3, 2, 0, 'Impuesto Vehicular', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(171, 6, 1, 3, 3, 0, 'Impuesto sobre Publicidad y Propaganda', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(172, 6, 1, 3, 4, 0, 'Impuesto Sobre Inmuebles Urbanos', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(173, 6, 1, 3, 5, 0, 'Solvencias', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(174, 6, 1, 3, 6, 0, 'Permisos', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(175, 6, 1, 3, 7, 0, 'Inspeccion de Bomberos', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(176, 6, 1, 3, 8, 0, 'Patente', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(177, 6, 1, 4, 0, 0, 'Gastos de Administracion y Ventas', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(178, 6, 1, 4, 1, 0, 'Gastos de Alquiler', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(179, 6, 1, 4, 2, 0, 'Intereses Bancario', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(180, 6, 1, 4, 3, 0, 'Papeleria y articulos de Oficina', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(181, 6, 1, 4, 4, 0, 'Servicios Basicos (Luz, Agua, Aseo, Internet, Telefonos)', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(182, 6, 1, 4, 5, 0, 'Gastos de Depreciación', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(183, 6, 1, 4, 6, 0, 'Gastos de Publicidad', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(184, 6, 1, 4, 7, 0, 'Gastos de Comisión Bancaria', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(185, 6, 1, 4, 8, 0, 'Gastos de Permisología', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:28', '2021-07-09 19:10:28'),
+(186, 6, 1, 4, 9, 0, 'Gastos de Seguros', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(187, 6, 1, 4, 10, 0, 'Gastos Legales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(188, 6, 1, 4, 11, 0, 'Gastos de Honorarios Profesionales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(189, 6, 1, 4, 12, 0, 'Gastos de Comida y Representación', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(190, 6, 1, 4, 13, 0, 'Gastos de Intereses Bancarios', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(191, 6, 1, 4, 14, 0, 'Otros Gastos Operacionales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(192, 6, 1, 4, 15, 0, 'Gasto de Representacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(193, 6, 1, 4, 16, 0, 'Gasto de Publicidad', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(194, 6, 1, 4, 17, 0, 'Gasto de Oficina', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(195, 6, 1, 4, 18, 0, 'Gastos de Seguro', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(196, 6, 1, 4, 20, 0, 'Gastos de Telefono', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(197, 6, 1, 4, 21, 0, 'Gastos de Luz', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(198, 6, 1, 4, 22, 0, 'Gasto de Interes por Prestamo', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(199, 6, 1, 4, 23, 0, 'Gastos Comision Bancaria', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(200, 6, 1, 4, 24, 0, 'Gasto de Condominio', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(201, 6, 1, 4, 25, 0, 'Gasto de Limpieza y Aseo', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(202, 6, 1, 4, 26, 0, 'Gastos de Comision', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(203, 6, 1, 4, 27, 0, 'Gasto Servicio Estacionamiento', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(204, 6, 1, 4, 28, 0, 'Gasto de Membresia', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(205, 6, 1, 4, 29, 0, 'Gastos Bancarios', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(206, 6, 1, 4, 30, 0, 'Gastos de Transporte', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(207, 6, 1, 4, 31, 0, 'Gastos de Honorarios Profesionales', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(208, 6, 1, 4, 32, 0, 'Gasto de Indemnizacion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(209, 6, 1, 4, 33, 0, 'Gastos Escolares', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(210, 6, 1, 4, 34, 0, 'Gastos sin Identificar', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(211, 6, 1, 4, 35, 0, 'Gastos Servicio de Camion', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(212, 6, 1, 4, 36, 0, 'Gastos Servicio de Vehiculo', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(213, 6, 1, 4, 38, 0, 'Prestamo Bancario', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(214, 6, 1, 4, 39, 0, 'Gastos de Mensajeria', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(215, 6, 1, 4, 41, 0, 'Gastos Varios', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(216, 6, 1, 4, 42, 0, 'Gasto Impuesto Transacciones', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(217, 6, 1, 5, 0, 0, 'Gastos de Inventario', 'Debe', 3, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(218, 6, 1, 5, 1, 0, 'Gastos de ajuste de inventario', 'Debe', 4, '0.00', '0.00', NULL, '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `account_historials`
+--
+
+CREATE TABLE `account_historials` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_account` bigint(20) UNSIGNED NOT NULL,
+  `date_begin` date NOT NULL,
+  `date_end` date NOT NULL,
+  `period` int(11) NOT NULL,
+  `balance_previous` decimal(64,2) NOT NULL,
+  `balance_current` decimal(64,2) NOT NULL,
+  `debe` decimal(64,2) NOT NULL,
+  `haber` decimal(64,2) NOT NULL,
+  `debe_coin` decimal(64,2) DEFAULT NULL,
+  `haber_coin` decimal(64,2) DEFAULT NULL,
+  `rate` decimal(64,2) DEFAULT NULL,
+  `coin` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -97,89 +329,12 @@ CREATE TABLE `anticipos` (
   `id_account` bigint(20) UNSIGNED NOT NULL,
   `id_user` bigint(20) UNSIGNED NOT NULL,
   `date` date NOT NULL,
-  `amount` decimal(16,2) NOT NULL,
+  `amount` decimal(64,2) NOT NULL,
   `reference` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `anticipos`
---
-
-INSERT INTO `anticipos` (`id`, `id_client`, `id_account`, `id_user`, `date`, `amount`, `reference`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 4, 2, '2021-05-12', '50.00', '111', 'C', '2021-05-12 19:11:57', '2021-05-12 19:11:57'),
-(3, 1, 7, 2, '2021-05-13', '60.00', '85', 'C', '2021-05-13 14:12:28', '2021-05-13 14:12:28'),
-(4, 1, 4, 2, '2021-05-19', '500.00', '789', 'C', '2021-05-19 17:23:26', '2021-05-19 17:23:26'),
-(5, 1, 7, 2, '2021-05-19', '400.00', '6262', 'C', '2021-05-19 17:55:50', '2021-05-19 17:55:50'),
-(6, 2, 6, 2, '2021-05-19', '300.00', 'tyry', 'C', '2021-05-19 18:03:10', '2021-05-19 18:03:10'),
-(7, 1, 6, 2, '2021-05-19', '1000.00', 'dewd', 'C', '2021-05-19 18:33:15', '2021-05-19 18:33:15');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `bank_movements`
---
-
-CREATE TABLE `bank_movements` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `id_account` bigint(20) UNSIGNED NOT NULL,
-  `id_counterpart` bigint(20) UNSIGNED NOT NULL,
-  `id_client` bigint(20) UNSIGNED DEFAULT NULL,
-  `id_vendor` bigint(20) UNSIGNED DEFAULT NULL,
-  `id_user` bigint(20) UNSIGNED NOT NULL,
-  `description` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type_movement` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `amount` decimal(16,2) NOT NULL,
-  `date` date NOT NULL,
-  `reference` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `bank_vouchers`
---
-
-CREATE TABLE `bank_vouchers` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `id_client` bigint(20) UNSIGNED DEFAULT NULL,
-  `id_vendor` bigint(20) UNSIGNED DEFAULT NULL,
-  `id_provider` bigint(20) UNSIGNED DEFAULT NULL,
-  `id_user` bigint(20) UNSIGNED NOT NULL,
-  `description` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type_movement` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `date` date NOT NULL,
-  `reference` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `bank_vouchers`
---
-
-INSERT INTO `bank_vouchers` (`id`, `id_client`, `id_vendor`, `id_provider`, `id_user`, `description`, `type_movement`, `date`, `reference`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2, NULL, NULL, 2, 'wewe', 'RE', '2021-05-31', NULL, '1', '2021-05-31 15:46:42', '2021-05-31 15:46:42'),
-(2, NULL, NULL, 1, 2, 'gbfg', 'RE', '2021-05-31', NULL, '1', '2021-05-31 15:47:46', '2021-05-31 15:47:46'),
-(3, 2, NULL, NULL, 2, 'tyutyu', 'RE', '2021-05-31', NULL, '1', '2021-05-31 15:59:19', '2021-05-31 15:59:19'),
-(4, 1, NULL, NULL, 2, 'tuiuouo', 'RE', '2021-05-31', NULL, '1', '2021-05-31 16:01:09', '2021-05-31 16:01:09'),
-(5, NULL, NULL, 1, 2, 'ipoop', 'RE', '2021-05-31', NULL, '1', '2021-05-31 16:02:48', '2021-05-31 16:02:48'),
-(6, 1, NULL, NULL, 2, 'ghghg', 'RE', '2021-05-31', NULL, '1', '2021-05-31 16:44:40', '2021-05-31 16:44:40'),
-(7, NULL, NULL, 1, 2, 'qweqwe', 'RE', '2021-05-31', NULL, '1', '2021-05-31 16:45:32', '2021-05-31 16:45:32'),
-(8, 1, NULL, NULL, 2, 'qqqqq', 'RE', '2021-05-31', NULL, '1', '2021-05-31 16:47:35', '2021-05-31 16:47:35'),
-(9, 2, NULL, NULL, 2, 'opop', 'RE', '2021-05-31', NULL, '1', '2021-05-31 16:48:41', '2021-05-31 16:48:41'),
-(10, NULL, NULL, NULL, 2, 'sdfsdv', 'DE', '2021-05-31', NULL, '1', '2021-05-31 18:22:45', '2021-05-31 18:22:45'),
-(11, NULL, NULL, NULL, 2, 'ghngh', 'DE', '2021-05-31', NULL, '1', '2021-05-31 18:23:38', '2021-05-31 18:23:38'),
-(12, NULL, NULL, 1, 2, 'sdfsdf', 'RE', '2021-05-31', '454', '1', '2021-05-31 18:29:05', '2021-05-31 18:29:05'),
-(13, NULL, NULL, 2, 2, 'plolplo', 'RE', '2021-05-31', NULL, '1', '2021-05-31 18:29:34', '2021-05-31 18:29:34'),
-(14, NULL, NULL, NULL, 2, NULL, 'TR', '2021-05-31', '234234', '1', '2021-05-31 18:43:33', '2021-05-31 18:43:33'),
-(15, NULL, NULL, NULL, 2, NULL, 'TR', '2021-05-31', '561', '1', '2021-05-31 18:44:17', '2021-05-31 18:44:17');
 
 -- --------------------------------------------------------
 
@@ -208,8 +363,7 @@ CREATE TABLE `branches` (
 --
 
 INSERT INTO `branches` (`id`, `company_id`, `parroquia_id`, `description`, `direction`, `phone`, `phone2`, `person_contact`, `phone_contact`, `observation`, `status`, `created_at`, `updated_at`) VALUES
-(2, 1, 10111, 'asd', 'asdasd', '65151', '1651', 'sdfsd', '56156', 'sdfsdf', '1', '2021-04-09 14:24:25', '2021-04-09 14:24:25'),
-(3, 1, 10102, 'www', 'wwww', '5151', '51515', 'wwoo', '5151', 'wwoo', '1', '2021-04-09 14:41:09', '2021-04-09 15:23:32');
+(1, 1, 10111, 'Sucursal Principal', 'Chacaito', '0212-7651562', '0212-7651569', 'Nestor', '0414-2351562', 'Ninguna', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -220,7 +374,8 @@ INSERT INTO `branches` (`id`, `company_id`, `parroquia_id`, `description`, `dire
 CREATE TABLE `clients` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `id_vendor` bigint(20) UNSIGNED DEFAULT NULL,
-  `type_code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_user` bigint(20) UNSIGNED NOT NULL,
+  `type_code` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
   `cedula_rif` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `direction` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -229,9 +384,9 @@ CREATE TABLE `clients` (
   `phone1` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone2` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `days_credit` int(11) NOT NULL,
-  `amount_max_credit` decimal(12,2) DEFAULT NULL,
-  `percentage_retencion_iva` decimal(6,2) DEFAULT NULL,
-  `percentage_retencion_islr` decimal(6,2) DEFAULT NULL,
+  `amount_max_credit` decimal(64,2) DEFAULT NULL,
+  `percentage_retencion_iva` decimal(64,2) DEFAULT NULL,
+  `percentage_retencion_islr` decimal(64,2) DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -241,9 +396,8 @@ CREATE TABLE `clients` (
 -- Volcado de datos para la tabla `clients`
 --
 
-INSERT INTO `clients` (`id`, `id_vendor`, `type_code`, `name`, `cedula_rif`, `direction`, `city`, `country`, `phone1`, `phone2`, `days_credit`, `amount_max_credit`, `percentage_retencion_iva`, `percentage_retencion_islr`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2, 'J-', 'Carlos', '45645', 'asdsad', 'casd', 'Venezuela', '(123) 123-1231', NULL, 0, NULL, NULL, NULL, '1', '2021-05-11 18:41:26', '2021-05-11 18:41:26'),
-(2, 2, 'J-', 'Manuel', '5616516', 'plaza', 'Caracas', 'Venezuela', '(132) 131-2321', '(123) 123-1232', 0, '1.00', '1.00', '1.00', '1', '2021-05-14 17:42:13', '2021-05-14 17:42:13');
+INSERT INTO `clients` (`id`, `id_vendor`, `id_user`, `type_code`, `name`, `cedula_rif`, `direction`, `city`, `country`, `phone1`, `phone2`, `days_credit`, `amount_max_credit`, `percentage_retencion_iva`, `percentage_retencion_islr`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'V-', 'Primer Cliente', '17.615.785', 'Chacao', 'Caracas', 'Venezuela', '0414 265-1651', '0424 965-2952', 9, '999999999999.99', '12.00', '10.00', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -264,8 +418,8 @@ CREATE TABLE `colors` (
 --
 
 INSERT INTO `colors` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Amarillo Claro', '1', '2021-04-14 15:52:37', '2021-04-14 15:52:51'),
-(2, 'Azul', '1', '2021-04-14 15:52:43', '2021-04-14 15:52:43');
+(1, 'Negro', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(2, 'Blanco', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -286,8 +440,7 @@ CREATE TABLE `comision_types` (
 --
 
 INSERT INTO `comision_types` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Comisión 3', '0', '2021-04-12 15:56:01', '2021-04-12 16:00:41'),
-(2, 'Comisión 2', '1', '2021-04-12 15:56:07', '2021-04-12 15:56:07');
+(1, 'Comision 1', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -324,7 +477,7 @@ CREATE TABLE `companies` (
 --
 
 INSERT INTO `companies` (`id`, `login`, `email`, `code_rif`, `razon_social`, `period`, `phone`, `address`, `franqueo_postal`, `tax_1`, `tax_2`, `tax_3`, `retention_islr`, `tipoinv_id`, `tiporate_id`, `rate`, `rate_petro`, `foto_company`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'trekexol', 'CEFREITAS.16@GMAIL.COM', '00354138-9', 'PATTERDAM', '2021', '04242041615', 'PLAZA VENEZUELA', '1010', '16.00', '0.00', '0.00', '0.00', 1, 1, '3115193.41', '9000000.00', 'default', '1', '2021-06-02 15:39:55', '2021-06-02 15:39:55');
+(1, 'trekexol', 'CEFREITAS.16@GMAIL.COM', '003548625-9', 'Empresa DEMO ARYA', '2021', '04242013215', 'PLAZA VENEZUELA', '1010', '16.00', '0.00', '0.00', '0.00', 1, 1, '3115193.41', '9000000.00', 'default', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31');
 
 -- --------------------------------------------------------
 
@@ -338,218 +491,15 @@ CREATE TABLE `detail_vouchers` (
   `id_header_voucher` bigint(20) UNSIGNED DEFAULT NULL,
   `id_invoice` bigint(20) UNSIGNED DEFAULT NULL,
   `id_expense` bigint(20) UNSIGNED DEFAULT NULL,
-  `id_bank_voucher` bigint(20) UNSIGNED DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `debe` decimal(16,2) NOT NULL,
-  `haber` decimal(16,2) NOT NULL,
+  `tasa` decimal(64,2) NOT NULL,
+  `debe` decimal(64,2) NOT NULL,
+  `haber` decimal(64,2) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date_end` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `detail_vouchers`
---
-
-INSERT INTO `detail_vouchers` (`id`, `id_account`, `id_header_voucher`, `id_invoice`, `id_expense`, `id_bank_voucher`, `user_id`, `debe`, `haber`, `status`, `created_at`, `updated_at`) VALUES
-(244, 6, 80, 31, NULL, NULL, 2, '1000.00', '0.00', 'C', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(245, 4, 80, 31, NULL, NULL, 2, '1000.00', '0.00', 'C', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(246, 4, 80, 31, NULL, NULL, 2, '1000.00', '0.00', 'C', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(247, 8, 80, 31, NULL, NULL, 2, '686.40', '0.00', 'C', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(248, 12, 80, 31, NULL, NULL, 2, '0.00', '4686.40', 'C', '2021-05-24 13:33:33', '2021-05-24 13:33:33'),
-(249, 12, 81, 31, NULL, NULL, 2, '4686.40', '0.00', 'C', '2021-05-24 13:33:33', '2021-05-24 13:33:33'),
-(250, 13, 81, 31, NULL, NULL, 2, '0.00', '4040.00', 'C', '2021-05-24 13:33:33', '2021-05-24 13:33:33'),
-(251, 14, 81, 31, NULL, NULL, 2, '0.00', '646.40', 'C', '2021-05-24 13:33:33', '2021-05-24 13:33:33'),
-(252, 15, 81, 31, NULL, NULL, 2, '0.00', '4040.00', 'C', '2021-05-24 13:33:33', '2021-05-24 13:33:33'),
-(253, 16, 81, 31, NULL, NULL, 2, '4040.00', '0.00', 'C', '2021-05-24 13:33:33', '2021-05-24 13:33:33'),
-(255, 4, 83, NULL, 7, NULL, 2, '2100.00', '0.00', 'C', '2021-05-28 14:00:19', '2021-05-28 14:00:19'),
-(256, 4, 84, NULL, 7, NULL, 2, '2100.00', '0.00', 'C', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(257, 12, 85, NULL, 7, NULL, 2, '2100.00', '0.00', 'C', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(258, 13, 85, NULL, 7, NULL, 2, '0.00', '2100.00', 'C', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(259, 15, 85, NULL, 7, NULL, 2, '0.00', '2100.00', 'C', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(260, 16, 85, NULL, 7, NULL, 2, '2100.00', '0.00', 'C', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(261, 8, 86, NULL, 8, NULL, 2, '1044.00', '0.00', 'C', '2021-05-28 14:30:51', '2021-05-28 14:30:51'),
-(262, 20, 86, NULL, 8, NULL, 2, '0.00', '1044.00', 'C', '2021-05-28 14:30:51', '2021-05-28 14:30:51'),
-(263, 18, 87, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:34:07', '2021-05-28 15:34:07'),
-(264, 14, 87, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:34:07', '2021-05-28 15:34:07'),
-(265, 20, 87, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:34:07', '2021-05-28 15:34:07'),
-(266, 18, 88, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:35:34', '2021-05-28 15:35:34'),
-(267, 14, 88, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:35:34', '2021-05-28 15:35:34'),
-(268, 20, 88, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:35:34', '2021-05-28 15:35:34'),
-(269, 18, 89, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:35:54', '2021-05-28 15:35:54'),
-(270, 14, 89, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:35:54', '2021-05-28 15:35:54'),
-(271, 20, 89, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:35:54', '2021-05-28 15:35:54'),
-(272, 18, 90, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:36:45', '2021-05-28 15:36:45'),
-(273, 14, 90, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:36:45', '2021-05-28 15:36:45'),
-(274, 20, 90, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:36:45', '2021-05-28 15:36:45'),
-(275, 18, 91, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:37:13', '2021-05-28 15:37:13'),
-(276, 14, 91, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:37:13', '2021-05-28 15:37:13'),
-(277, 20, 91, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:37:13', '2021-05-28 15:37:13'),
-(278, 18, 92, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:37:29', '2021-05-28 15:37:29'),
-(279, 14, 92, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:37:29', '2021-05-28 15:37:29'),
-(280, 20, 92, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:37:29', '2021-05-28 15:37:29'),
-(281, 18, 93, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:37:48', '2021-05-28 15:37:48'),
-(282, 14, 93, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:37:48', '2021-05-28 15:37:48'),
-(283, 20, 93, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:37:48', '2021-05-28 15:37:48'),
-(284, 18, 94, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:37:57', '2021-05-28 15:37:57'),
-(285, 14, 94, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:37:57', '2021-05-28 15:37:57'),
-(286, 20, 94, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:37:57', '2021-05-28 15:37:57'),
-(287, 18, 95, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:38:38', '2021-05-28 15:38:38'),
-(288, 14, 95, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:38:38', '2021-05-28 15:38:38'),
-(289, 20, 95, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:38:39', '2021-05-28 15:38:39'),
-(290, 18, 96, NULL, 9, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 15:45:40', '2021-05-28 15:45:40'),
-(291, 14, 96, NULL, 9, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 15:45:40', '2021-05-28 15:45:40'),
-(292, 20, 96, NULL, 9, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 15:45:40', '2021-05-28 15:45:40'),
-(293, 7, 97, NULL, 10, NULL, 2, '2331.60', '0.00', 'C', '2021-05-28 16:02:29', '2021-05-28 16:02:29'),
-(294, 14, 97, NULL, 10, NULL, 2, '321.60', '0.00', 'C', '2021-05-28 16:02:29', '2021-05-28 16:02:29'),
-(295, 20, 97, NULL, 10, NULL, 2, '0.00', '2331.60', 'C', '2021-05-28 16:02:29', '2021-05-28 16:02:29'),
-(296, 20, 98, NULL, 11, NULL, 2, '0.00', '696.00', 'C', '2021-05-28 16:38:14', '2021-05-28 16:38:14'),
-(297, 18, 98, NULL, 11, NULL, 2, '696.00', '0.00', 'C', '2021-05-28 16:38:15', '2021-05-28 16:38:15'),
-(298, 20, 99, NULL, 11, NULL, 2, '0.00', '696.00', 'C', '2021-05-28 16:39:03', '2021-05-28 16:39:03'),
-(299, 18, 99, NULL, 11, NULL, 2, '696.00', '0.00', 'C', '2021-05-28 16:39:03', '2021-05-28 16:39:03'),
-(300, 20, 100, NULL, 11, NULL, 2, '0.00', '696.00', 'C', '2021-05-28 16:39:43', '2021-05-28 16:39:43'),
-(301, 18, 100, NULL, 11, NULL, 2, '696.00', '0.00', 'C', '2021-05-28 16:39:44', '2021-05-28 16:39:44'),
-(302, 20, 101, NULL, 11, NULL, 2, '0.00', '696.00', 'C', '2021-05-28 16:40:26', '2021-05-28 16:40:26'),
-(303, 18, 101, NULL, 11, NULL, 2, '696.00', '0.00', 'C', '2021-05-28 16:40:26', '2021-05-28 16:40:26'),
-(304, 20, 101, NULL, 11, NULL, 2, '0.00', '696.00', 'C', '2021-05-28 16:40:26', '2021-05-28 16:40:26'),
-(305, 20, 102, NULL, 12, NULL, 2, '0.00', '1931.40', 'C', '2021-05-28 16:42:45', '2021-05-28 16:42:45'),
-(306, 4, 102, NULL, 12, NULL, 2, '1931.40', '0.00', 'C', '2021-05-28 16:42:45', '2021-05-28 16:42:45'),
-(307, 21, 102, NULL, 12, NULL, 2, '266.40', '0.00', 'C', '2021-05-28 16:42:45', '2021-05-28 16:42:45'),
-(308, 20, 102, NULL, 12, NULL, 2, '0.00', '1931.40', 'C', '2021-05-28 16:42:45', '2021-05-28 16:42:45'),
-(309, 20, 103, NULL, 13, NULL, 2, '1044.00', '0.00', 'C', '2021-05-28 16:45:59', '2021-05-28 16:45:59'),
-(310, 17, 103, NULL, 13, NULL, 2, '0.00', '0.00', 'C', '2021-05-28 16:45:59', '2021-05-28 16:45:59'),
-(311, 21, 103, NULL, 13, NULL, 2, '144.00', '0.00', 'C', '2021-05-28 16:45:59', '2021-05-28 16:45:59'),
-(312, 20, 103, NULL, 13, NULL, 2, '0.00', '1044.00', 'C', '2021-05-28 16:45:59', '2021-05-28 16:45:59'),
-(313, 20, 104, NULL, 14, NULL, 2, '1392.00', '0.00', 'C', '2021-05-28 16:52:17', '2021-05-28 16:52:17'),
-(314, 17, 104, NULL, 14, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 16:52:17', '2021-05-28 16:52:17'),
-(315, 15, 104, NULL, 14, NULL, 2, '1200.00', '0.00', 'C', '2021-05-28 16:52:17', '2021-05-28 16:52:17'),
-(316, 21, 104, NULL, 14, NULL, 2, '192.00', '0.00', 'C', '2021-05-28 16:52:17', '2021-05-28 16:52:17'),
-(317, 20, 104, NULL, 14, NULL, 2, '0.00', '1392.00', 'C', '2021-05-28 16:52:17', '2021-05-28 16:52:17'),
-(318, 20, 105, NULL, 15, NULL, 2, '1740.00', '0.00', 'C', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(319, 6, 105, NULL, 15, NULL, 2, '0.00', '1740.00', 'C', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(320, 15, 106, NULL, 15, NULL, 2, '1500.00', '0.00', 'C', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(321, 21, 106, NULL, 15, NULL, 2, '240.00', '0.00', 'C', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(322, 20, 106, NULL, 15, NULL, 2, '0.00', '1740.00', 'C', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(323, 20, 107, NULL, 16, NULL, 2, '3219.00', '0.00', 'C', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(324, 4, 107, NULL, 16, NULL, 2, '0.00', '3000.00', 'C', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(325, 6, 107, NULL, 16, NULL, 2, '0.00', '219.00', 'C', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(326, 15, 108, NULL, 16, NULL, 2, '2775.00', '0.00', 'C', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(327, 21, 108, NULL, 16, NULL, 2, '444.00', '0.00', 'C', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(328, 20, 108, NULL, 16, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(329, 20, 109, NULL, 17, NULL, 2, '3360.00', '0.00', 'C', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(330, 8, 109, NULL, 17, NULL, 2, '0.00', '1000.00', 'C', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(331, 4, 109, NULL, 17, NULL, 2, '0.00', '1000.00', 'C', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(332, 7, 109, NULL, 17, NULL, 2, '0.00', '1360.00', 'C', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(333, 15, 110, NULL, 17, NULL, 2, '3000.00', '0.00', 'C', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(334, 21, 110, NULL, 17, NULL, 2, '360.00', '0.00', 'C', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(335, 20, 110, NULL, 17, NULL, 2, '0.00', '3360.00', 'C', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(336, 20, 111, NULL, 18, NULL, 2, '3480.00', '0.00', 'C', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(337, 7, 111, NULL, 18, NULL, 2, '0.00', '3480.00', 'C', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(338, 15, 112, NULL, 18, NULL, 2, '3000.00', '0.00', 'C', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(339, 21, 112, NULL, 18, NULL, 2, '480.00', '0.00', 'C', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(340, 20, 112, NULL, 18, NULL, 2, '0.00', '3480.00', 'C', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(341, 20, 113, NULL, 19, NULL, 2, '3219.00', '0.00', 'C', '2021-05-28 17:46:10', '2021-05-28 17:46:10'),
-(342, 18, 113, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:46:11', '2021-05-28 17:46:11'),
-(343, 15, 114, NULL, 19, NULL, 2, '2775.00', '0.00', 'C', '2021-05-28 17:46:11', '2021-05-28 17:46:11'),
-(344, 21, 114, NULL, 19, NULL, 2, '444.00', '0.00', 'C', '2021-05-28 17:46:11', '2021-05-28 17:46:11'),
-(345, 20, 114, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:46:11', '2021-05-28 17:46:11'),
-(346, 20, 115, NULL, 19, NULL, 2, '3219.00', '0.00', 'C', '2021-05-28 17:46:20', '2021-05-28 17:46:20'),
-(347, 18, 115, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:46:21', '2021-05-28 17:46:21'),
-(348, 15, 116, NULL, 19, NULL, 2, '2775.00', '0.00', 'C', '2021-05-28 17:46:21', '2021-05-28 17:46:21'),
-(349, 21, 116, NULL, 19, NULL, 2, '444.00', '0.00', 'C', '2021-05-28 17:46:21', '2021-05-28 17:46:21'),
-(350, 20, 116, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:46:21', '2021-05-28 17:46:21'),
-(351, 20, 117, NULL, 19, NULL, 2, '3219.00', '0.00', 'C', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(352, 18, 117, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(353, 15, 118, NULL, 19, NULL, 2, '2775.00', '0.00', 'C', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(354, 21, 118, NULL, 19, NULL, 2, '444.00', '0.00', 'C', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(355, 20, 118, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(356, 20, 119, NULL, 19, NULL, 2, '3219.00', '0.00', 'C', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(357, 18, 119, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(358, 15, 120, NULL, 19, NULL, 2, '2775.00', '0.00', 'C', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(359, 21, 120, NULL, 19, NULL, 2, '444.00', '0.00', 'C', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(360, 20, 120, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(361, 20, 121, NULL, 19, NULL, 2, '3219.00', '0.00', 'C', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(362, 18, 121, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(363, 15, 122, NULL, 19, NULL, 2, '2775.00', '0.00', 'C', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(364, 21, 122, NULL, 19, NULL, 2, '444.00', '0.00', 'C', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(365, 20, 122, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(366, 20, 123, NULL, 19, NULL, 2, '3219.00', '0.00', 'C', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(367, 18, 123, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(368, 15, 124, NULL, 19, NULL, 2, '2775.00', '0.00', 'C', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(369, 21, 124, NULL, 19, NULL, 2, '444.00', '0.00', 'C', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(370, 20, 124, NULL, 19, NULL, 2, '0.00', '3219.00', 'C', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(371, 20, 125, NULL, 20, NULL, 2, '2448.00', '0.00', 'C', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(372, 18, 125, NULL, 20, NULL, 2, '0.00', '1000.00', 'C', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(373, 6, 125, NULL, 20, NULL, 2, '0.00', '1000.00', 'C', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(374, 17, 125, NULL, 20, NULL, 2, '0.00', '448.00', 'C', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(375, 15, 126, NULL, 20, NULL, 2, '2160.00', '0.00', 'C', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(376, 21, 126, NULL, 20, NULL, 2, '288.00', '0.00', 'C', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(377, 20, 126, NULL, 20, NULL, 2, '0.00', '2448.00', 'C', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(378, 20, 127, NULL, 4, NULL, 2, '6456.40', '0.00', 'C', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(379, 6, 127, NULL, 4, NULL, 2, '0.00', '6456.40', 'C', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(380, 15, 128, NULL, 4, NULL, 2, '5690.00', '0.00', 'C', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(381, 21, 128, NULL, 4, NULL, 2, '766.40', '0.00', 'C', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(382, 20, 128, NULL, 4, NULL, 2, '0.00', '6456.40', 'C', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(383, 20, 129, NULL, 3, NULL, 2, '931.48', '0.00', 'C', '2021-05-28 18:37:26', '2021-05-28 18:37:26'),
-(384, 4, 129, NULL, 3, NULL, 2, '0.00', '931.48', 'C', '2021-05-28 18:37:26', '2021-05-28 18:37:26'),
-(385, 15, 130, NULL, 3, NULL, 2, '803.00', '0.00', 'C', '2021-05-28 18:37:27', '2021-05-28 18:37:27'),
-(386, 21, 130, NULL, 3, NULL, 2, '128.48', '0.00', 'C', '2021-05-28 18:37:27', '2021-05-28 18:37:27'),
-(387, 20, 130, NULL, 3, NULL, 2, '0.00', '931.48', 'C', '2021-05-28 18:37:27', '2021-05-28 18:37:27'),
-(388, 15, 131, NULL, 21, NULL, 2, '2220.00', '0.00', 'C', '2021-05-28 19:21:47', '2021-05-28 19:21:47'),
-(389, 21, 131, NULL, 21, NULL, 2, '355.20', '0.00', 'C', '2021-05-28 19:21:47', '2021-05-28 19:21:47'),
-(390, 20, 131, NULL, 21, NULL, 2, '0.00', '2575.20', 'C', '2021-05-28 19:21:47', '2021-05-28 19:21:47'),
-(391, 20, 132, NULL, 21, NULL, 2, '2575.20', '0.00', 'C', '2021-05-28 19:23:14', '2021-05-28 19:23:14'),
-(392, 4, 132, NULL, 21, NULL, 2, '0.00', '2575.20', 'C', '2021-05-28 19:23:14', '2021-05-28 19:23:14'),
-(393, 12, 133, 33, NULL, NULL, 2, '928.00', '0.00', 'C', '2021-05-28 19:49:40', '2021-05-28 19:49:40'),
-(394, 13, 133, 33, NULL, NULL, 2, '0.00', '800.00', 'C', '2021-05-28 19:49:40', '2021-05-28 19:49:40'),
-(395, 14, 133, 33, NULL, NULL, 2, '0.00', '128.00', 'C', '2021-05-28 19:49:40', '2021-05-28 19:49:40'),
-(396, 15, 133, 33, NULL, NULL, 2, '0.00', '800.00', 'C', '2021-05-28 19:49:40', '2021-05-28 19:49:40'),
-(397, 16, 133, 33, NULL, NULL, 2, '800.00', '0.00', 'C', '2021-05-28 19:49:41', '2021-05-28 19:49:41'),
-(398, 4, 134, 33, NULL, NULL, 2, '928.00', '0.00', 'C', '2021-05-28 19:53:35', '2021-05-28 19:53:35'),
-(399, 12, 134, 33, NULL, NULL, 2, '0.00', '928.00', 'C', '2021-05-28 19:53:35', '2021-05-28 19:53:35'),
-(400, 4, 135, 33, NULL, NULL, 2, '928.00', '0.00', 'C', '2021-05-28 19:54:37', '2021-05-28 19:54:37'),
-(401, 12, 135, 33, NULL, NULL, 2, '0.00', '928.00', 'C', '2021-05-28 19:54:37', '2021-05-28 19:54:37'),
-(402, 12, 136, 30, NULL, NULL, 2, '1110.00', '0.00', 'C', '2021-05-28 19:55:03', '2021-05-28 19:55:03'),
-(403, 13, 136, 30, NULL, NULL, 2, '0.00', '1110.00', 'C', '2021-05-28 19:55:03', '2021-05-28 19:55:03'),
-(404, 15, 136, 30, NULL, NULL, 2, '0.00', '1110.00', 'C', '2021-05-28 19:55:03', '2021-05-28 19:55:03'),
-(405, 16, 136, 30, NULL, NULL, 2, '1110.00', '0.00', 'C', '2021-05-28 19:55:03', '2021-05-28 19:55:03'),
-(406, 4, 137, 30, NULL, NULL, 2, '1110.00', '0.00', 'C', '2021-05-28 19:55:40', '2021-05-28 19:55:40'),
-(407, 12, 137, 30, NULL, NULL, 2, '0.00', '1110.00', 'C', '2021-05-28 19:55:40', '2021-05-28 19:55:40'),
-(408, 4, NULL, NULL, NULL, 4, 2, '0.00', '450.00', 'C', '2021-05-31 16:01:09', '2021-05-31 16:01:09'),
-(409, 6, NULL, NULL, NULL, 4, 2, '450.00', '0.00', 'C', '2021-05-31 16:01:09', '2021-05-31 16:01:09'),
-(410, 4, NULL, NULL, NULL, 5, 2, '0.00', '500.00', 'C', '2021-05-31 16:02:48', '2021-05-31 16:02:48'),
-(411, 6, NULL, NULL, NULL, 5, 2, '500.00', '0.00', 'C', '2021-05-31 16:02:48', '2021-05-31 16:02:48'),
-(412, 8, NULL, NULL, NULL, 6, 2, '0.00', '200.00', 'C', '2021-05-31 16:44:40', '2021-05-31 16:44:40'),
-(413, 4, NULL, NULL, NULL, 6, 2, '200.00', '0.00', 'C', '2021-05-31 16:44:40', '2021-05-31 16:44:40'),
-(414, 8, NULL, NULL, NULL, 7, 2, '0.00', '300.00', 'C', '2021-05-31 16:45:32', '2021-05-31 16:45:32'),
-(415, 4, NULL, NULL, NULL, 7, 2, '300.00', '0.00', 'C', '2021-05-31 16:45:32', '2021-05-31 16:45:32'),
-(416, 4, NULL, NULL, NULL, 8, 2, '0.00', '400.00', 'C', '2021-05-31 16:47:35', '2021-05-31 16:47:35'),
-(417, 8, NULL, NULL, NULL, 8, 2, '400.00', '0.00', 'C', '2021-05-31 16:47:35', '2021-05-31 16:47:35'),
-(418, 8, NULL, NULL, NULL, 9, 2, '0.00', '1000.00', 'C', '2021-05-31 16:48:41', '2021-05-31 16:48:41'),
-(419, 4, NULL, NULL, NULL, 9, 2, '1000.00', '0.00', 'C', '2021-05-31 16:48:41', '2021-05-31 16:48:41'),
-(420, 6, NULL, NULL, NULL, 10, 2, '0.00', '2000.00', 'C', '2021-05-31 18:22:45', '2021-05-31 18:22:45'),
-(421, 4, NULL, NULL, NULL, 10, 2, '2000.00', '0.00', 'C', '2021-05-31 18:22:45', '2021-05-31 18:22:45'),
-(422, 7, NULL, NULL, NULL, 11, 2, '0.00', '7000.00', 'C', '2021-05-31 18:23:38', '2021-05-31 18:23:38'),
-(423, 4, NULL, NULL, NULL, 11, 2, '7000.00', '0.00', 'C', '2021-05-31 18:23:38', '2021-05-31 18:23:38'),
-(424, 4, NULL, NULL, NULL, 12, 2, '0.00', '2000.00', 'C', '2021-05-31 18:29:05', '2021-05-31 18:29:05'),
-(425, 6, NULL, NULL, NULL, 12, 2, '2000.00', '0.00', 'C', '2021-05-31 18:29:05', '2021-05-31 18:29:05'),
-(426, 4, NULL, NULL, NULL, 13, 2, '0.00', '3000.00', 'C', '2021-05-31 18:29:34', '2021-05-31 18:29:34'),
-(427, 6, NULL, NULL, NULL, 13, 2, '3000.00', '0.00', 'C', '2021-05-31 18:29:34', '2021-05-31 18:29:34'),
-(428, 4, NULL, NULL, NULL, 14, 2, '0.00', '1000.00', 'C', '2021-05-31 18:43:33', '2021-05-31 18:43:33'),
-(429, 6, NULL, NULL, NULL, 14, 2, '1000.00', '0.00', 'C', '2021-05-31 18:43:33', '2021-05-31 18:43:33'),
-(430, 4, NULL, NULL, NULL, 15, 2, '0.00', '6000.00', 'C', '2021-05-31 18:44:17', '2021-05-31 18:44:17'),
-(431, 6, NULL, NULL, NULL, 15, 2, '6000.00', '0.00', 'C', '2021-05-31 18:44:17', '2021-05-31 18:44:17'),
-(432, 5, 79, NULL, NULL, NULL, 2, '600.00', '0.00', 'C', '2021-06-02 12:48:45', '2021-06-02 12:48:45'),
-(433, 7, 79, NULL, NULL, NULL, 2, '0.00', '600.00', 'C', '2021-06-02 12:50:59', '2021-06-02 12:50:59'),
-(434, 10, 79, NULL, NULL, NULL, 2, '960.00', '0.00', 'C', '2021-06-02 13:21:47', '2021-06-02 13:21:47'),
-(435, 10, 79, NULL, NULL, NULL, 2, '0.00', '960.00', 'C', '2021-06-02 13:22:02', '2021-06-02 13:22:02'),
-(436, 15, 138, NULL, 22, NULL, 2, '2220.00', '0.00', 'C', '2021-06-02 14:07:05', '2021-06-02 14:07:05'),
-(437, 21, 138, NULL, 22, NULL, 2, '355.20', '0.00', 'C', '2021-06-02 14:07:05', '2021-06-02 14:07:05'),
-(438, 20, 138, NULL, 22, NULL, 2, '0.00', '2575.20', 'C', '2021-06-02 14:07:05', '2021-06-02 14:07:05'),
-(439, 12, 139, 35, NULL, NULL, 2, '1110.00', '0.00', 'C', '2021-06-02 14:33:27', '2021-06-02 14:33:27'),
-(440, 13, 139, 35, NULL, NULL, 2, '0.00', '1110.00', 'C', '2021-06-02 14:33:27', '2021-06-02 14:33:27'),
-(441, 15, 139, 35, NULL, NULL, 2, '0.00', '1110.00', 'C', '2021-06-02 14:33:27', '2021-06-02 14:33:27'),
-(442, 16, 139, 35, NULL, NULL, 2, '1110.00', '0.00', 'C', '2021-06-02 14:33:27', '2021-06-02 14:33:27');
 
 -- --------------------------------------------------------
 
@@ -565,8 +515,8 @@ CREATE TABLE `employees` (
   `estado_id` bigint(20) UNSIGNED NOT NULL,
   `municipio_id` bigint(20) UNSIGNED NOT NULL,
   `parroquia_id` bigint(20) UNSIGNED NOT NULL,
-  `id_empleado` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `branch_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `id_empleado` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `apellidos` varchar(160) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nombres` varchar(160) COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_ingreso` date NOT NULL,
@@ -579,21 +529,18 @@ CREATE TABLE `employees` (
   `acumulado_prestaciones` double(64,2) NOT NULL,
   `acumulado_utilidades` double(64,2) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code_employee` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `amount_utilities` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `code_employee` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `amount_utilities` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `employees`
 --
 
-INSERT INTO `employees` (`id`, `position_id`, `salary_types_id`, `profession_id`, `estado_id`, `municipio_id`, `parroquia_id`, `id_empleado`, `branch_id`, `apellidos`, `nombres`, `fecha_ingreso`, `fecha_egreso`, `fecha_nacimiento`, `direccion`, `monto_pago`, `email`, `telefono1`, `acumulado_prestaciones`, `acumulado_utilidades`, `status`, `created_at`, `updated_at`, `code_employee`, `amount_utilities`) VALUES
-(2, 1, 1, 1, 6, 601, 60104, '5464', NULL, 'asd', 'Carlos', '2021-04-14', NULL, '2021-04-18', 'aaaa', 11.00, 'dscds@asds.com', '6484', 16.00, 1651.00, '1', '2021-04-14 19:01:09', '2021-04-14 19:06:48', '777', 'Mi'),
-(3, 1, 1, 2, 1, 101, 10116, 'V-11.212.322', NULL, 'prueba', 'prueba', '2021-05-03', NULL, '1983-06-08', 'plaza', 400.00, 'aaaa@aaaa.com', '06561561', 1.00, 80.00, '1', '2021-05-03 15:57:40', '2021-05-03 15:57:40', '23', 'Ma'),
-(4, 1, 1, 1, 1, 101, 10104, 'V56151', NULL, 'asd', 'asd', '2021-05-03', NULL, '2021-05-07', 'Caracas', 6262.00, 'aa11aa@aaaa.com', '62662', 1.00, 1.00, '1', '2021-05-03 16:45:10', '2021-05-03 16:45:10', '1313', 'Ma'),
-(5, 1, 1, 1, 1, 101, 10116, '84.407.589', 2, 'Freitas', 'Carlos', '2021-06-02', NULL, '1997-09-09', 'PLAZA VENEZUELA', 1561515.00, 'cefreitas.16@gmail.com', '0424 204-1615', 151561.56, 6516.51, '1', '2021-06-02 14:00:58', '2021-06-02 14:00:58', 'AF77', 'Ma');
+INSERT INTO `employees` (`id`, `position_id`, `salary_types_id`, `profession_id`, `estado_id`, `municipio_id`, `parroquia_id`, `branch_id`, `id_empleado`, `apellidos`, `nombres`, `fecha_ingreso`, `fecha_egreso`, `fecha_nacimiento`, `direccion`, `monto_pago`, `email`, `telefono1`, `acumulado_prestaciones`, `acumulado_utilidades`, `status`, `code_employee`, `amount_utilities`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 1, 101, 10102, 1, '26.396.591', 'Prueba', 'Primer Empleado', '2021-04-01', NULL, '1997-09-09', 'Fuerzas Armadas', 1561651156.10, 'cefreitas.16@gmail.com', '0414 236-1514', 0.00, 0.00, '1', NULL, 'Ma', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -653,46 +600,17 @@ CREATE TABLE `expenses_and_purchases` (
   `observation` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date` date NOT NULL,
   `date_payment` date DEFAULT NULL,
-  `anticipo` decimal(16,2) DEFAULT NULL,
+  `anticipo` decimal(64,2) DEFAULT NULL,
   `iva_percentage` int(11) DEFAULT NULL,
   `credit_days` int(11) DEFAULT NULL,
-  `base_imponible` decimal(32,2) DEFAULT NULL,
-  `amount` decimal(32,2) DEFAULT NULL,
-  `amount_iva` decimal(32,2) DEFAULT NULL,
-  `amount_with_iva` decimal(32,2) DEFAULT NULL,
+  `base_imponible` decimal(64,2) DEFAULT NULL,
+  `amount` decimal(64,2) DEFAULT NULL,
+  `amount_iva` decimal(64,2) DEFAULT NULL,
+  `amount_with_iva` decimal(64,2) DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `expenses_and_purchases`
---
-
-INSERT INTO `expenses_and_purchases` (`id`, `id_provider`, `id_user`, `invoice`, `serie`, `observation`, `date`, `date_payment`, `anticipo`, `iva_percentage`, `credit_days`, `base_imponible`, `amount`, `amount_iva`, `amount_with_iva`, `status`, `created_at`, `updated_at`) VALUES
-(2, 2, 2, 'aaa', NULL, NULL, '2021-05-24', NULL, NULL, 16, NULL, '28249.00', '28919.00', '4519.84', '33438.84', '1', '2021-05-24 16:15:05', '2021-05-25 19:53:54'),
-(3, 2, 2, NULL, NULL, NULL, '2021-05-25', '2021-05-28', '0.00', 16, NULL, '80300.00', '803.00', '128.48', '931.48', 'C', '2021-05-25 13:26:48', '2021-05-28 18:37:27'),
-(4, 1, 2, NULL, NULL, NULL, '2021-05-25', '2021-05-28', '0.00', 16, NULL, '479000.00', '5690.00', '766.40', '6456.40', 'C', '2021-05-25 15:27:11', '2021-05-28 18:26:10'),
-(5, 1, 2, '1414', '1515', NULL, '2021-05-26', NULL, NULL, 16, 4, '1650.00', '2250.00', '264.00', '2514.00', '1', '2021-05-26 16:41:11', '2021-05-26 18:51:51'),
-(6, 1, 2, '1555', '15151515', 'azulado', '2021-05-27', NULL, NULL, 16, 7, '1344.00', '1344.00', '215.04', '1559.04', '1', '2021-05-27 18:06:39', '2021-05-27 18:09:28'),
-(7, 1, 2, '999', '99999', 'excelente', '2021-05-27', '2021-05-28', '0.00', 16, NULL, '0.00', '2100.00', '0.00', '2100.00', 'C', '2021-05-27 19:25:06', '2021-05-28 14:01:31'),
-(8, 2, 2, '1111', '1111', '1111', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '90000.00', '900.00', '144.00', '1044.00', 'C', '2021-05-28 14:14:27', '2021-05-28 14:30:51'),
-(9, 2, 2, '3333', '3333', '3333', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '120000.00', '1200.00', '192.00', '1392.00', 'C', '2021-05-28 15:18:38', '2021-05-28 15:45:40'),
-(10, 1, 2, '4444', '4444', '4444', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '201000.00', '2010.00', '321.60', '2331.60', 'C', '2021-05-28 15:46:22', '2021-05-28 16:02:29'),
-(11, 2, 2, '5555', '5555', '5555', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '60000.00', '600.00', '96.00', '696.00', 'C', '2021-05-28 16:37:33', '2021-05-28 16:40:26'),
-(12, 1, 2, '6666', '6666', '6666', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '166500.00', '1665.00', '266.40', '1931.40', 'C', '2021-05-28 16:42:13', '2021-05-28 16:42:46'),
-(13, 1, 2, '7777', '7777', '7777', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '90000.00', '900.00', '144.00', '1044.00', 'C', '2021-05-28 16:45:24', '2021-05-28 16:45:59'),
-(14, 2, 2, '8585', '8585', '8585', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '120000.00', '1200.00', '192.00', '1392.00', 'C', '2021-05-28 16:51:48', '2021-05-28 16:52:17'),
-(15, 2, 2, '99', '99', '99', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '150000.00', '1500.00', '240.00', '1740.00', 'C', '2021-05-28 16:54:30', '2021-05-28 16:55:01'),
-(16, 1, 2, '1212', '1212', '1212', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '277500.00', '2775.00', '444.00', '3219.00', 'C', '2021-05-28 16:57:36', '2021-05-28 16:58:39'),
-(17, 2, 2, '25', '25', '25', '2021-05-28', '2021-05-28', '0.00', 12, NULL, '300000.00', '3000.00', '360.00', '3360.00', 'C', '2021-05-28 17:39:13', '2021-05-28 17:42:15'),
-(18, 2, 2, '34324', '23423', '23423', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '300000.00', '3000.00', '480.00', '3480.00', 'C', '2021-05-28 17:43:37', '2021-05-28 17:44:08'),
-(19, 2, 2, '8585', '8585', '8585', '2021-05-28', '2021-05-28', '0.00', 16, NULL, '277500.00', '2775.00', '444.00', '3219.00', 'C', '2021-05-28 17:45:47', '2021-05-28 17:51:45'),
-(20, 1, 2, '2929', '2828', NULL, '2021-05-28', '2021-05-28', '0.00', 16, NULL, '180000.00', '2160.00', '288.00', '2448.00', 'C', '2021-05-28 18:00:28', '2021-05-28 18:03:35'),
-(21, 2, 2, '4242', '434', NULL, '2021-05-28', '2021-05-28', '0.00', 16, 7, '222000.00', '2220.00', '355.20', '2575.20', 'C', '2021-05-28 19:06:52', '2021-05-28 19:23:14'),
-(22, 1, 2, '962', '5161', NULL, '2021-06-02', NULL, NULL, 16, 6, '2220.00', '2220.00', '355.20', '2575.20', '1', '2021-06-02 14:05:21', '2021-06-02 14:07:05'),
-(23, 1, 2, NULL, NULL, NULL, '2021-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '2021-06-02 14:11:26', '2021-06-02 14:11:26'),
-(24, 2, 2, NULL, NULL, NULL, '2021-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '2021-06-02 14:24:39', '2021-06-02 14:24:39');
 
 -- --------------------------------------------------------
 
@@ -703,57 +621,19 @@ INSERT INTO `expenses_and_purchases` (`id`, `id_provider`, `id_user`, `invoice`,
 CREATE TABLE `expenses_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `id_expense` bigint(20) UNSIGNED NOT NULL,
+  `id_user` bigint(20) UNSIGNED NOT NULL,
   `id_inventory` bigint(20) UNSIGNED DEFAULT NULL,
   `id_account` bigint(20) UNSIGNED DEFAULT NULL,
-  `id_user` bigint(20) UNSIGNED DEFAULT NULL,
   `id_branch` bigint(20) UNSIGNED DEFAULT NULL,
   `description` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `exento` tinyint(1) NOT NULL,
   `islr` tinyint(1) NOT NULL,
   `amount` int(11) NOT NULL,
-  `price` decimal(24,2) NOT NULL,
+  `price` decimal(64,2) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `expenses_details`
---
-
-INSERT INTO `expenses_details` (`id`, `id_expense`, `id_inventory`, `id_account`, `id_user`, `id_branch`, `description`, `exento`, `islr`, `amount`, `price`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2, NULL, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 53, '533.00', '1', '2021-05-25 14:47:43', '2021-05-25 14:47:43'),
-(2, 2, NULL, 16, 2, 3, 'Costo de Mercancia', 1, 1, 67, '10.00', '1', '2021-05-25 14:53:52', '2021-05-25 14:53:52'),
-(6, 3, NULL, 16, 2, 2, 'Costo de Mercancia', 0, 0, 23, '33.00', '1', '2021-05-25 15:25:19', '2021-05-25 15:25:19'),
-(7, 3, NULL, 16, 2, NULL, 'Costo de Mercancia', 0, 0, 22, '2.00', '1', '2021-05-25 15:25:50', '2021-05-25 15:25:50'),
-(9, 4, NULL, 16, 2, NULL, 'Costo de Mercancia', 0, 0, 58, '55.00', '1', '2021-05-25 15:37:34', '2021-05-25 15:37:34'),
-(10, 4, NULL, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 4, '400.00', '1', '2021-05-25 17:50:12', '2021-05-25 17:50:12'),
-(11, 4, NULL, 15, 2, NULL, 'Mercancia para la Venta', 1, 1, 9, '100.00', '1', '2021-05-25 17:50:30', '2021-05-25 17:50:30'),
-(12, 5, 1, 15, 2, NULL, 'Cartucho Imp Hp 3221', 0, 0, 2, '555.00', '1', '2021-05-26 17:26:53', '2021-05-26 17:26:53'),
-(13, 5, 2, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 12, '40.00', '1', '2021-05-26 18:18:22', '2021-05-26 18:18:22'),
-(14, 5, 3, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 0, '300.00', '1', '2021-05-26 18:23:42', '2021-05-26 18:23:42'),
-(15, 5, 2, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 2, '30.00', '1', '2021-05-26 18:26:02', '2021-05-26 18:26:02'),
-(16, 5, 3, 15, 2, NULL, 'Mercancia para la Venta', 1, 1, 2, '300.00', '1', '2021-05-26 18:27:00', '2021-05-26 18:27:00'),
-(17, 6, NULL, 16, 2, NULL, 'Costo de Mercancia', 0, 0, 4, '336.00', '1', '2021-05-27 18:08:42', '2021-05-27 18:08:42'),
-(18, 7, 3, 15, 2, NULL, 'Mercancia para la Venta', 1, 1, 7, '300.00', '1', '2021-05-27 19:37:25', '2021-05-27 19:37:25'),
-(19, 8, 3, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 3, '300.00', '1', '2021-05-28 14:29:51', '2021-05-28 14:29:51'),
-(20, 9, 3, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 4, '300.00', '1', '2021-05-28 15:19:24', '2021-05-28 15:19:24'),
-(21, 10, 1, 15, 2, NULL, 'Mercancia para la Venta', 0, 0, 2, '555.00', '1', '2021-05-28 15:46:40', '2021-05-28 15:46:40'),
-(22, 10, 3, 15, 2, NULL, 'Alambre', 0, 0, 3, '300.00', '1', '2021-05-28 16:01:51', '2021-05-28 16:01:51'),
-(23, 11, 3, 15, 2, NULL, 'Alambre', 0, 0, 2, '300.00', '1', '2021-05-28 16:37:53', '2021-05-28 16:37:53'),
-(24, 12, 1, 15, 2, NULL, 'Cartucho Imp Hp 3221', 0, 0, 3, '555.00', '1', '2021-05-28 16:42:29', '2021-05-28 16:42:29'),
-(25, 13, 3, 15, 2, NULL, 'Alambre', 0, 0, 3, '300.00', '1', '2021-05-28 16:45:38', '2021-05-28 16:45:38'),
-(26, 14, 3, 15, 2, NULL, 'Alambre', 0, 0, 4, '300.00', '1', '2021-05-28 16:52:04', '2021-05-28 16:52:04'),
-(27, 15, 3, 15, 2, NULL, 'Alambre', 0, 0, 5, '300.00', '1', '2021-05-28 16:54:43', '2021-05-28 16:54:43'),
-(28, 16, 1, 15, 2, NULL, 'Cartucho Imp Hp 3221', 0, 0, 5, '555.00', '1', '2021-05-28 16:57:53', '2021-05-28 16:57:53'),
-(29, 17, 3, 15, 2, NULL, 'Alambre', 0, 0, 10, '300.00', '1', '2021-05-28 17:41:25', '2021-05-28 17:41:25'),
-(30, 18, 3, 15, 2, NULL, 'Alambre', 0, 0, 10, '300.00', '1', '2021-05-28 17:43:53', '2021-05-28 17:43:53'),
-(31, 19, 1, 15, 2, NULL, 'Cartucho Imp Hp 3221', 0, 0, 5, '555.00', '1', '2021-05-28 17:46:00', '2021-05-28 17:46:00'),
-(32, 20, 3, 15, 2, NULL, 'Alambre', 0, 0, 6, '300.00', '1', '2021-05-28 18:02:02', '2021-05-28 18:02:02'),
-(33, 20, 2, 15, 2, NULL, 'lapices', 1, 0, 12, '30.00', '1', '2021-05-28 18:02:25', '2021-05-28 18:02:25'),
-(34, 21, 1, 15, 2, NULL, 'Cartucho Imp Hp 3221', 0, 0, 4, '555.00', '1', '2021-05-28 19:07:22', '2021-05-28 19:07:22'),
-(35, 22, 1, 15, 2, NULL, 'Cartucho Imp Hp 3221', 0, 0, 4, '555.00', '1', '2021-06-02 14:05:49', '2021-06-02 14:05:49'),
-(36, 23, 3, 15, 2, NULL, 'Alambre', 0, 0, 3, '300.00', '1', '2021-06-02 14:11:51', '2021-06-02 14:11:51');
 
 -- --------------------------------------------------------
 
@@ -766,59 +646,12 @@ CREATE TABLE `expense_payments` (
   `id_expense` bigint(20) UNSIGNED NOT NULL,
   `id_account` bigint(20) UNSIGNED DEFAULT NULL,
   `payment_type` int(11) NOT NULL,
-  `amount` decimal(16,2) NOT NULL,
+  `amount` decimal(64,2) NOT NULL,
   `reference` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `expense_payments`
---
-
-INSERT INTO `expense_payments` (`id`, `id_expense`, `id_account`, `payment_type`, `amount`, `reference`, `status`, `created_at`, `updated_at`) VALUES
-(1, 7, NULL, 2, '2100.00', NULL, '1', '2021-05-28 13:43:47', '2021-05-28 13:43:47'),
-(2, 7, NULL, 2, '2100.00', NULL, '1', '2021-05-28 14:00:19', '2021-05-28 14:00:19'),
-(3, 7, NULL, 2, '2100.00', NULL, '1', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(4, 8, 8, 11, '1044.00', '1111', '1', '2021-05-28 14:30:51', '2021-05-28 14:30:51'),
-(5, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:34:07', '2021-05-28 15:34:07'),
-(6, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:35:34', '2021-05-28 15:35:34'),
-(7, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:35:54', '2021-05-28 15:35:54'),
-(8, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:36:45', '2021-05-28 15:36:45'),
-(9, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:37:13', '2021-05-28 15:37:13'),
-(10, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:37:29', '2021-05-28 15:37:29'),
-(11, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:37:48', '2021-05-28 15:37:48'),
-(12, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:37:57', '2021-05-28 15:37:57'),
-(13, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:38:38', '2021-05-28 15:38:38'),
-(14, 9, NULL, 3, '1392.00', NULL, '1', '2021-05-28 15:45:39', '2021-05-28 15:45:39'),
-(15, 10, 7, 11, '2331.60', '444', '1', '2021-05-28 16:02:29', '2021-05-28 16:02:29'),
-(16, 11, NULL, 3, '696.00', NULL, '1', '2021-05-28 16:38:15', '2021-05-28 16:38:15'),
-(17, 11, NULL, 3, '696.00', NULL, '1', '2021-05-28 16:39:03', '2021-05-28 16:39:03'),
-(18, 11, NULL, 3, '696.00', NULL, '1', '2021-05-28 16:39:43', '2021-05-28 16:39:43'),
-(19, 11, NULL, 3, '696.00', NULL, '1', '2021-05-28 16:40:26', '2021-05-28 16:40:26'),
-(20, 12, NULL, 2, '1931.40', NULL, '1', '2021-05-28 16:42:45', '2021-05-28 16:42:45'),
-(21, 13, NULL, 7, '1044.00', NULL, '1', '2021-05-28 16:45:59', '2021-05-28 16:45:59'),
-(22, 14, NULL, 7, '1392.00', NULL, '1', '2021-05-28 16:52:17', '2021-05-28 16:52:17'),
-(23, 15, 6, 5, '1740.00', '9999', '1', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(24, 16, NULL, 2, '3000.00', NULL, '1', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(25, 16, 6, 11, '219.00', '2626', '1', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(26, 17, 8, 5, '1000.00', '111', '1', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(27, 17, NULL, 2, '1000.00', NULL, '1', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(28, 17, 7, 9, '1360.00', NULL, '1', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(29, 18, 7, 1, '3480.00', '1232', '1', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(30, 19, NULL, 3, '3219.00', NULL, '1', '2021-05-28 17:46:10', '2021-05-28 17:46:10'),
-(31, 19, NULL, 3, '3219.00', NULL, '1', '2021-05-28 17:46:21', '2021-05-28 17:46:21'),
-(32, 19, NULL, 3, '3219.00', NULL, '1', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(33, 19, NULL, 3, '3219.00', NULL, '1', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(34, 19, NULL, 3, '3219.00', NULL, '1', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(35, 19, NULL, 3, '3219.00', NULL, '1', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(36, 20, NULL, 3, '1000.00', NULL, '1', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(37, 20, 6, 5, '1000.00', '1212', '1', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(38, 20, NULL, 7, '448.00', NULL, '1', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(39, 4, 6, 1, '6456.40', '8585', '1', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(40, 3, NULL, 2, '931.48', NULL, '1', '2021-05-28 18:37:26', '2021-05-28 18:37:26'),
-(41, 21, NULL, 2, '2575.20', NULL, '1', '2021-05-28 19:23:14', '2021-05-28 19:23:14');
 
 -- --------------------------------------------------------
 
@@ -833,6 +666,33 @@ CREATE TABLE `failed_jobs` (
   `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `general_nomina`
+--
+
+CREATE TABLE `general_nomina` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `date_begin` date NOT NULL,
+  `date_end` date NOT NULL,
+  `tax_unit` decimal(8,2) NOT NULL,
+  `days_utilities_minimun` int(11) NOT NULL,
+  `days_utilities_maximun` int(11) NOT NULL,
+  `vacation_bonus_days` int(11) NOT NULL,
+  `sso` decimal(8,2) NOT NULL,
+  `faov` decimal(8,2) NOT NULL,
+  `pie` decimal(8,2) NOT NULL,
+  `sso_company` decimal(8,2) NOT NULL,
+  `faov_company` decimal(8,2) NOT NULL,
+  `pie_company` decimal(8,2) NOT NULL,
+  `days_benefits` int(11) NOT NULL,
+  `cestaticket` int(11) NOT NULL,
+  `cestaticket_amount` decimal(64,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -853,123 +713,6 @@ CREATE TABLE `header_vouchers` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `header_vouchers`
---
-
-INSERT INTO `header_vouchers` (`id`, `reference`, `description`, `date`, `setting`, `centro_cos`, `status`, `created_at`, `updated_at`) VALUES
-(29, NULL, 'Cobro de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 15:42:51', '2021-05-18 15:42:51'),
-(30, NULL, 'Ventas de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 15:42:51', '2021-05-18 15:42:51'),
-(31, NULL, 'Cobro de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 15:47:54', '2021-05-18 15:47:54'),
-(32, NULL, 'Cobro de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 15:49:47', '2021-05-18 15:49:47'),
-(33, NULL, 'Ventas de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 15:49:47', '2021-05-18 15:49:47'),
-(34, NULL, 'Cobro de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 16:15:32', '2021-05-18 16:15:32'),
-(35, NULL, 'Ventas de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 16:15:32', '2021-05-18 16:15:32'),
-(36, NULL, 'Cobro de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 16:17:57', '2021-05-18 16:17:57'),
-(37, NULL, 'Ventas de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 16:17:57', '2021-05-18 16:17:57'),
-(38, NULL, 'Cobro de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 18:27:49', '2021-05-18 18:27:49'),
-(39, NULL, 'Ventas de Bienes o servicios.', '2021-05-18', NULL, NULL, '1', '2021-05-18 18:27:49', '2021-05-18 18:27:49'),
-(40, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 16:30:15', '2021-05-19 16:30:15'),
-(41, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 16:30:16', '2021-05-19 16:30:16'),
-(42, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:24:47', '2021-05-19 17:24:47'),
-(43, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:24:48', '2021-05-19 17:24:48'),
-(44, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:29:07', '2021-05-19 17:29:07'),
-(45, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:29:07', '2021-05-19 17:29:07'),
-(46, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:29:28', '2021-05-19 17:29:28'),
-(47, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:29:29', '2021-05-19 17:29:29'),
-(48, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:34:08', '2021-05-19 17:34:08'),
-(49, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:34:08', '2021-05-19 17:34:08'),
-(50, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:54:20', '2021-05-19 17:54:20'),
-(51, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:56:22', '2021-05-19 17:56:22'),
-(52, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:57:04', '2021-05-19 17:57:04'),
-(53, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:57:05', '2021-05-19 17:57:05'),
-(54, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:57:44', '2021-05-19 17:57:44'),
-(55, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:57:44', '2021-05-19 17:57:44'),
-(56, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:58:02', '2021-05-19 17:58:02'),
-(57, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 17:58:02', '2021-05-19 17:58:02'),
-(58, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:00:49', '2021-05-19 18:00:49'),
-(59, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:00:49', '2021-05-19 18:00:49'),
-(60, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:03:50', '2021-05-19 18:03:50'),
-(61, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:03:50', '2021-05-19 18:03:50'),
-(62, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:08:53', '2021-05-19 18:08:53'),
-(63, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:11:02', '2021-05-19 18:11:02'),
-(64, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:11:02', '2021-05-19 18:11:02'),
-(65, NULL, 'Cobro de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:16:07', '2021-05-19 18:16:07'),
-(66, NULL, 'Ventas de Bienes o servicios.', '2021-05-19', NULL, NULL, '1', '2021-05-19 18:16:07', '2021-05-19 18:16:07'),
-(67, NULL, 'Cobro de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 15:40:59', '2021-05-20 15:40:59'),
-(68, NULL, 'Ventas de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 15:41:02', '2021-05-20 15:41:02'),
-(69, NULL, 'Cobro de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 15:52:32', '2021-05-20 15:52:32'),
-(70, NULL, 'Cobro de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 15:53:44', '2021-05-20 15:53:44'),
-(71, NULL, 'Ventas de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 15:53:45', '2021-05-20 15:53:45'),
-(72, NULL, 'Cobro de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 16:02:15', '2021-05-20 16:02:15'),
-(73, NULL, 'Cobro de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 16:05:36', '2021-05-20 16:05:36'),
-(74, NULL, 'Ventas de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 16:05:37', '2021-05-20 16:05:37'),
-(75, NULL, 'Cobro de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 16:09:04', '2021-05-20 16:09:04'),
-(76, NULL, 'Ventas de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 16:09:04', '2021-05-20 16:09:04'),
-(77, NULL, 'Cobro de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 19:04:20', '2021-05-20 19:04:20'),
-(78, NULL, 'Ventas de Bienes o servicios.', '2021-05-20', NULL, NULL, '1', '2021-05-20 19:04:20', '2021-05-20 19:04:20'),
-(79, 15, 'Prueba', '2021-05-20', NULL, NULL, 'U', '2021-05-20 19:47:45', '2021-05-20 19:47:45'),
-(80, NULL, 'Cobro de Bienes o servicios.', '2021-05-24', NULL, NULL, '1', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(81, NULL, 'Ventas de Bienes o servicios.', '2021-05-24', NULL, NULL, '1', '2021-05-24 13:33:33', '2021-05-24 13:33:33'),
-(82, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 13:43:47', '2021-05-28 13:43:47'),
-(83, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 14:00:19', '2021-05-28 14:00:19'),
-(84, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(85, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 14:01:31', '2021-05-28 14:01:31'),
-(86, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 14:30:51', '2021-05-28 14:30:51'),
-(87, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:34:07', '2021-05-28 15:34:07'),
-(88, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:35:34', '2021-05-28 15:35:34'),
-(89, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:35:54', '2021-05-28 15:35:54'),
-(90, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:36:45', '2021-05-28 15:36:45'),
-(91, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:37:13', '2021-05-28 15:37:13'),
-(92, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:37:29', '2021-05-28 15:37:29'),
-(93, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:37:48', '2021-05-28 15:37:48'),
-(94, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:37:57', '2021-05-28 15:37:57'),
-(95, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:38:38', '2021-05-28 15:38:38'),
-(96, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 15:45:39', '2021-05-28 15:45:39'),
-(97, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:02:29', '2021-05-28 16:02:29'),
-(98, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:38:14', '2021-05-28 16:38:14'),
-(99, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:39:03', '2021-05-28 16:39:03'),
-(100, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:39:43', '2021-05-28 16:39:43'),
-(101, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:40:26', '2021-05-28 16:40:26'),
-(102, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:42:45', '2021-05-28 16:42:45'),
-(103, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:45:59', '2021-05-28 16:45:59'),
-(104, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:52:17', '2021-05-28 16:52:17'),
-(105, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(106, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:55:01', '2021-05-28 16:55:01'),
-(107, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(108, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 16:58:39', '2021-05-28 16:58:39'),
-(109, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(110, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:42:15', '2021-05-28 17:42:15'),
-(111, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(112, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:44:08', '2021-05-28 17:44:08'),
-(113, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:46:10', '2021-05-28 17:46:10'),
-(114, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:46:11', '2021-05-28 17:46:11'),
-(115, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:46:20', '2021-05-28 17:46:20'),
-(116, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:46:21', '2021-05-28 17:46:21'),
-(117, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(118, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:46:46', '2021-05-28 17:46:46'),
-(119, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(120, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:50:29', '2021-05-28 17:50:29'),
-(121, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(122, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:51:13', '2021-05-28 17:51:13'),
-(123, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(124, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 17:51:45', '2021-05-28 17:51:45'),
-(125, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(126, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 18:03:35', '2021-05-28 18:03:35'),
-(127, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(128, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 18:26:10', '2021-05-28 18:26:10'),
-(129, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 18:37:26', '2021-05-28 18:37:26'),
-(130, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 18:37:26', '2021-05-28 18:37:26'),
-(131, NULL, 'Compras de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 19:21:47', '2021-05-28 19:21:47'),
-(132, NULL, 'Pago de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 19:23:14', '2021-05-28 19:23:14'),
-(133, NULL, 'Ventas de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 19:49:40', '2021-05-28 19:49:40'),
-(134, NULL, 'Cobro de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 19:53:34', '2021-05-28 19:53:34'),
-(135, NULL, 'Cobro de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 19:54:37', '2021-05-28 19:54:37'),
-(136, NULL, 'Ventas de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 19:55:03', '2021-05-28 19:55:03'),
-(137, NULL, 'Cobro de Bienes o servicios.', '2021-05-28', NULL, NULL, '1', '2021-05-28 19:55:40', '2021-05-28 19:55:40'),
-(138, NULL, 'Compras de Bienes o servicios.', '2021-06-02', NULL, NULL, '1', '2021-06-02 14:07:05', '2021-06-02 14:07:05'),
-(139, NULL, 'Ventas de Bienes o servicios.', '2021-06-02', NULL, NULL, '1', '2021-06-02 14:33:27', '2021-06-02 14:33:27');
-
 -- --------------------------------------------------------
 
 --
@@ -980,20 +723,12 @@ CREATE TABLE `historic_transports` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `employee_id` bigint(20) UNSIGNED NOT NULL,
   `transport_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `date_begin` date NOT NULL,
   `date_end` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `historic_transports`
---
-
-INSERT INTO `historic_transports` (`id`, `employee_id`, `transport_id`, `date_begin`, `date_end`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 2, 1, '2021-04-15', NULL, '2021-04-15 13:11:08', '2021-04-15 13:11:08', 2),
-(2, 2, 1, '2021-04-15', NULL, '2021-04-15 13:13:40', '2021-04-15 13:13:40', 2);
 
 -- --------------------------------------------------------
 
@@ -1005,20 +740,11 @@ CREATE TABLE `index_bcvs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `period` varchar(4) COLLATE utf8mb4_unicode_ci NOT NULL,
   `month` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `rate` decimal(10,2) NOT NULL,
+  `rate` decimal(64,2) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `index_bcvs`
---
-
-INSERT INTO `index_bcvs` (`id`, `period`, `month`, `rate`, `status`, `created_at`, `updated_at`) VALUES
-(1, '2021', '3', '2.00', '1', '2021-04-09 19:15:45', '2021-04-09 19:15:45'),
-(2, '2022', '1', '17.80', '1', '2021-04-09 19:16:05', '2021-04-09 19:16:05'),
-(3, '2022', '10', '16.90', '1', '2021-04-09 19:19:54', '2021-04-09 19:22:57');
 
 -- --------------------------------------------------------
 
@@ -1039,7 +765,9 @@ CREATE TABLE `inventary_types` (
 --
 
 INSERT INTO `inventary_types` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'PRECIO DE ULTIMA COMPRA', '1', '2021-06-02 15:38:06', '2021-06-02 15:38:06');
+(1, 'PRECIO DE ULTIMA COMPRA', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(2, 'PRECIO PROMEDIO', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(3, 'LIFO', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30');
 
 -- --------------------------------------------------------
 
@@ -1050,6 +778,7 @@ INSERT INTO `inventary_types` (`id`, `description`, `status`, `created_at`, `upd
 CREATE TABLE `inventories` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
+  `id_user` bigint(20) UNSIGNED NOT NULL,
   `code` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` int(11) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1061,12 +790,8 @@ CREATE TABLE `inventories` (
 -- Volcado de datos para la tabla `inventories`
 --
 
-INSERT INTO `inventories` (`id`, `product_id`, `code`, `amount`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, '666', 128, '1', '2021-04-15 13:34:58', '2021-05-28 19:55:40'),
-(2, 2, '96369', 32, '1', '2021-05-07 18:46:45', '2021-05-28 19:54:37'),
-(3, 6, '615asd1', 98, '1', '2021-05-19 13:56:36', '2021-05-28 18:03:35'),
-(4, 7, 'AEU77', 60, '1', '2021-06-01 19:19:31', '2021-06-01 19:20:25'),
-(5, 1, 'asd', 40, '1', '2021-06-01 19:24:43', '2021-06-02 14:18:27');
+INSERT INTO `inventories` (`id`, `product_id`, `id_user`, `code`, `amount`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '1001', 100, '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -1080,65 +805,6 @@ CREATE TABLE `migrations` (
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `migrations`
---
-
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2021_03_31_125525_create_roles_table', 1),
-(3, '2021_04_06_162758_create_positions_table', 1),
-(4, '2021_04_06_165000_create_academiclevels_table', 1),
-(5, '2021_04_06_173525_create_professions_table', 1),
-(6, '2021_04_06_190904_create_salary_types_table', 1),
-(7, '2021_03_31_125527_create_failed_jobs_table', 1),
-(8, '2021_03_31_125526_create_users_table', 1),
-(9, '2021_03_31_125528_create_password_resets_table', 1),
-(10, '2021_04_07_142942_create_employees_table', 1),
-(14, '2020_04_09_020000_create_estados_table', 1),
-(15, '2020_04_09_020001_create_municipios_table', 1),
-(16, '2020_04_09_020003_create_parroquias_table', 1),
-(17, '2021_04_08_125017_create_segments_table', 4),
-(19, '2021_04_08_130719_create_segment_subs_table', 5),
-(20, '2021_04_08_105442_create_units_of_measure_table', 6),
-(24, '2021_04_08_143248_create_provider_table', 9),
-(25, '2021_04_08_143248_create_providers_table', 10),
-(26, '2021_04_08_114150_create_branches_table', 11),
-(28, '2021_04_09_115043_create_nomina_types_table', 12),
-(30, '2021_04_09_133320_create_payment_types_table', 13),
-(31, '2021_04_09_143916_create_index_bcvs_table', 14),
-(33, '2021_04_12_113722_create_comision_types_table', 16),
-(34, '2021_05_12_112909_create_vendors_table', 17),
-(37, '2021_04_08_130719_create_subsegments_table', 20),
-(38, '2021_04_09_113234_create_products_table', 21),
-(39, '2021_04_13_141126_create_inventories_table', 21),
-(40, '2021_04_14_111736_create_modelos_table', 22),
-(41, '2021_04_14_114510_create_colors_table', 23),
-(42, '2021_04_14_115422_create_transports_table', 24),
-(43, '2021_04_12_085248_create_receipt_vacations_table', 25),
-(44, '2021_04_14_141750_create_historic_transports_table', 25),
-(45, '2021_04_15_112909_create_vendors_table', 1),
-(49, '2021_04_20_133451_create_header_vouchers_table', 28),
-(61, '2021_04_16_133858_create_accounts_table', 31),
-(66, '2021_04_30_105311_create_nominas_table', 34),
-(67, '2021_04_30_131037_create_nomina_concepts_table', 35),
-(68, '2021_05_03_135853_create_nomina_calculations_table', 36),
-(71, '2021_05_11_110634_create_tasas_table', 38),
-(72, '2021_04_08_113124_create_clients_table', 39),
-(73, '2021_04_22_153243_create_bank_movements_table', 39),
-(74, '2021_04_23_094734_create_quotations_table', 39),
-(76, '2021_04_26_140253_create_quotation_payments_table', 39),
-(78, '2021_05_12_141114_create_anticipos_table', 40),
-(79, '2021_04_20_151425_create_detail_vouchers_table', 41),
-(80, '2021_04_26_112502_create_quotation_products_table', 42),
-(82, '2021_05_24_102447_create_expenses_and_purchases_table', 43),
-(85, '2021_05_24_105114_create_expenses_details_table', 44),
-(86, '2021_05_27_135935_create_expense_payments_table', 45),
-(87, '2021_05_31_110054_create_bank_vouchers_table', 46),
-(88, '2021_04_06_150835_create_rate_types_table', 47),
-(89, '2021_04_06_150836_create_inventary_types_table', 47),
-(90, '2021_04_06_150837_create_companies_table', 48),
-(91, '2021_06_02_144105_create_nomina_formulas_table', 49);
-
 -- --------------------------------------------------------
 
 --
@@ -1147,7 +813,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `modelos` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1158,8 +824,8 @@ CREATE TABLE `modelos` (
 --
 
 INSERT INTO `modelos` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Comisión', '0', '2021-04-14 15:40:30', '2021-04-14 15:44:12'),
-(2, 'Amarillo', '1', '2021-04-14 15:52:07', '2021-04-14 15:52:07');
+(1, 'Chevrolet', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(2, 'Toyota', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31');
 
 -- --------------------------------------------------------
 
@@ -1529,19 +1195,10 @@ CREATE TABLE `nominas` (
   `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date_begin` date NOT NULL,
   `date_end` date DEFAULT NULL,
+  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `nominas`
---
-
-INSERT INTO `nominas` (`id`, `id_profession`, `description`, `type`, `date_begin`, `date_end`, `created_at`, `updated_at`, `status`) VALUES
-(1, 1, 'Sueldo', 'Primera Quincena', '2021-04-30', '2021-05-01', '2021-04-30 16:05:53', '2021-04-30 17:02:08', '0'),
-(2, 2, 'prueba2', 'Primera Quincena', '2021-05-03', NULL, '2021-05-03 15:59:57', '2021-05-03 15:59:57', '1'),
-(3, 1, 'Nomina nue', 'Semanal', '2021-05-03', NULL, '2021-05-03 16:41:45', '2021-05-04 15:48:10', '1');
 
 -- --------------------------------------------------------
 
@@ -1556,31 +1213,15 @@ CREATE TABLE `nomina_calculations` (
   `id_employee` bigint(20) UNSIGNED NOT NULL,
   `number_receipt` int(11) NOT NULL,
   `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `amount` decimal(16,2) NOT NULL,
-  `hours` int(11) NOT NULL,
-  `days` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `voucher` int(11) NOT NULL,
+  `amount` decimal(64,2) NOT NULL,
+  `hours` int(11) DEFAULT NULL,
+  `days` int(11) DEFAULT NULL,
+  `cantidad` decimal(64,2) DEFAULT NULL,
+  `voucher` int(11) DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `nomina_calculations`
---
-
-INSERT INTO `nomina_calculations` (`id`, `id_nomina`, `id_nomina_concept`, `id_employee`, `number_receipt`, `type`, `amount`, `hours`, `days`, `cantidad`, `voucher`, `status`, `created_at`, `updated_at`) VALUES
-(1, 3, 3, 2, 0, 'No', '60.00', 6, 6, 6, 0, '1', '2021-05-04 14:54:43', '2021-05-04 14:54:43'),
-(2, 3, 3, 2, 0, 'No', '777.00', 777, 777, 777, 0, '1', '2021-05-04 14:56:24', '2021-05-04 14:56:24'),
-(3, 3, 2, 2, 0, 'No', '450.00', 45, 45, 45, 0, '1', '2021-05-04 15:08:41', '2021-05-04 15:08:41'),
-(4, 3, 2, 2, 0, 'No', '120.00', 12, 12, 12, 0, '1', '2021-05-04 15:09:57', '2021-05-04 15:09:57'),
-(5, 3, 4, 2, 0, 'No', '550.00', 55, 55, 55, 0, '1', '2021-05-04 15:19:30', '2021-05-04 15:19:30'),
-(6, 3, 1, 2, 0, 'No', '990.00', 999, 99, 9, 0, '1', '2021-05-04 15:31:21', '2021-05-04 15:31:21'),
-(7, 3, 1, 2, 0, 'No', '78000.00', 7800, 7800, 7800, 0, '1', '2021-05-04 15:35:47', '2021-05-04 15:35:47'),
-(8, 3, 4, 4, 0, 'No', '5550.00', 55, 5, 5, 0, '1', '2021-05-04 16:05:06', '2021-05-04 16:05:06'),
-(9, 3, 1, 4, 0, 'No', '5000000.00', 5000, 5000, 5000, 0, '1', '2021-05-04 16:05:52', '2021-05-04 16:05:52'),
-(10, 3, 3, 2, 0, 'No', '150.00', 6, 5, 15, 0, '1', '2021-06-02 18:16:36', '2021-06-02 18:16:36');
 
 -- --------------------------------------------------------
 
@@ -1590,31 +1231,53 @@ INSERT INTO `nomina_calculations` (`id`, `id_nomina`, `id_nomina_concept`, `id_e
 
 CREATE TABLE `nomina_concepts` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `id_formula_q` bigint(20) UNSIGNED DEFAULT NULL,
+  `id_formula_m` bigint(20) UNSIGNED DEFAULT NULL,
+  `id_formula_s` bigint(20) UNSIGNED DEFAULT NULL,
+  `id_account_debe` bigint(20) UNSIGNED DEFAULT NULL,
+  `id_account_haber` bigint(20) UNSIGNED DEFAULT NULL,
   `abbreviation` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `order` int(11) NOT NULL,
   `description` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sign` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `calculate` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `formula_m` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `formula_s` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `formula_q` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `minimum` decimal(16,2) DEFAULT NULL,
-  `maximum` decimal(16,2) DEFAULT NULL,
+  `minimum` decimal(64,2) DEFAULT NULL,
+  `maximum` decimal(64,2) DEFAULT NULL,
+  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `nomina_concepts`
 --
 
-INSERT INTO `nomina_concepts` (`id`, `abbreviation`, `order`, `description`, `type`, `sign`, `calculate`, `formula_m`, `formula_s`, `formula_q`, `minimum`, `maximum`, `created_at`, `updated_at`, `status`) VALUES
-(1, 'Prue2', 2, 'prueba2', 'Mensual', 'D', 'S', 'ab', 'ab', 'ab', '1000.00', '92349999.99', '2021-05-03 13:12:04', '2021-05-03 14:55:03', '1'),
-(2, 'Prue', 2, 'prueba', 'Quincenal', 'A', 'S', NULL, NULL, NULL, '100.00', '999999.00', '2021-05-03 14:15:42', '2021-05-03 14:25:14', '1'),
-(3, 'Prue3', 3, 'prueba3', 'Mensual', 'A', 'N', NULL, NULL, NULL, '33330.00', '9999999999.99', '2021-05-03 14:27:38', '2021-05-03 14:27:50', '1'),
-(4, 'CT', 4, 'CESTATICKET', 'Primera Quincena', 'A', 'S', NULL, NULL, NULL, '0.00', '9999999999.99', '2021-05-03 18:29:24', '2021-05-03 18:29:49', '1');
+INSERT INTO `nomina_concepts` (`id`, `id_formula_q`, `id_formula_m`, `id_formula_s`, `id_account_debe`, `id_account_haber`, `abbreviation`, `order`, `description`, `type`, `sign`, `calculate`, `minimum`, `maximum`, `status`, `created_at`, `updated_at`) VALUES
+(1, NULL, NULL, NULL, NULL, NULL, 'VAC', 1, 'Vacaciones', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(2, 3, 3, 3, NULL, NULL, 'SUES', 2, 'Sueldo Semanal', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(3, NULL, 6, NULL, NULL, NULL, 'SUEQ', 3, 'Sueldo Quincenal', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(4, 7, 7, 7, NULL, NULL, 'SUEM', 4, 'Sueldo Mensual', 'Segunda Quincena', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(5, NULL, NULL, NULL, NULL, NULL, 'RSAL', 5, 'Retroactivo de Salario', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(6, NULL, NULL, NULL, NULL, NULL, 'RCT', 6, 'Retroactivo de Cestatiket', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(7, NULL, NULL, NULL, NULL, NULL, 'RAYU', 7, 'Retroactivo Ayuda Economica', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(8, NULL, NULL, NULL, NULL, NULL, 'LIQU', 8, 'Liquidacion', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(9, 8, 8, 8, NULL, NULL, 'HEXT', 9, 'Horas Extras Diurna', 'Especial', 'A', 'N', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(10, 9, 9, 9, NULL, NULL, 'HENO', 10, 'Horas Extras Nocturnas', 'Especial', 'A', 'N', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(11, NULL, 10, NULL, NULL, NULL, 'DTRA', 11, 'Dias Trabajados', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(12, NULL, NULL, NULL, NULL, NULL, 'DIF', 12, 'Diferencial', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(13, 11, 11, 11, NULL, NULL, 'DFTR', 13, 'Dias Feriados', 'Especial', 'A', 'N', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(14, NULL, NULL, NULL, NULL, NULL, 'CTS', 14, 'Cestaticket Semanal', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(15, 12, 12, NULL, NULL, NULL, 'CT', 15, 'Cestaticket Quincenal', 'Especial', 'A', 'N', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(16, NULL, NULL, NULL, NULL, NULL, 'COMP', 16, 'Complemento', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(17, NULL, NULL, NULL, NULL, NULL, 'BVAC', 16, 'Bono Vacacional', 'Especial', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(18, 6, 6, 6, NULL, NULL, 'ANTC', 17, 'Anticipo Primera Quincena', 'Primera Quincena', 'A', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(19, 1, 1, 2, NULL, NULL, 'SSO', 17, 'Seguro Social Obligatorio', 'Quincenal', 'D', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(20, NULL, 13, NULL, NULL, NULL, 'RIMP', 18, 'Retencion Impuesto sobre la Renta', 'Especial', 'D', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(21, 14, 14, 15, NULL, NULL, 'PIE', 19, 'Ley de Regimen Prestacional de empleo', 'Especial', 'D', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(22, NULL, 16, NULL, NULL, NULL, 'FINJ', 20, 'Faltas Injustificadas', 'Especial', 'D', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(23, 4, 4, 5, NULL, NULL, 'FAOV', 21, 'Fondo de Ahorro para la Vivienda', 'Quincenal', 'D', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(24, NULL, 6, NULL, NULL, NULL, 'DAPQ', 22, 'Fondo de Ahorro para la Vivienda', 'Segunda Quincena', 'D', 'S', '0.00', '1000000000000000000.00', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31');
 
 -- --------------------------------------------------------
 
@@ -1631,6 +1294,28 @@ CREATE TABLE `nomina_formulas` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `nomina_formulas`
+--
+
+INSERT INTO `nomina_formulas` (`id`, `description`, `type`, `status`, `created_at`, `updated_at`) VALUES
+(1, '{{sueldo}} * 12 / 52 * {{lunes}} * 0.04', 'Q', '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(2, '{{sueldo}} * 12 / 52 * {{lunes}} * 0.04 * 5 / 5', 'S', '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(3, '{{sueldo}} / 30 * 7.5', 'Q', '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(4, '{{sueldo}} * 0.01 / 2', 'Q', '1', '2021-07-09 19:10:29', '2021-07-09 19:10:29'),
+(5, '{{sueldo}} * 0.01 / 4', 'Q', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(6, '{{sueldo}} / 2', 'Q', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(7, '{{sueldo}}', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(8, '{{sueldo}} / 30 / 8 * 1.6 / {{horas}}', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(9, '{{sueldo}} / 30 / 8 * 1.8 / {{horas}}', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(10, '{{sueldo}} / 30*1.5 *{{dias}}', 'M', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(11, '{{sueldo}} / 30 * 1.5 * {{diasferiados}}', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(12, '{{cestaticket}} / 2', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(13, '{{sueldo}} * 0.03', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(14, '{{sueldo}} * 12 / 52 * {{lunes}} * 0.005', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(15, '{{sueldo}} * 12 / 52 * {{lunes}} * 0.004', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(16, '{{sueldo}} / 30 * {{dias_faltados}}', 'T', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30');
+
 -- --------------------------------------------------------
 
 --
@@ -1644,14 +1329,6 @@ CREATE TABLE `nomina_types` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `nomina_types`
---
-
-INSERT INTO `nomina_types` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Nomina nueva', '0', '2021-04-09 17:05:30', '2021-04-09 17:26:08'),
-(2, 'AAA', '1', '2021-04-09 18:17:40', '2021-04-09 18:17:40');
 
 -- --------------------------------------------------------
 
@@ -2849,13 +2526,6 @@ CREATE TABLE `payment_types` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `payment_types`
---
-
-INSERT INTO `payment_types` (`id`, `description`, `type`, `credit_days`, `pide_ref`, `small_box`, `nature`, `point`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'AAABBB', 'Credito', 20, 'No', '20', 'Credito', 'No', '0', '2021-04-09 18:33:54', '2021-04-09 18:34:48');
-
 -- --------------------------------------------------------
 
 --
@@ -2876,7 +2546,8 @@ CREATE TABLE `positions` (
 --
 
 INSERT INTO `positions` (`id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Ingeniero', 'ing', '1', '2021-04-07 20:08:24', '2021-04-07 20:08:24');
+(1, 'Ingeniero', 'Se encarga del sistema', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(2, 'Contador', 'Se encarga de las finanzas', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31');
 
 -- --------------------------------------------------------
 
@@ -2889,17 +2560,18 @@ CREATE TABLE `products` (
   `segment_id` bigint(20) UNSIGNED NOT NULL,
   `subsegment_id` bigint(20) UNSIGNED NOT NULL,
   `unit_of_measure_id` bigint(20) UNSIGNED NOT NULL,
+  `id_user` bigint(20) UNSIGNED NOT NULL,
   `code_comercial` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `price` decimal(16,2) NOT NULL,
-  `price_buy` decimal(16,2) NOT NULL,
-  `cost_average` decimal(16,2) NOT NULL,
+  `price` decimal(64,2) NOT NULL,
+  `price_buy` decimal(64,2) NOT NULL,
+  `cost_average` decimal(64,2) NOT NULL,
   `photo_product` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `money` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
   `exento` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `islr` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `special_impuesto` decimal(16,2) NOT NULL,
+  `special_impuesto` decimal(64,2) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -2909,14 +2581,8 @@ CREATE TABLE `products` (
 -- Volcado de datos para la tabla `products`
 --
 
-INSERT INTO `products` (`id`, `segment_id`, `subsegment_id`, `unit_of_measure_id`, `code_comercial`, `type`, `description`, `price`, `price_buy`, `cost_average`, `photo_product`, `money`, `exento`, `islr`, `special_impuesto`, `status`, `created_at`, `updated_at`) VALUES
-(1, 6, 1, 1, '777', 'MERCANCIA', 'Cartucho Imp Hp 3221', '555.00', '555.00', '5555.00', NULL, 'D', '1', '1', '55.00', '1', '2021-04-15 13:32:06', '2021-04-15 13:32:06'),
-(2, 6, 1, 1, '13333', 'MERCANCIA', 'lapices', '40.00', '30.00', '35.00', NULL, 'D', '0', '0', '35.00', '1', '2021-04-26 15:00:05', '2021-04-26 15:00:05'),
-(3, 9, 3, 1, '752456', 'MERCANCIA', 'focos', '1000.00', '1000.00', '1000.00', NULL, 'D', '0', '0', '1000.00', '1', '2021-05-13 19:04:08', '2021-05-13 19:04:08'),
-(4, 1, 1, 1, '635', 'MERCANCIA', 'prueba producto', '1000.00', '300.00', '30.00', NULL, 'D', '0', '0', '1.00', '1', '2021-05-17 16:40:43', '2021-05-17 16:46:03'),
-(5, 1, 1, 1, '1000', 'MERCANCIA', 'Prueba Exento', '500.00', '800.00', '850.00', NULL, 'D', '1', '0', '1.00', '1', '2021-05-17 16:43:10', '2021-05-17 16:45:48'),
-(6, 6, 1, 1, 'ASD777', 'MERCANCIA', 'Alambre', '505.00', '300.00', '350.00', NULL, 'D', '0', '0', '90.00', '1', '2021-05-19 12:59:30', '2021-05-19 13:34:05'),
-(7, 6, 1, 1, 'ASD1561', 'MERCANCIA', 'Pepsi', '6.00', '3.00', '4.00', NULL, 'D', '0', '0', '1.56', '1', '2021-06-01 19:11:57', '2021-06-01 19:11:57');
+INSERT INTO `products` (`id`, `segment_id`, `subsegment_id`, `unit_of_measure_id`, `id_user`, `code_comercial`, `type`, `description`, `price`, `price_buy`, `cost_average`, `photo_product`, `money`, `exento`, `islr`, `special_impuesto`, `status`, `created_at`, `updated_at`) VALUES
+(1, 2, 2, 1, 1, '1001', 'MERCANCIA', 'Producto 1', '10.00', '5.00', '4.00', NULL, 'D', '0', '0', '0.00', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -2926,9 +2592,9 @@ INSERT INTO `products` (`id`, `segment_id`, `subsegment_id`, `unit_of_measure_id
 
 CREATE TABLE `professions` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2938,10 +2604,8 @@ CREATE TABLE `professions` (
 --
 
 INSERT INTO `professions` (`id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Administrador', 'administrador', '1', '2021-04-07 20:38:37', '2021-04-07 20:38:37'),
-(2, 'Chofer', 'Conduce autos', '1', '2021-05-03 15:53:54', '2021-05-03 15:53:54'),
-(3, 'Conductor', 'chofer', '1', '2021-05-27 19:29:40', '2021-05-27 19:29:40'),
-(4, 'Guardia', 'Guardia', '1', '2021-05-27 19:30:27', '2021-05-27 19:30:27');
+(1, 'Administrador', 'Supervisa el area administrativa', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(2, 'Secretaria', 'Se encarga de la parte administrativa', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31');
 
 -- --------------------------------------------------------
 
@@ -2975,8 +2639,7 @@ CREATE TABLE `providers` (
 --
 
 INSERT INTO `providers` (`id`, `code_provider`, `razon_social`, `direction`, `city`, `country`, `phone1`, `phone2`, `has_credit`, `days_credit`, `amount_max_credit`, `porc_retencion_iva`, `retiene_islr`, `balance`, `select_balance`, `status`, `created_at`, `updated_at`) VALUES
-(1, '1515', '1515', 'asdas', 'caasd', 'Venezuela', '51651', '6151', 0, 1, 1.00, 1.00, 0, 1.00, 0, '1', '2021-04-09 12:58:01', '2021-04-09 12:58:01'),
-(2, '3333', '555', 'asd', 'acs', 'Venezuela', '51651', '6156', 0, 2, 2.00, 1.00, 1, 2.00, 0, '0', '2021-04-09 12:58:37', '2021-04-09 13:13:48');
+(1, '1000', 'Proveedor Prueba', 'Chacaito', 'Caracas', 'Venezuela', '0414 216-5165', '0212 651-5162', 1, 1, 9999999999.99, 0.00, 0, 0.00, 0, '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -2988,38 +2651,27 @@ CREATE TABLE `quotations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `id_client` bigint(20) UNSIGNED NOT NULL,
   `id_vendor` bigint(20) UNSIGNED NOT NULL,
-  `id_transport` bigint(20) UNSIGNED NOT NULL,
+  `id_transport` bigint(20) UNSIGNED DEFAULT NULL,
   `id_user` bigint(20) UNSIGNED NOT NULL,
   `serie` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_quotation` date NOT NULL,
   `date_billing` date DEFAULT NULL,
   `date_delivery_note` date DEFAULT NULL,
-  `anticipo` decimal(16,2) DEFAULT NULL,
+  `anticipo` decimal(64,2) DEFAULT NULL,
   `iva_percentage` int(11) DEFAULT NULL,
   `observation` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `credit_days` int(11) DEFAULT NULL,
   `note` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `credit_days` int(11) DEFAULT NULL,
   `coin` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `base_imponible` decimal(32,2) DEFAULT NULL,
-  `amount` decimal(32,2) DEFAULT NULL,
-  `amount_iva` decimal(32,2) DEFAULT NULL,
-  `amount_with_iva` decimal(32,2) DEFAULT NULL,
+  `bcv` decimal(64,2) DEFAULT NULL COMMENT 'Tasa de cambio a bolivares del banco central de venezuela',
+  `base_imponible` decimal(64,2) DEFAULT NULL,
+  `amount` decimal(64,2) DEFAULT NULL,
+  `amount_iva` decimal(64,2) DEFAULT NULL,
+  `amount_with_iva` decimal(64,2) DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `quotations`
---
-
-INSERT INTO `quotations` (`id`, `id_client`, `id_vendor`, `id_transport`, `id_user`, `serie`, `date_quotation`, `date_billing`, `date_delivery_note`, `anticipo`, `iva_percentage`, `observation`, `credit_days`, `note`, `coin`, `base_imponible`, `amount`, `amount_iva`, `amount_with_iva`, `status`, `created_at`, `updated_at`) VALUES
-(30, 1, 2, 1, 2, 'dsaf45', '2021-05-24', '2021-05-28', NULL, '0.00', 16, NULL, 9, NULL, NULL, '0.00', '1110.00', '0.00', '1110.00', 'C', '2021-05-24 13:20:53', '2021-05-28 19:55:40'),
-(31, 1, 2, 1, 2, '424', '2021-05-24', '2021-05-24', NULL, '0.00', 16, NULL, 5, NULL, NULL, '404000.00', '4040.00', '646.40', '4686.40', 'C', '2021-05-24 13:21:35', '2021-05-24 13:33:33'),
-(32, 1, 2, 1, 2, '7474', '2021-05-28', NULL, '2021-05-28', NULL, 16, NULL, NULL, NULL, 'Bolivares', NULL, NULL, NULL, NULL, '1', '2021-05-28 18:47:06', '2021-05-28 18:48:12'),
-(33, 1, 2, 1, 2, '205200', '2021-05-28', '2021-05-28', NULL, '0.00', 16, NULL, 9, NULL, NULL, '80000.00', '800.00', '128.00', '928.00', 'C', '2021-05-28 19:47:05', '2021-05-28 19:54:37'),
-(34, 2, 2, 1, 2, '9689', '2021-05-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '2021-05-31 18:50:12', '2021-05-31 18:50:12'),
-(35, 2, 2, 1, 2, '89456', '2021-06-02', '2021-06-02', NULL, NULL, 16, NULL, 7, NULL, NULL, '0.00', '1110.00', '0.00', '1110.00', '1', '2021-06-02 14:31:35', '2021-06-02 14:33:27');
 
 -- --------------------------------------------------------
 
@@ -3032,27 +2684,14 @@ CREATE TABLE `quotation_payments` (
   `id_quotation` bigint(20) UNSIGNED NOT NULL,
   `id_account` bigint(20) UNSIGNED DEFAULT NULL,
   `payment_type` int(11) NOT NULL,
-  `amount` decimal(16,2) NOT NULL,
+  `amount` decimal(64,2) NOT NULL,
+  `rate` decimal(64,2) NOT NULL,
   `credit_days` int(11) DEFAULT NULL,
   `reference` int(11) DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `quotation_payments`
---
-
-INSERT INTO `quotation_payments` (`id`, `id_quotation`, `id_account`, `payment_type`, `amount`, `credit_days`, `reference`, `status`, `created_at`, `updated_at`) VALUES
-(84, 31, 6, 1, '1000.00', NULL, 6363, '1', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(85, 31, NULL, 2, '1000.00', NULL, NULL, '1', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(86, 31, NULL, 3, '1000.00', NULL, NULL, '1', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(87, 31, 4, 6, '1000.00', NULL, NULL, '1', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(88, 31, 8, 11, '686.40', NULL, 777, '1', '2021-05-24 13:33:32', '2021-05-24 13:33:32'),
-(89, 33, NULL, 2, '928.00', NULL, NULL, '1', '2021-05-28 19:53:34', '2021-05-28 19:53:34'),
-(90, 33, NULL, 2, '928.00', NULL, NULL, '1', '2021-05-28 19:54:37', '2021-05-28 19:54:37'),
-(91, 30, NULL, 2, '1110.00', NULL, NULL, '1', '2021-05-28 19:55:40', '2021-05-28 19:55:40');
 
 -- --------------------------------------------------------
 
@@ -3065,23 +2704,13 @@ CREATE TABLE `quotation_products` (
   `id_quotation` bigint(20) UNSIGNED NOT NULL,
   `id_inventory` bigint(20) UNSIGNED NOT NULL,
   `amount` int(11) NOT NULL,
-  `discount` decimal(16,2) NOT NULL,
+  `discount` decimal(64,2) NOT NULL,
+  `price` decimal(64,2) NOT NULL,
+  `rate` decimal(64,2) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `quotation_products`
---
-
-INSERT INTO `quotation_products` (`id`, `id_quotation`, `id_inventory`, `amount`, `discount`, `status`, `created_at`, `updated_at`) VALUES
-(31, 31, 3, 8, '0.00', '1', '2021-05-24 13:24:23', '2021-05-24 13:25:00'),
-(32, 30, 1, 2, '0.00', '1', '2021-05-27 19:55:57', '2021-05-27 19:55:57'),
-(33, 32, 1, 3, '0.00', '1', '2021-05-28 18:47:19', '2021-05-28 18:47:19'),
-(34, 33, 2, 20, '0.00', '1', '2021-05-28 19:49:10', '2021-05-28 19:49:10'),
-(35, 35, 5, 2, '0.00', '1', '2021-06-02 14:32:08', '2021-06-02 14:32:08'),
-(36, 34, 3, 3, '0.00', '1', '2021-06-02 14:34:47', '2021-06-02 14:34:47');
 
 -- --------------------------------------------------------
 
@@ -3102,9 +2731,9 @@ CREATE TABLE `rate_types` (
 --
 
 INSERT INTO `rate_types` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'AUTOMATICA', '1', '2021-06-02 15:36:49', '2021-06-02 15:36:49'),
-(2, 'FIJA', '1', '2021-06-02 15:37:16', '2021-06-02 15:37:16'),
-(3, 'SIN TASA', '1', '2021-06-02 15:37:31', '2021-06-02 15:37:31');
+(1, 'AUTOMATICA', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(2, 'FIJA', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30'),
+(3, 'SIN TASA', '1', '2021-07-09 19:10:30', '2021-07-09 19:10:30');
 
 -- --------------------------------------------------------
 
@@ -3120,11 +2749,11 @@ CREATE TABLE `receipt_vacations` (
   `days_vacations` int(11) NOT NULL,
   `bono_vacations` int(11) NOT NULL,
   `days_feriados` int(11) NOT NULL,
-  `lph` decimal(15,2) NOT NULL,
-  `sso` decimal(15,2) NOT NULL,
-  `seguro_paro_forzoso` decimal(15,2) NOT NULL,
-  `ultimo_sueldo` decimal(15,2) NOT NULL,
-  `total_pagar` decimal(15,2) NOT NULL,
+  `lph` decimal(64,2) NOT NULL,
+  `sso` decimal(64,2) NOT NULL,
+  `seguro_paro_forzoso` decimal(64,2) NOT NULL,
+  `ultimo_sueldo` decimal(64,2) NOT NULL,
+  `total_pagar` decimal(64,2) NOT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -3149,8 +2778,8 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Master', '1', NULL, NULL),
-(2, 'Usuario', '1', NULL, NULL);
+(1, 'Administrador', '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24'),
+(2, 'Usuario', '1', '2021-07-09 19:10:24', '2021-07-09 19:10:24');
 
 -- --------------------------------------------------------
 
@@ -3172,7 +2801,8 @@ CREATE TABLE `salary_types` (
 --
 
 INSERT INTO `salary_types` (`id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Mayor', '600 a 800', '1', '2021-04-07 20:08:46', '2021-04-07 20:08:46');
+(1, 'Alto', '600 a 800', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32'),
+(2, 'Medio', '400 a 600', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -3183,6 +2813,7 @@ INSERT INTO `salary_types` (`id`, `name`, `description`, `status`, `created_at`,
 CREATE TABLE `segments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3191,23 +2822,9 @@ CREATE TABLE `segments` (
 -- Volcado de datos para la tabla `segments`
 --
 
-INSERT INTO `segments` (`id`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'ENVIOS EXPORTACION', NULL, '2021-04-08 17:05:35'),
-(2, 'ENVIO AEREO US', NULL, NULL),
-(3, 'ENVIO MARITIMO USA', NULL, NULL),
-(4, 'ENVIO AEREO ESPANA', NULL, NULL),
-(5, 'ENVIO MARITIMO ESPANA', NULL, NULL),
-(6, 'ADUANA', NULL, NULL),
-(7, 'SEGURO', NULL, NULL),
-(8, 'ALMACEN', NULL, NULL),
-(9, 'CARGA', NULL, NULL),
-(10, 'MATERIAL DE ENVIOS Y EMPAQUE', NULL, NULL),
-(11, 'ENVIOS NACIONALES', NULL, NULL),
-(12, 'ENTREGAS', NULL, NULL),
-(13, 'GASTOS ADMINISTRATIVOS', NULL, NULL),
-(14, 'ENVIO INTERNACIONAL', NULL, NULL),
-(15, 'Sueldo y SALARIO', '2021-04-30 15:47:11', '2021-04-30 15:47:11'),
-(16, 'prueba2', '2021-05-03 15:59:13', '2021-05-03 15:59:13');
+INSERT INTO `segments` (`id`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Bebidas', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32'),
+(2, 'Alimentos', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -3229,9 +2846,8 @@ CREATE TABLE `subsegments` (
 --
 
 INSERT INTO `subsegments` (`id`, `segment_id`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 6, 'AAA', '1', '2021-04-14 14:52:29', '2021-04-14 14:52:29'),
-(2, 8, '777', '1', '2021-04-14 14:52:36', '2021-04-14 14:52:36'),
-(3, 9, 'Comisión 1', '1', '2021-04-14 14:52:42', '2021-04-14 14:52:42');
+(1, 1, 'Refrescos', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32'),
+(2, 2, 'Lata', '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -3244,18 +2860,10 @@ CREATE TABLE `tasas` (
   `id_user` bigint(20) UNSIGNED NOT NULL,
   `date_begin` date NOT NULL,
   `date_end` date DEFAULT NULL,
-  `amount` decimal(16,2) NOT NULL,
+  `amount` decimal(64,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `tasas`
---
-
-INSERT INTO `tasas` (`id`, `id_user`, `date_begin`, `date_end`, `amount`, `created_at`, `updated_at`) VALUES
-(1, 2, '2021-05-11', '2021-05-11', '5262110.00', '2021-05-11 15:27:45', '2021-05-11 15:34:22'),
-(2, 2, '2021-05-11', NULL, '6651120.00', '2021-05-11 15:34:22', '2021-05-11 15:34:22');
 
 -- --------------------------------------------------------
 
@@ -3270,7 +2878,7 @@ CREATE TABLE `transports` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `placa` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `photo_transport` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo_transport` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -3281,8 +2889,7 @@ CREATE TABLE `transports` (
 --
 
 INSERT INTO `transports` (`id`, `modelo_id`, `color_id`, `user_id`, `type`, `placa`, `photo_transport`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 2, 'Carro', 'AEU77N', 'sdf', '1', '2021-04-14 18:15:48', '2021-04-14 18:15:48'),
-(2, 1, 1, 2, 'Carro', 'DSF5165', 'a', '1', '2021-06-02 14:41:45', '2021-06-02 14:41:45');
+(1, 1, 1, 1, 'Carro', 'ABF22N', NULL, '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 -- --------------------------------------------------------
 
@@ -3304,8 +2911,8 @@ CREATE TABLE `unit_of_measures` (
 --
 
 INSERT INTO `unit_of_measures` (`id`, `code`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Kgs', 'Kilogramos', '1', '2021-04-08 15:23:38', '2021-04-08 15:23:38'),
-(2, 'Lts', 'Litros', '1', '2021-04-08 15:26:10', '2021-04-08 15:28:59');
+(1, 'Kgs', 'Kilogramos', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31'),
+(2, 'Lts', 'Litros', '1', '2021-07-09 19:10:31', '2021-07-09 19:10:31');
 
 -- --------------------------------------------------------
 
@@ -3315,12 +2922,12 @@ INSERT INTO `unit_of_measures` (`id`, `code`, `description`, `status`, `created_
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role_id` bigint(20) UNSIGNED NOT NULL,
-  `status` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -3330,9 +2937,8 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role_id`, `status`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'carlos', 'cefreitas.16@gmail.com', NULL, '$2y$10$NvfvmRMbU6KGGStZHAK9ServKzv/XWTun1S/hfFH1xhYKh30RLSnG', 1, '1', NULL, '2021-04-07 18:27:20', '2021-04-07 18:27:20'),
-(3, 'usuario dos', 'usuario2@gmail.com', NULL, '$2y$10$Sh9HiLoMvtX07BO570wuA.NdLIwXZ.n5WWGdsRDL9xUv8Dno4/tIq', 1, '1', NULL, '2021-04-16 16:50:20', '2021-04-16 16:50:38');
+INSERT INTO `users` (`id`, `role_id`, `name`, `email`, `email_verified_at`, `password`, `status`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Carlos', 'cefreitas.16@gmail.com', NULL, '$2y$10$uxxIiFy/79OtgW/d.K/SgO/0KeJWVDAXiW5o0A0mOJurgnxsIRCXu', '1', NULL, '2021-07-09 19:10:24', '2021-07-09 19:10:24');
 
 -- --------------------------------------------------------
 
@@ -3353,7 +2959,7 @@ CREATE TABLE `vendors` (
   `email` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone2` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `comision` decimal(64,2) DEFAULT NULL,
+  `comision` decimal(64,2) NOT NULL,
   `instagram` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `facebook` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `twitter` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -3369,9 +2975,7 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`id`, `parroquia_id`, `comision_id`, `employee_id`, `user_id`, `code`, `cedula_rif`, `name`, `surname`, `email`, `phone`, `phone2`, `comision`, `instagram`, `facebook`, `twitter`, `especification`, `observation`, `status`, `created_at`, `updated_at`) VALUES
-(2, 100801, 1, 2, 2, '561', '626561', 'carlos eduardo', 'asdasd', 'dscds@asdsasd.com', '65105616', '26626222654', '52.00', 'adasd561', 'sdfsdf', 'sdfsdf', 'dsfsdfds', 'sdfsdf', '1', '2021-04-16 14:00:17', '2021-04-16 14:00:17'),
-(3, 220701, 2, 2, 2, '561236212', '4894849', 'Scarlet', 'Perez', 'car@car.com', '651561', '651651', '56123.00', 'asd', 'asd', 'asd', 'a', 'a', '1', '2021-05-19 19:14:59', '2021-05-19 19:14:59'),
-(4, 230403, 1, 2, 2, 'SDF4156', '5.615.651', 'Giuseppe', 'Pino', 'Giuseppe@gmail.com', '0414 565-1651', '0212 651-5165', '5135351.00', 'a', 'a', 'a', 'a', 'a', '1', '2021-06-02 14:56:14', '2021-06-02 14:56:14');
+(1, 10113, 1, 1, 1, '0001', '27.615.651', 'Primer Vendedor', 'Prueba', 'Eduardoperez17@gmail.com', '0414 255-1545', '0412 255-1545', '0.00', NULL, NULL, NULL, NULL, NULL, '1', '2021-07-09 19:10:32', '2021-07-09 19:10:32');
 
 --
 -- Índices para tablas volcadas
@@ -3390,6 +2994,13 @@ ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `account_historials`
+--
+ALTER TABLE `account_historials`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `account_historials_id_account_foreign` (`id_account`);
+
+--
 -- Indices de la tabla `anticipos`
 --
 ALTER TABLE `anticipos`
@@ -3397,27 +3008,6 @@ ALTER TABLE `anticipos`
   ADD KEY `anticipos_id_client_foreign` (`id_client`),
   ADD KEY `anticipos_id_account_foreign` (`id_account`),
   ADD KEY `anticipos_id_user_foreign` (`id_user`);
-
---
--- Indices de la tabla `bank_movements`
---
-ALTER TABLE `bank_movements`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `bank_movements_id_account_foreign` (`id_account`),
-  ADD KEY `bank_movements_id_counterpart_foreign` (`id_counterpart`),
-  ADD KEY `bank_movements_id_client_foreign` (`id_client`),
-  ADD KEY `bank_movements_id_vendor_foreign` (`id_vendor`),
-  ADD KEY `bank_movements_id_user_foreign` (`id_user`);
-
---
--- Indices de la tabla `bank_vouchers`
---
-ALTER TABLE `bank_vouchers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `bank_vouchers_id_client_foreign` (`id_client`),
-  ADD KEY `bank_vouchers_id_vendor_foreign` (`id_vendor`),
-  ADD KEY `bank_vouchers_id_provider_foreign` (`id_provider`),
-  ADD KEY `bank_vouchers_id_user_foreign` (`id_user`);
 
 --
 -- Indices de la tabla `branches`
@@ -3432,7 +3022,8 @@ ALTER TABLE `branches`
 --
 ALTER TABLE `clients`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `clients_id_vendor_foreign` (`id_vendor`);
+  ADD KEY `clients_id_vendor_foreign` (`id_vendor`),
+  ADD KEY `clients_id_user_foreign` (`id_user`);
 
 --
 -- Indices de la tabla `colors`
@@ -3465,6 +3056,7 @@ ALTER TABLE `detail_vouchers`
   ADD KEY `detail_vouchers_id_account_foreign` (`id_account`),
   ADD KEY `detail_vouchers_id_header_voucher_foreign` (`id_header_voucher`),
   ADD KEY `detail_vouchers_id_invoice_foreign` (`id_invoice`),
+  ADD KEY `detail_vouchers_id_expense_foreign` (`id_expense`),
   ADD KEY `detail_vouchers_user_id_foreign` (`user_id`);
 
 --
@@ -3477,7 +3069,8 @@ ALTER TABLE `employees`
   ADD KEY `employees_estado_id_foreign` (`estado_id`),
   ADD KEY `employees_profession_id_foreign` (`profession_id`),
   ADD KEY `employees_salary_types_id_foreign` (`salary_types_id`),
-  ADD KEY `employees_position_id_foreign` (`position_id`);
+  ADD KEY `employees_position_id_foreign` (`position_id`),
+  ADD KEY `employees_branch_id_foreign` (`branch_id`);
 
 --
 -- Indices de la tabla `estados`
@@ -3520,6 +3113,12 @@ ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `general_nomina`
+--
+ALTER TABLE `general_nomina`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `header_vouchers`
 --
 ALTER TABLE `header_vouchers`
@@ -3531,7 +3130,8 @@ ALTER TABLE `header_vouchers`
 ALTER TABLE `historic_transports`
   ADD PRIMARY KEY (`id`),
   ADD KEY `historic_transports_employee_id_foreign` (`employee_id`),
-  ADD KEY `historic_transports_transport_id_foreign` (`transport_id`);
+  ADD KEY `historic_transports_transport_id_foreign` (`transport_id`),
+  ADD KEY `historic_transports_user_id_foreign` (`user_id`);
 
 --
 -- Indices de la tabla `index_bcvs`
@@ -3551,7 +3151,8 @@ ALTER TABLE `inventary_types`
 --
 ALTER TABLE `inventories`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `inventories_product_id_foreign` (`product_id`);
+  ADD KEY `inventories_product_id_foreign` (`product_id`),
+  ADD KEY `inventories_id_user_foreign` (`id_user`);
 
 --
 -- Indices de la tabla `migrations`
@@ -3592,7 +3193,12 @@ ALTER TABLE `nomina_calculations`
 -- Indices de la tabla `nomina_concepts`
 --
 ALTER TABLE `nomina_concepts`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `nomina_concepts_id_formula_q_foreign` (`id_formula_q`),
+  ADD KEY `nomina_concepts_id_formula_m_foreign` (`id_formula_m`),
+  ADD KEY `nomina_concepts_id_formula_s_foreign` (`id_formula_s`),
+  ADD KEY `nomina_concepts_id_account_debe_foreign` (`id_account_debe`),
+  ADD KEY `nomina_concepts_id_account_haber_foreign` (`id_account_haber`);
 
 --
 -- Indices de la tabla `nomina_formulas`
@@ -3639,7 +3245,8 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
   ADD KEY `products_segment_id_foreign` (`segment_id`),
   ADD KEY `products_subsegment_id_foreign` (`subsegment_id`),
-  ADD KEY `products_unit_of_measure_id_foreign` (`unit_of_measure_id`);
+  ADD KEY `products_unit_of_measure_id_foreign` (`unit_of_measure_id`),
+  ADD KEY `products_id_user_foreign` (`id_user`);
 
 --
 -- Indices de la tabla `professions`
@@ -3766,43 +3373,37 @@ ALTER TABLE `vendors`
 -- AUTO_INCREMENT de la tabla `academiclevels`
 --
 ALTER TABLE `academiclevels`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+
+--
+-- AUTO_INCREMENT de la tabla `account_historials`
+--
+ALTER TABLE `account_historials`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `anticipos`
 --
 ALTER TABLE `anticipos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT de la tabla `bank_movements`
---
-ALTER TABLE `bank_movements`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `bank_vouchers`
---
-ALTER TABLE `bank_vouchers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `branches`
 --
 ALTER TABLE `branches`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `colors`
@@ -3814,7 +3415,7 @@ ALTER TABLE `colors`
 -- AUTO_INCREMENT de la tabla `comision_types`
 --
 ALTER TABLE `comision_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `companies`
@@ -3826,13 +3427,13 @@ ALTER TABLE `companies`
 -- AUTO_INCREMENT de la tabla `detail_vouchers`
 --
 ALTER TABLE `detail_vouchers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=443;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `estados`
@@ -3844,19 +3445,19 @@ ALTER TABLE `estados`
 -- AUTO_INCREMENT de la tabla `expenses_and_purchases`
 --
 ALTER TABLE `expenses_and_purchases`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `expenses_details`
 --
 ALTER TABLE `expenses_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `expense_payments`
 --
 ALTER TABLE `expense_payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -3865,40 +3466,46 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `general_nomina`
+--
+ALTER TABLE `general_nomina`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `header_vouchers`
 --
 ALTER TABLE `header_vouchers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `historic_transports`
 --
 ALTER TABLE `historic_transports`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `index_bcvs`
 --
 ALTER TABLE `index_bcvs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `inventary_types`
 --
 ALTER TABLE `inventary_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `inventories`
 --
 ALTER TABLE `inventories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `modelos`
@@ -3916,31 +3523,31 @@ ALTER TABLE `municipios`
 -- AUTO_INCREMENT de la tabla `nominas`
 --
 ALTER TABLE `nominas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `nomina_calculations`
 --
 ALTER TABLE `nomina_calculations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `nomina_concepts`
 --
 ALTER TABLE `nomina_concepts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `nomina_formulas`
 --
 ALTER TABLE `nomina_formulas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `nomina_types`
 --
 ALTER TABLE `nomina_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `parroquias`
@@ -3952,49 +3559,49 @@ ALTER TABLE `parroquias`
 -- AUTO_INCREMENT de la tabla `payment_types`
 --
 ALTER TABLE `payment_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `professions`
 --
 ALTER TABLE `professions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `providers`
 --
 ALTER TABLE `providers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `quotations`
 --
 ALTER TABLE `quotations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `quotation_payments`
 --
 ALTER TABLE `quotation_payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `quotation_products`
 --
 ALTER TABLE `quotation_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rate_types`
@@ -4018,31 +3625,31 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `salary_types`
 --
 ALTER TABLE `salary_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `segments`
 --
 ALTER TABLE `segments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `subsegments`
 --
 ALTER TABLE `subsegments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tasas`
 --
 ALTER TABLE `tasas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `transports`
 --
 ALTER TABLE `transports`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `unit_of_measures`
@@ -4054,17 +3661,23 @@ ALTER TABLE `unit_of_measures`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `account_historials`
+--
+ALTER TABLE `account_historials`
+  ADD CONSTRAINT `account_historials_id_account_foreign` FOREIGN KEY (`id_account`) REFERENCES `accounts` (`id`);
 
 --
 -- Filtros para la tabla `anticipos`
@@ -4073,25 +3686,6 @@ ALTER TABLE `anticipos`
   ADD CONSTRAINT `anticipos_id_account_foreign` FOREIGN KEY (`id_account`) REFERENCES `accounts` (`id`),
   ADD CONSTRAINT `anticipos_id_client_foreign` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`),
   ADD CONSTRAINT `anticipos_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`);
-
---
--- Filtros para la tabla `bank_movements`
---
-ALTER TABLE `bank_movements`
-  ADD CONSTRAINT `bank_movements_id_account_foreign` FOREIGN KEY (`id_account`) REFERENCES `accounts` (`id`),
-  ADD CONSTRAINT `bank_movements_id_client_foreign` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`),
-  ADD CONSTRAINT `bank_movements_id_counterpart_foreign` FOREIGN KEY (`id_counterpart`) REFERENCES `accounts` (`id`),
-  ADD CONSTRAINT `bank_movements_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `bank_movements_id_vendor_foreign` FOREIGN KEY (`id_vendor`) REFERENCES `vendors` (`id`);
-
---
--- Filtros para la tabla `bank_vouchers`
---
-ALTER TABLE `bank_vouchers`
-  ADD CONSTRAINT `bank_vouchers_id_client_foreign` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`),
-  ADD CONSTRAINT `bank_vouchers_id_provider_foreign` FOREIGN KEY (`id_provider`) REFERENCES `providers` (`id`),
-  ADD CONSTRAINT `bank_vouchers_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `bank_vouchers_id_vendor_foreign` FOREIGN KEY (`id_vendor`) REFERENCES `vendors` (`id`);
 
 --
 -- Filtros para la tabla `branches`
@@ -4104,6 +3698,7 @@ ALTER TABLE `branches`
 -- Filtros para la tabla `clients`
 --
 ALTER TABLE `clients`
+  ADD CONSTRAINT `clients_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `clients_id_vendor_foreign` FOREIGN KEY (`id_vendor`) REFERENCES `vendors` (`id`);
 
 --
@@ -4118,6 +3713,7 @@ ALTER TABLE `companies`
 --
 ALTER TABLE `detail_vouchers`
   ADD CONSTRAINT `detail_vouchers_id_account_foreign` FOREIGN KEY (`id_account`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `detail_vouchers_id_expense_foreign` FOREIGN KEY (`id_expense`) REFERENCES `expenses_and_purchases` (`id`),
   ADD CONSTRAINT `detail_vouchers_id_header_voucher_foreign` FOREIGN KEY (`id_header_voucher`) REFERENCES `header_vouchers` (`id`),
   ADD CONSTRAINT `detail_vouchers_id_invoice_foreign` FOREIGN KEY (`id_invoice`) REFERENCES `quotations` (`id`),
   ADD CONSTRAINT `detail_vouchers_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
@@ -4126,6 +3722,7 @@ ALTER TABLE `detail_vouchers`
 -- Filtros para la tabla `employees`
 --
 ALTER TABLE `employees`
+  ADD CONSTRAINT `employees_branch_id_foreign` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`),
   ADD CONSTRAINT `employees_estado_id_foreign` FOREIGN KEY (`estado_id`) REFERENCES `estados` (`id`),
   ADD CONSTRAINT `employees_municipio_id_foreign` FOREIGN KEY (`municipio_id`) REFERENCES `municipios` (`id`),
   ADD CONSTRAINT `employees_parroquia_id_foreign` FOREIGN KEY (`parroquia_id`) REFERENCES `parroquias` (`id`),
@@ -4162,12 +3759,14 @@ ALTER TABLE `expense_payments`
 --
 ALTER TABLE `historic_transports`
   ADD CONSTRAINT `historic_transports_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`),
-  ADD CONSTRAINT `historic_transports_transport_id_foreign` FOREIGN KEY (`transport_id`) REFERENCES `transports` (`id`);
+  ADD CONSTRAINT `historic_transports_transport_id_foreign` FOREIGN KEY (`transport_id`) REFERENCES `transports` (`id`),
+  ADD CONSTRAINT `historic_transports_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Filtros para la tabla `inventories`
 --
 ALTER TABLE `inventories`
+  ADD CONSTRAINT `inventories_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `inventories_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
@@ -4191,6 +3790,16 @@ ALTER TABLE `nomina_calculations`
   ADD CONSTRAINT `nomina_calculations_id_nomina_foreign` FOREIGN KEY (`id_nomina`) REFERENCES `nominas` (`id`);
 
 --
+-- Filtros para la tabla `nomina_concepts`
+--
+ALTER TABLE `nomina_concepts`
+  ADD CONSTRAINT `nomina_concepts_id_account_debe_foreign` FOREIGN KEY (`id_account_debe`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `nomina_concepts_id_account_haber_foreign` FOREIGN KEY (`id_account_haber`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `nomina_concepts_id_formula_m_foreign` FOREIGN KEY (`id_formula_m`) REFERENCES `nomina_formulas` (`id`),
+  ADD CONSTRAINT `nomina_concepts_id_formula_q_foreign` FOREIGN KEY (`id_formula_q`) REFERENCES `nomina_formulas` (`id`),
+  ADD CONSTRAINT `nomina_concepts_id_formula_s_foreign` FOREIGN KEY (`id_formula_s`) REFERENCES `nomina_formulas` (`id`);
+
+--
 -- Filtros para la tabla `parroquias`
 --
 ALTER TABLE `parroquias`
@@ -4201,6 +3810,7 @@ ALTER TABLE `parroquias`
 -- Filtros para la tabla `products`
 --
 ALTER TABLE `products`
+  ADD CONSTRAINT `products_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `products_segment_id_foreign` FOREIGN KEY (`segment_id`) REFERENCES `segments` (`id`),
   ADD CONSTRAINT `products_subsegment_id_foreign` FOREIGN KEY (`subsegment_id`) REFERENCES `subsegments` (`id`),
   ADD CONSTRAINT `products_unit_of_measure_id_foreign` FOREIGN KEY (`unit_of_measure_id`) REFERENCES `unit_of_measures` (`id`);

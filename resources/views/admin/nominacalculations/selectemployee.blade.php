@@ -131,3 +131,15 @@
    
     </script>
 @endsection
+@section('javascript')
+
+    <script>
+    $('#dataTable').DataTable({
+        "ordering": false,
+        "order": [],
+        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
+    });
+
+    </script> 
+
+@endsection

@@ -77,8 +77,11 @@ class AccountController extends Controller
         $users_role =   $user->role_id;
         if($users_role == '1'){
              
-            if($type == 'bank'){
-                $detailvouchers = BankMovement::where('id_account',$id)->orderBy('id','desc')->get();
+            if($type == 'header_voucher'){
+                $detailvouchers = DetailVoucher::where('id_header_voucher',$id)->orderBy('id','desc')->get();
+                
+                $var = null;
+                $type = $detailvouchers[0]['headers']->description;;
             }
             if($type == 'invoice'){
                 $detailvouchers = DetailVoucher::where('id_invoice',$id)->get();
@@ -215,7 +218,7 @@ class AccountController extends Controller
                                                     a.code_three = ? AND
                                                     a.code_four = ? AND
                                                     d.status = ?
-                                                    LIMIT 1'
+                                                    '
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
                                     $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
                                                     FROM accounts a
@@ -226,7 +229,7 @@ class AccountController extends Controller
                                                     a.code_three = ? AND
                                                     a.code_four = ? AND
                                                     d.status = ?
-                                                    LIMIT 1'
+                                                    '
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
                                     $total_dolar_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS dolar
@@ -238,7 +241,7 @@ class AccountController extends Controller
                                                     a.code_three = ? AND
                                                     a.code_four = ? AND
                                                     d.status = ?
-                                                    LIMIT 1'
+                                                    '
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
                                     $total_dolar_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS dolar
@@ -250,7 +253,7 @@ class AccountController extends Controller
                                                     a.code_three = ? AND
                                                     a.code_four = ? AND
                                                     d.status = ?
-                                                    LIMIT 1'
+                                                    '
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
                                                     $var->balance =  $var->balance_previus;
@@ -265,7 +268,7 @@ class AccountController extends Controller
                                         a.code_three = ? AND
                                         a.code_four = ? AND
                                         d.status = ?
-                                        LIMIT 1'
+                                        '
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
                                         
                                         $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
@@ -277,7 +280,7 @@ class AccountController extends Controller
                                         a.code_three = ? AND
                                         a.code_four = ? AND
                                         d.status = ?
-                                        LIMIT 1'
+                                        '
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
                                         if(($var->balance_previus != 0) && ($var->rate !=0))
@@ -312,7 +315,7 @@ class AccountController extends Controller
                                                 a.code_three = ? AND
                                                 
                                                 d.status = ?
-                                                LIMIT 1'
+                                                '
                                                 , [$var->code_one,$var->code_two,$var->code_three,'C']);
                                 $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
                                                 FROM accounts a
@@ -323,7 +326,7 @@ class AccountController extends Controller
                                                 a.code_three = ? AND
                                                 
                                                 d.status = ?
-                                                LIMIT 1'
+                                                '
                                                 , [$var->code_one,$var->code_two,$var->code_three,'C']);
 
                                 $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
@@ -331,7 +334,7 @@ class AccountController extends Controller
                                             WHERE a.code_one = ? AND
                                             a.code_two = ?  AND
                                             a.code_three = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one,$var->code_two,$var->code_three]);
                                 
                                 }else{
@@ -344,7 +347,7 @@ class AccountController extends Controller
                                         a.code_three = ? AND
                                         
                                         d.status = ?
-                                        LIMIT 1'
+                                        '
                                         , [$var->code_one,$var->code_two,$var->code_three,'C']);
                                         
                                         $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
@@ -356,7 +359,7 @@ class AccountController extends Controller
                                         a.code_three = ? AND
                                         
                                         d.status = ?
-                                        LIMIT 1'
+                                        '
                                         , [$var->code_one,$var->code_two,$var->code_three,'C']);
                         
                                         $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
@@ -364,7 +367,7 @@ class AccountController extends Controller
                                             WHERE a.code_one = ? AND
                                             a.code_two = ? AND
                                             a.code_three = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one,$var->code_two,$var->code_three]);
 
                                     }
@@ -391,7 +394,7 @@ class AccountController extends Controller
                                                 WHERE a.code_one = ? AND
                                                 a.code_two = ? AND
                                                 d.status = ?
-                                                LIMIT 1'
+                                                '
                                                 , [$var->code_one,$var->code_two,'C']);
                                 $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
                                                 FROM accounts a
@@ -400,14 +403,14 @@ class AccountController extends Controller
                                                 WHERE a.code_one = ? AND
                                                 a.code_two = ? AND
                                                 d.status = ?
-                                                LIMIT 1'
+                                                '
                                                 , [$var->code_one,$var->code_two,'C']);
                                 
                                 $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ? AND
                                             a.code_two = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one,$var->code_two]);
                                 
                                 }else{
@@ -418,7 +421,7 @@ class AccountController extends Controller
                                     WHERE a.code_one = ? AND
                                     a.code_two = ? AND
                                     d.status = ?
-                                    LIMIT 1'
+                                    '
                                     , [$var->code_one,$var->code_two,'C']);
                                     
                                     $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
@@ -428,14 +431,14 @@ class AccountController extends Controller
                                     WHERE a.code_one = ? AND
                                     a.code_two = ? AND
                                     d.status = ?
-                                    LIMIT 1'
+                                    '
                                     , [$var->code_one,$var->code_two,'C']);
 
                                     $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ? AND
                                             a.code_two = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one,$var->code_two]);
                     
                                 }
@@ -458,7 +461,7 @@ class AccountController extends Controller
                                                 ON d.id_account = a.id
                                             WHERE a.code_one = ? AND
                                             d.status = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one,'C']);
                             $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
                                             FROM accounts a
@@ -466,13 +469,13 @@ class AccountController extends Controller
                                                 ON d.id_account = a.id
                                             WHERE a.code_one = ? AND
                                             d.status = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one,'C']);
 
                             $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one]);
                             
                             }else{
@@ -482,7 +485,7 @@ class AccountController extends Controller
                                     ON d.id_account = a.id
                                 WHERE a.code_one = ? AND
                                 d.status = ?
-                                LIMIT 1'
+                                '
                                 , [$var->code_one,'C']);
                                 
                                 $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
@@ -491,13 +494,13 @@ class AccountController extends Controller
                                     ON d.id_account = a.id
                                 WHERE a.code_one = ? AND
                                 d.status = ?
-                                LIMIT 1'
+                                '
                                 , [$var->code_one,'C']);
 
                                 $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ?
-                                            LIMIT 1'
+                                            '
                                             , [$var->code_one]);
                 
                             }
@@ -731,13 +734,16 @@ class AccountController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y');
         $datenow2 = $date->format('Y-m-d');
-        $last_detail = DetailVoucher::where('status', 'C')->orderBy('id', 'asc')->first();
+        $last_detail_activate = DetailVoucher::where('status', 'C')->orderBy('id', 'desc')->first();
+        $last_detail_desactivate = DetailVoucher::where('status', 'F')->orderBy('id', 'desc')->first();
 
+        
         //Verifica que existan movimientos con los cuales hacer el cierre
-        if(isset($last_detail)){
-            //Verifica que no se haga el cierre 2 veces un mismo dia
-            if(var_dump($last_detail->date_end != $datenow2)){
+        if(isset($last_detail_activate)){
 
+            //Verifica que no se haga el cierre 2 veces un mismo dia
+            if(!(isset($last_detail_desactivate)) || ((isset($last_detail_desactivate)) && (var_dump($last_detail_desactivate->date_end != $datenow2)))){
+                
                 foreach($accounts as $account){ 
                     
                     $var = new AccountHistorial();
@@ -747,19 +753,20 @@ class AccountController extends Controller
 
                     $var->id_account =  $account->id;
                     $var->period =  $datenow;
-                    $var->date_begin = $last_detail->created_at->format('Y-m-d');
+                    $var->date_begin = $last_detail_activate->created_at->format('Y-m-d');
                     $var->date_end = $datenow2;
 
                     $var->balance_previous = $account->balance_previus;
 
-                    if(isset($account->coin)){
-                        $var->balance_current = $account->balance_previus + $account->dolar_debe - $account->dolar_haber;
+                    if(isset($account->coin) && isset($account->rate)){
                         $var->coin =  $account->coin;
+                        $var->rate =  $account->rate;
                     }else{
-                        $var->balance_current = $account->balance_previus + $account->debe - $account->haber;
-                        $var->coin =  $coin;
+                       $var->coin =  $coin;
                     }
-
+                    
+                        $var->balance_current = $account->balance_previus + $account->debe - $account->haber;
+                        
                         $var->debe =  $account->debe ?? 0;
                         $var->haber =  $account->haber ?? 0;
                         $var->debe_coin =  $account->dolar_debe ?? 0;
@@ -770,6 +777,7 @@ class AccountController extends Controller
                     $var->save();
 
                     $var_account->balance_previus = $var->balance_current;
+                    //dd($var_account->description);
                     $var_account->save();
 
                 }
@@ -780,13 +788,13 @@ class AccountController extends Controller
                 
                 return redirect('/accounts/menu')->withSuccess('Se realizo el Cierre Exitosamente!');
 
-    }else{
-        return redirect('/accounts/menu')->withDanger('No se puede realizar el cierre en un mismo dia!');
-    }
+            }else{
+                return redirect('/accounts/menu')->withDanger('No se puede realizar el cierre en un mismo dia!');
+            }
 
-   }else{
-        return redirect('/accounts/menu')->withDanger('No hay movimientos para realizar un cierre!');
-   }
+        }else{
+                return redirect('/accounts/menu')->withDanger('No hay movimientos para realizar un cierre!');
+        }
 }
 
 

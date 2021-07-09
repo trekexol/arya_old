@@ -49,14 +49,10 @@
                 @else
                     @foreach ($detailvouchers as $var)
                     <tr>
-                    <td>{{$var->headers['date'] ?? $var->banks['date'] ?? ''}}</td>
+                    <td>{{$var->headers['date'] ?? ''}}</td>
 
-                    @if(isset($var->id_bank_voucher))
-                        <td>Bancario</td>
-                        <td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_bank_voucher,'bank',$account->id]) }}" title="Crear">{{ $var->id_bank_voucher }}</a>
-                        </td>
-                    @elseif(isset($var->id_invoice))
+                    
+                    @if(isset($var->id_invoice))
                         <td>Factura</td>
                         <td>
                         <a href="{{ route('accounts.header_movements',[$var->id_invoice,'invoice',$account->id]) }}" title="Crear">{{ $var->id_invoice }}</a>
@@ -74,10 +70,8 @@
                     @endif
                     
                                    
-                    @if(isset($var->id_bank_voucher))
-                      
-                        <td>{{$var->banks['description'] ?? ''}}</td>
-                    @elseif (isset($var->id_invoice))
+                   
+                    @if (isset($var->id_invoice))
                         
                         <td>{{$var->headers['description'] ?? ''}} fact({{ $var->id_invoice }}) / {{$var->accounts['description'] ?? ''}}</td>
                     

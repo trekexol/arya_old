@@ -17,12 +17,6 @@ class Client extends Model
         return $this->belongsToMany('App\Quotation')->withTimesTamps();
     }
 
-    public function bankmovements(){
-        return $this->belongsToMany('App\BankMovement')->withTimesTamps();
-
-        
-    }
-
     public function anticipos(){
         return $this->belongsToMany('App\Anticipo')->withTimesTamps();
     }

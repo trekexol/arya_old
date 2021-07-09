@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 
 use App\Account;
-use App\BankVoucher;
 use App\Client;
 use App\DetailVoucher;
 use App\HeaderVoucher;
@@ -49,7 +48,31 @@ class BankMovementController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
         
-        $detailvouchers = DetailVoucher::where('id_bank_voucher','<>',null)->orderby('created_at','asc')->get();
+        /*$detailvouchers = DB::select('SELECT d.*, h.description as header_description, h.reference as header_reference, h.date as header_date
+                            FROM header_vouchers h
+                            LEFT JOIN detail_vouchers d 
+                                ON d.id_header_voucher = h.id
+                            WHERE h.description LIKE ? OR
+                            h.description LIKE ? OR
+                            h.description LIKE ? 
+                            '
+                            , ['Deposito%','Retiro%','Transferencia%']);
+        */
+        $detailvouchers = DB::table('detail_vouchers')
+                            ->join('header_vouchers', 'header_vouchers.id', '=', 'detail_vouchers.id_header_voucher')
+                            ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
+                            ->where('header_vouchers.description','LIKE','Deposito%')
+                            ->orwhere('header_vouchers.description','LIKE','Retiro%')
+                            ->orwhere('header_vouchers.description','LIKE','Transferencia%')
+                            ->select('detail_vouchers.*','header_vouchers.description as header_description', 
+                            'header_vouchers.reference as header_reference','header_vouchers.date as header_date',
+                            'accounts.description as account_description','accounts.code_one as account_code_one',
+                            'accounts.code_two as account_code_two','accounts.code_three as account_code_three',
+                            'accounts.code_four as account_code_four')
+                            ->orderBy('header_vouchers.id','desc')
+                            ->get();
+
+        //dd($detailvouchers);
 
         }elseif($users_role == '2'){
            return view('admin.index');
@@ -79,8 +102,9 @@ class BankMovementController extends Controller
                                         ->orderBY('description','asc')->pluck('description','id')->toArray();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
+            $bcv = $this->search_bcv();
 
-            return view('admin.bankmovements.createdeposit',compact('account','datenow','contrapartidas'));
+            return view('admin.bankmovements.createdeposit',compact('bcv','account','datenow','contrapartidas'));
 
         }else{
             return redirect('/bankmovements')->withDanger('No existe la Cuenta!');
@@ -100,8 +124,9 @@ class BankMovementController extends Controller
                                         ->orderBY('description','asc')->pluck('description','id')->toArray();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
+            $bcv = $this->search_bcv();
 
-            return view('admin.bankmovements.createretirement',compact('account','datenow','contrapartidas'));
+            return view('admin.bankmovements.createretirement',compact('bcv','account','datenow','contrapartidas'));
 
         }else{
             return redirect('/bankmovements')->withDanger('No existe la Cuenta!');
@@ -121,8 +146,9 @@ class BankMovementController extends Controller
                                         ->orderBY('description','asc')->get();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
+            $bcv = $this->search_bcv();
 
-            return view('admin.bankmovements.createtransfer',compact('account','datenow','counterparts'));
+            return view('admin.bankmovements.createtransfer',compact('bcv','account','datenow','counterparts'));
 
         }else{
             return redirect('/bankmovements')->withDanger('No existe la Cuenta!');
@@ -141,7 +167,8 @@ class BankMovementController extends Controller
             'Subcontrapartida'  =>'required',
             'user_id'           =>'required',
             'amount'            =>'required',
-            
+            'rate'            =>'required',
+            'coin'            =>'required',
             'date'              =>'required',
         
         
@@ -149,43 +176,51 @@ class BankMovementController extends Controller
         
         $account = request('id_account');
         $contrapartida = request('Subcontrapartida');
+        $coin = request('coin');
 
         if($account != $contrapartida){
 
             $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+            $rate = str_replace(',', '.', str_replace('.', '', request('rate')));
+
+            if($coin != 'bolivares'){
+                $amount = $amount * $rate;
+            }
 
             $check_amount = $this->check_amount($contrapartida);
 
             if($check_amount->saldo_actual >= $amount){
-                $var = new BankVoucher();
 
-                $var->id_user = request('user_id');
-                $var->description = request('description');
-                $var->type_movement = request('type_movement');
-                $var->date = request('date');
-                $var->reference = request('reference');
-                $var->status =  1;
+                $header = new HeaderVoucher();
+                
+                $header->reference = request('reference');
+                $header->description = "Deposito " . request('description');
+                $header->date = request('date');
+                
             
-                $var->save();
-
+                $header->status =  "1";
+            
+                $header->save();
 
                 $movement = new DetailVoucher();
 
+                $movement->id_header_voucher = $header->id;
                 $movement->id_account = $contrapartida;
-                $movement->id_bank_voucher = $var->id;
                 $movement->user_id = request('user_id');
                 $movement->debe = 0;
                 $movement->haber = $amount;
+                $movement->tasa = $rate;
                 $movement->status = "C";
             
                 $movement->save();
 
                 $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->id_header_voucher = $header->id;
                 $movement_counterpart->id_account = $account;
-                $movement_counterpart->id_bank_voucher = $var->id;
                 $movement_counterpart->user_id = request('user_id');
                 $movement_counterpart->debe = $amount;
                 $movement_counterpart->haber = 0;
+                $movement_counterpart->tasa = $rate;
                 $movement_counterpart->status = "C";
 
                 $movement_counterpart->save();
@@ -230,67 +265,60 @@ class BankMovementController extends Controller
             'id_account'        =>'required',
             'Subcontrapartida'  =>'required',
 
-            'beneficiario'      =>'required',
-            'Subbeneficiario'      =>'required',
-
             'user_id'           =>'required',
             'amount'            =>'required',
-            
+            'rate'            =>'required',
+            'coin'            =>'required',
             'date'              =>'required',
         
         
         ]);
-        
+        //dd($request);
         $account = request('id_account');
         $contrapartida = request('Subcontrapartida');
+        $coin = request('coin');
 
         if($account != $contrapartida){
 
             $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+            $rate = str_replace(',', '.', str_replace('.', '', request('rate')));
+
+            if($coin != 'bolivares'){
+                $amount = $amount * $rate;
+            }
 
             $check_amount = $this->check_amount($account);
 
             if($check_amount->saldo_actual >= $amount){
-                $var = new BankVoucher();
-
-                /*$var->id_account = $contrapartida;
+               
+                $header = new HeaderVoucher();
+                
+                $header->reference = request('reference');
+                $header->description = "Retiro " . request('description');
+                $header->date = request('date');
+                $header->status =  "1";
             
-                $var->id_counterpart = $account;*/
-            
-                if(request('beneficiario') == 1){
-                    $var->id_client = request('Subbeneficiario');
-                    
-                }else{
-                    $var->id_provider = request('Subbeneficiario');
-                }
-
-                $var->id_user = request('user_id');
-                $var->description = request('description');
-                $var->type_movement = request('type_movement');
-                $var->date = request('date');
-                $var->reference = request('reference');
-                $var->status =  1;
-            
-                $var->save();
+                $header->save();
 
 
                 $movement = new DetailVoucher();
-
+                $movement->id_header_voucher = $header->id;
                 $movement->id_account = $account;
-                $movement->id_bank_voucher = $var->id;
                 $movement->user_id = request('user_id');
                 $movement->debe = 0;
                 $movement->haber = $amount;
+                $movement->tasa = $rate;
                 $movement->status = "C";
             
                 $movement->save();
 
                 $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->id_header_voucher = $header->id;
                 $movement_counterpart->id_account = $contrapartida;
-                $movement_counterpart->id_bank_voucher = $var->id;
                 $movement_counterpart->user_id = request('user_id');
                 $movement_counterpart->debe = $amount;
                 $movement_counterpart->haber = 0;
+                $movement_counterpart->tasa = $rate;
                 $movement_counterpart->status = "C";
 
                 $movement_counterpart->save();
@@ -333,7 +361,8 @@ class BankMovementController extends Controller
 
             'user_id'           =>'required',
             'amount'            =>'required',
-            
+            'rate'            =>'required',
+            'coin'            =>'required',
             'date'              =>'required',
         
         
@@ -341,13 +370,16 @@ class BankMovementController extends Controller
         
         $account = request('id_account');
         $contrapartida = request('id_counterpart');
-
-        $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');   
+        $coin = request('coin'); 
 
         if($account != $contrapartida){
 
             $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+            $rate = str_replace(',', '.', str_replace('.', '', request('rate')));
+
+            if($coin != 'bolivares'){
+                $amount = $amount * $rate;
+            }
 
             $check_amount = $this->check_amount($account);
 
@@ -355,32 +387,32 @@ class BankMovementController extends Controller
                
                 $header = new HeaderVoucher();
                 
-                $header->description = "Deposito";
-                $header->date = $datenow;
-                
-            
+                $header->reference = request('reference');
+                $header->description = "Transferencia " . request('description');
+                $header->date = request('date');
                 $header->status =  "1";
             
                 $header->save();
 
 
                 $movement = new DetailVoucher();
-
+                $movement->id_header_voucher = $header->id;
                 $movement->id_account = $account;
-                
                 $movement->user_id = request('user_id');
                 $movement->debe = 0;
                 $movement->haber = $amount;
+                $movement->tasa = $rate;
                 $movement->status = "C";
             
                 $movement->save();
 
                 $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->id_header_voucher = $header->id;
                 $movement_counterpart->id_account = $contrapartida;
-                $movement_counterpart->id_bank_voucher = $var->id;
                 $movement_counterpart->user_id = request('user_id');
                 $movement_counterpart->debe = $amount;
                 $movement_counterpart->haber = 0;
+                $movement_counterpart->tasa = $rate;
                 $movement_counterpart->status = "C";
 
                 $movement_counterpart->save();
@@ -942,6 +974,27 @@ class BankMovementController extends Controller
         }
     }
     
+}
+public function search_bcv()
+{
+    /*Buscar el indice bcv*/
+    $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+    $pageDocument = @file_get_contents($urlToGet);
+    preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+    if ($cap[0] == array()){ // VALIDAR Concidencia
+        $titulo = '0,00';
+    } else {
+        $titulo = $cap[1][2];
+    }
+
+    $bcv_con_formato = $titulo;
+    $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+    /*-------------------------- */
+    return $bcv;
+
 }
 
 
