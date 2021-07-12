@@ -36,13 +36,41 @@ class DetailVoucherController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-   public function create()
+   public function create($coin,$id_header = null,$code_one = null,$code_two = null,$code_three = null,$code_four = null,$period = null)
    {
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
        // $detailvouchers = DetailVoucher::All();
+        $header_disponible = HeaderVoucher::orderBy('id','desc')->first();
+        $header_number = 1;
 
-        return view('admin.detailvouchers.create',compact('datenow'));
+        if(isset($header_disponible)){
+            $header_number = $header_disponible->id + 1;
+        }
+        $bcv = $this->search_bcv();
+        if(($coin == 'bolivares') ){
+            $coin = 'bolivares';
+        }else{
+            //$bcv = null;
+            $coin = 'dolares';
+        }
+        $header = null;
+        $detailvouchers = null;
+        $account = null;
+        if(isset($id_header)){
+            $header = HeaderVoucher::find($id_header);
+            $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
+            if(isset($code_one)){
+                $account = DB::table('accounts')->where('code_one', $code_one)
+                                ->where('code_two', $code_two)
+                                ->where('code_three', $code_three)
+                                ->where('code_four', $code_four)
+                                ->where('period', $period)->first();
+            }
+        }
+        
+
+        return view('admin.detailvouchers.create',compact('account','datenow','header_number','coin','bcv','header','detailvouchers'));
    }
    public function createselect($id_header)
    {
@@ -61,7 +89,7 @@ class DetailVoucherController extends Controller
         
    }
 
-   public function createselectaccount($id_header,$code_one,$code_two,$code_three,$code_four,$period)
+   /*public function createselectaccount($id_header,$code_one,$code_two,$code_three,$code_four,$period)
    {
         $header = HeaderVoucher::find($id_header); 
 
@@ -88,21 +116,22 @@ class DetailVoucherController extends Controller
             return redirect('/detailvouchers/register')->withDanger('No existe el Header!');
         }
 
-   }
+   }*/
 
 
-   public function selectaccount($id_header)
+   public function selectaccount($coin,$id_header)
    {
+      // dd("hola");
        if($id_header != -1){
 
             $header = HeaderVoucher::find($id_header);
             $accounts = Account::All();
             
 
-            return view('admin.detailvouchers.selectaccount',compact('accounts','header'));
+            return view('admin.detailvouchers.selectaccount',compact('coin','accounts','header'));
 
        }else{
-        return redirect('/detailvouchers/register')->withDanger('Seleccione informacion de Cabecera!');
+        return redirect('/detailvouchers/register/'.$coin.'')->withDanger('Seleccione informacion de Cabecera!');
        }
         
    }
@@ -312,18 +341,40 @@ class DetailVoucherController extends Controller
 
 
    public function listheader(Request $request, $var = null){
-    //validar si la peticion es asincrona
-    if($request->ajax()){
-        try{
-            
-            $respuesta = HeaderVoucher::select('id','description','amount')->where('reference',$var)->orderBy('description','asc')->get();
-            return response()->json($respuesta,200);
-        }catch(Throwable $th){
-            return response()->json(false,500);
+        //validar si la peticion es asincrona
+        if($request->ajax()){
+            try{
+                
+                $respuesta = HeaderVoucher::select('id','description')->where('id',$var)->orderBy('description','asc')->get();
+                return response()->json($respuesta,200);
+            }catch(Throwable $th){
+                return response()->json(false,500);
+            }
         }
-    }
     
-}
+    }
+
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        }else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
+    }
 
 
 

@@ -64,7 +64,7 @@
                         @if($intercalar)
                         <?php $intercalar = false;?>
                         <td style="text-align:right; color:black;">  
-                            <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                            <a href="{{ route('detailvouchers.createselectaccount',[$coin,$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
                         </td>
                             <td style="text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
                             <td style="text-align:right; color:black;">{{$account->description}}</td>
@@ -85,7 +85,7 @@
                         @else
                             <?php $intercalar = true; ?>
                             <td style="background: #E0D7CD; text-align:right; color:black;">
-                                <a href="{{ route('detailvouchers.createselectaccount',[$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                                <a href="{{ route('detailvouchers.createselectaccount',[$coin,$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
                              </td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->description}}</td>
@@ -110,3 +110,12 @@
 </div>
   
 @endsection
+@section('javascript')
+    <script>
+        $('#dataTable').DataTable({
+            "ordering": false,
+            "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
+        });
+    </script>
+@endsection                      

@@ -39,29 +39,38 @@ $suma_haber = 0;
                             <label for="reference" class="col-md-2 col-form-label text-md-right">Referencia</label>
 
                             <div class="col-md-3">
-                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ $header->reference ?? old('reference') }}" required autocomplete="reference">
-
+                                @if(isset($header))
+                                    <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ $header->reference ?? old('reference') }}" required autocomplete="reference">
+                                @else
+                                     <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" placeholder="Numero Disponible: {{ $header_number ?? 0 }}" required autocomplete="reference">
+                                @endif
                                 @error('reference')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-1">
+                            <!--<div class="col-md-1">
                                 <a href="{{ route('detailvouchers.selectheadervouche') }}" title="Seleccionar"><i class="fa fa-eye"></i></a>    
                                 <a href="" title="Editar"><i class="fa fa-trash-alt"></i></a>  
-                           
+                            </div>-->
+                            <div class="col-md-1">
+                                <a id="btn_search_reference" class="btn btn-info " onclick="searchReference()" title="Buscar Referencia">Buscar</a>  
                             </div>
-
-                            <a id="btn_search_reference" class="btn btn-info " onclick="searchReference()" title="Buscar Referencia">Buscar</a>  
-                               
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-success" title="Agregarheader">Registrar Cabecera</button>  
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="description" class="col-md-2 col-form-label text-md-right">Descripción</label>
 
                             <div class="col-md-4">
-                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $header->description ?? old('description') }}" readonly required autocomplete="description" >
-                            @error('description')
+                                @if(isset($header))
+                                    <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $header->description ?? old('description') }}" readonly required autocomplete="description" >
+                                @else
+                                    <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description"  required autocomplete="description" >
+                                @endif
+                                @error('description')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -73,8 +82,11 @@ $suma_haber = 0;
                             <label for="date" class="col-md-2 col-form-label text-md-right">Fecha del Comprobante</label>
 
                             <div class="col-md-4">
-                                <input id="date_begin" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="{{ $header->date ?? '' }}" readonly required autocomplete="date">
-
+                                @if(isset($header))
+                                    <input id="date_begin" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="{{ $header->date ?? '' }}" readonly required autocomplete="date">
+                                @else
+                                    <input id="date_begin" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="{{ $datenow ?? '' }}" required autocomplete="date">
+                                @endif
                                 @error('date')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -92,7 +104,35 @@ $suma_haber = 0;
                       
                 <form method="POST" action="{{ route('detailvouchers.store') }}" id="fo" enctype="multipart/form-data">
                     @csrf
-                        
+                    <div class="form-group row" id="formcoin">
+                        <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+
+                        <div class="col-md-2">
+                            <select class="form-control" name="coin" id="coin">
+                                <option value="bolivares">Bolívares</option>
+                                @if($coin == 'dolares')
+                                    <option selected value="dolares">Dolares</option>
+                                @else 
+                                    <option value="dolares">Dolares</option>
+                                @endif
+                            </select>
+                        </div>
+                        <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
+                        <div class="col-md-2">
+                            <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+                            @error('rate')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <a href="#" onclick="refreshrate()" title="tasaactual"><i class="fa fa-redo-alt"></i></a>  
+                        <label  class="col-md-2 col-form-label text-md-right h6">Tasa actual:</label>
+                        <div class="col-md-2 col-form-label text-md-left">
+                            <label for="tasaactual" id="tasaacutal">{{ number_format($bcv, 2, ',', '.')}}</label>
+                        </div>
+                    </div>
+
                         <input type="hidden" name="id_header_voucher" value="{{$header->id ?? ''}}" readonly>
                         <input type="hidden" name="period" value="{{$account->period ?? ''}}" readonly>
                         <input type="hidden" name="id_account" value="{{$account->id ?? ''}}" readonly>
@@ -118,7 +158,7 @@ $suma_haber = 0;
                                         <input id="code_four" type="text" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
-                                        <a href="{{ route('detailvouchers.selectaccount',$header->id ?? -1) }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                        <a href="{{ route('detailvouchers.selectaccount',[$coin,$header->id ?? -1]) }}" title="Editar"><i class="fa fa-eye"></i></a>  
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="description" >Descripción</label>
@@ -240,7 +280,7 @@ $suma_haber = 0;
                         <label for="reference" class="col-md-2 col-form-label text-md-right"><i class="fa fa-circle" style="color: rgb(255, 94, 94)"><strong> No Contabilizado</strong></i></label>
                     </div>
 
-                    <a href="{{route('detailvouchers.contabilizar',$header->id ?? -1) }}" id="btncontabilizar" name="btncontabilizar" class="btn btn-success" title="Contabilizar">Contabilizar</a>  
+                    <a href="{{route('detailvouchers.contabilizar',[$coin,$header->id ?? -1]) }}" id="btncontabilizar" name="btncontabilizar" class="btn btn-success" title="Contabilizar">Contabilizar</a>  
                                             
                 </div>
             </div>
@@ -270,22 +310,44 @@ $suma_haber = 0;
                 
     });
 
-$(document).ready(function () {
-    $("#debe").mask('000.000.000.000.000,00', { reverse: true });
-    
-});
-$(document).ready(function () {
-    $("#haber").mask('000.000.000.000.000,00', { reverse: true });
-    
-});
+    $(document).ready(function () {
+        $("#debe").mask('000.000.000.000.000,00', { reverse: true });
+        
+    });
+    $(document).ready(function () {
+        $("#haber").mask('000.000.000.000.000,00', { reverse: true });
+        
+    });
 
-$(document).ready(function () {
-    $("#reference").mask('000000000000000', { reverse: true });
+    $(document).ready(function () {
+        $("#reference").mask('000000000000000', { reverse: true });
+        
+    });
+    $(document).ready(function () {
+        $("#rate").mask('000.000.000.000.000,00', { reverse: true });
+        
+    });
+
     
-});
 
 
 </script>
+    @if (isset($header))
+        <script>
+            $("#coin").on('change',function(){
+                coin = $(this).val();
+                window.location = "{{route('detailvouchers.create', ['',''])}}"+"/"+coin+"/{{ $header->id }}";
+            });
+        </script>
+    @else
+        <script>
+            $("#coin").on('change',function(){
+                coin = $(this).val();
+                window.location = "{{route('detailvouchers.create', [''])}}"+"/"+coin;
+            });
+        </script>
+    @endif
+    
 @endsection 
 
 @section('javascript')
@@ -297,12 +359,6 @@ $(document).ready(function () {
         btncontabilizar.style.color = '#bbb';
 
        
-    $('#dataTable').DataTable({
-        "ordering": false,
-        "order": [],
-        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
-        'iDisplayLength': '50'
-    });
     
 
     </script> 
@@ -312,15 +368,6 @@ $(document).ready(function () {
 
             btncontabilizar.style.pointerEvents = null;
         
-
-
-    $('#dataTable').DataTable({
-        "ordering": false,
-        "order": [],
-        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
-        'iDisplayLength': '50'
-    });
-    
     </script> 
         
     @endif
@@ -329,7 +376,12 @@ $(document).ready(function () {
 
 @section('consulta')
     <script>
-            
+        $('#dataTable').DataTable({
+            "ordering": false,
+            "order": [],
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
+        });
+    
         function searchReference(){
             
             let reference_id = document.getElementById("reference").value; 
@@ -357,7 +409,7 @@ $(document).ready(function () {
                         response.forEach((item, index, object)=>{
                             let {id,description,date} = item;
                           
-                           window.location = "{{route('detailvouchers.createselect', '')}}"+"/"+id;
+                           window.location = "{{route('detailvouchers.create', [$coin,''])}}"+"/"+id;
                            //inputDescription.value = description;
                            //inputDate.value = date;
                         });
@@ -373,7 +425,7 @@ $(document).ready(function () {
                 
                 },
                 error:(xhr)=>{
-                    alert('Presentamos Inconvenientes');
+                    alert('No se encuentra el numero de cabecera');
                 }
             })
         }

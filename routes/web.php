@@ -368,21 +368,21 @@ Route::group(["prefix"=>'headervouchers'],function(){
 
 Route::group(["prefix"=>'detailvouchers'],function(){
     Route::get('/','DetailVoucherController@index')->name('detailvouchers');
-    Route::get('register','DetailVoucherController@create')->name('detailvouchers.create');
+    Route::get('register/{coin}/{id_header?}/{code_one?}/{code_two?}/{code_three?}/{code_four?}/{period?}','DetailVoucherController@create')->name('detailvouchers.create');
     Route::post('store','DetailVoucherController@store')->name('detailvouchers.store');
     Route::get('{id}/edit','DetailVoucherController@edit')->name('detailvouchers.edit');
     Route::delete('{id}/delete','DetailVoucherController@destroy')->name('detailvouchers.delete');
     Route::patch('{id}/update','DetailVoucherController@update')->name('detailvouchers.update');
    
-    Route::get('selectaccount/{id_header}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
+    Route::get('selectaccount/{coin}/{id_header}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
     
     Route::get('selectheadervouche','DetailVoucherController@selectheader')->name('detailvouchers.selectheadervouche');
 
-    Route::get('register/{id_header}','DetailVoucherController@createselect')->name('detailvouchers.createselect');
+   // Route::get('register/{coin}/{id_header}','DetailVoucherController@createselect')->name('detailvouchers.createselect');
 
-    Route::get('register/{id_header}/{code_one}/{code_two}/{code_three}/{code_four}/{period}','DetailVoucherController@createselectaccount')->name('detailvouchers.createselectaccount');
+    //Route::get('register/{coin}/{id_header}/{code_one}/{code_two}/{code_three}/{code_four}/{period}','DetailVoucherController@createselectaccount')->name('detailvouchers.createselectaccount');
 
-    Route::get('contabilizar/{id_header}','DetailVoucherController@contabilizar')->name('detailvouchers.contabilizar');
+    Route::get('contabilizar/{coin}/{id_header}','DetailVoucherController@contabilizar')->name('detailvouchers.contabilizar');
     
     Route::get('listheader/{var?}','DetailVoucherController@listheader')->name('detailvouchers.listheader');
 });

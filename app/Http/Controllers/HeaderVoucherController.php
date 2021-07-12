@@ -39,6 +39,7 @@ class HeaderVoucherController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
+        
         return view('admin.headervouchers.create',compact('datenow'));
    }
 
@@ -52,6 +53,7 @@ class HeaderVoucherController extends Controller
     */
    public function store(Request $request)
     {
+        //dd($request);
          $data = request()->validate([
                 
                 
@@ -65,7 +67,14 @@ class HeaderVoucherController extends Controller
 
             $var = new HeaderVoucher();
 
-            $var->reference = request('reference');
+            $header_id = request('reference');
+            $header = HeaderVoucher::find($header_id);
+
+            if(isset($header)){
+                return redirect('/detailvouchers/register')->withDanger('Ya el numero de cabecera existe! , elija uno correctamente');
+            }
+            $var->id = $header_id;
+            $var->reference = $header_id;
             $var->description = request('description');
             $var->date = request('date');
            
@@ -74,7 +83,7 @@ class HeaderVoucherController extends Controller
         
             $var->save();
 
-            return redirect('/headervouchers')->withSuccess('Registro Exitoso!');
+            return redirect('/detailvouchers/register/'.$header_id.'')->withSuccess('Se registro la cabecera Exitosamente!');
 
        
     }
