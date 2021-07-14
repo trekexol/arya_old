@@ -59,7 +59,7 @@
                     @foreach ($detailvouchers as $key => $var)
                     <tr>
                     <td class="text-center font-weight-bold">{{$var->headers['date']}}</td>
-                    <td class="text-center font-weight-bold">{{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
+                    <td class="text-center font-weight-bold">{{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}.{{$var->accounts['code_five']}}</td>
                     <td class="text-center font-weight-bold">{{$var->id_header_voucher}}</td>
                     <td class="text-center font-weight-bold">{{$var->id_invoice}}</td>
                     <td class="font-weight-bold">{{$var->headers['description']}} fact({{ $var->id_invoice }}) / {{$var->accounts['description']}}</td>

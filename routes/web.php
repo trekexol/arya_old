@@ -347,7 +347,7 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::post('store/newlevel','AccountController@storeNewLevel')->name('accounts.storeNewLevel');
     
 
-    Route::get('register/{code_one}/{code_two}/{code_three}/{code_four}/{period}','AccountController@createlevel')->name('accounts.createlevel');
+    Route::get('register/{id_account}','AccountController@createlevel')->name('accounts.createlevel');
     
     Route::get('movementaccount/{id_account}/{coin?}','AccountController@movements')->name('accounts.movements');
 
@@ -368,13 +368,13 @@ Route::group(["prefix"=>'headervouchers'],function(){
 
 Route::group(["prefix"=>'detailvouchers'],function(){
     Route::get('/','DetailVoucherController@index')->name('detailvouchers');
-    Route::get('register/{coin}/{id_header?}/{code_one?}/{code_two?}/{code_three?}/{code_four?}/{period?}','DetailVoucherController@create')->name('detailvouchers.create');
+    Route::get('register/{coin}/{id_header?}/{id_account?}','DetailVoucherController@create')->name('detailvouchers.create');
     Route::post('store','DetailVoucherController@store')->name('detailvouchers.store');
-    Route::get('{id}/edit','DetailVoucherController@edit')->name('detailvouchers.edit');
+    Route::get('{coin}/{id}/edit','DetailVoucherController@edit')->name('detailvouchers.edit');
     Route::delete('{id}/delete','DetailVoucherController@destroy')->name('detailvouchers.delete');
     Route::patch('{id}/update','DetailVoucherController@update')->name('detailvouchers.update');
    
-    Route::get('selectaccount/{coin}/{id_header}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
+    Route::get('selectaccount/{coin}/{id_header}/{control}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
     
     Route::get('selectheadervouche','DetailVoucherController@selectheader')->name('detailvouchers.selectheadervouche');
 

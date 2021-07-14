@@ -19,6 +19,7 @@ class CreateAccountsTable extends Migration
              $table->integer('code_two');
              $table->integer('code_three');
              $table->integer('code_four');
+             $table->integer('code_five');
              $table->integer('period');
              $table->string('description',100);
              $table->string('type',10);

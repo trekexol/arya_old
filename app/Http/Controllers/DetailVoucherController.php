@@ -36,7 +36,7 @@ class DetailVoucherController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-   public function create($coin,$id_header = null,$code_one = null,$code_two = null,$code_three = null,$code_four = null,$period = null)
+   public function create($coin,$id_header = null,$id_account = null)
    {
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
@@ -57,20 +57,19 @@ class DetailVoucherController extends Controller
         $header = null;
         $detailvouchers = null;
         $account = null;
+        $detailvouchers_last = null;
         if(isset($id_header)){
             $header = HeaderVoucher::find($id_header);
             $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
-            if(isset($code_one)){
-                $account = DB::table('accounts')->where('code_one', $code_one)
-                                ->where('code_two', $code_two)
-                                ->where('code_three', $code_three)
-                                ->where('code_four', $code_four)
-                                ->where('period', $period)->first();
+            //se usa el ultimo movimiento agregado de la cabecera para tomar cual fue la tasa que se uso
+            $detailvouchers_last = DetailVoucher::where('id_header_voucher',$id_header)->orderBy('id','desc')->first();
+            if(isset($id_account)){
+                $account = Account::find($id_account);
             }
         }
         
 
-        return view('admin.detailvouchers.create',compact('account','datenow','header_number','coin','bcv','header','detailvouchers'));
+        return view('admin.detailvouchers.create',compact('detailvouchers_last','account','datenow','header_number','coin','bcv','header','detailvouchers'));
    }
    public function createselect($id_header)
    {
@@ -89,47 +88,19 @@ class DetailVoucherController extends Controller
         
    }
 
-   /*public function createselectaccount($id_header,$code_one,$code_two,$code_three,$code_four,$period)
+  
+
+
+   public function selectaccount($coin,$id_header,$control)
    {
-        $header = HeaderVoucher::find($id_header); 
-
-        $account = DB::table('accounts')->where('code_one', $code_one)
-                                ->where('code_two', $code_two)
-                                ->where('code_three', $code_three)
-                                ->where('code_four', $code_four)
-                                ->where('period', $period)->first();
-
-        $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
-
-        if(isset($header)){                           
-            if(isset($account)){     
-
-                $date = Carbon::now();
-                $datenow = $date->format('Y-m-d');    
-
-                return view('admin.detailvouchers.create',compact('header','account','datenow','detailvouchers'));
-        
-            }else{
-                return redirect('/detailvouchers/register')->withDanger('No existe la Cuenta!');
-        }
-        }else{
-            return redirect('/detailvouchers/register')->withDanger('No existe el Header!');
-        }
-
-   }*/
-
-
-   public function selectaccount($coin,$id_header)
-   {
-      // dd("hola");
+       
        if($id_header != -1){
 
             $header = HeaderVoucher::find($id_header);
-            $accounts = Account::All();
+            $accounts = $this->calculation('bolivares');
             
-
-            return view('admin.detailvouchers.selectaccount',compact('coin','accounts','header'));
-
+            return view('admin.detailvouchers.selectaccount',compact('coin','accounts','header','control'));
+            
        }else{
         return redirect('/detailvouchers/register/'.$coin.'')->withDanger('Seleccione informacion de Cabecera!');
        }
@@ -145,16 +116,14 @@ class DetailVoucherController extends Controller
    }
 
 
-   public function contabilizar($id_header)
+   public function contabilizar($coin,$id_header)
    {
 
   //  dd($id_header);
     $header = HeaderVoucher::find($id_header); 
 
-    if(isset($header)){  
+        if(isset($header)){  
 
-           
-            
             $affected = DB::table('detail_vouchers')->where('id_header_voucher', '=', $id_header)->update(array('status' => 'C'));
 
             $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
@@ -173,16 +142,16 @@ class DetailVoucherController extends Controller
             
              /*----------------------------- */
 
-
+                $bcv = $this->search_bcv();
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');    
                                 
-                    return view('admin.detailvouchers.create',compact('header','datenow','detailvouchers'));
+                    return view('admin.detailvouchers.create',compact('bcv','coin','header','datenow','detailvouchers'));
                                         
             
-            }else{
-                return redirect('/detailvouchers/register')->withDanger('No existe el Header!');
-            }                              
+        }else{
+            return redirect('/detailvouchers/register')->withDanger('No existe el Header!');
+        }                              
 
    }
 
@@ -195,7 +164,7 @@ class DetailVoucherController extends Controller
    public function store(Request $request)
     {
        
-
+        //dd($request);
 
          $data = request()->validate([
                 
@@ -214,6 +183,7 @@ class DetailVoucherController extends Controller
 
             $var = new DetailVoucher();
 
+            $coin = request('coin');
             
             $var->id_account = request('id_account');
             $var->id_header_voucher = request('id_header_voucher');
@@ -221,29 +191,29 @@ class DetailVoucherController extends Controller
 
             $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', request('debe')));
             $valor_sin_formato_haber = str_replace(',', '.', str_replace('.', '', request('haber')));
+            $valor_sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
 
+            if($coin == 'bolivares'){
+                $var->debe = $valor_sin_formato_debe;
+                $var->haber = $valor_sin_formato_haber;
+                $var->tasa = $valor_sin_formato_rate;
+               
+            }else{
+                $var->debe = $valor_sin_formato_debe * $valor_sin_formato_rate;
+                $var->haber = $valor_sin_formato_haber * $valor_sin_formato_rate;
+                $var->tasa = $valor_sin_formato_rate;
+               
+            }
 
-            $var->debe = $valor_sin_formato_debe;
-            $var->haber = $valor_sin_formato_haber;
-           
+            
+            
           
             $var->status =  "N";
         
             $var->save();
 
-            return redirect('/detailvouchers/register/'.$var->id_header_voucher.'');
-           /* $account = DB::table('accounts')->where('code_one', $var->code_one)
-                                ->where('code_two', $var->code_two)
-                                ->where('code_three', $var->code_three)
-                                ->where('code_four', $var->code_four)
-                                ->where('period', $var->period)->first();
-
-
-           return redirect('/detailvouchers/register/'.$var->id_header_voucher.'')->with('detail',$var)->with('accountdetail',$account);
-           */
-          /* return redirect('/detailvouchers/register/'.$var->id_header_voucher.'
-            /'.$var->code_one.'/'.$var->code_two.'/'.$var->code_three.'/'.$var->code_four.'
-            /'.$var->period.'');*/
+            return redirect('/detailvouchers/register/'.$coin.'/'.$var->id_header_voucher.'')->withSuccess('Agregado el movimiento Correctamente, para procesarlo debe contabilizar!');
+           
     }
 
    /**
@@ -263,11 +233,13 @@ class DetailVoucherController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function edit($id)
+   public function edit($coin,$id)
    {
         $var = DetailVoucher::find($id);
+
+        $bcv = $this->search_bcv();
        
-        return view('admin.detailvouchers.edit',compact('var'));
+        return view('admin.detailvouchers.edit',compact('var','bcv','coin'));
   
    }
 
@@ -376,6 +348,491 @@ class DetailVoucherController extends Controller
 
     }
 
+    public function calculation($coin)
+    {
+        
+        $accounts = Account::orderBy('code_one', 'asc')
+                         ->orderBy('code_two', 'asc')
+                         ->orderBy('code_three', 'asc')
+                         ->orderBy('code_four', 'asc')
+                         ->orderBy('code_five', 'asc')
+                         ->get();
+        
+                       
+        if(isset($accounts)) {
+            
+            foreach ($accounts as $var) 
+            {
+                if($var->code_one != 0)
+                {
+                    if($var->code_two != 0)
+                    {
+                        if($var->code_three != 0)
+                        {
+                            if($var->code_four != 0)
+                            {
+                                if($var->code_five != 0)
+                                {
+                                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
+                                
+                                     if($coin == 'bolivares'){
+                                        $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+                                        $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                        $total_dolar_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                        $total_dolar_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS dolar
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                                        $var->balance =  $var->balance_previus;
+    
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                                        FROM accounts a
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ?  AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? 
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
+                                    
+                                        }else{
+                                            $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                            FROM accounts a
+                                            INNER JOIN detail_vouchers d 
+                                                ON d.id_account = a.id
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ? AND
+                                            a.code_three = ? AND
+                                            a.code_four = ? AND
+                                            a.code_five = ? AND
+                                            d.status = ?
+                                            '
+                                            , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+                                            
+                                            $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                            FROM accounts a
+                                            INNER JOIN detail_vouchers d 
+                                                ON d.id_account = a.id
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ? AND
+                                            a.code_three = ? AND
+                                            a.code_four = ? AND
+                                            a.code_five = ? AND
+                                            d.status = ?
+                                            '
+                                            , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                            $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
+                                                        FROM accounts a
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ?  AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? 
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
+    
+                                            if(($var->balance_previus != 0) && ($var->rate !=0))
+                                            $var->balance =  $var->balance_previus / $var->rate;
+                                        }
+                                        $total_debe = $total_debe[0]->debe;
+                                        $total_haber = $total_haber[0]->haber;
+                                        if(isset($total_dolar_debe[0]->dolar)){
+                                            $total_dolar_debe = $total_dolar_debe[0]->dolar;
+                                            $var->dolar_debe = $total_dolar_debe;
+                                        }
+                                        if(isset($total_dolar_haber[0]->dolar)){
+                                            $total_dolar_haber = $total_dolar_haber[0]->dolar;
+                                            $var->dolar_haber = $total_dolar_haber;
+                                        }
+                                    
+                                        $var->debe = $total_debe;
+                                        $var->haber = $total_haber;
+                                
+                                }else{
+                            
+                                    /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
+                                
+                                    if($coin == 'bolivares'){
+                                    $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                                    FROM accounts a
+                                                    INNER JOIN detail_vouchers d 
+                                                        ON d.id_account = a.id
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ? AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ? AND
+                                                    d.status = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+                                    $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                                    FROM accounts a
+                                                    INNER JOIN detail_vouchers d 
+                                                        ON d.id_account = a.id
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ? AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ? AND
+                                                    d.status = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
+                                    $total_dolar_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                                    FROM accounts a
+                                                    INNER JOIN detail_vouchers d 
+                                                        ON d.id_account = a.id
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ? AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ? AND
+                                                    d.status = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+
+                                    $total_dolar_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS dolar
+                                                    FROM accounts a
+                                                    INNER JOIN detail_vouchers d 
+                                                        ON d.id_account = a.id
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ? AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ? AND
+                                                    d.status = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+
+                                                    $var->balance =  $var->balance_previus;
+
+                                    $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                                    FROM accounts a
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ?  AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four]);
+                                
+                                    }else{
+                                        $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                        FROM accounts a
+                                        INNER JOIN detail_vouchers d 
+                                            ON d.id_account = a.id
+                                        WHERE a.code_one = ? AND
+                                        a.code_two = ? AND
+                                        a.code_three = ? AND
+                                        a.code_four = ? AND
+                                        d.status = ?
+                                        '
+                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+                                        
+                                        $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                        FROM accounts a
+                                        INNER JOIN detail_vouchers d 
+                                            ON d.id_account = a.id
+                                        WHERE a.code_one = ? AND
+                                        a.code_two = ? AND
+                                        a.code_three = ? AND
+                                        a.code_four = ? AND
+                                        d.status = ?
+                                        '
+                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
+                                                    FROM accounts a
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ?  AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four]);
+
+                                        /*if(($var->balance_previus != 0) && ($var->rate !=0))
+                                        $var->balance =  $var->balance_previus / $var->rate;*/
+                                    }
+                                    $total_debe = $total_debe[0]->debe;
+                                    $total_haber = $total_haber[0]->haber;
+                                    if(isset($total_dolar_debe[0]->dolar)){
+                                        $total_dolar_debe = $total_dolar_debe[0]->dolar;
+                                        $var->dolar_debe = $total_dolar_debe;
+                                    }
+                                    if(isset($total_dolar_haber[0]->dolar)){
+                                        $total_dolar_haber = $total_dolar_haber[0]->dolar;
+                                        $var->dolar_haber = $total_dolar_haber;
+                                    }
+                                
+                                    $var->debe = $total_debe;
+                                    $var->haber = $total_haber;
+
+                                    $total_balance = $total_balance[0]->balance;
+                                    $var->balance = $total_balance;
+                                }  
+                            }else{          
+                            
+                                if($coin == 'bolivares'){
+                                $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                                FROM accounts a
+                                                INNER JOIN detail_vouchers d 
+                                                    ON d.id_account = a.id
+                                                WHERE a.code_one = ? AND
+                                                a.code_two = ? AND
+                                                a.code_three = ? AND
+                                                
+                                                d.status = ?
+                                                '
+                                                , [$var->code_one,$var->code_two,$var->code_three,'C']);
+                                $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                                FROM accounts a
+                                                INNER JOIN detail_vouchers d 
+                                                    ON d.id_account = a.id
+                                                WHERE a.code_one = ? AND
+                                                a.code_two = ? AND
+                                                a.code_three = ? AND
+                                                
+                                                d.status = ?
+                                                '
+                                                , [$var->code_one,$var->code_two,$var->code_three,'C']);
+
+                                $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ?  AND
+                                            a.code_three = ?
+                                            '
+                                            , [$var->code_one,$var->code_two,$var->code_three]);
+                                
+                                }else{
+                                        $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                        FROM accounts a
+                                        INNER JOIN detail_vouchers d 
+                                            ON d.id_account = a.id
+                                        WHERE a.code_one = ? AND
+                                        a.code_two = ? AND
+                                        a.code_three = ? AND
+                                        
+                                        d.status = ?
+                                        '
+                                        , [$var->code_one,$var->code_two,$var->code_three,'C']);
+                                        
+                                        $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                        FROM accounts a
+                                        INNER JOIN detail_vouchers d 
+                                            ON d.id_account = a.id
+                                        WHERE a.code_one = ? AND
+                                        a.code_two = ? AND
+                                        a.code_three = ? AND
+                                        
+                                        d.status = ?
+                                        '
+                                        , [$var->code_one,$var->code_two,$var->code_three,'C']);
+                        
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ? AND
+                                            a.code_three = ?
+                                            '
+                                            , [$var->code_one,$var->code_two,$var->code_three]);
+
+                                    }
+                                    $total_debe = $total_debe[0]->debe;
+                                    $total_haber = $total_haber[0]->haber;
+                                
+                                    $var->debe = $total_debe;
+                                    $var->haber = $total_haber;
+
+                                    
+
+                                    $total_balance = $total_balance[0]->balance;
+                                    $var->balance = $total_balance;
+                                      
+                                            
+                            }           
+                        }else{
+                                            
+                            if($coin == 'bolivares'){
+                                $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                                FROM accounts a
+                                                INNER JOIN detail_vouchers d 
+                                                    ON d.id_account = a.id
+                                                WHERE a.code_one = ? AND
+                                                a.code_two = ? AND
+                                                d.status = ?
+                                                '
+                                                , [$var->code_one,$var->code_two,'C']);
+                                $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                                FROM accounts a
+                                                INNER JOIN detail_vouchers d 
+                                                    ON d.id_account = a.id
+                                                WHERE a.code_one = ? AND
+                                                a.code_two = ? AND
+                                                d.status = ?
+                                                '
+                                                , [$var->code_one,$var->code_two,'C']);
+                                
+                                $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ?
+                                            '
+                                            , [$var->code_one,$var->code_two]);
+                                
+                                }else{
+                                    $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                    FROM accounts a
+                                    INNER JOIN detail_vouchers d 
+                                        ON d.id_account = a.id
+                                    WHERE a.code_one = ? AND
+                                    a.code_two = ? AND
+                                    d.status = ?
+                                    '
+                                    , [$var->code_one,$var->code_two,'C']);
+                                    
+                                    $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                    FROM accounts a
+                                    INNER JOIN detail_vouchers d 
+                                        ON d.id_account = a.id
+                                    WHERE a.code_one = ? AND
+                                    a.code_two = ? AND
+                                    d.status = ?
+                                    '
+                                    , [$var->code_one,$var->code_two,'C']);
+
+                                    $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ?
+                                            '
+                                            , [$var->code_one,$var->code_two]);
+                    
+                                }
+                                
+                                $total_debe = $total_debe[0]->debe;
+                                $total_haber = $total_haber[0]->haber;
+                                $var->debe = $total_debe;
+                                $var->haber = $total_haber;
+
+                                
+
+                                $total_balance = $total_balance[0]->balance;
+                                $var->balance = $total_balance;
+                        }
+                    }else{
+                        if($coin == 'bolivares'){
+                            $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                            FROM accounts a
+                                            INNER JOIN detail_vouchers d 
+                                                ON d.id_account = a.id
+                                            WHERE a.code_one = ? AND
+                                            d.status = ?
+                                            '
+                                            , [$var->code_one,'C']);
+                            $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                            FROM accounts a
+                                            INNER JOIN detail_vouchers d 
+                                                ON d.id_account = a.id
+                                            WHERE a.code_one = ? AND
+                                            d.status = ?
+                                            '
+                                            , [$var->code_one,'C']);
+
+                            $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ?
+                                            '
+                                            , [$var->code_one]);
+                            
+                            }else{
+                                $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                FROM accounts a
+                                INNER JOIN detail_vouchers d 
+                                    ON d.id_account = a.id
+                                WHERE a.code_one = ? AND
+                                d.status = ?
+                                '
+                                , [$var->code_one,'C']);
+                                
+                                $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                FROM accounts a
+                                INNER JOIN detail_vouchers d 
+                                    ON d.id_account = a.id
+                                WHERE a.code_one = ? AND
+                                d.status = ?
+                                '
+                                , [$var->code_one,'C']);
+
+                                $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                            FROM accounts a
+                                            WHERE a.code_one = ?
+                                            '
+                                            , [$var->code_one]);
+                
+                            }
+                            $total_debe = $total_debe[0]->debe;
+                            $total_haber = $total_haber[0]->haber;
+                            $var->debe = $total_debe;
+                            $var->haber = $total_haber;
+
+                            $total_balance = $total_balance[0]->balance;
+
+                            $var->balance = $total_balance;
+
+                    }
+                }else{
+                    return redirect('/accounts/menu')->withDanger('El codigo uno es igual a cero!');
+                }
+            } 
+        
+        }else{
+            return redirect('/accounts/menu')->withDanger('No hay Cuentas');
+        }              
+                 
+       
+        
+         return $accounts;
+    }
 
 }

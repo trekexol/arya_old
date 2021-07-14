@@ -112,32 +112,36 @@ class AccountController extends Controller
         return view('admin.accounts.create',compact('datenow','rate'));
    }
 
-    public function createlevel($code_one,$code_two,$code_three,$code_four,$period)
+    public function createlevel($id_account)
     {
     
-            $var = DB::table('accounts')->where('code_one', $code_one)
-                                        ->where('code_two', $code_two)
-                                        ->where('code_three', $code_three)
-                                        ->where('code_four', $code_four)
-                                        ->where('period', $period)->first();
+            $var = DB::table('accounts')->where('id', $id_account)->first();
                                     
             if(isset($var)){          
                             
-                    if($code_one != 0){
+                    if($var->code_one != 0){
                         
-                        if($code_two != 0){
+                        if($var->code_two != 0){
 
 
-                            if($code_three != 0){
+                            if($var->code_three != 0){
 
 
-                                if($code_four != 0){
+                                if($var->code_four != 0){
 
+                                                $level = DB::table('accounts')->where('code_one', $var->code_one)
+                                                                            ->where('code_two', $var->code_two)
+                                                                            ->where('code_three', $var->code_three)
+                                                                            ->where('code_four', $var->code_four)
+                                                                            ->max('code_five');
+                                                $var->code_five = $level + 1;
+                                                $var->level = 5;
+    
                                 }else{
                                 
-                                    $level = DB::table('accounts')->where('code_one', $code_one)
-                                                                ->where('code_two', $code_two)
-                                                                ->where('code_three', $code_three)
+                                    $level = DB::table('accounts')->where('code_one', $var->code_one)
+                                                                ->where('code_two', $var->code_two)
+                                                                ->where('code_three', $var->code_three)
                                                         ->max('code_four');
                                     $var->code_four = $level + 1;
                                     $var->level = 4;
@@ -145,8 +149,8 @@ class AccountController extends Controller
                                 }
                             }else{
                                 
-                                $level = DB::table('accounts')->where('code_one', $code_one)
-                                                                ->where('code_two', $code_two)
+                                $level = DB::table('accounts')->where('code_one', $var->code_one)
+                                                                ->where('code_two', $var->code_two)
                                                         ->max('code_three');
                                 $var->code_three = $level + 1;
                                 $var->level = 3;
@@ -155,7 +159,7 @@ class AccountController extends Controller
                         }else{
                             //Cuentas NIVEL 2
                         //level trae el valor de code_two mas alto
-                            $level = DB::table('accounts')->where('code_one', $code_one)
+                            $level = DB::table('accounts')->where('code_one', $var->code_one)
                                                         ->max('code_two');
                             
                             //luego que tenemos el valor del codigo two mas alto, le sumamos uno para crear el proximo
@@ -191,6 +195,7 @@ class AccountController extends Controller
                          ->orderBy('code_two', 'asc')
                          ->orderBy('code_three', 'asc')
                          ->orderBy('code_four', 'asc')
+                         ->orderBy('code_five', 'asc')
                          ->get();
         
                        
@@ -206,6 +211,130 @@ class AccountController extends Controller
                         {
                             if($var->code_four != 0)
                             {
+                                if($var->code_five != 0)
+                                {
+                                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
+                                
+                                     if($coin == 'bolivares'){
+                                        $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+                                        $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                        $total_dolar_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                        $total_dolar_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS dolar
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                                        $var->balance =  $var->balance_previus;
+    
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                                        FROM accounts a
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ?  AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? 
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
+                                    
+                                        }else{
+                                            $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                            FROM accounts a
+                                            INNER JOIN detail_vouchers d 
+                                                ON d.id_account = a.id
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ? AND
+                                            a.code_three = ? AND
+                                            a.code_four = ? AND
+                                            a.code_five = ? AND
+                                            d.status = ?
+                                            '
+                                            , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+                                            
+                                            $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                            FROM accounts a
+                                            INNER JOIN detail_vouchers d 
+                                                ON d.id_account = a.id
+                                            WHERE a.code_one = ? AND
+                                            a.code_two = ? AND
+                                            a.code_three = ? AND
+                                            a.code_four = ? AND
+                                            a.code_five = ? AND
+                                            d.status = ?
+                                            '
+                                            , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                            $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
+                                                        FROM accounts a
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ?  AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? 
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
+    
+                                            if(($var->balance_previus != 0) && ($var->rate !=0))
+                                            $var->balance =  $var->balance_previus / $var->rate;
+                                        }
+                                        $total_debe = $total_debe[0]->debe;
+                                        $total_haber = $total_haber[0]->haber;
+                                        if(isset($total_dolar_debe[0]->dolar)){
+                                            $total_dolar_debe = $total_dolar_debe[0]->dolar;
+                                            $var->dolar_debe = $total_dolar_debe;
+                                        }
+                                        if(isset($total_dolar_haber[0]->dolar)){
+                                            $total_dolar_haber = $total_dolar_haber[0]->dolar;
+                                            $var->dolar_haber = $total_dolar_haber;
+                                        }
+                                    
+                                        $var->debe = $total_debe;
+                                        $var->haber = $total_haber;
+                                
+                                }else{
+                            
                                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
                                 
                                     if($coin == 'bolivares'){
@@ -257,6 +386,15 @@ class AccountController extends Controller
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
                                                     $var->balance =  $var->balance_previus;
+
+                                    $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                                    FROM accounts a
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ?  AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four]);
                                 
                                     }else{
                                         $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
@@ -283,8 +421,17 @@ class AccountController extends Controller
                                         '
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
-                                        if(($var->balance_previus != 0) && ($var->rate !=0))
-                                        $var->balance =  $var->balance_previus / $var->rate;
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
+                                                    FROM accounts a
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ?  AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four]);
+
+                                        /*if(($var->balance_previus != 0) && ($var->rate !=0))
+                                        $var->balance =  $var->balance_previus / $var->rate;*/
                                     }
                                     $total_debe = $total_debe[0]->debe;
                                     $total_haber = $total_haber[0]->haber;
@@ -300,9 +447,9 @@ class AccountController extends Controller
                                     $var->debe = $total_debe;
                                     $var->haber = $total_haber;
 
-                                   
-                                    
-                                    
+                                    $total_balance = $total_balance[0]->balance;
+                                    $var->balance = $total_balance;
+                                }  
                             }else{          
                             
                                 if($coin == 'bolivares'){
@@ -598,6 +745,7 @@ class AccountController extends Controller
                                 ->where('code_two', request('code_two'))
                                 ->where('code_three', request('code_three'))
                                 ->where('code_four', request('code_four'))
+                                ->where('code_five', request('code_five'))
                                 ->where('period', request('period'))->first();
 
         if(!isset($exist)){
@@ -621,6 +769,7 @@ class AccountController extends Controller
             $var->code_two = request('code_two');
             $var->code_three = request('code_three');
             $var->code_four = request('code_four');
+            $var->code_five = request('code_five');
 
             $var->period = request('period');
             $var->description = request('description');

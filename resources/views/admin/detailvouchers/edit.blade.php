@@ -23,74 +23,77 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card">
-                    <div class="card-header">Editar Comprobante Cabecera</div>
+                    <div class="card-header">Editar Movimiento</div>
     
                     <div class="card-body">
-                    <form  method="POST"   action="{{ route('headervouchers.update',$var->id) }}" enctype="multipart/form-data" >
+                    <form  method="POST"   action="{{ route('detailvouchers.update',$var->id) }}" enctype="multipart/form-data" >
                         @method('PATCH')
                         @csrf()
                       
-                    
-
                         <div class="form-group row">
-                            <label for="reference" class="col-md-4 col-form-label text-md-right">Referencia</label>
+                            <label for="account" class="col-md-3 col-form-label text-md-right">Cuenta:</label>
 
                             <div class="col-md-6">
-                                <input id="reference" type="number" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ $var->reference }}" required autocomplete="reference" >
+                                <input id="account" type="text" class="form-control @error('account') is-invalid @enderror" readonly name="account" value="{{ $var->accounts['code_one'] }}.{{ $var->accounts['code_two'] }}.{{ $var->accounts['code_three'] }}.{{ $var->accounts['code_four'] }} - {{ $var->accounts['description'] }}" required autocomplete="account" >
 
-                                @error('reference')
+                                @error('account')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
+                            <a href="{{ route('detailvouchers.selectaccount',[$coin,$var->id_header_voucher,'edit']) }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                   
                         </div>
+                       
                         <div class="form-group row">
-                            <label for="description" class="col-md-4 col-form-label text-md-right">Descripción</label>
-
-                            <div class="col-md-6">
-                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $var->description }}" required autocomplete="description" >
-                            @error('description')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="date" class="col-md-4 col-form-label text-md-right">Fecha</label>
-
+                            <label for="rate" class="col-md-3 col-form-label text-md-right">Tasa:</label>
                             <div class="col-md-4">
-                                <input id="date_begin" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="{{ $var->date }}" required autocomplete="date" step="any" />
-
-                                @error('date')
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+                                @error('rate')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
+                            <!--<a href="#" onclick="refreshrate()" title="tasaactual"><i class="fa fa-redo-alt"></i></a> --> 
+                            <label  class="col-md-2 col-form-label text-md-right h6">Tasa actual:</label>
+                            <div class="col-md-2 col-form-label text-md-left">
+                                <label for="tasaactual" id="tasaacutal">{{ number_format($bcv, 2, ',', '.')}}</label>
+                            </div>
                         </div>
                         <div class="form-group row">
-                            <label for="rol" class="col-md-4 col-form-label text-md-right">Status</label>
-                    
-                            <div class="col-md-4">
-                                <select class="form-control" id="status" name="status" title="status">
-                                    @if($var->status == 1)
-                                        <option value="1">Activo</option>
-                                    @else
-                                        <option value="0">Inactivo</option>
+                            @if (isset($var->debe) && ($var->debe != 0))
+                                <label for="amount" class="col-md-3 col-form-label text-md-right">Monto por el Debe:</label>
+                                <div class="col-md-4">
+                                    <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ $var->debe }}" required autocomplete="amount">
+                                    
+                            @else
+                                <label for="amount" class="col-md-3 col-form-label text-md-right">Monto por el Haber:</label>
+                                <div class="col-md-4">
+                                    <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ $var->haber }}" required autocomplete="amount">    
+                            @endif
+                            
+                           @error('amount')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+
+                            <div class="col-md-3">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
                                     @endif
-                                    <option value="nulo">----------------</option>
-                                    
-                                    <div class="dropdown">
-                                        <option value="1">Activo</option>
-                                        <option value="0">Inactivo</option>
-                                    </div>
-                                    
-                                    
                                 </select>
                             </div>
                         </div>
+                       
                         <br>
                         
                         <div class="form-group row">
@@ -100,7 +103,7 @@
                                 <button type="submit" class="btn btn-success btn-block"><i class="fa fa-send-o"></i>Actualizar</button>
                             </div>
                             <div class="form-group col-sm-4">
-                                <a href="{{ route('headervouchers') }}" name="danger" type="button" class="btn btn-danger btn-block">Cancelar</a>
+                                <a href="{{ route('detailvouchers.create',[$coin,$var->id_header_voucher]) }}" name="danger" type="button" class="btn btn-danger btn-block">Cancelar</a>
                             </div>
                         </div>
 
@@ -111,4 +114,24 @@
         </div>
     </div>
 </div>
+@endsection
+@section('validacion')
+    
+    <script>
+       
+        $(document).ready(function () {
+            $("#reference").mask('000000000000000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#amount").mask('000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+       
+
+    </script>
 @endsection

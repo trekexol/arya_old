@@ -77,13 +77,14 @@ class HeaderVoucherController extends Controller
             $var->reference = $header_id;
             $var->description = request('description');
             $var->date = request('date');
+            $coin = request('coin');
            
             //U porque son creados por el usuario
             $var->status =  "U";
         
             $var->save();
 
-            return redirect('/detailvouchers/register/'.$header_id.'')->withSuccess('Se registro la cabecera Exitosamente!');
+            return redirect('/detailvouchers/register/'.$coin.'/'.$header_id.'')->withSuccess('Se registro la cabecera Exitosamente!');
 
        
     }

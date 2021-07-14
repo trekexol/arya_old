@@ -64,19 +64,23 @@
                         @if($intercalar)
                         <?php $intercalar = false;?>
                         <td style="text-align:right; color:black;">  
-                            <a href="{{ route('detailvouchers.createselectaccount',[$coin,$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
-                        </td>
-                            <td style="text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
+                            @if ($control == 'edit')
+                                <a href="{{ route('detailvouchers.edit',[$coin,$header->id,$account->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                            @else
+                                <a href="{{ route('detailvouchers.create',[$coin,$header->id,$account->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                            @endif
+                       </td>
+                            <td style="text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}.{{ str_pad($account->code_five, 3, "0", STR_PAD_LEFT)}}</td>
                             <td style="text-align:right; color:black;">{{$account->description}}</td>
                             <td style="text-align:right; color:black;">{{$account->level}}</td>
                             <td style="text-align:right; color:black;">{{$account->type}}</td>
                             
-                            <td style="text-align:right; color:black;">{{$account->balance_previus}}</td>
-                            <td style="text-align:right; color:black;">{{$account->debe}}</td>
-                            <td style="text-align:right; color:black;">{{$account->haber}}</td>
+                            <td style="text-align:right; color:black;">{{ number_format($account->balance_previus, 2, ',', '.') }}</td>
+                            <td style="text-align:right; color:black;">{{ number_format($account->debe, 2, ',', '.') }}</td>
+                            <td style="text-align:right; color:black;">{{ number_format($account->haber, 2, ',', '.') }}</td>
 
-                            
-                            <td style="text-align:right; color:black;">{{$account->balance_previus+$account->debe-$account->haber}}</td>
+                            <?php $total = $account->balance_previus+$account->debe-$account->haber;?>
+                            <td style="text-align:right; color:black;">{{ number_format($total, 2, ',', '.') }}</td>
                             
                             
                             
@@ -85,18 +89,19 @@
                         @else
                             <?php $intercalar = true; ?>
                             <td style="background: #E0D7CD; text-align:right; color:black;">
-                                <a href="{{ route('detailvouchers.createselectaccount',[$coin,$header->id,$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
+                                <a href="{{ route('detailvouchers.create',[$coin,$header->id,$account->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
                              </td>
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}.{{str_pad($account->code_five, 3, "0", STR_PAD_LEFT)}}</td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->description}}</td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->level}}</td>
                             <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->type}}</td>
                             
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->balance_previus}}</td>
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->debe}}</td>
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->haber}}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{ number_format($account->balance_previus, 2, ',', '.') }}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{ number_format($account->debe, 2, ',', '.') }}</td>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{ number_format($account->haber, 2, ',', '.') }}</td>
 
-                            <td style="background: #E0D7CD; text-align:right; color:black;">{{$account->balance_previus+$account->debe-$account->haber}}</td>
+                            <?php $total = $account->balance_previus+$account->debe-$account->haber;?>
+                            <td style="background: #E0D7CD; text-align:right; color:black;">{{ number_format($total, 2, ',', '.') }}</td>
                             
                                
                         </tr>   

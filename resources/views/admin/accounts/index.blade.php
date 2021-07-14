@@ -116,7 +116,7 @@
                     @if(isset($level))
                         @if($level >= $account->level)
                         <tr>
-                            <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
+                            <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}.{{ str_pad($account->code_five, 3, "0", STR_PAD_LEFT)}}</td>
                             <td style="text-align:right; color:black;">
                                 @if(isset($account->coin))
                                     <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}} ({{ $account->coin }})</a>
@@ -221,7 +221,7 @@
                         @endif
                     @else
                     <tr>
-                        <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}</td>
+                        <td style="text-align:right; color:black; font-weight: bold;">{{$account->code_one}}.{{$account->code_two}}.{{$account->code_three}}.{{$account->code_four}}.{{ str_pad($account->code_five, 3, "0", STR_PAD_LEFT)}}</td>
                         <td style="text-align:right; color:black;">
                             @if(isset($account->coin))
                                 <a href="{{ route('accounts.edit',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{$account->description}} ({{ $account->coin }})</a>
@@ -324,8 +324,8 @@
                         @endif
                        
                             <td style="text-align:right; color:black; ">  
-                                @if($account->code_four == 0)
-                                <a href="{{ route('accounts.createlevel',[$account->code_one,$account->code_two,$account->code_three,$account->code_four,$account->period]) }}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
+                                @if($account->code_five == 0)
+                                <a href="{{ route('accounts.createlevel',$account->id) }}" title="Crear"><i class="fa fa-plus" style="color: orangered"></i></a>
                                 @endif
                             </td>
                     </tr>   

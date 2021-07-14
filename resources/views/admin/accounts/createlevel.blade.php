@@ -33,6 +33,7 @@
                         <input type="hidden" name="code_two" value="{{$var->code_two}}" readonly>
                         <input type="hidden" name="code_three" value="{{$var->code_three}}" readonly>
                         <input type="hidden" name="code_four" value="{{$var->code_four}}" readonly>
+                        <input type="hidden" name="code_five" value="{{$var->code_five}}" readonly>
 
                         <input type="hidden" name="period" value="{{$var->period}}" readonly>
 
@@ -40,7 +41,7 @@
                             <label for="code" class="col-md-2 col-form-label text-md-right">Código</label>
 
                             <div class="col-md-4">
-                                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}" required autocomplete="code" readonly autofocus>
+                                <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{$var->code_one}}.{{$var->code_two}}.{{$var->code_three}}.{{$var->code_four}}.{{$var->code_five}}" required autocomplete="code" readonly autofocus>
 
                                 @error('code')
                                     <span class="invalid-feedback" role="alert">

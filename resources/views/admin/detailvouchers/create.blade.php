@@ -34,6 +34,7 @@ $suma_haber = 0;
                     <form method="POST" action="{{ route('headervouchers.store') }}" enctype="multipart/form-data">
                         @csrf
 
+                        <input type="hidden" name="coin" value="{{$coin ?? 'bolivares'}}" readonly>
                        
                         <div class="form-group row">
                             <label for="reference" class="col-md-2 col-form-label text-md-right">Referencia</label>
@@ -59,6 +60,9 @@ $suma_haber = 0;
                             </div>
                             <div class="col-md-3">
                                 <button type="submit" class="btn btn-success" title="Agregarheader">Registrar Cabecera</button>  
+                            </div>
+                            <div class="col-md-1">
+                                <a id="btn_clean" class="btn btn-light2" href="{{ route('detailvouchers.create','bolivares') }}" title="Limpiar Referencia">Limpiar</a>  
                             </div>
                         </div>
                         <div class="form-group row">
@@ -119,14 +123,14 @@ $suma_haber = 0;
                         </div>
                         <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
                         <div class="col-md-2">
-                            <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+                            <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $detailvouchers_last->tasa ?? $bcv }}" required autocomplete="rate">
                             @error('rate')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
-                        <a href="#" onclick="refreshrate()" title="tasaactual"><i class="fa fa-redo-alt"></i></a>  
+                        <!--<a href="#" onclick="refreshrate()" title="tasaactual"><i class="fa fa-redo-alt"></i></a> --> 
                         <label  class="col-md-2 col-form-label text-md-right h6">Tasa actual:</label>
                         <div class="col-md-2 col-form-label text-md-left">
                             <label for="tasaactual" id="tasaacutal">{{ number_format($bcv, 2, ',', '.')}}</label>
@@ -158,7 +162,11 @@ $suma_haber = 0;
                                         <input id="code_four" type="text" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
-                                        <a href="{{ route('detailvouchers.selectaccount',[$coin,$header->id ?? -1]) }}" title="Editar"><i class="fa fa-eye"></i></a>  
+                                        <label for="description" >.</label>
+                                        <input id="code_five" type="text" class="form-control @error('code_five') is-invalid @enderror" name="code_five" value="{{ session()->get('detail')->code_five ?? $account->code_five ?? old('code_five') }}" required autocomplete="code_five"  autofocus>
+                                    </div>
+                                    <div class="form-group ">
+                                        <a href="{{ route('detailvouchers.selectaccount',[$coin,$header->id ?? -1,'detail']) }}" title="Editar"><i class="fa fa-eye"></i></a>  
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="description" >Descripción</label>
@@ -192,7 +200,7 @@ $suma_haber = 0;
                                             </span>
                                         @enderror
                                     </div>
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group">
                                         <button type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
                                     </div>
                                 </div>    
@@ -221,22 +229,33 @@ $suma_haber = 0;
                                     <tr>
                                    
                                         @if($var->status == 'N')
-                                            <td><i class="fa fa-circle" style="color: rgb(252, 128, 128)"></i> {{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
+                                            <td><i class="fa fa-circle" style="color: rgb(252, 128, 128)"></i> {{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}.{{ str_pad($var->accounts['code_five'], 3, "0", STR_PAD_LEFT)}}</td>
                                         @else
-                                            <td><i class="fa fa-circle" style="color: rgb(84, 196, 84)"></i> {{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}</td>
+                                            <td><i class="fa fa-circle" style="color: rgb(84, 196, 84)"></i> {{$var->accounts['code_one']}}.{{$var->accounts['code_two']}}.{{$var->accounts['code_three']}}.{{$var->accounts['code_four']}}.{{ str_pad($var->accounts['code_five'], 3, "0", STR_PAD_LEFT)}}</td>
                                         @endif
 
-                                    <td>{{$var->accounts['description']}}</td>
-                
-                                    <?php
-                                        $suma_debe += $var->debe;
-                                        $suma_haber += $var->haber;
-                                    ?>
-                                    <td>{{number_format($var->debe, 2, ',', '.')}}</td>
-                                    <td>{{number_format($var->haber, 2, ',', '.')}}</td>
+                                        <td>{{$var->accounts['description']}}</td>
+                    
+                                        
+                                        @if ((isset($coin)) && ($coin == 'bolivares'))
+                                            <?php
+                                                $suma_debe += $var->debe;
+                                                $suma_haber += $var->haber;
+                                            ?>
+                                            <td>{{number_format($var->debe, 2, ',', '.')}}</td>
+                                            <td>{{number_format($var->haber, 2, ',', '.')}}</td>
+                                        @else
+                                            <?php
+                                                $suma_debe += $var->debe / $var->tasa;
+                                                $suma_haber += $var->haber / $var->tasa;
+                                            ?>
+                                            <td>{{number_format($var->debe / $var->tasa, 2, ',', '.')}}</td>
+                                            <td>{{number_format($var->haber / $var->tasa, 2, ',', '.')}}</td>
+                                        @endif
+                                       
                                     
                                         <td>
-                                        <a href="{{route('detailvouchers.edit',$var->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                        <a href="{{route('detailvouchers.edit',[$coin,$var->id]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                                         </td>
                                    
                                     </tr>
@@ -246,27 +265,22 @@ $suma_haber = 0;
                                         @if($suma_debe == $suma_haber)
                                             <td style="color: rgb(84, 196, 84)">El comprobante está cuadrado</td>
                                             <td>Total</td>
-                                            <td>{{$suma_debe}}</td>
-                                            <td>{{$suma_haber}}</td>
+                                            <td>{{ number_format($suma_debe, 2, ',', '.') }}</td>
+                                            <td>{{ number_format($suma_haber, 2, ',', '.') }}</td>
                                         @else
                                             <td style="color: red">El comprobante está descuadrado</td>
                                             <td>Total</td>
                                             @if ($suma_debe > $suma_haber)
-                                                <td>{{$suma_debe}}  <br><div style="color: red"> - {{$suma_debe - $suma_haber}}</div></td>
-                                                <td>{{$suma_haber}}</td>
+                                                <td>{{number_format($suma_debe, 2, ',', '.')}}  <br><div style="color: red"> - {{ number_format($suma_debe - $suma_haber, 2, ',', '.')}}</div></td>
+                                                <td>{{number_format($suma_haber, 2, ',', '.')}}</td>
                                             @else
-                                                <td>{{$suma_debe}}</td>
-                                                <td>{{$suma_haber}} <br><div style="color: red"> - {{$suma_haber - $suma_debe}}</div></td>
+                                                <td>{{number_format($suma_debe, 2, ',', '.')}}</td>
+                                                <td>{{number_format($suma_haber, 2, ',', '.')}} <br><div style="color: red"> - {{ number_format($suma_haber - $suma_debe, 2, ',', '.')}}</div></td>
                                             @endif
                                             
                                         @endif
-                                        
-                    
-                                        
-                                        
                                             <td>
-                                            <a href="{{route('detailvouchers.edit',$var->id ?? '') }}" title="Editar"><i class="fa fa-edit"></i></a>  
-                                            </td>
+                                          </td>
                                        
                                         </tr>
                                 @endif
@@ -277,10 +291,10 @@ $suma_haber = 0;
 
                     <div class="form-group row">
                         <label for="reference" class="col-md-2 col-form-label text-md-right"><i class="fa fa-circle" style="color: rgb(84, 196, 84)"><strong> Contabilizado</strong></i></label>
-                        <label for="reference" class="col-md-2 col-form-label text-md-right"><i class="fa fa-circle" style="color: rgb(255, 94, 94)"><strong> No Contabilizado</strong></i></label>
+                        <label for="reference" class="col-md-3 col-form-label text-md-right"><i class="fa fa-circle" style="color: rgb(255, 94, 94)"><strong> No Contabilizado</strong></i></label>
                     </div>
 
-                    <a href="{{route('detailvouchers.contabilizar',[$coin,$header->id ?? -1]) }}" id="btncontabilizar" name="btncontabilizar" class="btn btn-success" title="Contabilizar">Contabilizar</a>  
+                    <a href="{{route('detailvouchers.contabilizar',[$coin ?? 'bolivares',$header->id ?? -1]) }}" id="btncontabilizar" name="btncontabilizar" class="btn btn-success" title="Contabilizar">Contabilizar</a>  
                                             
                 </div>
             </div>
@@ -381,6 +395,12 @@ $suma_haber = 0;
             "order": [],
             'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
         });
+        $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+        if ($(".sidebar").hasClass("toggled")) {
+            $('.sidebar .collapse').collapse('hide');
+        };
+    
     
         function searchReference(){
             
