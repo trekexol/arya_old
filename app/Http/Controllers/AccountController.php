@@ -34,20 +34,11 @@ class AccountController extends Controller
         }
             $accounts = $this->calculation($coin);
 
-
-        if(($coin == null) || ($coin == 'bolivares')){
-            $bcv = $this->search_bcv();
-        }else{
-            $bcv = null;
-        }
-            
-
-        
         }else if($users_role == '2'){
            return view('admin.index');
        }
 
-       return view('admin.accounts.index',compact('accounts','coin','level','bcv'));
+       return view('admin.accounts.index',compact('accounts','coin','level'));
    }
 
 
@@ -269,16 +260,7 @@ class AccountController extends Controller
     
                                                         $var->balance =  $var->balance_previus;
     
-                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
-                                                        FROM accounts a
-                                                        WHERE a.code_one = ? AND
-                                                        a.code_two = ?  AND
-                                                        a.code_three = ? AND
-                                                        a.code_four = ? AND
-                                                        a.code_five = ? 
-                                                        '
-                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
-                                    
+                                       
                                         }else{
                                             $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
                                             FROM accounts a
@@ -306,18 +288,9 @@ class AccountController extends Controller
                                             '
                                             , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
     
-                                            $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
-                                                        FROM accounts a
-                                                        WHERE a.code_one = ? AND
-                                                        a.code_two = ?  AND
-                                                        a.code_three = ? AND
-                                                        a.code_four = ? AND
-                                                        a.code_five = ? 
-                                                        '
-                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
-    
-                                            if(($var->balance_previus != 0) && ($var->rate !=0))
-                                            $var->balance =  $var->balance_previus / $var->rate;
+                                           
+                                            
+                                            
                                         }
                                         $total_debe = $total_debe[0]->debe;
                                         $total_haber = $total_haber[0]->haber;
@@ -332,6 +305,10 @@ class AccountController extends Controller
                                     
                                         $var->debe = $total_debe;
                                         $var->haber = $total_haber;
+
+                                        if(($var->balance_previus != 0) && ($var->rate !=0)){
+                                            $var->balance =  $var->balance_previus;
+                                        }
                                 
                                 }else{
                             
@@ -421,7 +398,7 @@ class AccountController extends Controller
                                         '
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
-                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                                     FROM accounts a
                                                     WHERE a.code_one = ? AND
                                                     a.code_two = ?  AND

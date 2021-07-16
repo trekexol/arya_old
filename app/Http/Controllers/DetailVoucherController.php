@@ -91,15 +91,16 @@ class DetailVoucherController extends Controller
   
 
 
-   public function selectaccount($coin,$id_header,$control)
+   public function selectaccount($coin,$id_header,$id_detail)
    {
        
        if($id_header != -1){
 
             $header = HeaderVoucher::find($id_header);
-            $accounts = $this->calculation('bolivares');
+            $accounts = $this->calculation($coin);
+
             
-            return view('admin.detailvouchers.selectaccount',compact('coin','accounts','header','control'));
+            return view('admin.detailvouchers.selectaccount',compact('coin','accounts','header','id_detail'));
             
        }else{
         return redirect('/detailvouchers/register/'.$coin.'')->withDanger('Seleccione informacion de Cabecera!');
@@ -119,7 +120,7 @@ class DetailVoucherController extends Controller
    public function contabilizar($coin,$id_header)
    {
 
-  //  dd($id_header);
+    //  dd($id_header);
     $header = HeaderVoucher::find($id_header); 
 
         if(isset($header)){  
@@ -233,13 +234,23 @@ class DetailVoucherController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function edit($coin,$id)
+   public function edit($coin,$id,$id_account = null)
    {
         $var = DetailVoucher::find($id);
 
+        if(isset($id_account)){
+            $var->id_account = $id_account;
+        }
+        
+
         $bcv = $this->search_bcv();
+
+        if($coin != 'bolivares'){
+            $var->debe = $var->debe / $var->tasa;
+            $var->haber = $var->haber / $var->tasa;
+        }
        
-        return view('admin.detailvouchers.edit',compact('var','bcv','coin'));
+        return view('admin.detailvouchers.edit',compact('var','bcv','coin','id_account'));
   
    }
 
@@ -251,55 +262,78 @@ class DetailVoucherController extends Controller
     * @return \Illuminate\Http\Response
     */
    public function update(Request $request, $id)
-   {
+    {
+        
+        $data = request()->validate([
+                    
+            'type'      =>'required',
+            'amount'    =>'required',
+            'rate'    =>'required',
+            'coin'    =>'required',
+            'id_account'    =>'required',
+        
+        
+        ]);
+        
+        $var = DetailVoucher::findOrFail($id);
 
-    $vars =  DetailVoucher::find($id);
+        $coin = request('coin');
+        $type = request('type');
+        $id_account = request('id_account');
 
-    $vars_status = $vars->status;
-  
-    $data = request()->validate([
-                
-                
+        if($id_account != -1){
+            $var->id_account = $id_account;
+        }
 
-        'code_one'      =>'required',
-        'code_two'      =>'required',
-        'code_three'    =>'required',
-        'code_four'     =>'required',
-        'period'        =>'required',
-        'id_header_voucher'     =>'required',
-        'debe'                  =>'required',
-        'haber'                 =>'required',
-        'ref'                   =>'required',
-       
-    
-    ]);
+        $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+        $valor_sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
 
-    $var = DetailVoucher::findOrFail($id);
+        if($coin == 'bolivares'){
+            if($type == 'debe'){
+                $var->debe = $valor_sin_formato_amount;
+                $var->tasa = $valor_sin_formato_rate;
+                $var->haber = 0;
+            }else{
+                $var->haber = $valor_sin_formato_amount;
+                $var->tasa = $valor_sin_formato_rate;
+                $var->debe = 0;
+            }
+        }else{
+            if($type == 'debe'){
+                $var->debe = $valor_sin_formato_amount * $valor_sin_formato_rate;
+                $var->tasa = $valor_sin_formato_rate;
+                $var->haber = 0;
+            }else{
+                $var->haber = $valor_sin_formato_amount * $valor_sin_formato_rate;
+                $var->tasa = $valor_sin_formato_rate;
+                $var->debe = 0;
+            }
+        }
+        $var->save();
 
-    $var->code_one = request('code_one');
-    $var->code_two = request('code_two');
-    $var->code_three = request('code_three');
-    $var->code_four = request('code_four');
-    $var->period = request('period');
-    $var->id_header_voucher = request('id_header_voucher');
-    $var->debe = request('debe');
-    $var->haber = request('haber');
-    $var->ref = request('ref');
-    
-    
+        $affected = DB::table('detail_vouchers')->where('id_header_voucher', '=', $var->id_header_voucher)->update(array('status' => 'N'));
 
-    if(request('status') == null){
-        $var->status = $vars_status;
-    }else{
-        $var->status = request('status');
+        $this->check_exist_movement_in_account();
+
+        return redirect('/detailvouchers/register/'.$coin.'/'.$var->id_header_voucher.'')->withSuccess('Actualizacion Exitosa!');
     }
-   
-    $var->save();
 
-    return redirect('/detailvouchers')->withSuccess('Actualizacion Exitosa!');
+    public function check_exist_movement_in_account()
+    {
+        $account_with_movement = Account::where('status','M')->get();
+
+        foreach($account_with_movement as $var){
+           $exist_detail = DetailVoucher::where('id_account',$var->id)->first();
+
+           if(!isset($exist_detail)){
+
+                $account = Account::findOrFail($var->id);
+                $account->status = '1';
+                $account->save();
+
+           }
+        }
     }
-
-
    /**
     * Remove the specified resource from storage.
     *
@@ -429,16 +463,7 @@ class DetailVoucherController extends Controller
     
                                                         $var->balance =  $var->balance_previus;
     
-                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
-                                                        FROM accounts a
-                                                        WHERE a.code_one = ? AND
-                                                        a.code_two = ?  AND
-                                                        a.code_three = ? AND
-                                                        a.code_four = ? AND
-                                                        a.code_five = ? 
-                                                        '
-                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
-                                    
+                                       
                                         }else{
                                             $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
                                             FROM accounts a
@@ -466,18 +491,9 @@ class DetailVoucherController extends Controller
                                             '
                                             , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
     
-                                            $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
-                                                        FROM accounts a
-                                                        WHERE a.code_one = ? AND
-                                                        a.code_two = ?  AND
-                                                        a.code_three = ? AND
-                                                        a.code_four = ? AND
-                                                        a.code_five = ? 
-                                                        '
-                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five]);
-    
-                                            if(($var->balance_previus != 0) && ($var->rate !=0))
-                                            $var->balance =  $var->balance_previus / $var->rate;
+                                           
+                                            
+                                            
                                         }
                                         $total_debe = $total_debe[0]->debe;
                                         $total_haber = $total_haber[0]->haber;
@@ -492,6 +508,10 @@ class DetailVoucherController extends Controller
                                     
                                         $var->debe = $total_debe;
                                         $var->haber = $total_haber;
+
+                                        if(($var->balance_previus != 0) && ($var->rate !=0)){
+                                            $var->balance =  $var->balance_previus;
+                                        }
                                 
                                 }else{
                             
@@ -581,7 +601,7 @@ class DetailVoucherController extends Controller
                                         '
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
-                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/d.tasa) AS balance
+                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                                     FROM accounts a
                                                     WHERE a.code_one = ? AND
                                                     a.code_two = ?  AND

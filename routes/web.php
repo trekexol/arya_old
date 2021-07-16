@@ -370,11 +370,11 @@ Route::group(["prefix"=>'detailvouchers'],function(){
     Route::get('/','DetailVoucherController@index')->name('detailvouchers');
     Route::get('register/{coin}/{id_header?}/{id_account?}','DetailVoucherController@create')->name('detailvouchers.create');
     Route::post('store','DetailVoucherController@store')->name('detailvouchers.store');
-    Route::get('{coin}/{id}/edit','DetailVoucherController@edit')->name('detailvouchers.edit');
+    Route::get('edit/{coin}/{id}/{id_account?}','DetailVoucherController@edit')->name('detailvouchers.edit');
     Route::delete('{id}/delete','DetailVoucherController@destroy')->name('detailvouchers.delete');
     Route::patch('{id}/update','DetailVoucherController@update')->name('detailvouchers.update');
    
-    Route::get('selectaccount/{coin}/{id_header}/{control}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
+    Route::get('selectaccount/{coin}/{id_header}/{id_detail?}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
     
     Route::get('selectheadervouche','DetailVoucherController@selectheader')->name('detailvouchers.selectheadervouche');
 

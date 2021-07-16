@@ -178,7 +178,7 @@ class FacturarController extends Controller
 
         //Ingresos por SubSegmento de Bienes
 
-        $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
+        $account_subsegmento = Account::where('description', 'like', 'Ventas por Bienes')->first();
 
         if(isset($account_cuentas_por_cobrar)){
             $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sin_formato_amount);
@@ -1250,7 +1250,7 @@ class FacturarController extends Controller
 
                 //Ingresos por SubSegmento de Bienes
 
-                $account_subsegmento = Account::where('description', 'like', 'Ingresos por Sub-Segmento de Bienes')->first();
+                $account_subsegmento = Account::where('description', 'like', 'Ventas por Bienes')->first();
 
                 if(isset($account_subsegmento)){
                     $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
