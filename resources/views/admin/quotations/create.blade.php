@@ -217,7 +217,7 @@
                                     <div class="form-group col-md-2">
                                         @if(isset($inventory->products['price']) && (isset($bcv))) 
                                             <?php 
-                                                $product_Bs = $inventory->products['price'] * $bcv;
+                                                $product_Bs = $inventory->products['price'] * $quotation->bcv;
                                             ?>
                                             <label for="cost" >Precio</label>
                                             <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($product_Bs, 2, ',', '.') ?? '' }}"  required autocomplete="cost">

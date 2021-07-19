@@ -133,6 +133,8 @@ class InventoryController extends Controller
 
     $var->product_id = request('product_id');
 
+    $var->id_user = request('id_user');
+
     $var->code = request('code');
 
     $var->status = "1";

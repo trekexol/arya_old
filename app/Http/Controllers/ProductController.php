@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Segment;
 use App\Subsegment;
+use App\TwoSubSegment;
 use App\UnitOfMeasure;
 use Illuminate\Http\Request;
 
@@ -55,73 +56,76 @@ class ProductController extends Controller
     */
    public function store(Request $request)
     {
-   
-    $data = request()->validate([
         
-       
-        'segment'         =>'required',
-        'Subsegment'         =>'required',
-        'unit_of_measure_id'         =>'required',
-
-
-        'type'         =>'required',
-        'description'         =>'required',
-      
-        'price'         =>'required',
-        'price_buy'         =>'required',
-        'cost_average'         =>'required',
-
-        'money'         =>'required',
-       
-        'special_impuesto'         =>'required',
+        $data = request()->validate([
+            
         
-       
-    ]);
-
-    $var = new Product();
-
-    $var->segment_id = request('segment');
-    $var->subsegment_id= request('Subsegment');
-    $var->unit_of_measure_id = request('unit_of_measure_id');
-    $var->code_comercial = request('code_comercial');
-    $var->type = request('type');
-    $var->description = request('description');
-
-    $var->id_user = request('id_user');
-
-    $valor_sin_formato_price = str_replace(',', '.', str_replace('.', '',request('price')));
-    $valor_sin_formato_price_buy = str_replace(',', '.', str_replace('.', '',request('price_buy')));
-    $valor_sin_formato_cost_average = str_replace(',', '.', str_replace('.', '',request('cost_average')));
-    $valor_sin_formato_special_impuesto = str_replace(',', '.', str_replace('.', '',request('special_impuesto')));
-       
+            'segment'         =>'required',
+            'Subsegment'         =>'required',
+            'unit_of_measure_id'         =>'required',
 
 
-    $var->price = $valor_sin_formato_price;
-    $var->price_buy = $valor_sin_formato_price_buy;
-    $var->cost_average = $valor_sin_formato_cost_average;
-    $var->money = request('money');
-    $var->photo_product = request('photo_product');
+            'type'         =>'required',
+            'description'         =>'required',
+        
+            'price'         =>'required',
+            'price_buy'         =>'required',
+            'cost_average'         =>'required',
 
-    $exento = request('exento');
-    if($exento == null){
-        $var->exento = false;
-    }else{
-        $var->exento = true;
-    }
+            'money'         =>'required',
+        
+            'special_impuesto'         =>'required',
+            
+        
+        ]);
+
+        $var = new Product();
+
+        $var->segment_id = request('segment');
+        $var->subsegment_id= request('Subsegment');
+        $var->unit_of_measure_id = request('unit_of_measure_id');
+        $var->code_comercial = request('code_comercial');
+        $var->type = request('type');
+        $var->description = request('description');
+
+        $var->twosubsegment_id= request('twoSubsegment');
+        $var->threesubsegment_id= request('threeSubsegment');
+
+        $var->id_user = request('id_user');
+
+        $valor_sin_formato_price = str_replace(',', '.', str_replace('.', '',request('price')));
+        $valor_sin_formato_price_buy = str_replace(',', '.', str_replace('.', '',request('price_buy')));
+        $valor_sin_formato_cost_average = str_replace(',', '.', str_replace('.', '',request('cost_average')));
+        $valor_sin_formato_special_impuesto = str_replace(',', '.', str_replace('.', '',request('special_impuesto')));
+        
+
+
+        $var->price = $valor_sin_formato_price;
+        $var->price_buy = $valor_sin_formato_price_buy;
+        $var->cost_average = $valor_sin_formato_cost_average;
+        $var->money = request('money');
+        $var->photo_product = request('photo_product');
+
+        $exento = request('exento');
+        if($exento == null){
+            $var->exento = false;
+        }else{
+            $var->exento = true;
+        }
+        
+        $islr = request('islr');
+        if($islr == null){
+            $var->islr = false;
+        }else{
+            $var->islr = true;
+        }
+
+        $var->special_impuesto = $valor_sin_formato_special_impuesto;
+        $var->status =  1;
     
-    $islr = request('islr');
-    if($islr == null){
-        $var->islr = false;
-    }else{
-        $var->islr = true;
-    }
+        $var->save();
 
-    $var->special_impuesto = $valor_sin_formato_special_impuesto;
-    $var->status =  1;
-  
-    $var->save();
-
-    return redirect('/products')->withSuccess('Registro Exitoso!');
+        return redirect('/products')->withSuccess('Registro Exitoso!');
     }
 
    /**
@@ -254,4 +258,6 @@ class ProductController extends Controller
    {
        //
    }
+
+
 }

@@ -276,6 +276,8 @@ Route::group(["prefix"=>'products'],function(){
     Route::delete('{id}/delete','ProductController@destroy')->name('products.delete');
     Route::patch('{id}/update','ProductController@update')->name('products.update');
 
+    Route::get('listtwosubsegment/{id_subsegment}','TwoSubSegmentController@list2subsegment')->name('products.list2subsegment');
+
 });
 
 Route::group(["prefix"=>'inventories'],function(){
@@ -669,4 +671,32 @@ Route::group(["prefix"=>'pdfnomina'],function(){
     Route::post('store','ReportController@store')->name('balancegenerals.store');
     Route::get('balancepdf/{date_begin?}/{date_end?}/{level?}','ReportController@balance_pdf')->name('balancegenerals.balance_pdf');
    
+});
+
+Route::group(["prefix"=>'twosubsegments'],function(){
+    Route::get('/','TwoSubSegmentController@index')->name('twosubsegments');
+    Route::get('register','TwoSubSegmentController@create')->name('twosubsegments.create');
+    Route::post('store', 'TwoSubSegmentController@store')->name('twosubsegments.store');
+   
+    Route::get('{id}/edit','TwoSubSegmentController@edit')->name('twosubsegments.edit');
+    Route::delete('{id}/delete','TwoSubSegmentController@destroy')->name('twosubsegments.delete');
+    Route::patch('{id}/update','TwoSubSegmentController@update')->name('twosubsegments.update');
+
+
+    Route::get('list/{subsegment_id?}','TwoSubSegmentController@list')->name('twosubsegments.list');
+
+});
+
+Route::group(["prefix"=>'threesubsegments'],function(){
+    Route::get('/','ThreeSubSegmentController@index')->name('threesubsegments');
+    Route::get('register','ThreeSubSegmentController@create')->name('threesubsegments.create');
+    Route::post('store', 'ThreeSubSegmentController@store')->name('threesubsegments.store');
+   
+    Route::get('{id}/edit','ThreeSubSegmentController@edit')->name('threesubsegments.edit');
+    Route::delete('{id}/delete','ThreeSubSegmentController@destroy')->name('threesubsegments.delete');
+    Route::patch('{id}/update','ThreeSubSegmentController@update')->name('threesubsegments.update');
+
+
+    Route::get('list/{subsegment_id?}','ThreeSubSegmentController@list')->name('threesubsegments.list');
+
 });

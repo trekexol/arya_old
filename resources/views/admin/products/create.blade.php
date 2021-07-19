@@ -88,6 +88,36 @@
                             </div>
                         </div>  
 
+                        <div class="form-group row">
+                                    
+                            <label for="segment" class="col-md-2 col-form-label text-md-right">Sub Segmento 2 (Opcional)</label>
+                        
+                            <div class="col-md-4">
+                                <select  id="twosubsegment"  name="twoSubsegment" class="form-control" >
+                                    <option value=""></option>
+                                </select>
+
+                                @if ($errors->has('subsegment_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('subsegment_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <label for="subsegment" class="col-md-2 col-form-label text-md-right">Sub Segmento 3 (Opcional)</label>
+                        
+                            <div class="col-md-4">
+                                <select  id="threesubsegment"  name="threeSubsegment" class="form-control" >
+                                    <option value=""></option>
+                                </select>
+
+                                @if ($errors->has('subsegment_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('subsegment_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>  
+
                        
                         <div class="form-group row">
                             <label for="unitofmeasure" class="col-md-2 col-form-label text-md-right">Unidad de Medida</label>
@@ -292,9 +322,84 @@
         $("#subsegment").on('change',function(){
                 var subsegment_id = $(this).val();
                 var segment_id    = document.getElementById("segment").value;
-                
+
+                get2Subsegment(subsegment_id);
             });
 
+
+        function get2Subsegment(subsegment_id){
+           
+            $.ajax({
+                url:"{{ route('twosubsegments.list','') }}" + '/' + subsegment_id,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                    let subsegment = $("#twosubsegment");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subsegment') == '${id}' ? 'selected' : '' }}>${description}</option>`
+
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subsegment.html('');
+                    subsegment.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
+
+
+
+        $("#twosubsegment").on('change',function(){
+                var subsegment_id = $(this).val();
+                var segment_id    = document.getElementById("segment").value;
+
+                get3Subsegment(subsegment_id);
+            });
+
+
+        function get3Subsegment(subsegment_id){
+           
+            $.ajax({
+                url:"{{ route('threesubsegments.list','') }}" + '/' + subsegment_id,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                    let subsegment = $("#threesubsegment");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subsegment') == '${id}' ? 'selected' : '' }}>${description}</option>`
+
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subsegment.html('');
+                    subsegment.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
     </script>
 @endsection
 

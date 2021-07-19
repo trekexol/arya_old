@@ -90,6 +90,8 @@
             <a class="collapse-item" href="{{ route('paymenttypes') }}" > <i class="fas fa-credit-card fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tipos de Pagos</strong></a>
             <a class="collapse-item" href="{{ route('segments') }}" > <i class="fas fa-cog fa-sm fa-fw mr-2 text-blue-400"></i><strong>Segmentos</strong></a>
             <a class="collapse-item" href="{{ route('subsegment') }}" > <i class="fas fa-cogs fa-sm fa-fw mr-2 text-blue-400"></i><strong>Sub Segmentos</strong></a>
+            <a class="collapse-item" href="{{ route('twosubsegments') }}" > <i class="fas fa-cogs fa-sm fa-fw mr-2 text-blue-400"></i><strong>Segundo <br><div style="text-indent: 22px;">Sub Segmento</div></strong></a>
+            <a class="collapse-item" href="{{ route('threesubsegments') }}" > <i class="fas fa-cogs fa-sm fa-fw mr-2 text-blue-400"></i><strong>Tercer<br><div style="text-indent: 22px;">Sub Segmento</div></strong></a>
             <a class="collapse-item" href="{{ route('unitofmeasures') }}" > <i class="fas fa-balance-scale fa-sm fa-fw mr-2 text-blue-400"></i><strong>Unidades de Medida</strong></a>
             <a class="collapse-item" href="{{ route('receiptvacations') }}" > <i class="fas fa-plane-departure fa-sm fa-fw mr-2 text-blue-400"></i><strong>Recibo de Vacaciones</strong></a>
             <a class="collapse-item" href="{{ route('modelos') }}" > <i class="fas fa-clipboard-list fa-sm fa-fw mr-2 text-blue-400"></i><strong>Modelos</strong></a>

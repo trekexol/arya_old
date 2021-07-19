@@ -35,13 +35,15 @@ class FacturarController extends Controller
 
              $accounts_bank = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
-                                            ->where('code_three', 2)
-                                            ->where('code_four', '<>',0)
+                                            ->where('code_three', 1)
+                                            ->where('code_four', 2)
+                                            ->where('code_five', '<>',0)
                                             ->get();
              $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
-                                            ->where('code_four', '<>',0)
+                                            ->where('code_four', 1)
+                                            ->where('code_five', '<>',0)
                                             ->get();
              $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
                                             ->get();
@@ -1305,7 +1307,7 @@ class FacturarController extends Controller
         }
 
         
-    }
+        }
         
     }
 
@@ -1420,8 +1422,8 @@ class FacturarController extends Controller
                 
                 }//SIN DETERMINAR
                 else if($payment_type == 7){
-                    
-                    $account_sin_determinar = Account::where('description', 'like', 'Sin determinar')->first(); 
+                            //------------------Sin Determinar
+                    $account_sin_determinar = Account::where('description', 'like', 'Otros Ingresos No Identificados')->first(); 
             
                     if(isset($account_sin_determinar)){
                         $this->add_movement($bcv,$header_voucher,$account_sin_determinar->id,$quotation_id,$user_id,$amount_debe,0);
@@ -1436,7 +1438,7 @@ class FacturarController extends Controller
                     }
                 }//CONTRA ANTICIPO
                 else if($payment_type == 3){
-                    
+                            //--------------
                     $account_contra_anticipo = Account::where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
             
                     if(isset($account_contra_anticipo)){
@@ -1444,14 +1446,14 @@ class FacturarController extends Controller
                     }
                 } 
                 //Tarjeta Corporativa 
-                else if($payment_type == 8){
-                    
+               /* else if($payment_type == 8){
+                            //---------------
                     $account_contra_anticipo = Account::where('description', 'like', 'Tarjeta Corporativa')->first(); 
             
                     if(isset($account_contra_anticipo)){
                         $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
                     }
-                } 
+                } */
 
     }
 

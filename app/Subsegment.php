@@ -14,4 +14,8 @@ class Subsegment extends Model
         return $this->belongsTo('App\Permission\Models\Segment','segment_id');
     }
 
+    public function twosubsegment()
+    {
+        return $this->hasMany('App\TwoSubsegment');
+    }
 }

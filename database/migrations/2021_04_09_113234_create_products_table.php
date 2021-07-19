@@ -17,6 +17,8 @@ class CreateProductsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('segment_id');
             $table->unsignedBigInteger('subsegment_id');
+            $table->unsignedBigInteger('twosubsegment_id')->nullable();
+            $table->unsignedBigInteger('threesubsegment_id')->nullable();
             $table->unsignedBigInteger('unit_of_measure_id');
             $table->unsignedBigInteger('id_user');
             $table->string('code_comercial',20)->nullable();
@@ -36,6 +38,8 @@ class CreateProductsTable extends Migration
             
             $table->foreign('segment_id')->references('id')->on('segments');
             $table->foreign('subsegment_id')->references('id')->on('subsegments');
+            $table->foreign('twosubsegment_id')->references('id')->on('twosubsegments');
+            $table->foreign('threesubsegment_id')->references('id')->on('threesubsegments');
             $table->foreign('unit_of_measure_id')->references('id')->on('unit_of_measures');
             $table->foreign('id_user')->references('id')->on('users');
             $table->timestamps();

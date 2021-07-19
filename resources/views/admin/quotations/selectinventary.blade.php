@@ -38,14 +38,15 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr> 
-                <th></th>
-                <th>SKU</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-                <th>Costo</th>
+                <th class="text-center"></th>
+                <th class="text-center">SKU</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Costo Bs</th>
+                <th class="text-center">Costo Moneda</th>
+                <th class="text-center">Moneda</th>
+                <th class="text-center">Foto del Producto</th>
                 
-                <th>Foto del Producto</th>
-                <th>Moneda</th>
               
                 
                 
@@ -63,23 +64,25 @@
                             <td>{{ $var->code }}</td>
                             <td>{{ $var->products['description']}}</td>
                             <td style="text-align: right">{{ $var->amount }}</td> 
-                            @if($coin == 'bolivares')
-                                <td style="text-align: right">{{number_format($var->products['price'] * $bcv, 2, ',', '.')}}</td>
-                            @else
-                                <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
-                            @endif
+                            
                            
-                            
-                            
-                            <td>{{ $var->products['photo_product']}}</td> 
-                            
-                            @if($var->products['money'] == "D")
-                            <td>Dolar</td>
+                            @if($var->products['money'] != 'Bs')
+                                <td style="text-align: right">{{number_format($var->products['price'] * $bcv_quotation_product, 2, ',', '.')}}</td>
+                                <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td> 
                             @else
-                            <td>Bolívar</td>
+                                <td style="text-align: right">{{number_format($var->products['price'], 2, ',', '.')}}</td> 
+                                <td style="text-align: right"></td> 
+                            @endif
+                            
+                           
+                            @if($var->products['money'] == "D")
+                                <td>Dolar</td>
+                            @else
+                                <td>Bolívar</td>
                             @endif
 
-                           
+                            <td>{{ $var->products['photo_product'] ?? ''}}</td> 
+                            
                             
                         </tr>     
                     @endforeach   
@@ -96,7 +99,7 @@
         $('#dataTable').DataTable({
             "ordering": false,
             "order": [],
-            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
+            'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "Todo"]]
         });
         </script> 
 @endsection

@@ -35,7 +35,8 @@
                     <form method="POST" action="{{ route('inventories.store') }}" enctype="multipart/form-data">
                         @csrf
                        
-                        
+                        <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" readonly required autocomplete="id_user">
+                       
                         <input id="product_id" type="hidden" name="product_id" value="{{ $product->id }}" required autocomplete="code">
 
 

@@ -270,7 +270,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                        <option value="8">Tarjeta Coorporativa</option>
+                                         <!-- <option value="8">Tarjeta Coorporativa</option>-->
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -340,7 +340,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                        <option value="8">Tarjeta Coorporativa</option>
+                                       <!-- <option value="8">Tarjeta Coorporativa</option>-->
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -412,7 +412,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -483,7 +483,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -554,7 +554,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                    <!-- <option value="8">Tarjeta Coorporativa</option>-->
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -625,7 +625,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -696,7 +696,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>

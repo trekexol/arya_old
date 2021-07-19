@@ -142,6 +142,7 @@ class QuotationController extends Controller
                     $coin = 'bolivares';
                 }else{
                     //$bcv = null;
+
                     $coin = 'dolares';
                 }
                 
@@ -210,6 +211,10 @@ class QuotationController extends Controller
                     if(($coin == 'bolivares')){
                         $bcv = $this->search_bcv();
                     }else{
+                        //Cuando mi producto esta en Bolivares, pero estoy cotizando en dolares, convierto los bs a dolares
+                        if($inventory->products['money'] == 'Bs'){
+
+                        }
                         $bcv = null;
                     }
 
@@ -228,7 +233,9 @@ class QuotationController extends Controller
     {
             $inventories     = Inventory::all();
             $bcv = $this->search_bcv();
-            $bcv_quotation_product = $this->search_bcv();
+            $quotation = Quotation::find($id_quotation);
+
+            $bcv_quotation_product = $quotation->bcv;
             if(!isset($coin)){
                 $coin = 'bolivares';
             }
