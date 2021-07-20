@@ -75,7 +75,11 @@ class FacturarController extends Controller
                 }
 
                 //me suma todos los precios de costo de los productos
-                $price_cost_total += $var->price_buy * $var->amount_quotation;
+                 if($var->money == 'Bs'){
+                    $price_cost_total += $var->price_buy * $var->amount_quotation;
+                }else{
+                    $price_cost_total += $var->price_buy * $var->amount_quotation * $quotation->bcv;
+                }
              }
 
              $quotation->total_factura = $total;
@@ -112,8 +116,8 @@ class FacturarController extends Controller
         $bcv = $this->search_bcv();
 
      
-        //precio de costo de los productos, vienen en dolares, y se le multiplica la tasa
-        $price_cost_total = request('price_cost_total') * $bcv;
+        //precio de costo de los productos, vienen en bolivares
+        $price_cost_total = request('price_cost_total');// * $bcv;
         
 
         
@@ -295,7 +299,7 @@ class FacturarController extends Controller
 
         $coin = request('coin');
 
-        $price_cost_total = request('price_cost_total') * $bcv;
+        $price_cost_total = request('price_cost_total');// * $bcv;
         
 
      
@@ -1578,7 +1582,12 @@ class FacturarController extends Controller
                 }
 
                 //me suma todos los precios de costo de los productos
-                $price_cost_total += $var->price_buy * $var->amount_quotation;
+                if($var->money == 'Bs'){
+                    $price_cost_total += $var->price_buy * $var->amount_quotation;
+                }else{
+                    $price_cost_total += $var->price_buy * $var->amount_quotation * $quotation->bcv;
+                }
+                
             }
 
              $quotation->total_factura = $total;

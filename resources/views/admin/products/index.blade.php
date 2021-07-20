@@ -58,6 +58,7 @@
                 <th class="text-center">Descripción</th>
                 <th class="text-center">Tipo</th>
                 <th class="text-center">Precio</th>
+                <th class="text-center">Moneda</th>
                 <th class="text-center">Foto del Producto</th>
               
                 <th class="text-center"></th>
@@ -74,6 +75,12 @@
                             <td class="text-center">{{$product->description}}</td>
                             <td class="text-center">{{$product->type}}</td>
                             <td class="text-right">{{number_format($product->price, 2, ',', '.')}}</td>
+                            
+                            @if ($product->money == 'Bs')
+                              <td class="text-center">Bolivares</td>
+                            @else
+                              <td class="text-center">Dolares</td>
+                            @endif
                             
                             <td class="text-center"><img src="{{ asset('/storage/descarga.jpg') }} " ></td>
 

@@ -15,6 +15,7 @@ class CreateHeaderVouchersTable extends Migration
     {
         Schema::create('header_vouchers', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('id_anticipo')->nullable();
             $table->integer('reference')->nullable();
             $table->string('description',150);
             $table->date('date');
@@ -22,6 +23,8 @@ class CreateHeaderVouchersTable extends Migration
             $table->string('setting',15)->nullable();
             $table->string('centro_cos',50)->nullable();
             $table->string('status',1);
+
+            $table->foreign('id_anticipo')->references('id')->on('anticipos');
             $table->timestamps();
         });
     }

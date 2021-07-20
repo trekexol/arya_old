@@ -69,7 +69,8 @@
                 <th class="text-center">Descripción</th>
                 <th class="text-center">Tipo</th>
                 <th class="text-center">Cantidad</th>
-                <th class="text-center">Monto</th>
+                <th class="text-center">Moneda</th>
+                
                
             </tr>
             </thead>
@@ -83,15 +84,18 @@
                 @else  
                     @foreach ($inventories_quotations as $var)
                         <?php 
-                        $total = $var->amount_sales * $var->price * ($bcv ?? 1);
+                            $total = $var->amount_sales * $var->price * ($bcv ?? 1);
                         ?>
                         <tr>
                             <td class="text-center font-weight-bold">{{$var->code}}</td>
                             <td class="text-center font-weight-bold">{{$var->description}}</td>
                             <td class="text-center font-weight-bold">{{$var->type}}</td>
-                            <td class="text-right font-weight-bold">{{number_format($var->amount_sales, 2, ',', '.')}}</td>
-                            <td class="text-right font-weight-bold">{{number_format($total, 2, ',', '.')}}</td>
-                            
+                            <td class="text-right font-weight-bold">{{number_format($var->amount_sales, 0, '', '.')}}</td>
+                            @if ($var->money == 'Bs')
+                                <td class="text-center">Bolivares</td>
+                            @else
+                                <td class="text-center">Dolares</td>
+                            @endif
                             
                         </tr>     
                     @endforeach   

@@ -263,10 +263,13 @@
                                 
                                 <br>
                                 <div class="form-group row mb-0">
-                                    <div class="col-md-6 offset-md-4">
+                                    <div class="col-md-3 offset-md-4">
                                         <button type="submit" class="btn btn-primary">
                                            Actualizar Producto
                                         </button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="{{ route('inventories') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                                     </div>
                                 </div>
                             </form>

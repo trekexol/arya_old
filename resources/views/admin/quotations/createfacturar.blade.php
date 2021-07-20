@@ -94,21 +94,17 @@
                                     </span>
                                 @enderror
                             </div>
+                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
 
-                            <select class="form-control" name="iva" id="iva">
-                                @if(isset($quotation->iva_percentage))
-                                    <option value="{{ $quotation->iva_percentage }}">{{ $quotation->iva_percentage }}%</option>
-                                @else
-                                    <option value="16">16%</option>
-                                    <option value="12">12%</option>
-                                @endif
-                                
-                            </select>
+                                @error('observation')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            
                         </div>
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
@@ -121,7 +117,17 @@
                                     </span>
                                 @enderror
                             </div>
-                            
+                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
+
+                            <div class="col-md-3">
+                                <input id="retencion" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
+
+                                @error('note')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                         
                         
@@ -129,7 +135,7 @@
 
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
@@ -139,7 +145,7 @@
                                     @enderror
                                 </div>
                             @else
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum, 2, ',', '.') ?? 0.00 }}" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
@@ -148,29 +154,22 @@
                                         </span>
                                     @enderror
                                 </div>
+                                <div class="col-md-1">
+                                    <a href="{{ route('quotations.selectproduct',[$quotation->id,$coin]) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                                </div>
                             @endif
-                            
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
-
+                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
                             <div class="col-md-2">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
 
-                                @error('observation')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
-
-                            <div class="col-md-2">
-                                <input id="retencion" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
-
-                                @error('note')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <select class="form-control" name="iva" id="iva">
+                                @if(isset($quotation->iva_percentage))
+                                    <option value="{{ $quotation->iva_percentage }}">{{ $quotation->iva_percentage }}%</option>
+                                @else
+                                    <option value="16">16%</option>
+                                    <option value="12">12%</option>
+                                @endif
+                                
+                            </select>
                             </div>
                         </div>
              

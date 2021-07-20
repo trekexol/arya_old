@@ -45,7 +45,11 @@
                         @foreach ($clients as $client)
                             <tr>
                                 <td>
-                                    <a href="{{ route('anticipos.createclient',$client->id) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
+                                    @if (isset($id_anticipo))
+                                        <a href="{{ route('anticipos.edit',[$id_anticipo,$client->id]) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
+                                    @else
+                                        <a href="{{ route('anticipos.createclient',$client->id) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
+                                    @endif
                                </td>
                                 <td>{{$client->name}}</td>
                                 <td>{{$client->cedula_rif}}</td>

@@ -1,6 +1,13 @@
 @extends('admin.layouts.dashboard')
 
 @section('content')
+
+{{-- VALIDACIONES-RESPUESTA--}}
+@include('admin.layouts.success')   {{-- SAVE --}}
+@include('admin.layouts.danger')    {{-- EDITAR --}}
+@include('admin.layouts.delete')    {{-- DELELTE --}}
+{{-- VALIDACIONES-RESPUESTA --}}
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -78,6 +85,19 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="rate" class="col-md-3 col-form-label text-md-right">Tasa del Dia</label>
+
+                            <div class="col-md-6">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $bcv }}" required autocomplete="rate">
+
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="reference" class="col-md-3 col-form-label text-md-right">Referencia</label>
 
                             <div class="col-md-6">
@@ -94,10 +114,18 @@
                        
                     <br>
                         <div class="form-group row mb-0">
+
                             <div class="col-md-4 offset-md-4">
-                                <button type="submit" class="btn btn-info">
-                                   Registrar Anticipo
-                                </button>
+                                @if (isset($client->id))
+                                    <button type="submit" class="btn btn-info">
+                                        Registrar Anticipo
+                                    </button>
+                                @else
+                                    <button type="submit" class="btn btn-info" disabled title="Debe Seleccionar un Cliente para poder Continuar">
+                                        Registrar Anticipo
+                                    </button>
+                                @endif
+                                
                             </div>
                             <div class="col-md-2">
                                 <a href="{{ route('anticipos') }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>                                 
@@ -113,10 +141,13 @@
 @section('validacion')
     <script>    
         $(document).ready(function () {
-            $("#amount").mask('000.000.000.000.000,00', { reverse: true });
+            $("#amount").mask('000.000.000.000.000.000.000,00', { reverse: true });
             
         });
-
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000.000.000,00', { reverse: true });
+            
+        });
 
 
 

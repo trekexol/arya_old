@@ -213,7 +213,7 @@ class QuotationController extends Controller
                     }else{
                         //Cuando mi producto esta en Bolivares, pero estoy cotizando en dolares, convierto los bs a dolares
                         if($inventory->products['money'] == 'Bs'){
-
+                            $inventory->products['price'] = $inventory->products['price'] / $quotation->bcv;
                         }
                         $bcv = null;
                     }

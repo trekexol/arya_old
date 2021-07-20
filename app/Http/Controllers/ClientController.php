@@ -19,14 +19,7 @@ class ClientController extends Controller
        $user= auth()->user();
 
        $clients = Client::orderBy('id' ,'DESC')->get();
-       //dd($user->estado_id);
-
-       //$rol = $user->roles();
-       //dd($rol);
-       //$persons = Person::where('estado_id', $user->estado_id)
-                           //->orderBy('id', 'DESC')
-                           //->get();
-       // dd($persons);
+       
        return view('admin.clients.index',compact('clients'));
    }
 
@@ -53,7 +46,7 @@ class ClientController extends Controller
    
         $data = request()->validate([
             'type_code'         =>'required|max:20',
-            
+            'id_user'         =>'required',
             'name'         =>'required|max:80',
             'cedula_rif'         =>'required|max:20',
             'direction'         =>'required|max:100',
@@ -70,7 +63,7 @@ class ClientController extends Controller
     $users = new client();
 
     $users->id_vendor = request('id_vendor');
-
+    $users->id_user = request('id_user');
     $users->type_code = request('type_code');
    
     $users->name = request('name');

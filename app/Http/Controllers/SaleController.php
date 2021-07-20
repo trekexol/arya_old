@@ -20,8 +20,8 @@ class SaleController extends Controller
             $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.status','C')
-                                                            ->select('products.description', DB::raw('SUM(quotation_products.amount) as amount_sales'),'products.type','products.price as price','inventories.code')
-                                                            ->groupBy('products.description','products.type','products.price','inventories.code')
+                                                            ->select('products.description', DB::raw('SUM(quotation_products.amount) as amount_sales'),'products.type','products.price as price','inventories.code','products.money as money')
+                                                            ->groupBy('products.description','products.type','products.price','inventories.code','products.money')
                                                             ->get(); 
          //$bcv = $this->search_bcv();   
            

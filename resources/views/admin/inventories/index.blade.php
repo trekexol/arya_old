@@ -77,9 +77,9 @@
                 <th class="text-center">Cantidad</th>
                 <th class="text-center">Costo</th>
                 
-                <th class="text-center">Foto del Producto</th>
                 <th class="text-center">Moneda</th>
               
+                <th class="text-center">Foto del Producto</th>
                 
                 <th class="text-center"></th>
             </tr>
@@ -95,17 +95,14 @@
                             <td class="text-right">{{ $var->amount }}</td> 
                             <td class="text-right">{{number_format($var->products['price'], 2, ',', '.')}}</td>
                             
-                            
-                            
-                            <td class="text-center">{{ $var->products['photo_product']}}</td> 
-                            
                             @if($var->products['money'] == "D")
                             <td class="text-center">Dolar</td>
                             @else
                             <td class="text-center">Bolívar</td>
                             @endif
 
-                           
+                            <td class="text-center">{{ $var->products['photo_product']}}</td> 
+                            
                             <td class="text-center">
                                 <a href="{{ route('inventories.create_increase_inventory',$var->id) }}" style="color: blue;" title="Aumentar Inventario"><i class="fa fa-plus"></i></a>
                                 <a href="{{ route('inventories.create_decrease_inventory',$var->id) }}" style="color: rgb(248, 62, 62);" title="Disminuir Inventario"><i class="fa fa-minus"></i></a>

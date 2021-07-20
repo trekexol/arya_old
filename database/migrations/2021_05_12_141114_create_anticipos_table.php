@@ -21,6 +21,8 @@ class CreateAnticiposTable extends Migration
 
             $table->date('date');
             $table->decimal('amount',64,2);
+            $table->decimal('rate',64,2);
+            $table->string('coin',20);
             $table->string('reference',20)->nullable();
             
            

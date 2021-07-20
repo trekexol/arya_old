@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Account;
 use App\Anticipo;
 use App\Client;
+use App\Color;
 use App\DetailVoucher;
 use App\HeaderVoucher;
+use App\Modelo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +28,8 @@ class AnticipoController extends Controller
        if($users_role == '1'){
        
         $anticipos = Anticipo::where('status',1)->orderBy('id','desc')->get();
+        
+
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -52,11 +56,11 @@ class AnticipoController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-    public function selectclient()
+    public function selectclient($id_anticipo = null)
     {
         $clients = Client::orderBy('id' ,'DESC')->get();
 
-         return view('admin.anticipos.selectclient',compact('clients'));
+        return view('admin.anticipos.selectclient',compact('clients','id_anticipo'));
     }
     
   
@@ -65,13 +69,15 @@ class AnticipoController extends Controller
    {
         $accounts = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
-                                            ->where('code_three', 2)
-                                            ->where('code_four', '<>',0)
+                                            ->where('code_three', 1)
+                                            ->where('code_four', 1)
+                                            ->where('code_five', '<>',0)
                                             ->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
+        $bcv = $this->search_bcv();
 
-        return view('admin.anticipos.create',compact('datenow','accounts'));
+        return view('admin.anticipos.create',compact('datenow','accounts','bcv'));
    }
 
    public function createclient($id_client)
@@ -80,13 +86,15 @@ class AnticipoController extends Controller
         $client =  Client::find($id_client);
         $accounts = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
-                                            ->whereIn('code_three', [1, 2])
-                                            ->where('code_four', '<>',0)
+                                            ->where('code_three',1)
+                                            ->whereIn('code_four', [1, 2])
+                                            ->where('code_five', '<>',0)
                                             ->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
+        $bcv = $this->search_bcv();
 
-        return view('admin.anticipos.create',compact('datenow','client','accounts'));
+        return view('admin.anticipos.create',compact('datenow','client','accounts','bcv'));
    }
 
 
@@ -99,6 +107,7 @@ class AnticipoController extends Controller
    public function store(Request $request)
     {
    
+        
         $data = request()->validate([
             
         
@@ -108,23 +117,37 @@ class AnticipoController extends Controller
             'id_user'         =>'required',
 
             'amount'         =>'required',
+            'rate'         =>'required',
             'coin'         =>'required',
 
         ]);
 
-        $var = new anticipo();
+        $var = new Anticipo();
 
         $var->date = request('date_begin');
         $var->id_client = request('id_client');
         $var->id_account = request('id_account');
         $var->id_user = request('id_user');
+        $var->coin = request('coin');
+
+        if($var->id_client == -1){
+            return redirect('/anticipos/register')->withDanger('Debe Seleccionar un Cliente!');
+        }
         
         $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
-            
+        $valor_sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
 
-        $var->amount = $valor_sin_formato_amount;
+        if($var->coin != 'Bolivares'){
+            $var->amount = $valor_sin_formato_amount * $valor_sin_formato_rate; 
+            $var->rate = $valor_sin_formato_rate;
+        }else{
+            $var->amount = $valor_sin_formato_amount;
+            $var->rate = $valor_sin_formato_rate;
+        }
+
+        
         $var->reference = request('reference');
-        $var->coin = request('coin');
+        
     
         $var->status = 1;
 
@@ -135,19 +158,19 @@ class AnticipoController extends Controller
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
-
+        $header_voucher->id_anticipo =  $var->id;
         $header_voucher->description = "Anticipo";
         $header_voucher->date = $datenow;
         $header_voucher->status =  "1";
         $header_voucher->save();
 
-        $this->add_movement($header_voucher->id,$var->id_account,$var->id_user,$var->amount,0);
+        $this->add_movement($header_voucher->id,$var->id_account,$var->id_user,$var->amount,0,$var->rate);
 
 
         $account_anticipo = Account::where('description', 'like', 'Anticipos Clientes Nacionales')->first();  
             
         if(isset($account_anticipo)){
-            $this->add_movement($header_voucher->id,$account_anticipo->id,$var->id_user,0,$var->amount);
+            $this->add_movement($header_voucher->id,$account_anticipo->id,$var->id_user,0,$var->amount,$var->rate);
         }
         
 
@@ -159,7 +182,7 @@ class AnticipoController extends Controller
 
 
 
-    public function add_movement($id_header,$id_account,$id_user,$debe,$haber){
+    public function add_movement($id_header,$id_account,$id_user,$debe,$haber,$tasa){
 
        
 
@@ -171,7 +194,7 @@ class AnticipoController extends Controller
 
         $detail->debe = $debe;
         $detail->haber = $haber;
-       
+        $detail->tasa = $tasa;
       
         $detail->status =  "C";
 
@@ -195,15 +218,34 @@ class AnticipoController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function edit($id)
+   public function edit($id,$id_client = null)
    {
-        $anticipo = anticipo::find($id);
-       
-        $modelos     = Modelo::orderBY('description','asc')->pluck('description','id')->toArray();
+        $anticipo = Anticipo::find($id);
+
+        if(isset($id_client)){
+            $client = Client::find($id_client);
+        }else{
+            $client = null;
+        }
+        
+
+        $accounts = DB::table('accounts')->where('code_one', 1)
+                                            ->where('code_two', 1)
+                                            ->where('code_three',1)
+                                            ->whereIn('code_four', [1, 2])
+                                            ->where('code_five', '<>',0)
+                                            ->get();
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');    
+        $bcv = $this->search_bcv();
+
+        if($anticipo->coin != 'Bolivares'){
+            
+            $anticipo->amount = $anticipo->amount / $anticipo->rate;
+            
+        }
       
-        $colors     = Color::orderBY('description','asc')->pluck('description','id')->toArray();
-      
-        return view('admin.anticipos.edit',compact('anticipo','modelos','colors'));
+        return view('admin.anticipos.edit',compact('anticipo','accounts','datenow','bcv','client'));
   
    }
 
@@ -217,46 +259,73 @@ class AnticipoController extends Controller
    public function update(Request $request, $id)
    {
 
-    $vars =  anticipo::find($id);
+        $data = request()->validate([
+                
+            
+            'date_begin'         =>'required',
+            'id_client'         =>'required',
+            'id_account'         =>'required',
+            'id_user'         =>'required',
 
-    $vars_status = $vars->status;
-    $vars_exento = $vars->exento;
-    $vars_islr = $vars->islr;
-  
-    $data = request()->validate([
+            'amount'         =>'required',
+            'rate'         =>'required',
+            'coin'         =>'required',
+
+        ]);
+
         
+
+
+        $var = Anticipo::findOrFail($id);
+
        
-        'modelo_id'         =>'required',
-        'color_id'         =>'required',
-        'user_id'         =>'required',
+        $var->date = request('date_begin');
+        $var->id_client = request('id_client');
+        $var->id_account = request('id_account');
+        $var->id_user = request('id_user');
+        $var->coin = request('coin');
 
-        'type'         =>'required',
-        'placa'         =>'required',
-        'photo_anticipo'         =>'required',
+        if($var->id_client == -1){
+            return redirect('/anticipos/edit/'.$id.'')->withDanger('Debe Seleccionar un Cliente!');
+        }
+        
+        $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+        $valor_sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
 
-        'status'         =>'required',
+        if($var->coin != 'Bolivares'){
+            $var->amount = $valor_sin_formato_amount * $valor_sin_formato_rate; 
+            $var->rate = $valor_sin_formato_rate;
+        }else{
+            $var->amount = $valor_sin_formato_amount;
+            $var->rate = $valor_sin_formato_rate;
+        }
+
+        
+        $var->reference = request('reference');
+        
+        if(request('status') != null){
+            $var->status = request('status');
+        }
+    
+        DB::table('detail_vouchers as d')
+                        ->join('header_vouchers as h', 'h.id', '=', 'd.id_header_voucher')
+                        ->where('h.id_anticipo',$var->id)
+                        ->where('d.haber',0)
+                        ->update([ 'd.debe' => $var->amount, 'd.tasa' => $var->rate,'d.id_account' => $var->id_account]);
+        
+        DB::table('detail_vouchers as d')
+                        ->join('header_vouchers as h', 'h.id', '=', 'd.id_header_voucher')
+                        ->where('h.id_anticipo',$var->id)
+                        ->where('d.debe',0)
+                        ->update([ 'd.haber' => $var->amount , 'd.tasa' => $var->rate]);
+
+        
+
+        //$header_voucher->date = $datenow;
        
-    ]);
+        $var->save();
 
-    $var = anticipo::findOrFail($id);
-
-    $var->modelo_id = request('modelo_id');
-    $var->color_id = request('color_id');
-    $var->user_id = request('user_id');
-    $var->type = request('type');
-   
-    $var->placa = request('placa');
-    $var->photo_anticipo = request('photo_anticipo');
-
-    if(request('status') == null){
-        $var->status = $vars_status;
-    }else{
-        $var->status = request('status');
-    }
-   
-    $var->save();
-
-    return redirect('/anticipos')->withSuccess('Actualizacion Exitosa!');
+        return redirect('/anticipos')->withSuccess('Actualizacion Exitosa!');
     }
 
 
@@ -270,5 +339,28 @@ class AnticipoController extends Controller
    {
        //
    }
+
+
+   public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        } else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
+    }
 }
 

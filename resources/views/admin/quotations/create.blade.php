@@ -162,7 +162,7 @@
                                 <div class="form-row col-md-12">
                                     <div class="form-group col-md-2">
                                         <label for="description" >Código</label>
-                                        <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $inventory->code ?? old('code') }}" required autocomplete="code" autofocus>
+                                        <input id="code" type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $inventory->code ?? old('code') ?? '' }}" required autocomplete="code" autofocus>
                                     </div>
                                    
                                     <div class="form-group col-md-1">
@@ -175,7 +175,7 @@
                                     
                                     <div class="form-group col-md-3">
                                         <label for="description" >Descripción</label>
-                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $inventory->products['description'] ?? old('description') }}" readonly required autocomplete="description">
+                                        <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $inventory->products['description'] ?? old('description') ?? '' }}" readonly required autocomplete="description">
         
                                         @error('description')
                                             <span class="invalid-feedback" role="alert">
@@ -215,15 +215,17 @@
                                         @endif
                                     </div>
                                     <div class="form-group col-md-2">
-                                        @if(isset($inventory->products['price']) && (isset($bcv))) 
+                                        @if(isset($inventory->products['price']) && (isset($quotation->bcv)) && ($inventory->products['money'] != 'Bs')) 
                                             <?php 
+                                                
                                                 $product_Bs = $inventory->products['price'] * $quotation->bcv;
+                                               
                                             ?>
                                             <label for="cost" >Precio</label>
                                             <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ number_format($product_Bs, 2, ',', '.') ?? '' }}"  required autocomplete="cost">
                                         @else
                                             <label for="cost" >Precio</label>
-                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{ $inventory->products['price']  ?? '' }}"  required autocomplete="cost">
+                                            <input id="cost" type="text" class="form-control @error('cost') is-invalid @enderror" name="cost" value="{{number_format($inventory->products['price'] ?? 0, 2, ',', '.') ?? '' }}"  required autocomplete="cost">
                                         @endif
 
                                         

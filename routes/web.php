@@ -537,12 +537,12 @@ Route::group(["prefix"=>'anticipos'],function(){
     Route::get('register','AnticipoController@create')->name('anticipos.create');
     Route::post('store', 'anticipoController@store')->name('anticipos.store');
    
-    Route::get('{id}/edit','AnticipoController@edit')->name('anticipos.edit');
+    Route::get('edit/{id}/{id_client?}','AnticipoController@edit')->name('anticipos.edit');
     Route::delete('{id}/delete','AnticipoController@destroy')->name('anticipos.delete');
     Route::patch('{id}/update','AnticipoController@update')->name('anticipos.update');
 
     Route::get('register/{id_client}','AnticipoController@createclient')->name('anticipos.createclient');
-    Route::get('selectclient','AnticipoController@selectclient')->name('anticipos.selectclient');
+    Route::get('selectclient/{id_anticipo?}','AnticipoController@selectclient')->name('anticipos.selectclient');
 
     Route::get('historic','AnticipoController@indexhistoric')->name('anticipos.historic');
     
