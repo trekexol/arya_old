@@ -74,11 +74,59 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="iva_amounts" class="col-md-2 col-form-label text-md-right">Monto de Iva</label>
+                            <label for="iva_amounts" class="col-md-2 col-form-label text-md-right">Monto de Iva:</label>
                             <div class="col-md-4">
                                 <input id="iva_amounts" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount"  readonly required autocomplete="iva_amount"> 
                                 
                                 @error('iva_amount')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
+
+                            <div class="col-md-3">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
+
+                                @error('observation')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General:</label>
+                            <div class="col-md-4">
+                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ number_format($quotation->iva_amount  / ($bcv ?? 1), 2, ',', '.') ?? old('grand_total') }}" readonly required autocomplete="grand_total"> 
+                           
+                                @error('grand_total')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
+
+                            <div class="col-md-3">
+                                <input id="note" type="number" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
+
+                                @error('note')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="form-group row">
+                            <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
+                            <div class="col-md-4">
+                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($quotation->anticipo, 2, ',', '.') ?? '0,00' }}" readonly required autocomplete="anticipo"> 
+                           
+                                @error('anticipo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -90,59 +138,9 @@
                                 <option value="{{ $quotation->iva_percentage }}">{{ $quotation->iva_percentage }}%</option>
                             </select>
                             </div>
-                            
                         </div>
                         <div class="form-group row">
-                            <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
-                            <div class="col-md-4">
-                                <input id="grand_total" type="text" class="form-control @error('grand_total') is-invalid @enderror" name="grand_total" value="{{ number_format($quotation->iva_amount  / ($bcv ?? 1), 2, ',', '.') ?? old('grand_total') }}" readonly required autocomplete="grand_total"> 
-                           
-                                @error('grand_total')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            
-                        </div>
-                        
-                        
-                        <div class="form-group row">
-                            <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
-                            <div class="col-md-2">
-                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($quotation->anticipo, 2, ',', '.') ?? '0,00' }}" readonly required autocomplete="anticipo"> 
-                           
-                                @error('anticipo')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
-
-                            <div class="col-md-2">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
-
-                                @error('observation')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
-
-                            <div class="col-md-2">
-                                <input id="note" type="number" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
-
-                                @error('note')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="total_pays" class="col-md-2 col-form-label text-md-right">Total a Pagar</label>
+                            <label for="total_pays" class="col-md-2 col-form-label text-md-right">Total a Pagar:</label>
                             <div class="col-md-4">
                                 <input id="total_pay" type="text" class="form-control @error('total_pay') is-invalid @enderror" name="total_pay" readonly  required autocomplete="total_pay"> 
                            
@@ -153,7 +151,7 @@
                                 @enderror
                             </div>
                             @if (isset($quotation->credit_days))
-                                <label for="total_pays" class="col-md-2 col-form-label text-md-right">Dias de Crédito</label>
+                                <label for="total_pays" class="col-md-2 col-form-label text-md-right">Dias de Crédito:</label>
                                 <div class="col-md-1">
                                     <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" value="{{ $quotation->credit_days ?? '' }}" readonly autocomplete="credit"> 
                                 </div>

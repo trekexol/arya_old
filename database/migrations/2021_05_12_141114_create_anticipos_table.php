@@ -18,6 +18,7 @@ class CreateAnticiposTable extends Migration
             $table->unsignedBigInteger('id_client');
             $table->unsignedBigInteger('id_account');
             $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_quotation')->nullable();
 
             $table->date('date');
             $table->decimal('amount',64,2);
@@ -31,6 +32,7 @@ class CreateAnticiposTable extends Migration
             $table->foreign('id_client')->references('id')->on('clients');
             $table->foreign('id_account')->references('id')->on('accounts');
             $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_quotation')->references('id')->on('quotations');
             $table->timestamps();
         });
     }

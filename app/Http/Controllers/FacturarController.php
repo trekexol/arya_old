@@ -31,13 +31,31 @@ class FacturarController extends Controller
                                                             
              $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
 
-             $anticipos_sum = Anticipo::where('status',1)->where('id_client',$quotation->id_client)->sum('amount');
+             $anticipos_sum_bolivares = Anticipo::where('status',1)
+                                        ->where('id_client',$quotation->id_client)
+                                        ->where('coin','like','bolivares')
+                                        ->sum('amount');
+
+            $total_dolar_anticipo =    DB::select('SELECT SUM(amount/rate) AS dolar
+                                        FROM anticipos
+                                        WHERE id_client = ? AND
+                                        coin not like ? AND
+                                        status = ?
+                                        '
+                                        , [$quotation->id_client,'bolivares',1]);
+
+            $anticipos_sum_dolares = 0;
+            if(isset($total_dolar_anticipo[0]->dolar)){
+                $anticipos_sum_dolares = $total_dolar_anticipo[0]->dolar;
+                
+            }
 
              $accounts_bank = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->where('code_four', 2)
                                             ->where('code_five', '<>',0)
+                                            ->where('description','not like', 'Punto de Venta%')
                                             ->get();
              $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
@@ -87,19 +105,24 @@ class FacturarController extends Controller
             
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
-
+             $anticipos_sum = 0;
              if(isset($coin)){
                  if($coin == 'bolivares'){
                     $bcv = null;
+                    //Si la factura es en BS, y tengo anticipos en dolares, los multiplico los dolares por la tasa a la que estoy facturando
+                    $anticipos_sum_dolares =  $anticipos_sum_dolares * $quotation->bcv;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
                  }else{
-                     $bcv = $quotation->bcv;
+                    $bcv = $quotation->bcv;
+                     //Si la factura es en Dolares, y tengo anticipos en bolivares, divido los bolivares por la tasa a la que estoy facturando
+                    $anticipos_sum_bolivares =  $anticipos_sum_bolivares / $quotation->bcv;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
                  }
              }else{
                 $bcv = null;
              }
              
-             
-             
+            
      
              return view('admin.quotations.createfacturar',compact('price_cost_total','coin','quotation','payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','datenow','bcv','anticipos_sum'));
          }else{
@@ -258,8 +281,7 @@ class FacturarController extends Controller
         $quotation = Quotation::findOrFail(request('id_quotation'));
 
 
-        
-
+        $anticipo = request('anticipo_form');
 
         $quotation_status = $quotation->status;
 
@@ -295,7 +317,7 @@ class FacturarController extends Controller
 
         //-----------------------
 
-        $bcv = $this->search_bcv();
+        $bcv = $quotation->bcv;
 
         $coin = request('coin');
 
@@ -1154,7 +1176,7 @@ class FacturarController extends Controller
             
             }
 
-            if($coin == 'dolares'){
+            if($coin != 'bolivares'){
                 $total_pay_form = $total_pay_form * $bcv;
             }
             
@@ -1200,13 +1222,23 @@ class FacturarController extends Controller
 
                 $anticipo = request('anticipo_form');
 
+                $sub_total = request('sub_total_form');
 
-                
+                $base_imponible = request('base_imponible_form');
+
+                $total_iva = 0 ;
+
+                if($base_imponible != 0){
+                    $total_iva = ($base_imponible * $iva_percentage)/100;
+
+                }
                 
 
                 if(isset($anticipo)){
                    // $valor_sin_formato_anticipo = str_replace(',', '.', str_replace('.', '', $anticipo));
                     $quotation->anticipo =  $anticipo;
+                    //Si hay anticipo, entonces necesito registrar este monto tal cual el total de la factura sin restarle el anticipo
+                    $total_pay_form = $sub_total + $total_iva;
                 }else{
                     $quotation->anticipo = 0;
                 }
@@ -1222,11 +1254,9 @@ class FacturarController extends Controller
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');   
 
-            $sub_total = request('sub_total_form');
+           
 
-            $base_imponible = request('base_imponible_form');
-
-            if($coin == 'dolares'){
+            if($coin != 'bolivares'){
                 $sub_total = $sub_total * $bcv;
                 $base_imponible = $base_imponible * $bcv;
             }
@@ -1295,12 +1325,17 @@ class FacturarController extends Controller
 
             
                     /*Verificamos si el cliente tiene anticipos activos */
-                    if($anticipo != 0){
+                   // if($anticipo != 0){
                         DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
                         ->where('status', '=', '1')
                         ->update(['status' => 'C']);
+
+                        //los que quedaron en espera, pasan a estar activos
+                        DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+                        ->where('status', '=', 'M')
+                        ->update(['status' => '1']);
             
-                    }
+                   // }
                     /*------------------------------------------------- */
 
                     return redirect('quotations/facturado/'.$quotation->id.'/'.$coin.'')->withSuccess('Factura Guardada con Exito!');
@@ -1515,6 +1550,7 @@ class FacturarController extends Controller
                    $bcv = null;
                 }else{
                     $bcv = $quotation->bcv;
+                    $quotation->anticipo = $quotation->anticipo / $quotation->bcv;
                 }
             }else{
                $bcv = null;

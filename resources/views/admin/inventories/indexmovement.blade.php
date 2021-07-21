@@ -56,10 +56,16 @@
                             <td>{{ $var->date_billing ?? $var->date_delivery_note ?? '' }}</td>
                             <td>{{ $var->description ?? ''}}</td>
                             @if (isset($var->date_billing))
-                                <td>Factura</td>
+                                <td>Factura (
+                                    <a href="{{ route('quotations.createfacturado',[$var->id_quotation,$var->coin_quotation ?? 'bolivares']) }}" title="Ver Factura" class="font-weight-bold text-dark">{{ $var->id_quotation }}</a>
+                                    )
+                                </td>
                                 <td>Salida</td>
                             @elseif(isset($var->date_delivery_note))
-                                <td>Nota de Entrega</td>
+                                <td>Nota de Entrega (
+                                    <a href="{{ route('quotations.createfacturado',[$var->id_quotation,$var->coin_quotation ?? 'bolivares']) }}" title="Ver Factura" class="font-weight-bold text-dark">{{ $var->id_quotation }}</a>
+                                    )
+                                </td>
                                 <td>Salida</td>
                             @else
                                 <td>Otro</td>

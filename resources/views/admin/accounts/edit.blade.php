@@ -101,6 +101,7 @@
                                                 </span>
                                             @enderror
                                         </div>
+                                        
                                     @else
                                         <label for="rate" id="rate_label" class="col-md-4 col-form-label text-md-right">Tasa del Dia</label>                           
                                         <div class="col-md-4">
@@ -113,6 +114,7 @@
                                             @enderror
                                         </div>   
                                     @endif
+                                    <label for="rate" id="rate_label" class="col-md-2 col-form-label text-md-right">Tasa del Dia {{ number_format($rate, 2, ',', '.') }}</label>                           
                                     
                                     
                                 </div>

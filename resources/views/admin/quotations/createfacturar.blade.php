@@ -135,7 +135,7 @@
 
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
@@ -154,10 +154,10 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <div class="col-md-1">
-                                    <a href="{{ route('quotations.selectproduct',[$quotation->id,$coin]) }}" title="Productos"><i class="fa fa-eye"></i></a>  
-                                </div>
                             @endif
+                            <div class="col-md-1">
+                                <a href="{{ route('anticipos.selectanticipo',[$quotation->id_client,$coin,$quotation->id]) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                            </div>
                             <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
                             <div class="col-md-2">
 
@@ -305,7 +305,7 @@
                                         </span>
                                     @enderror
                                     <br>
-                                    <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" placeholder="Referencia" autocomplete="reference"> 
+                                    <input id="reference"  maxlength="40" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" placeholder="Referencia" autocomplete="reference"> 
                            
                                     @error('reference')
                                         <span class="invalid-feedback" role="alert">
@@ -375,7 +375,7 @@
                                         </span>
                                     @enderror
                                     <br>
-                                    <input id="reference2" type="text" class="form-control @error('reference2') is-invalid @enderror" name="reference2" placeholder="Referencia" autocomplete="reference2"> 
+                                    <input id="reference2" maxlength="40"  type="text"  class="form-control @error('reference2') is-invalid @enderror" name="reference2" placeholder="Referencia" autocomplete="reference2"> 
                            
                                     @error('reference2')
                                         <span class="invalid-feedback" role="alert">
@@ -447,7 +447,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference3" type="text" class="form-control @error('reference3') is-invalid @enderror" name="reference3" placeholder="Referencia" autocomplete="reference3"> 
+                                <input id="reference3" maxlength="40"  type="text" class="form-control @error('reference3') is-invalid @enderror" name="reference3" placeholder="Referencia" autocomplete="reference3"> 
                        
                                 @error('reference3')
                                     <span class="invalid-feedback" role="alert">
@@ -518,7 +518,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference4" type="text" class="form-control @error('reference4') is-invalid @enderror" name="reference4" placeholder="Referencia" autocomplete="reference4"> 
+                                <input id="reference4" maxlength="40"  type="text" class="form-control @error('reference4') is-invalid @enderror" name="reference4" placeholder="Referencia" autocomplete="reference4"> 
                        
                                 @error('reference4')
                                     <span class="invalid-feedback" role="alert">
@@ -589,7 +589,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference5" type="text" class="form-control @error('reference5') is-invalid @enderror" name="reference5" placeholder="Referencia" autocomplete="reference5"> 
+                                <input id="reference5" maxlength="40"  type="text" class="form-control @error('reference5') is-invalid @enderror" name="reference5" placeholder="Referencia" autocomplete="reference5"> 
                        
                                 @error('reference5')
                                     <span class="invalid-feedback" role="alert">
@@ -660,7 +660,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference6" type="text" class="form-control @error('reference6') is-invalid @enderror" name="reference6" placeholder="Referencia" autocomplete="reference6"> 
+                                <input id="reference6" maxlength="40"  type="text" class="form-control @error('reference6') is-invalid @enderror" name="reference6" placeholder="Referencia" autocomplete="reference6"> 
                        
                                 @error('reference6')
                                     <span class="invalid-feedback" role="alert">
@@ -731,7 +731,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference7" type="text" class="form-control @error('reference7') is-invalid @enderror" name="reference7" placeholder="Referencia" autocomplete="reference7"> 
+                                <input id="reference7" maxlength="40"  type="text" class="form-control @error('reference7') is-invalid @enderror" name="reference7" placeholder="Referencia" autocomplete="reference7"> 
                        
                                 @error('reference7')
                                     <span class="invalid-feedback" role="alert">

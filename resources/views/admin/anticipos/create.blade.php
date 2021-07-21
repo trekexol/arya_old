@@ -66,8 +66,8 @@
                             <div class="col-md-6">
                                 <select  id="coin" name="coin" class="form-control" required>
                                     <option value="">Seleccione una Moneda</option>
-                                    <option  value="Bolivares">Bolivares</option>
-                                    <option  value="Dolares">Dolares</option>
+                                    <option  value="bolivares">Bolivares</option>
+                                    <option  value="dolares">Dolares</option>
                                 </select>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                             <label for="reference" class="col-md-3 col-form-label text-md-right">Referencia</label>
 
                             <div class="col-md-6">
-                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" required autocomplete="reference">
+                                <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" autocomplete="reference">
 
                                 @error('reference')
                                     <span class="invalid-feedback" role="alert">

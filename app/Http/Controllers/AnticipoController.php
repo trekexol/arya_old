@@ -63,6 +63,15 @@ class AnticipoController extends Controller
         return view('admin.anticipos.selectclient',compact('clients','id_anticipo'));
     }
     
+    public function selectanticipo($id_client,$coin,$id_quotation)
+    {
+        $anticipos = Anticipo::where('id_client',$id_client)->whereIn('status',[1,'M'])->orderBy('id' ,'DESC')->get();
+
+        $client = Client::find($id_client);
+
+        return view('admin.anticipos.selectanticipo',compact('anticipos','client','id_quotation','coin'));
+    }
+    
   
 
    public function create()
@@ -137,7 +146,7 @@ class AnticipoController extends Controller
         $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
         $valor_sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
 
-        if($var->coin != 'Bolivares'){
+        if($var->coin != 'bolivares'){
             $var->amount = $valor_sin_formato_amount * $valor_sin_formato_rate; 
             $var->rate = $valor_sin_formato_rate;
         }else{
@@ -361,6 +370,26 @@ class AnticipoController extends Controller
         /*-------------------------- */
         return $bcv;
 
+    }
+
+    public function changestatus(Request $request, $id_anticipo, $verify){
+        //validar si la peticion es asincrona
+        if($request->ajax()){
+            try{
+                if($verify == 'true'){
+                    $anticipo = Anticipo::where('id',$id_anticipo)->update([ 'status' => 1 ]);
+                    
+                }else{
+                    $anticipo = Anticipo::where('id',$id_anticipo)->update([ 'status' => 'M' ]);
+                   
+                }
+                return response()->json($anticipo,200);
+
+            }catch(Throwable $th){
+                return response()->json(false,500);
+            }
+        }
+        
     }
 }
 

@@ -545,6 +545,11 @@ Route::group(["prefix"=>'anticipos'],function(){
     Route::get('selectclient/{id_anticipo?}','AnticipoController@selectclient')->name('anticipos.selectclient');
 
     Route::get('historic','AnticipoController@indexhistoric')->name('anticipos.historic');
+
+    Route::get('selectanticipo/{id_client}/{coin}/{id_quotation}','AnticipoController@selectanticipo')->name('anticipos.selectanticipo');
+    
+    Route::get('changestatus/{id_anticipo}/{verify}','AnticipoController@changestatus')->name('anticipos.changestatus');
+
     
 });
 

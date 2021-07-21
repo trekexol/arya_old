@@ -93,7 +93,7 @@
                 @else
                     @foreach ($anticipos as $key => $anticipo)
                     <?php 
-                        if($anticipo->coin != 'Bolivares'){
+                        if($anticipo->coin != 'bolivares'){
                             $anticipo->amount = $anticipo->amount / $anticipo->rate;
                         }
                     ?>

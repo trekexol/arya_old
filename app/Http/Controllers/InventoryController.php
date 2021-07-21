@@ -43,9 +43,12 @@ class InventoryController extends Controller
                                                         ->select('products.*','quotation_products.discount as discount',
                                                         'quotation_products.amount as amount_quotation',
                                                         'quotation_products.id_quotation as id_quotation',
-                                                        'quotations.*',
+                                                        'quotations.date_billing as date_billing',
+                                                        'quotations.date_delivery_note as date_delivery_note',
+                                                        'quotations.id as id_quotation','quotations.coin as coin_quotation',
                                                         'inventories.amount as amount_inventory'
                                                         )
+                                                        ->orderBy('quotations.id','desc')
                                                         ->get(); 
 
        
