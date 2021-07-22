@@ -26,7 +26,8 @@ class CreateExpensesDetailsTable extends Migration
             $table->boolean('islr');
             $table->integer('amount');
             $table->decimal('price',64,2);
-          
+            $table->decimal('rate',64,2)->comment = 'Tasa';
+            
             $table->string('status',1);
 
             $table->foreign('id_expense')->references('id')->on('expenses_and_purchases');

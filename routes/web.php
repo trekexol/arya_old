@@ -602,6 +602,10 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
 
     Route::get('movementexpense/{id_expense}','ExpensesAndPurchaseController@movements_expense')->name('expensesandpurchases.movement');
     
+    Route::get('refreshrate/{id_expense}/{coin}/{rate}','ExpensesAndPurchaseController@refreshrate')->name('expensesandpurchases.refreshrate');
+
+    Route::get('productedit/{id_product}/{coin}','ExpensesAndPurchaseController@editproduct')->name('expensesandpurchases.editproduct');
+
 });
 
 Route::group(["prefix"=>'directpaymentorders'],function(){

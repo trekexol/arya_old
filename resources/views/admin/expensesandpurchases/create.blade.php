@@ -84,7 +84,7 @@
                            
                             <label for="observation" class="col-md-2 col-form-label text-md-right">Observaciones:</label>
 
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ $expense->observation ?? old('observation') }}" readonly autocomplete="observation">
 
                                 @error('observation')
@@ -93,16 +93,31 @@
                                     </span>
                                 @enderror
                             </div>
+                            <label for="rate" class="col-md-1 col-form-label text-md-right">Tasa:</label>
+                            <div class="col-md-2">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ $expense->rate ?? $bcv }}" required autocomplete="rate">
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <a href="#" onclick="refreshrate()" title="tasaactual"><i class="fa fa-redo-alt"></i></a>  
+                                    <label  class="col-md-2 col-form-label text-md-right h6">Tasa actual:</label>
+                                    <div class="col-md-2 col-form-label text-md-left">
+                                        <label for="tasaactual" id="tasaacutal">{{ number_format($bcv, 2, ',', '.')}}</label>
+                            </div>
+                                    
                         </div>
-                        <br>
                         
                         <form method="POST" action="{{ route('expensesandpurchases.store_detail') }}" enctype="multipart/form-data" onsubmit="return validacion()">
                             @csrf
                             <input id="id_expense" type="hidden" class="form-control @error('id_expense') is-invalid @enderror" name="id_expense" value="{{ $expense->id ?? -1}}" readonly required autocomplete="id_expense">
                             <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
                             <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required  readonly autocomplete="id_user">
-                           
-                           
+                            <input id="rate_expense" type="hidden" class="form-control @error('rate_expense') is-invalid @enderror" name="rate_expense" value="{{ $expense->rate ?? -1}}" readonly required autocomplete="rate_expense"> 
+                            <input id="coin" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares'}}" readonly required autocomplete="coin">
+                            
                                 <div class="form-group row">
                                     <label for="type" class="col-md-2 col-form-label text-md-right">Tipo de Compra</label>
                                 
@@ -186,6 +201,7 @@
                                     </div>
                                     
                                 </div>
+                                
                                 <br>
                                 <div class="form-row">
                                     <div class="form-group col-md-1">
@@ -211,31 +227,52 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-md-1">
-                                        
+                                        @if (empty($inventory))
                                             <div class="form-check">
-                                                <input class="form-check-input" name="exento" type="checkbox" id="gridCheck">
+                                                <input class="form-check-input" type="checkbox" disabled id="gridCheck">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exento
                                                 </label>
                                             </div>
-                                          
-                                           
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        
+                                        @else  
                                             <div class="form-check">
-                                                <input class="form-check-input" name="islr" type="checkbox" id="gridCheck">
-                                                <label class="form-check-label" for="gridCheck2">
-                                                    Retiene ISLR
+                                                @if($inventory->products['exento'] == 1)
+                                                    <input class="form-check-input" type="checkbox" disabled checked id="gridCheck">
+                                                @else
+                                                    <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                @endif
+                                                <label class="form-check-label" for="gridCheck">
+                                                    Exento
                                                 </label>
                                             </div>
-                                        
-                                           
+                                        @endif
                                     </div>
+                                    <div class="form-group col-md-1">
+                                        @if (empty($inventory))
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                <label class="form-check-label" for="gridCheck">
+                                                    ISLR
+                                                </label>
+                                            </div>
+                                        @else  
+                                            <div class="form-check">
+                                                @if($inventory->products['islr'] == 1)
+                                                    <input class="form-check-input" type="checkbox" disabled checked id="gridCheck">
+                                                @else
+                                                    <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                @endif
+                                                <label class="form-check-label" for="gridCheck">
+                                                    ISLR
+                                                </label>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    
                                     <div class="form-group col-md-3">
                                         <label for="price" >Precio</label>
                                         @if(isset($inventory->products['price_buy']))
-                                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $inventory->products['price_buy'] * ($bcv ?? 1)  }}"  required autocomplete="price">
+                                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ number_format($inventory->products['price_buy'], 2, ',', '.')  }}"  required autocomplete="price">
                                         @else
                                             <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" readonly required autocomplete="price">
                                         @endif
@@ -296,7 +333,7 @@
                                                     $suma += $var->price * $var->amount;
                                                 ?>
                                                     <td style="text-align: right">
-                                                    <a href="{{ route('quotations.productedit',$var->id_expense) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                        <a href="{{ route('expensesandpurchases.editproduct',[$var->id_expense,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -338,6 +375,8 @@
                 $("#code_inventary_label").show();
                 $("#code_inventary").show();
                 $("#btn_code_inventary").show();
+
+                
         </script>
     @endsection
 @endif
@@ -349,19 +388,38 @@
         "order": [],
             'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]],
             'iDisplayLength': '50'
-    } );
-    
-    </script>
-    
-        <script>
-            $("#coin").on('change',function(){
+        } );
+
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000,00', { reverse: true });
+            
+        });
+
+        $(document).ready(function () {
+            $("#price").mask('000.000.000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+        
+        $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+        if ($(".sidebar").hasClass("toggled")) {
+            $('.sidebar .collapse').collapse('hide');
+        };
+
+        $("#coin").on('change',function(){
                 
                 coin = $(this).val();
                 window.location = "{{route('expensesandpurchases.create_detail', [$expense->id,'',''])}}"+"/"+coin+"/"+"{{ $inventory->id ?? '' }}";
             
         });
-        </script>
-   
+
+        function refreshrate() {
+       
+            let rate = document.getElementById("rate").value; 
+            window.location = "{{ route('expensesandpurchases.refreshrate',[$expense->id,$coin,'']) }}"+"/"+rate;
+            
+        }
+    </script>
     <script>
         $("#code_inventary_label").hide();
         $("#code_inventary").hide();

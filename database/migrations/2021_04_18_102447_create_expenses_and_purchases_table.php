@@ -36,7 +36,9 @@ class CreateExpensesAndPurchasesTable extends Migration
             $table->decimal('amount_iva',64,2)->nullable();
             $table->decimal('amount_with_iva',64,2)->nullable();
 
+            $table->string('coin',15)->nullable();
 
+            $table->decimal('rate',64,2)->nullable()->comment = 'Tasa';
 
            
             $table->string('status',1);

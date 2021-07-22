@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row py-lg-2">
        
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h2>Seleccione un Producto del Inventario</h2>
         </div>
         
@@ -43,9 +43,8 @@
                 <th>Descripción</th>
                 <th>Cantidad</th>
                 <th>Precio de Compra</th>
-                
-                <th>Foto del Producto</th>
                 <th>Moneda</th>
+                <th>Foto del Producto</th>
               
                 
                 
@@ -65,16 +64,13 @@
                             <td style="text-align: right">{{ $var->amount }}</td> 
                             <td style="text-align: right">{{number_format($var->products['price_buy'], 2, ',', '.')}}</td>
                             
-                            
-                            
-                            <td>{{ $var->products['photo_product']}}</td> 
-                            
                             @if($var->products['money'] == "D")
                             <td>Dolar</td>
                             @else
                             <td>Bolívar</td>
                             @endif
 
+                            <td>{{ $var->products['photo_product']}}</td> 
                            
                             
                         </tr>     
