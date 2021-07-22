@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Inventory;
 use App\Product;
 use App\Segment;
 use App\Subsegment;
@@ -124,6 +125,16 @@ class ProductController extends Controller
         $var->status =  1;
     
         $var->save();
+
+        $inventory = new Inventory();
+
+        $inventory->product_id = $var->id;
+        $inventory->id_user = $var->id_user;
+        $inventory->code = $var->code_comercial;
+        $inventory->amount = 0;
+        $inventory->status = 1;
+
+        $inventory->save();
 
         return redirect('/products')->withSuccess('Registro Exitoso!');
     }
