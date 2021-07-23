@@ -215,7 +215,7 @@
                                         @endif
                                     </div>
                                     <div class="form-group col-md-2">
-                                        @if(isset($inventory->products['price']) && (isset($quotation->bcv)) && ($inventory->products['money'] != 'Bs')) 
+                                        @if(isset($inventory->products['price']) && (isset($quotation->bcv)) && ($inventory->products['money'] != 'Bs') && ($coin == 'bolivares')) 
                                             <?php 
                                                 
                                                 $product_Bs = $inventory->products['price'] * $quotation->bcv;

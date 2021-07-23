@@ -314,7 +314,7 @@
                 
                 },
                 error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
+                    
                 }
             })
         }
@@ -354,7 +354,7 @@
                 
                 },
                 error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
+                    
                 }
             })
         }
@@ -396,7 +396,7 @@
                 
                 },
                 error:(xhr)=>{
-                    alert('Presentamos inconvenientes al consultar los datos');
+                    
                 }
             })
         }

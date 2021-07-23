@@ -45,9 +45,9 @@
                                 @endif
                             </select>
                         </div>
-                        <label for="amount" class="col-md-3 col-form-label text-md-right">Cantidad En Inventario</label>
+                        <label for="amount_old" class="col-md-3 col-form-label text-md-right">Cantidad En Inventario</label>
                         <div class="col-md-3">
-                            <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ $inventory->amount }}" readonly required autocomplete="amount">
+                            <input id="amount_old" type="text" class="form-control @error('amount_old') is-invalid @enderror" name="amount_old" value="{{ $inventory->amount }}" readonly required autocomplete="amount_old">
                         </div> 
                     </div>
                     <div class="form-group row">

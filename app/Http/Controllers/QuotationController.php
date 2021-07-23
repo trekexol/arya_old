@@ -299,7 +299,7 @@ class QuotationController extends Controller
         * @return \Illuminate\Http\Response
         */
     public function store(Request $request)
-        {
+    {
     
         $data = request()->validate([
             
@@ -356,7 +356,7 @@ class QuotationController extends Controller
         } 
 
         
-        }
+    }
 
 
         public function storeproduct(Request $request)
@@ -372,7 +372,7 @@ class QuotationController extends Controller
             
             
             ]);
-            //dd($request);
+
             
             $var = new QuotationProduct();
 
@@ -393,6 +393,13 @@ class QuotationController extends Controller
             $amount = request('amount');
             $cost = str_replace(',', '.', str_replace('.', '',request('cost')));
             
+            $value_return = $this->check_amount($quotation->id,$var->id_inventory,$amount);
+
+            if($value_return != 'exito'){
+                 return redirect('quotations/registerproduct/'.$var->id_quotation.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario!');
+            }
+
+           
 
             if($coin == 'dolares'){
                 $cost_sin_formato = ($cost) * $var->rate;
@@ -423,6 +430,28 @@ class QuotationController extends Controller
         * @param  int  $id
         * @return \Illuminate\Http\Response
         */
+
+    public function check_amount($id_quotation,$id_inventory,$amount_new)
+    {
+        
+        $inventory = Inventory::find($id_inventory);
+
+        $sum_amount = db::table('quotation_products')
+                        ->where('id_quotation',$id_quotation)
+                        ->where('id_inventory',$id_inventory)
+                        ->sum('amount');
+
+        $total_in_quotation = $sum_amount + $amount_new;
+
+        if($inventory->amount >= $total_in_quotation){
+            return "exito";
+        }else{
+            return "no_hay_cantidad_suficiente";
+        }
+    
+    }
+
+
     public function show($id)
     {
         //
@@ -562,13 +591,15 @@ class QuotationController extends Controller
         public function updatequotationproduct(Request $request, $id)
         { 
 
-            
+           
             $data = request()->validate([
                 
                 'amount'         =>'required',
                 'discount'         =>'required',
             
             ]);
+
+            
         
             $var = QuotationProduct::findOrFail($id);
 
@@ -588,6 +619,13 @@ class QuotationController extends Controller
         
             $var->discount = request('discount');
         
+
+            $value_return = $this->check_amount($var->id_quotation,$var->id_inventory,$var->amount);
+
+            if($value_return != 'exito'){
+                return redirect('quotations/quotationproduct/'.$var->id.'/'.$coin.'/edit')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario!');
+           }
+
         
             $var->save();
         

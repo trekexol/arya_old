@@ -203,7 +203,13 @@ class InventoryController extends Controller
         
             $header_voucher->save();
 
-            $total = $valor_sin_formato_amount_new * $valor_sin_formato_price_buy;
+            if($var->products['money'] == 'Bs'){
+                $total = $valor_sin_formato_amount_new * $valor_sin_formato_price_buy;
+            }else{
+                $total = $valor_sin_formato_amount_new * $valor_sin_formato_price_buy * $valor_sin_formato_rate;
+            }
+
+            
 
            //$account = request('account');
             $account_mecancia_para_venta = Account::where('code_one',1)->where('code_two',1)->where('code_three',3)->where('code_four',1)->where('code_five',1)->first();  
@@ -276,7 +282,12 @@ class InventoryController extends Controller
             
                 $header_voucher->save();
 
-                $total = $valor_sin_formato_amount_new * $valor_sin_formato_price_buy;
+                if($var->products['money'] == 'Bs'){
+                    $total = $valor_sin_formato_amount_new * $valor_sin_formato_price_buy;
+                }else{
+                    $total = $valor_sin_formato_amount_new * $valor_sin_formato_price_buy * $valor_sin_formato_rate;
+                }
+    
 
             //$account = request('account');
                 $account_mecancia_para_venta = Account::where('code_one',1)->where('code_two',1)->where('code_three',3)->where('code_four',1)->where('code_five',1)->first();  

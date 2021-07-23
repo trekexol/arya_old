@@ -117,6 +117,14 @@ class PDFController extends Controller
                  $quotation = Quotation::findOrFail($id_quotation);
 
                  if(!(isset($quotation->date_delivery_note))){
+
+
+                    $retorno = $this->discount_inventory($id_quotation);
+
+                    if($retorno != 'exito'){
+                        return redirect('quotations/register/'.$id_quotation.'/'.$coin.'')->withDanger($retorno);                     
+                    }
+
                     $date = Carbon::now();
                     $datenow = $date->format('Y-m-d');   
    
@@ -126,7 +134,9 @@ class PDFController extends Controller
 
                     $quotation->save();
    
-                    $this->discount_inventory($id_quotation);
+                    
+
+
                  }else{
                     if(isset($quotation->bcv)){
                         $bcv = $quotation->bcv;
@@ -503,7 +513,8 @@ class PDFController extends Controller
 
 
 
-    public function discount_inventory($id_quotation){
+    public function discount_inventory($id_quotation)
+    {
             /*Primero Revisa que todos los productos tengan inventario suficiente*/
             $no_hay_cantidad_suficiente = DB::table('inventories')
                                     ->join('quotation_products', 'quotation_products.id_inventory','=','inventories.id')
@@ -514,7 +525,7 @@ class PDFController extends Controller
                                     ->first(); 
         
             if(isset($no_hay_cantidad_suficiente)){
-                return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('En el Inventario de Codigo: '.$no_hay_cantidad_suficiente->code.' no hay Cantidad suficiente!');
+                return "no_hay_cantidad_suficiente";
             }
 
             /*Luego, descuenta del Inventario*/
@@ -530,7 +541,7 @@ class PDFController extends Controller
                 $quotation_product = QuotationProduct::findOrFail($inventories_quotation->id_quotation);
 
                 if(isset($quotation_product)){
-                $inventory = Inventory::findOrFail($quotation_product->id_inventory);
+                    $inventory = Inventory::findOrFail($quotation_product->id_inventory);
 
                     if(isset($inventory)){
                         //REVISO QUE SEA MAYOR EL MONTO DEL INVENTARIO Y LUEGO DESCUENTO
@@ -543,20 +554,20 @@ class PDFController extends Controller
                             $quotation_product->save();
 
                         }else{
-                            return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de Codigo: '.$inventory->code.' no tiene Cantidad suficiente!');
+                            return 'El Inventario de Codigo: '.$inventory->code.' no tiene Cantidad suficiente!';
                         }
                         
                     }else{
-                        return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario no existe!');
+                        return 'El Inventario no existe!';
                     }
                 }else{
-                return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de la cotizacion no existe!');
+                return 'El Inventario de la cotizacion no existe!';
                 }
 
             }
 
             return "exito";
 
-}
+    }
 
 }

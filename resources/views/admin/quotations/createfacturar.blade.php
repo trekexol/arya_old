@@ -158,19 +158,32 @@
                             <div class="col-md-1">
                                 <a href="{{ route('anticipos.selectanticipo',[$quotation->id_client,$coin,$quotation->id]) }}" title="Productos"><i class="fa fa-eye"></i></a>  
                             </div>
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <label for="iva" class="col-md-1 col-form-label text-md-right">IVA:</label>
                             <div class="col-md-2">
-
-                            <select class="form-control" name="iva" id="iva">
-                                @if(isset($quotation->iva_percentage))
-                                    <option value="{{ $quotation->iva_percentage }}">{{ $quotation->iva_percentage }}%</option>
-                                @else
-                                    <option value="16">16%</option>
-                                    <option value="12">12%</option>
-                                @endif
-                                
-                            </select>
+                                <select class="form-control" name="iva" id="iva">
+                                    @if(isset($quotation->iva_percentage))
+                                        <option value="{{ $quotation->iva_percentage }}">{{ $quotation->iva_percentage }}%</option>
+                                    @else
+                                        <option value="16">16%</option>
+                                        <option value="12">12%</option>
+                                    @endif
+                                    
+                                </select>
                             </div>
+                            
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            
                         </div>
              
                         <input type="hidden" name="id_quotation" value="{{$quotation->id}}" readonly>
@@ -244,7 +257,7 @@
                         <input type="hidden" id="anticipo_form" name="anticipo_form"  readonly>
 
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
-                       
+                        
                        
                         
                         <div class="form-group row" id="formulario1" >
@@ -809,6 +822,10 @@
             $("#credit").mask('0000', { reverse: true });
             
         });
+        $("#coin").on('change',function(){
+                coin = $(this).val();
+                window.location = "{{route('quotations.createfacturar', [$quotation->id,''])}}"+"/"+coin;
+            });
     </script>
     <script type="text/javascript">
 

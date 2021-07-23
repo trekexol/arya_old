@@ -294,7 +294,7 @@ class AccountsTableSeeder extends Seeder
             'code_two' => 1,
             'code_three' => 1,
             'code_four' => 2,
-            'code_five' => 1,
+            'code_five' => 2,
             'period' => 0,
             'description' => 'Punto de Venta Banco 1',
             'type' => 'Debe',

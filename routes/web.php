@@ -535,7 +535,7 @@ Route::group(["prefix"=>'invoices'],function(){
 Route::group(["prefix"=>'anticipos'],function(){
     Route::get('/','AnticipoController@index')->name('anticipos');
     Route::get('register','AnticipoController@create')->name('anticipos.create');
-    Route::post('store', 'anticipoController@store')->name('anticipos.store');
+    Route::post('store', 'AnticipoController@store')->name('anticipos.store');
    
     Route::get('edit/{id}/{id_client?}','AnticipoController@edit')->name('anticipos.edit');
     Route::delete('{id}/delete','AnticipoController@destroy')->name('anticipos.delete');

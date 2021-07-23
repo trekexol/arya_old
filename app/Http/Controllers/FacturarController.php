@@ -1239,9 +1239,15 @@ class FacturarController extends Controller
                     $quotation->anticipo =  $anticipo;
                     //Si hay anticipo, entonces necesito registrar este monto tal cual el total de la factura sin restarle el anticipo
                     $total_pay_form = $sub_total + $total_iva;
+                    if($coin != 'bolivares'){
+                        $total_pay_form = $total_pay_form * $bcv;
+                        $quotation->anticipo =  $anticipo * $bcv;
+                    }
                 }else{
                     $quotation->anticipo = 0;
                 }
+
+                
 
                 $quotation->amount_with_iva = $total_pay_form;
 
