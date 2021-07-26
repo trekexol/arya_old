@@ -584,7 +584,7 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
 
     Route::post('storedetail', 'ExpensesAndPurchaseController@store_detail')->name('expensesandpurchases.store_detail');
 
-    Route::get('registerpayment/{id_expense?}','ExpensesAndPurchaseController@create_payment')->name('expensesandpurchases.create_payment');
+    Route::get('registerpayment/{id_expense}/{coin}','ExpensesAndPurchaseController@create_payment')->name('expensesandpurchases.create_payment');
     
     Route::patch('storepayment','ExpensesAndPurchaseController@store_payment')->name('expensesandpurchases.store_payment');
 
@@ -594,17 +594,19 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
 
     Route::get('selectinventary/{id_expense}/{coin}','ExpensesAndPurchaseController@selectinventary')->name('expensesandpurchases.selectinventary');
 
-    Route::get('expensevoucher/{id_expense}','ExpensesAndPurchaseController@create_expense_voucher')->name('expensesandpurchases.create_expense_voucher');
+    Route::get('expensevoucher/{id_expense}/{coin}','ExpensesAndPurchaseController@create_expense_voucher')->name('expensesandpurchases.create_expense_voucher');
 
-    Route::get('registerpaymentafter/{id_expense?}','ExpensesAndPurchaseController@create_payment_after')->name('expensesandpurchases.create_payment_after');
+    Route::get('registerpaymentafter/{id_expense}/{coin}','ExpensesAndPurchaseController@create_payment_after')->name('expensesandpurchases.create_payment_after');
     
     Route::post('storeexpensepayment', 'ExpensesAndPurchaseController@store_expense_payment')->name('expensesandpurchases.store_expense_payment');
 
-    Route::get('movementexpense/{id_expense}','ExpensesAndPurchaseController@movements_expense')->name('expensesandpurchases.movement');
+    Route::get('movementexpense/{id_expense}/{coin}','ExpensesAndPurchaseController@movements_expense')->name('expensesandpurchases.movement');
     
     Route::get('refreshrate/{id_expense}/{coin}/{rate}','ExpensesAndPurchaseController@refreshrate')->name('expensesandpurchases.refreshrate');
 
     Route::get('productedit/{id_product}/{coin}','ExpensesAndPurchaseController@editproduct')->name('expensesandpurchases.editproduct');
+
+    Route::get('listinventory/{code}','ExpensesAndPurchaseController@listinventory')->name('expensesandpurchases.listinventory');
 
 });
 

@@ -63,11 +63,16 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
-                            <div class="col-md-2">
-                            <select class="form-control" name="iva" id="iva">
-                                <option value="{{ $expense->iva_percentage }}">{{ $expense->iva_percentage }}%</option>
-                            </select>
+                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
+
+                            <div class="col-md-3">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
+
+                                @error('observation')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                             
                         </div>
@@ -82,35 +87,9 @@
                                     </span>
                                 @enderror
                             </div>
-                            
-                        </div>
-                        
-                        
-                        <div class="form-group row">
-                            <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
-                            <div class="col-md-2">
-                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($expense->anticipo, 2, ',', '.') ?? '0,00' }}" readonly required autocomplete="anticipo"> 
-                           
-                                @error('anticipo')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
-
-                            <div class="col-md-2">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
-
-                                @error('observation')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
                             <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <input id="note" type="number" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
 
                                 @error('note')
@@ -119,6 +98,37 @@
                                     </span>
                                 @enderror
                             </div>
+                        </div>
+                        
+                        
+                        <div class="form-group row">
+                            <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
+                            <div class="col-md-3">
+                                <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($expense->anticipo, 2, ',', '.') ?? '0,00' }}" readonly required autocomplete="anticipo"> 
+                           
+                                @error('anticipo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <div class="col-md-2">
+                            <select class="form-control" name="iva" id="iva">
+                                <option value="{{ $expense->iva_percentage }}">{{ $expense->iva_percentage }}%</option>
+                            </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
+                            </div>
+                            
                         </div>
                         <div class="form-group row">
                             <label for="total_pays" class="col-md-2 col-form-label text-md-right">Total a Pagar</label>
@@ -151,7 +161,7 @@
                             </div>
                             
                             <div class="col-md-3">
-                                <a href="{{ route('expensesandpurchases.movement',$expense->id) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
+                                <a href="{{ route('expensesandpurchases.movement',[$expense->id,$coin]) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
                             </div>
                             
                             <div class="col-md-3">
@@ -172,6 +182,11 @@
 
 
     <script type="text/javascript">
+
+        $("#coin").on('change',function(){
+            coin = $(this).val();
+            window.location = "{{route('expensesandpurchases.create_expense_voucher', [$expense->id,''])}}"+"/"+coin;
+        });
             function pdf() {
                 
                 var nuevaVentana= window.open("{{ route('pdf.expense',$expense->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");

@@ -19,7 +19,7 @@ class CreatethreesubsegmentsTable extends Migration
             $table->string('description',100);
             $table->string('status',1);
             
-            $table->foreign('twosubsegment_id')->references('id')->on('twosubsegments');
+            $table->foreign('twosubsegment_id')->references('id')->on('two_subsegments');
             $table->timestamps();
         });
     }

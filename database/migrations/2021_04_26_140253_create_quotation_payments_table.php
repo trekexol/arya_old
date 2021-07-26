@@ -22,7 +22,7 @@ class CreateQuotationPaymentsTable extends Migration
             $table->integer('payment_type');
             $table->decimal('amount',64,2);
             $table->decimal('rate',64,2);
-            $table->integer('credit_days',3)->nullable();
+            $table->integer('credit_days')->nullable();
             $table->string('reference',50)->nullable();
 
             $table->string('status',1);

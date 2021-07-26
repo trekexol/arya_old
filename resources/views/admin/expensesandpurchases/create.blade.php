@@ -116,7 +116,7 @@
                             <input id="id_inventory" type="hidden" class="form-control @error('id_inventory') is-invalid @enderror" name="id_inventory" value="{{ $inventory->id ?? -1 }}" readonly required autocomplete="id_inventory">
                             <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required  readonly autocomplete="id_user">
                             <input id="rate_expense" type="hidden" class="form-control @error('rate_expense') is-invalid @enderror" name="rate_expense" value="{{ $expense->rate ?? -1}}" readonly required autocomplete="rate_expense"> 
-                            <input id="coin" type="hidden" class="form-control @error('coin') is-invalid @enderror" name="coin" value="{{ $coin ?? 'bolivares'}}" readonly required autocomplete="coin">
+                            <input id="coin_hidde" type="hidden" class="form-control @error('coin_hidde') is-invalid @enderror" name="coin_hidde" value="{{ $coin ?? 'bolivares'}}" readonly required autocomplete="coin_hidde">
                             
                                 <div class="form-group row">
                                     <label for="type" class="col-md-2 col-form-label text-md-right">Tipo de Compra</label>
@@ -162,8 +162,11 @@
                                                
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-1">
-                                            <a id="btn_code_inventary" href="{{ route('expensesandpurchases.selectinventary',[$expense->id,$coin]) }}" title="Buscar un Producto del Inventario"><i class="fa fa-eye"></i></a>  
+                                        
+                                        <div id="btn_code_inventary" class="form-group col-md-1">
+                                            <a href="" title="Buscar Producto Por Codigo" onclick="searchCodeInventory()"><i class="fa fa-search"></i></a>  
+                                            <a  href="{{ route('expensesandpurchases.selectinventary',[$expense->id,$coin]) }}" title="Buscar un Producto del Inventario"><i class="fa fa-eye"></i></a>  
+                                        
                                         </div>
                                     
                                 </div>
@@ -316,7 +319,12 @@
                                             $suma = 0.00;
                                         ?>
                                             @foreach ($expense_details as $var)
-
+                                            <?php
+                                                if($coin != 'bolivares'){
+                                                    $var->price = $var->price / $expense->rate;
+                                                }
+                                                
+                                            ?>
                                            
                                                 <tr>
                                                
@@ -356,7 +364,7 @@
                             <div class="form-group row mb-0">
                                 
                                 <div class="col-md-4">
-                                    <a id="btnpayment" href="{{ route('expensesandpurchases.create_payment',$expense->id) }}" name="btnpayment" class="btn btn-info" title="Registrar">Registrar</a>  
+                                    <a id="btnpayment" href="{{ route('expensesandpurchases.create_payment',[$expense->id,$coin]) }}" name="btnpayment" class="btn btn-info" title="Registrar">Registrar</a>  
                                 </div>
                                 
                             </div>
@@ -407,9 +415,8 @@
         };
 
         $("#coin").on('change',function(){
-                
-                coin = $(this).val();
-                window.location = "{{route('expensesandpurchases.create_detail', [$expense->id,'',''])}}"+"/"+coin+"/"+"{{ $inventory->id ?? '' }}";
+            coin = $(this).val();
+            window.location = "{{route('expensesandpurchases.create_detail', [$expense->id,'',''])}}"+"/"+coin+"/"+"{{ $inventory->id ?? '' }}";
             
         });
 
@@ -495,6 +502,38 @@
                 
                     
                 
+                },
+                error:(xhr)=>{
+                    alert('Presentamos Inconvenientes');
+                }
+            })
+        }
+
+        function searchCodeInventory(){
+            
+            let reference_id = document.getElementById("code_inventary").value; 
+            
+            
+            $.ajax({
+                
+                url:"{{ route('expensesandpurchases.listinventory',['']) }}" + '/' + reference_id,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                 
+                    
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description,date} = item;
+                          
+                           window.location = "{{route('expensesandpurchases.create_detail', [$expense->id,$coin,''])}}"+"/"+id;
+                           
+                        });
+                    }else{
+                        alert('No se Encontro este numero de Referencia');
+                    }
+                   
                 },
                 error:(xhr)=>{
                     alert('Presentamos Inconvenientes');

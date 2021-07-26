@@ -5,11 +5,13 @@
 <div class="container-fluid">
     <div class="row py-lg-2">
        
-        <div class="col-md-8">
+        <div class="col-md-10">
             <h2>Seleccione un Producto del Inventario</h2>
         </div>
         
-    
+        <div class="col-md-2">
+            <a href="{{ route('expensesandpurchases.create_detail',[$id_expense,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+        </div>
     </div>
 </div>
 

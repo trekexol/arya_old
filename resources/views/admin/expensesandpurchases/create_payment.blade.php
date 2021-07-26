@@ -31,7 +31,8 @@
                     @csrf   
                 <div class="card-body" >
                     <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
-                       
+                    <input type="hidden" name="coin" value="{{$coin}}" readonly>
+
 
                         <div class="form-group row">
                             <label for="total_factura" class="col-md-2 col-form-label text-md-right">Total Factura:</label>
@@ -66,14 +67,19 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
-                            <div class="col-md-2">
-                            <select class="form-control" name="iva" id="iva">
-                                <option value="16">16%</option>
-                                <option value="12">12%</option>
-                            </select>
-                            </div>
                             
+                          
+                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
+
+                            <div class="col-md-3">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
+
+                                @error('observation')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
@@ -86,7 +92,17 @@
                                     </span>
                                 @enderror
                             </div>
-                            
+                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
+
+                            <div class="col-md-3">
+                                <input id="retencion" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
+
+                                @error('note')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                         
                         
@@ -94,7 +110,7 @@
 
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
@@ -104,7 +120,7 @@
                                     @enderror
                                 </div>
                             @else
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum, 2, ',', '.') ?? 0.00 }}" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
@@ -114,29 +130,25 @@
                                     @enderror
                                 </div>
                             @endif
+                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <div class="col-md-2">
+                            <select class="form-control" name="iva" id="iva">
+                                <option value="16">16%</option>
+                                <option value="12">12%</option>
+                            </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
+                            </div>
                             
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
-
-                            <div class="col-md-2">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
-
-                                @error('observation')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
-
-                            <div class="col-md-2">
-                                <input id="retencion" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
-
-                                @error('note')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                            
                         </div>
              
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
@@ -182,6 +194,8 @@
                 @csrf   
 
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
+
+                        <input type="hidden" name="coin" value="{{$coin}}" readonly>
 
                         <!--CANTIDAD DE PAGOS QUE QUIERO ENVIAR-->
                         <input type="hidden" id="amount_of_payments" name="amount_of_payments"  readonly>
@@ -230,7 +244,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                        <option value="8">Tarjeta Coorporativa</option>
+                                       
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -266,7 +280,7 @@
                                         </span>
                                     @enderror
                                     <br>
-                                    <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" placeholder="Referencia" autocomplete="reference"> 
+                                    <input id="reference"  maxlenght="30" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" placeholder="Referencia" autocomplete="reference"> 
                            
                                     @error('reference')
                                         <span class="invalid-feedback" role="alert">
@@ -300,7 +314,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                        <option value="8">Tarjeta Coorporativa</option>
+                                       
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -336,7 +350,7 @@
                                         </span>
                                     @enderror
                                     <br>
-                                    <input id="reference2" type="text" class="form-control @error('reference2') is-invalid @enderror" name="reference2" placeholder="Referencia" autocomplete="reference2"> 
+                                    <input id="reference2" maxlenght="30"  type="text" class="form-control @error('reference2') is-invalid @enderror" name="reference2" placeholder="Referencia" autocomplete="reference2"> 
                            
                                     @error('reference2')
                                         <span class="invalid-feedback" role="alert">
@@ -372,7 +386,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                   
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -408,7 +422,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference3" type="text" class="form-control @error('reference3') is-invalid @enderror" name="reference3" placeholder="Referencia" autocomplete="reference3"> 
+                                <input id="reference3" maxlenght="30"  type="text" class="form-control @error('reference3') is-invalid @enderror" name="reference3" placeholder="Referencia" autocomplete="reference3"> 
                        
                                 @error('reference3')
                                     <span class="invalid-feedback" role="alert">
@@ -443,7 +457,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                   
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -479,7 +493,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference4" type="text" class="form-control @error('reference4') is-invalid @enderror" name="reference4" placeholder="Referencia" autocomplete="reference4"> 
+                                <input id="reference4" maxlenght="30"  type="text" class="form-control @error('reference4') is-invalid @enderror" name="reference4" placeholder="Referencia" autocomplete="reference4"> 
                        
                                 @error('reference4')
                                     <span class="invalid-feedback" role="alert">
@@ -514,7 +528,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                   
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -550,7 +564,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference5" type="text" class="form-control @error('reference5') is-invalid @enderror" name="reference5" placeholder="Referencia" autocomplete="reference5"> 
+                                <input id="reference5" maxlenght="30"  type="text" class="form-control @error('reference5') is-invalid @enderror" name="reference5" placeholder="Referencia" autocomplete="reference5"> 
                        
                                 @error('reference5')
                                     <span class="invalid-feedback" role="alert">
@@ -585,7 +599,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                   
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -621,7 +635,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference6" type="text" class="form-control @error('reference6') is-invalid @enderror" name="reference6" placeholder="Referencia" autocomplete="reference6"> 
+                                <input id="reference6" maxlenght="30"  type="text" class="form-control @error('reference6') is-invalid @enderror" name="reference6" placeholder="Referencia" autocomplete="reference6"> 
                        
                                 @error('reference6')
                                     <span class="invalid-feedback" role="alert">
@@ -656,7 +670,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                   
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -692,7 +706,7 @@
                                     </span>
                                 @enderror
                                 <br>
-                                <input id="reference7" type="text" class="form-control @error('reference7') is-invalid @enderror" name="reference7" placeholder="Referencia" autocomplete="reference7"> 
+                                <input id="reference7" maxlenght="30"  type="text" class="form-control @error('reference7') is-invalid @enderror" name="reference7" placeholder="Referencia" autocomplete="reference7"> 
                        
                                 @error('reference7')
                                     <span class="invalid-feedback" role="alert">
@@ -764,6 +778,10 @@
         $(document).ready(function () {
             $("#credit").mask('0000', { reverse: true });
             
+        });
+        $("#coin").on('change',function(){
+            coin = $(this).val();
+            window.location = "{{route('expensesandpurchases.create_payment', [$expense->id,''])}}"+"/"+coin;
         });
     </script>
     <script type="text/javascript">

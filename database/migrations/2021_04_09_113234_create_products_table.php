@@ -38,8 +38,8 @@ class CreateProductsTable extends Migration
             
             $table->foreign('segment_id')->references('id')->on('segments');
             $table->foreign('subsegment_id')->references('id')->on('subsegments');
-            $table->foreign('twosubsegment_id')->references('id')->on('twosubsegments');
-            $table->foreign('threesubsegment_id')->references('id')->on('threesubsegments');
+            $table->foreign('twosubsegment_id')->references('id')->on('two_subsegments');
+            $table->foreign('threesubsegment_id')->references('id')->on('three_subsegments');
             $table->foreign('unit_of_measure_id')->references('id')->on('unit_of_measures');
             $table->foreign('id_user')->references('id')->on('users');
             $table->timestamps();

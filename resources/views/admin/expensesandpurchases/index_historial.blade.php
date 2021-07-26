@@ -80,7 +80,7 @@
                             </td>
                             @else
                             <td class="text-center font-weight-bold">
-                                <a href="{{ route('expensesandpurchases.create_payment_after',$expensesandpurchase->id) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Pagar</a>
+                                <a href="{{ route('expensesandpurchases.create_payment_after',[$expensesandpurchase->id,$expensesandpurchase->coin]) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Pagar</a>
                             </td>
                             @endif
                         </tr>     
@@ -101,7 +101,13 @@
       "ordering": false,
       "order": [],
         'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
-} );
+    } );
+
+    $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+        if ($(".sidebar").hasClass("toggled")) {
+            $('.sidebar .collapse').collapse('hide');
+        };
 </script>
     
 @endsection

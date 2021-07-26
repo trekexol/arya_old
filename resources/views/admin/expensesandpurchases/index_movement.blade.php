@@ -17,7 +17,7 @@
             </a>
         </div>
         <div class="col-md-3">
-            <a href="{{ route('expensesandpurchases.create_expense_voucher',$expense->id) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
+            <a href="{{ route('expensesandpurchases.create_expense_voucher',[$expense->id,$coin]) }}" class="btn btn-light2"><i class="fas fa-undo" ></i>
                  Volver a la Compra
             </a>
         </div>
@@ -64,9 +64,14 @@
                     
                     <td>{{$var->headers['description']}} Compra({{ $var->id_expense }}) / {{$var->accounts['description']}}</td>
 
-                    <td class="text-right">{{number_format($var->debe, 2, ',', '.')}}</td>
-                    <td class="text-right">{{number_format($var->haber, 2, ',', '.')}}</td>
-
+                    @if ($coin == 'bolivares')
+                        <td class="text-right">{{number_format($var->debe, 2, ',', '.')}}</td>
+                        <td class="text-right">{{number_format($var->haber, 2, ',', '.')}}</td>
+                    @else
+                        <td class="text-right">{{number_format($var->debe / $var->tasa ?? 1, 2, ',', '.')}}</td>
+                        <td class="text-right">{{number_format($var->haber / $var->tasa ?? 1, 2, ',', '.')}}</td>
+                    @endif
+                    
                  
                     </tr>
                     @endforeach

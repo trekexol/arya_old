@@ -62,14 +62,19 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
-                            <div class="col-md-2">
-                            <select class="form-control" name="iva" id="iva">
-                                <option value="16">16%</option>
-                                <option value="12">12%</option>
-                            </select>
-                            </div>
                             
+                          
+                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
+
+                            <div class="col-md-3">
+                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
+
+                                @error('observation')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
@@ -82,7 +87,17 @@
                                     </span>
                                 @enderror
                             </div>
-                            
+                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
+
+                            <div class="col-md-3">
+                                <input id="retencion" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
+
+                                @error('note')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                         
                         
@@ -90,7 +105,7 @@
 
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
@@ -100,7 +115,7 @@
                                     @enderror
                                 </div>
                             @else
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum, 2, ',', '.') ?? 0.00 }}" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
@@ -110,29 +125,25 @@
                                     @enderror
                                 </div>
                             @endif
+                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <div class="col-md-2">
+                            <select class="form-control" name="iva" id="iva">
+                                <option value="16">16%</option>
+                                <option value="12">12%</option>
+                            </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
+                            </div>
                             
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
-
-                            <div class="col-md-2">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
-
-                                @error('observation')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
-
-                            <div class="col-md-2">
-                                <input id="retencion" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
-
-                                @error('note')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                            
                         </div>
              
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
@@ -155,6 +166,8 @@
                 @csrf   
 
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
+
+                        <input type="hidden" name="coin" value="{{$coin}}" readonly>
 
                         <!--CANTIDAD DE PAGOS QUE QUIERO ENVIAR-->
                         <input type="hidden" id="amount_of_payments" name="amount_of_payments"  readonly>
@@ -203,7 +216,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                        <option value="8">Tarjeta Coorporativa</option>
+                                        
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -273,7 +286,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                        <option value="8">Tarjeta Coorporativa</option>
+                                        
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -345,7 +358,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -416,7 +429,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -487,7 +500,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -558,7 +571,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -629,7 +642,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <option value="8">Tarjeta Coorporativa</option>
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -738,6 +751,10 @@
             $("#credit").mask('0000', { reverse: true });
             
         });
+        $("#coin").on('change',function(){
+            coin = $(this).val();
+            window.location = "{{route('expensesandpurchases.create_payment_after', [$expense->id,''])}}"+"/"+coin;
+        });
     </script>
     <script type="text/javascript">
 
@@ -783,7 +800,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -796,7 +813,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -820,7 +837,7 @@
 
                // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 
@@ -873,7 +890,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -886,7 +903,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("grand_total").value = grand_totalformat;
 
@@ -909,7 +926,7 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 
@@ -965,7 +982,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -978,7 +995,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -1001,7 +1018,7 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 

@@ -60,7 +60,7 @@ class ExpensesAndPurchaseController extends Controller
    }
 
 
-   public function movements_expense($id_expense)
+   public function movements_expense($id_expense,$coin)
    {
        
 
@@ -74,7 +74,7 @@ class ExpensesAndPurchaseController extends Controller
            return view('admin.index');
        }
        
-       return view('admin.expensesandpurchases.index_movement',compact('detailvouchers','expense'));
+       return view('admin.expensesandpurchases.index_movement',compact('coin','detailvouchers','expense'));
    }
 
    /**
@@ -153,12 +153,59 @@ class ExpensesAndPurchaseController extends Controller
         return view('admin.expensesandpurchases.create',compact('coin','bcv','datenow','provider','expense','expense_details','branches','inventory','accounts_inventory'));
     }
 
-   
+    public function create_expense_voucher($id_expense,$coin)
+    {
+
+        $expense = null;
+        $provider = null;
+        $expense_details = null;
+
+        if(isset($id_expense)){
+            $expense = ExpensesAndPurchase::find($id_expense);
+
+            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+        }else{
+            return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
+        } 
+
+             $total= 0;
+             $base_imponible= 0;
+
+             foreach($expense_details as $var){
+                 
+                    $total += ($var->price * $var->amount);
+               
+                if($var->exento == 0){
+                    $base_imponible += ($var->price * $var->amount); 
+                }
+             }
+
+             if($coin == 'bolivares'){
+                $bcv = null;
+               
+             }else{
+                $bcv = $expense->rate;
+                $total = $total / $expense->rate;
+                $base_imponible = $base_imponible / $expense->rate;
+             }
+
+             $expense->total_factura = $total;
+             $expense->base_imponible = $base_imponible;
+            
+             $date = Carbon::now();
+             $datenow = $date->format('Y-m-d');    
+
+             
+     
+             return view('admin.expensesandpurchases.create_payment_voucher',compact('coin','expense','datenow','expense_details'));
+         
+    }
   
 
 
-    public function create_payment($id_expense)
+    public function create_payment($id_expense,$coin)
     {
+        
         $expense = null;
         $provider = null;
         $expense_details = null;
@@ -176,17 +223,20 @@ class ExpensesAndPurchaseController extends Controller
             $anticipos_sum = 0;//Anticipo::where('status',1)->where('id_client',$expense->id_client)->sum('amount');
 
             $accounts_bank = DB::table('accounts')->where('code_one', 1)
-                                        ->where('code_two', 1)
-                                        ->where('code_three', 2)
-                                        ->where('code_four', '<>',0)
-                                        ->get();
+                        ->where('code_two', 1)
+                        ->where('code_three', 1)
+                        ->where('code_four', 2)
+                        ->where('code_five', '<>',0)
+                        ->where('description','not like', 'Punto de Venta%')
+                        ->get();
             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
-                                        ->where('code_two', 1)
-                                        ->where('code_three', 1)
-                                        ->where('code_four', '<>',0)
-                                        ->get();
+                        ->where('code_two', 1)
+                        ->where('code_three', 1)
+                        ->where('code_four', 1)
+                        ->where('code_five', '<>',0)
+                        ->get();
             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
-                                        ->get();
+                        ->get();
           
              $total= 0;
              $base_imponible= 0;
@@ -200,20 +250,30 @@ class ExpensesAndPurchaseController extends Controller
                 }
              }
 
-             $expense->total_factura = $total;
-             $expense->base_imponible = $base_imponible;
+             
             
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
+             if($coin == 'bolivares'){
+                $bcv = null;
+               
+             }else{
+                $bcv = $expense->rate;
+                $total = $total / $expense->rate;
+                $base_imponible = $base_imponible / $expense->rate;
+             }
+
+             $expense->total_factura = $total;
+             $expense->base_imponible = $base_imponible;
              
      
-             return view('admin.expensesandpurchases.create_payment',compact('expense','datenow','expense_details','accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','anticipos_sum'));
+             return view('admin.expensesandpurchases.create_payment',compact('coin','expense','datenow','expense_details','accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','anticipos_sum'));
          
          
     }
 
-    public function create_payment_after($id_expense)
+    public function create_payment_after($id_expense,$coin)
     {
         $expense = null;
         $provider = null;
@@ -232,17 +292,20 @@ class ExpensesAndPurchaseController extends Controller
             $anticipos_sum = 0;//Anticipo::where('status',1)->where('id_client',$expense->id_client)->sum('amount');
 
             $accounts_bank = DB::table('accounts')->where('code_one', 1)
-                                        ->where('code_two', 1)
-                                        ->where('code_three', 2)
-                                        ->where('code_four', '<>',0)
-                                        ->get();
+                        ->where('code_two', 1)
+                        ->where('code_three', 1)
+                        ->where('code_four', 2)
+                        ->where('code_five', '<>',0)
+                        ->where('description','not like', 'Punto de Venta%')
+                        ->get();
             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
-                                        ->where('code_two', 1)
-                                        ->where('code_three', 1)
-                                        ->where('code_four', '<>',0)
-                                        ->get();
+                        ->where('code_two', 1)
+                        ->where('code_three', 1)
+                        ->where('code_four', 1)
+                        ->where('code_five', '<>',0)
+                        ->get();
             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
-                                        ->get();
+                        ->get();
           
              $total= 0;
              $base_imponible= 0;
@@ -256,15 +319,23 @@ class ExpensesAndPurchaseController extends Controller
                 }
              }
 
-             $expense->total_factura = $total;
-             $expense->base_imponible = $base_imponible;
             
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
 
-             
+             if($coin == 'bolivares'){
+                $bcv = null;
+               
+             }else{
+                $bcv = $expense->rate;
+                $total = $total / $expense->rate;
+                $base_imponible = $base_imponible / $expense->rate;
+             }
+             $expense->total_factura = $total;
+             $expense->base_imponible = $base_imponible;
+            
      
-             return view('admin.expensesandpurchases.create_payment_after',compact('expense','datenow','expense_details','accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','anticipos_sum'));
+             return view('admin.expensesandpurchases.create_payment_after',compact('coin','expense','datenow','expense_details','accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','anticipos_sum'));
          
          
     }
@@ -346,11 +417,12 @@ class ExpensesAndPurchaseController extends Controller
         
         ]);
 
+        
         $var = new ExpensesDetail();
 
         $var->id_expense = request('id_expense');
         $var->rate = request('rate_expense');
-        $coin = request('coin');
+        $coin = request('coin_hidde');
 
         $var->id_user = request('id_user');
         $var->id_account = request('Account');
@@ -360,9 +432,15 @@ class ExpensesAndPurchaseController extends Controller
         $var->description = request('description');
 
         $sin_formato_price = str_replace(',', '.', str_replace('.', '', request('price')));
+
+        if($coin != 'bolivares'){
+            $sin_formato_price = ($sin_formato_price) * $var->rate;
+        }else{
+            $sin_formato_price = $sin_formato_price;
+        }
        
         $var->price = $sin_formato_price;
-
+       
         $var->id_branch = request('centro_costo');
 
         $exento = request('exento');
@@ -404,8 +482,6 @@ class ExpensesAndPurchaseController extends Controller
         
         $total_pay = 0;
 
-        $bcv = $this->search_bcv();
-
         //Saber cuantos pagos vienen
         $come_pay = request('amount_of_payments');
 
@@ -425,11 +501,12 @@ class ExpensesAndPurchaseController extends Controller
 
         $expense = ExpensesAndPurchase::findOrFail(request('id_expense'));
 
+        $bcv = $expense->rate;
+        $coin = request('coin');
+
         //Verifica el status del pago, si esta en C significa Cobrado y por tanto no se debe cobrar de nuevo 
         if($expense->status != "C"){
-        
             
-        
             $payment_type = request('payment_type');
             if($come_pay >= 1){
 
@@ -517,7 +594,10 @@ class ExpensesAndPurchaseController extends Controller
                             $var->payment_type = request('payment_type');
                             $var->amount = $valor_sin_formato_amount_pay;
                             
-                            
+                            if($coin != 'bolivares'){
+                                $var->amount = $var->amount * $bcv;
+                            }
+
                             $var->status =  1;
                         
                             $total_pay += $valor_sin_formato_amount_pay;
@@ -622,6 +702,9 @@ class ExpensesAndPurchaseController extends Controller
                         $var2->payment_type = request('payment_type2');
                         $var2->amount = $valor_sin_formato_amount_pay2;
                         
+                        if($coin != 'bolivares'){
+                            $var2->amount = $var2->amount * $bcv;
+                        }
                         
                         $var2->status =  1;
                     
@@ -727,6 +810,9 @@ class ExpensesAndPurchaseController extends Controller
                                 $var3->payment_type = request('payment_type3');
                                 $var3->amount = $valor_sin_formato_amount_pay3;
                                 
+                                if($coin != 'bolivares'){
+                                    $var3->amount = $var3->amount * $bcv;
+                                }
                                 
                                 $var3->status =  1;
                             
@@ -832,6 +918,9 @@ class ExpensesAndPurchaseController extends Controller
                                 $var4->payment_type = request('payment_type4');
                                 $var4->amount = $valor_sin_formato_amount_pay4;
                                 
+                                if($coin != 'bolivares'){
+                                    $var4->amount = $var4->amount * $bcv;
+                                }
                                 
                                 $var4->status =  1;
                             
@@ -937,6 +1026,9 @@ class ExpensesAndPurchaseController extends Controller
                             $var5->payment_type = request('payment_type5');
                             $var5->amount = $valor_sin_formato_amount_pay5;
                             
+                            if($coin != 'bolivares'){
+                                $var5->amount = $var5->amount * $bcv;
+                            }
                             
                             $var5->status =  1;
                         
@@ -1041,7 +1133,10 @@ class ExpensesAndPurchaseController extends Controller
 
                             $var6->payment_type = request('payment_type6');
                             $var6->amount = $valor_sin_formato_amount_pay6;
-                            
+
+                            if($coin != 'bolivares'){
+                                $var6->amount = $var6->amount * $bcv;
+                            }
                             
                             $var6->status =  1;
                         
@@ -1147,6 +1242,9 @@ class ExpensesAndPurchaseController extends Controller
                             $var7->payment_type = request('payment_type7');
                             $var7->amount = $valor_sin_formato_amount_pay7;
                             
+                            if($coin != 'bolivares'){
+                                $var7->amount = $var7->amount * $bcv;
+                            }
                             
                             $var7->status =  1;
                         
@@ -1183,25 +1281,24 @@ class ExpensesAndPurchaseController extends Controller
             
                 $header_voucher->save();
 
+                if($coin != 'bolivares'){
+                    $total_pay_form = $total_pay_form * $bcv;
+                }    
+                
+                //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
+                $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                     
+                if(isset($account_cuentas_por_pagar_proveedores)){
+                    $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,$total_pay_form,0);
+                }
 
-                    //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
-                    $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
-                        
-                    if(isset($account_cuentas_por_pagar_proveedores)){
-                            $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,$total_pay_form,0);
-                    }
-
-                /*TERMINAR ESTO */
+                
                 if($validate_boolean1 == true){
                     $var->save();
 
-                
                     $this->add_pay_movement($bcv,$payment_type,$header_voucher->id,$var->id_account,$expense->id,$user_id,0,$var->amount);
                     
-
-                    //LE PONEMOS STATUS C, DE COBRADO
-                    $expense->status = "C";
+                   
                 }
                 
                 if($validate_boolean2 == true){
@@ -1247,25 +1344,37 @@ class ExpensesAndPurchaseController extends Controller
                 $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('sub_total_form')));
                 $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
                 $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('total_pay_form')));
+                $sub_total = request('sub_total_form');
+                $base_imponible = request('base_imponible_form');
+
+                if($coin != 'bolivares'){
+                    $sin_formato_amount_iva = $sin_formato_amount_iva * $bcv;
+                    $sin_formato_amount_with_iva = $sin_formato_amount_with_iva * $bcv;
+                    $sin_formato_base_imponible = $sin_formato_base_imponible * $bcv;
+                    $sin_formato_amount = $sin_formato_amount * $bcv;
+
+                    $sub_total = $sub_total * $bcv;
+                    $base_imponible = $base_imponible * $bcv;
+                }
 
                 $expense->base_imponible = $sin_formato_base_imponible;
                 $expense->amount =  $sin_formato_amount;
                 $expense->amount_iva =  $sin_formato_amount_iva;
                 $expense->amount_with_iva =  $sin_formato_amount_with_iva;
-            
                 $iva_percentage = request('iva_form');
+
+                
+            
+                
 
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');   
 
-                $sub_total = request('sub_total_form');
+                
 
-                $base_imponible = request('base_imponible_form');
 
-                //Verificamos si ya existen movimientos guardados, si es asi, no registramos movimientos
-                $verification_detail = DetailVoucher::where('id_expense',$expense->id)->first();
-
-                if(!isset($verification_detail)){
+                if(($expense->status != 'C') && ($expense->status != 'P')){
+                    
                     $header_voucher  = new HeaderVoucher();
 
 
@@ -1287,7 +1396,7 @@ class ExpensesAndPurchaseController extends Controller
     
                     //Credito Fiscal IVA por Pagar
     
-                    $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA Credito Fiscal')->first();
+                    $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
                         
                     if(isset($account_credito_iva_fiscal)){
                         if($sin_formato_amount_iva != 0){
@@ -1303,21 +1412,12 @@ class ExpensesAndPurchaseController extends Controller
                     }
                 }
                 
-                
-                
-
                 /*Modifica la cotizacion */
-                    $expense->date_payment = $datenow;
-
                     $expense->date_payment = $datenow;
 
                     $expense->iva_percentage = $iva_percentage;
 
                     $anticipo = request('anticipo_form');
-
-
-                    
-                    
 
                     if(isset($anticipo)){
                     // $valor_sin_formato_anticipo = str_replace(',', '.', str_replace('.', '', $anticipo));
@@ -1328,13 +1428,13 @@ class ExpensesAndPurchaseController extends Controller
 
                     $expense->amount_with_iva = $total_pay_form;
 
-                    
+                    $expense->status = "C";
+
+                    $expense->coin = $coin;
 
                     $expense->save();
 
                 /*---------------------- */
-
-            
 
                 
                 /*aumentamos el inventario*/
@@ -1346,21 +1446,14 @@ class ExpensesAndPurchaseController extends Controller
                 
                 /*---------------- */
 
-
-            
-                
-
                 /*Verificamos si el cliente tiene anticipos activos */
 
                 if($anticipo != 0){
-                        DB::table('anticipos')->where('id_client', '=', $expense->id_client)
+                        DB::table('anticipos')->where('id_provider', '=', $expense->id_provider)
                         ->where('status', '=', '1')
                         ->update(['status' => 'C']);
             
                 }
-
-                
-
 
                     /*------------------------------------------------- */
 
@@ -1370,7 +1463,7 @@ class ExpensesAndPurchaseController extends Controller
 
             
 
-            return redirect('expensesandpurchases/expensevoucher/'.$expense->id.'')->withSuccess('Factura Guardada con Exito!');
+            return redirect('expensesandpurchases/expensevoucher/'.$expense->id.'/'.$coin.'')->withSuccess('Factura Guardada con Exito!');
 
         }else{
             return redirect('expensesandpurchases/registerpaymentafter/'.$expense->id.'')->withDanger('Este pago ya ha sido realizado!');
@@ -1390,11 +1483,22 @@ class ExpensesAndPurchaseController extends Controller
         $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount')));
         $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('grand_total')));
          
-
+        
         $id_expense = request('id_expense');
         $user_id = request('user_id');
 
+        $coin = request('coin');
+
         $expense = ExpensesAndPurchase::findOrFail($id_expense);
+
+        if($expense->coin == 'dolares'){
+            $sin_formato_amount_iva = $sin_formato_amount_iva * $expense->rate;
+            $sin_formato_amount_with_iva = $sin_formato_amount_with_iva * $expense->rate;
+            $sin_formato_base_imponible = $sin_formato_base_imponible * $expense->rate;
+            $sin_formato_amount = $sin_formato_amount * $expense->rate;
+       
+        }
+
 
         $expense->base_imponible = $sin_formato_base_imponible;
         $expense->amount =  $sin_formato_amount;
@@ -1425,16 +1529,16 @@ class ExpensesAndPurchaseController extends Controller
         $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
 
         if(isset($account_mercancia_venta)){
-            $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sin_formato_amount,0);
+            $this->add_movement($expense->rate,$header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sin_formato_amount,0);
         }
 
         //IVA credito Fiscal
 
-        $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA Credito Fiscal')->first();
+        $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
             
         if(isset($account_credito_iva_fiscal)){
             if($sin_formato_amount_iva != 0){
-                $this->add_movement($bcv,$header_voucher->id,$account_credito_iva_fiscal->id,$expense->id,$user_id,$sin_formato_amount_iva,0);
+                $this->add_movement($expense->rate,$header_voucher->id,$account_credito_iva_fiscal->id,$expense->id,$user_id,$sin_formato_amount_iva,0);
             }
         }
 
@@ -1442,9 +1546,9 @@ class ExpensesAndPurchaseController extends Controller
         $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                     
         if(isset($account_cuentas_por_pagar_proveedores)){
-            $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$sin_formato_amount_with_iva);
+            $this->add_movement($expense->rate,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$sin_formato_amount_with_iva);
         }
-        return redirect('expensesandpurchases/expensevoucher/'.$expense->id.'')->withSuccess('Gasto o Compra Guardada con Exito!');
+        return redirect('expensesandpurchases/expensevoucher/'.$expense->id.'/'.$coin.'')->withSuccess('Gasto o Compra Guardada con Exito!');
     }
 
 
@@ -1487,7 +1591,7 @@ class ExpensesAndPurchaseController extends Controller
 
 
 
-    public function add_movement($bcv,$id_header,$id_account,$id_invoice,$id_user,$debe,$haber)
+    public function add_movement($bcv,$id_header,$id_account,$id_expense,$id_user,$debe,$haber)
     {
 
         $detail = new DetailVoucher();
@@ -1496,11 +1600,7 @@ class ExpensesAndPurchaseController extends Controller
         $detail->id_header_voucher = $id_header;
         $detail->user_id = $id_user;
         $detail->tasa = $bcv;
-        $detail->id_invoice = $id_invoice;
-
-        /*  $valor_sin_formato_debe = str_replace(',', '.', str_replace('.', '', $debe));
-        $valor_sin_formato_haber = str_replace(',', '.', str_replace('.', '', $haber));*/
-
+        $detail->id_expense = $id_expense;
 
         $detail->debe = $debe;
         $detail->haber = $haber;
@@ -1560,7 +1660,7 @@ class ExpensesAndPurchaseController extends Controller
             }//SIN DETERMINAR
             else if($payment_type == 7){
                 
-                $account_sin_determinar = Account::where('description', 'like', 'Sin determinar')->first(); 
+                $account_sin_determinar = Account::where('description', 'like', 'Otros Ingresos No Identificados')->first(); 
         
                 if(isset($account_sin_determinar)){
                     $this->add_movement($bcv,$header_voucher,$account_sin_determinar->id,$id_expense,$user_id,$amount_debe,$amount_haber);
@@ -1582,18 +1682,10 @@ class ExpensesAndPurchaseController extends Controller
                     $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$id_expense,$user_id,$amount_debe,$amount_haber);
                 }
             } 
-            //Tarjeta Corporativa 
-            else if($payment_type == 8){
-                
-                $account_contra_anticipo = Account::where('description', 'like', 'Tarjeta Corporativa')->first(); 
-        
-                if(isset($account_contra_anticipo)){
-                    $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$id_expense,$user_id,$amount_debe,$amount_haber);
-                }
-            } 
+           
 
     }
-
+    
 
 
     public function refreshrate($id_expense,$coin,$rate)
@@ -1800,43 +1892,7 @@ class ExpensesAndPurchaseController extends Controller
     
     
 
-    public function create_expense_voucher($id_expense){
-
-        $expense = null;
-        $provider = null;
-        $expense_details = null;
-
-        if(isset($id_expense)){
-            $expense = ExpensesAndPurchase::find($id_expense);
-
-            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
-        }else{
-            return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
-        } 
-
-             $total= 0;
-             $base_imponible= 0;
-
-             foreach($expense_details as $var){
-                 
-                    $total += ($var->price * $var->amount);
-               
-                if($var->exento == 0){
-                    $base_imponible += ($var->price * $var->amount); 
-                }
-             }
-
-             $expense->total_factura = $total;
-             $expense->base_imponible = $base_imponible;
-            
-             $date = Carbon::now();
-             $datenow = $date->format('Y-m-d');    
-
-             
-     
-             return view('admin.expensesandpurchases.create_payment_voucher',compact('expense','datenow','expense_details'));
-         
-    }
+    
 
    
 
@@ -1849,16 +1905,23 @@ class ExpensesAndPurchaseController extends Controller
                     $code_three = 0;
 
                 if($type == 1){
+                    //Inventario
                     $code_one = 1;  $code_two = 1;
                     $code_three = 8;
                 }
                 if($type == 2){
+                    //Activos Fijos
                     $code_one = 1;  $code_two = 2;
-                    $code_three = 1;
+                    
                 }
                 if($type == 3){
-                    $code_one = 5;  $code_two = 1;
-                    $code_three = 1;
+                    $code_one = 5;  
+                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                                                                ->where('code_two', '<>',0)
+                                                                ->where('code_three', '<>',0)
+                                                                ->where('code_four', '<>',0)
+                                                                ->where('code_five', '<>',0)->get();
+                    return response()->json($respuesta,200);
                 }
                 if($type == 4){
                     $code_one = 6;  $code_two = 1;
@@ -1879,8 +1942,24 @@ class ExpensesAndPurchaseController extends Controller
                 
                 $respuesta = Account::select('id','description')->where('code_one',$code_one)
                                                                 ->where('code_two', $code_two)
-                                                                ->where('code_three', $code_three)
-                                                                ->where('code_four', '<>',0)->get();
+                                                                ->where('code_three', '<>',0)
+                                                                ->where('code_four', '<>',0)
+                                                                ->where('code_five', '<>',0)->get();
+                return response()->json($respuesta,200);
+
+            }catch(Throwable $th){
+                return response()->json(false,500);
+            }
+        }
+        
+    }
+
+    public function listinventory(Request $request, $var = null){
+        //validar si la peticion es asincrona
+        if($request->ajax()){
+            try{
+                
+                $respuesta = Inventory::select('id')->where('code',$var)->get();
                 return response()->json($respuesta,200);
 
             }catch(Throwable $th){

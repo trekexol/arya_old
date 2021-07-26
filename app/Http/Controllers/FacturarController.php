@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class FacturarController extends Controller
 {
-    public function createfacturar($id_quotation,$coin = null)
+    public function createfacturar($id_quotation,$coin)
     {
          $quotation = null;
              
@@ -136,7 +136,7 @@ class FacturarController extends Controller
 
         $quotation = Quotation::findOrFail($id_quotation);
         $quotation->coin = request('coin');
-        $bcv = $this->search_bcv();
+        $bcv = $quotation->bcv;
 
      
         //precio de costo de los productos, vienen en bolivares
@@ -1176,12 +1176,7 @@ class FacturarController extends Controller
             
             }
 
-            if($coin != 'bolivares'){
-                $total_pay_form = $total_pay_form * $bcv;
-            }
             
-
-
             //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
             $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
             
@@ -1199,7 +1194,8 @@ class FacturarController extends Controller
             $sin_formato_amount = request('sub_total_form');
             $iva_percentage = request('iva_form');
 
-            if($coin == 'dolares'){
+            if($coin != 'bolivares'){
+                $total_pay_form = $total_pay_form * $bcv;
                 $sin_formato_amount_iva = $sin_formato_amount_iva * $bcv;
                 $sin_formato_amount_with_iva = $sin_formato_amount_with_iva * $bcv;
                 $sin_formato_base_imponible = $sin_formato_base_imponible * $bcv;
