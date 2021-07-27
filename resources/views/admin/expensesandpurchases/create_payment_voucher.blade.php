@@ -189,12 +189,12 @@
         });
             function pdf() {
                 
-                var nuevaVentana= window.open("{{ route('pdf.expense',$expense->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+                var nuevaVentana= window.open("{{ route('pdf.expense',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
             function pdf_media() {
                 
-                var nuevaVentana2= window.open("{{ route('pdf.expense_media',$expense->id)}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+                var nuevaVentana2= window.open("{{ route('pdf.expense_media',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
         
             }
            
@@ -217,7 +217,7 @@
 
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
-                var iva_format = total_iva_exento.toLocaleString('de-DE');
+                var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
                 //------------------------------
@@ -230,7 +230,7 @@
                 // var grand_total = parseFloat(totalFactura) + parseFloat(totalIva);
                 var grand_total = parseFloat(totalFactura) + parseFloat(total_iva_exento);
 
-                var grand_totalformat = grand_total.toLocaleString('de-DE');
+                var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
                 document.getElementById("grand_total").value = grand_totalformat;
@@ -245,7 +245,7 @@
 
                
 
-                var total_payformat = total_pay.toLocaleString('de-DE');
+                var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
 

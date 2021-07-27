@@ -232,7 +232,7 @@
                                     <div class="form-group col-md-1">
                                         @if (empty($inventory))
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exento
                                                 </label>
@@ -240,9 +240,9 @@
                                         @else  
                                             <div class="form-check">
                                                 @if($inventory->products['exento'] == 1)
-                                                    <input class="form-check-input" type="checkbox" disabled checked id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="exento" checked id="gridCheck">
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
                                                 @endif
                                                 <label class="form-check-label" for="gridCheck">
                                                     Exento
@@ -253,7 +253,7 @@
                                     <div class="form-group col-md-1">
                                         @if (empty($inventory))
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                <input class="form-check-input" type="checkbox" name="islr" id="gridCheck">
                                                 <label class="form-check-label" for="gridCheck">
                                                     ISLR
                                                 </label>
@@ -261,9 +261,9 @@
                                         @else  
                                             <div class="form-check">
                                                 @if($inventory->products['islr'] == 1)
-                                                    <input class="form-check-input" type="checkbox" disabled checked id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck">
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="islr" id="gridCheck">
                                                 @endif
                                                 <label class="form-check-label" for="gridCheck">
                                                     ISLR
@@ -277,7 +277,7 @@
                                         @if(isset($inventory->products['price_buy']))
                                             <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ number_format($inventory->products['price_buy'], 2, ',', '.')  }}"  required autocomplete="price">
                                         @else
-                                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price" readonly required autocomplete="price">
+                                            <input id="price" type="text" class="form-control @error('price') is-invalid @enderror" name="price"  required autocomplete="price">
                                         @endif
                                         @error('price')
                                             <span class="invalid-feedback" role="alert">
@@ -341,7 +341,7 @@
                                                     $suma += $var->price * $var->amount;
                                                 ?>
                                                     <td style="text-align: right">
-                                                        <a href="{{ route('expensesandpurchases.editproduct',[$var->id_expense,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                        <a href="{{ route('expensesandpurchases.editproduct',[$var->id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -405,6 +405,10 @@
 
         $(document).ready(function () {
             $("#price").mask('000.000.000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#amount_product").mask('000.000', { reverse: true });
             
         });
         

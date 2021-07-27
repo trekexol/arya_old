@@ -729,7 +729,7 @@
                                  </button>
                             </div>
                             <div class="col-md-2">
-                                <a href="{{ route('expensesandpurchases.create',$expense->id) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                <a href="{{ route('expensesandpurchases.create_detail',[$expense->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="Volver">Volver</a>  
                             </div>
                         </div>
                         

@@ -513,9 +513,9 @@ Route::group(["prefix"=>'invoices'],function(){
 
     Route::get('facturamedia/{id_quotation}/{coin?}','PDFController@imprimirfactura_media')->name('pdf.media');
 
-    Route::get('expense/{id_expense}','PDFController@imprimirExpense')->name('pdf.expense');
+    Route::get('expense/{id_expense}/{coin}','PDFController@imprimirExpense')->name('pdf.expense');
 
-    Route::get('expensemedia/{id_expense}','PDFController@imprimirExpenseMedia')->name('pdf.expense_media');
+    Route::get('expensemedia/{id_expense}/{coin}','PDFController@imprimirExpenseMedia')->name('pdf.expense_media');
  });
 
 
@@ -605,6 +605,8 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     Route::get('refreshrate/{id_expense}/{coin}/{rate}','ExpensesAndPurchaseController@refreshrate')->name('expensesandpurchases.refreshrate');
 
     Route::get('productedit/{id_product}/{coin}','ExpensesAndPurchaseController@editproduct')->name('expensesandpurchases.editproduct');
+
+    Route::patch('productupdate/{id}/{coin}','ExpensesAndPurchaseController@update_product')->name('expensesandpurchases.update_product');
 
     Route::get('listinventory/{code}','ExpensesAndPurchaseController@listinventory')->name('expensesandpurchases.listinventory');
 

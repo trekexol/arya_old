@@ -76,7 +76,7 @@
                             <td class="text-right">{{number_format($expensesandpurchase->amount_with_iva, 2, ',', '.')}}</td>
                             @if ($expensesandpurchase->status == "C")
                             <td class="text-center font-weight-bold">
-                                <a href="{{ route('expensesandpurchases.create_expense_voucher',$expensesandpurchase->id) }}" title="Ver Detalle" class="text-center text-success font-weight-bold">Pagado</a>
+                                <a href="{{ route('expensesandpurchases.create_expense_voucher',[$expensesandpurchase->id,$expensesandpurchase->coin ?? 'bolivares']) }}" title="Ver Detalle" class="text-center text-success font-weight-bold">Pagado</a>
                             </td>
                             @else
                             <td class="text-center font-weight-bold">

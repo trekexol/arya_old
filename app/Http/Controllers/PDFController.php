@@ -359,7 +359,7 @@ class PDFController extends Controller
 
 
 
-    function imprimirExpense($id_expense){
+    function imprimirExpense($id_expense,$coin){
       
 
         $pdf = App::make('dompdf.wrapper');
@@ -403,13 +403,17 @@ class PDFController extends Controller
     
                     }
                 }
-    
+                if($coin != 'bolivares'){
+                    $total = $total / $expense->rate;
+                    $base_imponible = $base_imponible / $expense->rate;
+                    $ventas_exentas = $ventas_exentas / $expense->rate;
+                }
                  $expense->sub_total = $total;
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
 
                  
-                 $pdf = $pdf->loadView('pdf.expense',compact('expense','inventories_expenses','payment_expenses'));
+                 $pdf = $pdf->loadView('pdf.expense',compact('coin','expense','inventories_expenses','payment_expenses'));
                  return $pdf->stream();
          
                 }else{
@@ -421,7 +425,7 @@ class PDFController extends Controller
         
     }
 
-    function imprimirExpenseMedia($id_expense){
+    function imprimirExpenseMedia($id_expense,$coin){
       
 
         $pdf = App::make('dompdf.wrapper');
@@ -467,13 +471,19 @@ class PDFController extends Controller
     
                     }
                 }
+
+                if($coin != 'bolivares'){
+                    $total = $total / $expense->rate;
+                    $base_imponible = $base_imponible / $expense->rate;
+                    $ventas_exentas = $ventas_exentas / $expense->rate;
+                }
     
                  $expense->sub_total = $total;
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
 
                 
-                 $pdf = $pdf->loadView('pdf.expense',compact('expense','inventories_expenses','payment_expenses'));
+                 $pdf = $pdf->loadView('pdf.expense_media',compact('coin','expense','inventories_expenses','payment_expenses'));
                  return $pdf->stream();
          
                 }else{

@@ -12,4 +12,8 @@ class QuotationProduct extends Model
     public function product() {
         return $this->hasMany('App\Product');   
     }
+
+    public function quotations(){
+        return $this->belongsTo('App\Quotation','id_quotation');
+    }
 }

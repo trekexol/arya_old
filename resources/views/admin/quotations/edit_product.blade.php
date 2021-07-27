@@ -21,6 +21,9 @@
             <form  method="POST"   action="{{ route('quotations.productupdate',$quotation_product->id) }}" enctype="multipart/form-data" onsubmit="return validacion()">
                 @method('PATCH')
                 @csrf()
+
+                    <input id="rate_quotation" type="hidden" class="form-control @error('rate_quotation') is-invalid @enderror" name="rate_quotation" value="{{ $quotation_product->rate ?? -1}}" readonly required autocomplete="rate_quotation"> 
+                     
                     <div class="form-group row">
                         <label for="description" class="col-md-2 col-form-label text-md-right">Código</label>
                         <div class="col-md-3">
@@ -134,6 +137,19 @@
         $(document).ready(function () {
             $("#rate").mask('000.000.000.000.000.000.000.000,00', { reverse: true });
             
+        });
+
+        $("#coin").on('change',function(){
+            coin = $(this).val();
+            var price = document.getElementById("price").value;
+            var price_new_format = price.replace(/[$.]/g,'').replace(/[,]/g,'.');
+            if(coin == 'bolivares'){
+                var total = price_new_format * document.getElementById("rate_quotation").value;
+                document.getElementById("price").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;        
+            }else{
+                var total = price_new_format / document.getElementById("rate_quotation").value;
+                document.getElementById("price").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;        
+            }
         });
 
 

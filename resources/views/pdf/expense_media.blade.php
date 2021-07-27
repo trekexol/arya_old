@@ -119,6 +119,11 @@
         </tr>
 
         @foreach ($payment_expenses as $var)
+        <?php 
+          if($coin != 'bolivares'){
+            $var->amount = $var->amount / $expense->rate;
+          }
+        ?>
         <tr>
           <th style="text-align: center; font-weight: normal;">{{ $var->payment_type }}</th>
           @if (isset($var->accounts['description']))
@@ -149,9 +154,10 @@
   </tr> 
   @foreach ($inventories_expenses as $var)
       <?php
-      $percentage = (($var->price * $var->amount))/100;
-
-      $total_less_percentage = ($var->price * $var->amount) - $percentage;
+        if($coin != 'bolivares'){
+          $var->price = $var->price / $expense->rate;
+        }
+        $total_less_percentage = ($var->price * $var->amount);
       ?>
     <tr>
       @if (isset($var->id_inventory))
@@ -173,7 +179,7 @@
 
   $total = $expense->sub_total + $iva;
 
-  $total_petro = ($total - $expense->anticipo)/ 159765192.04;
+  $total_petro = 0;
 ?>
 
 <table style="width: 100%;">
@@ -201,12 +207,8 @@
   @endif
  
   <tr>
-    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL</th>
+    <th style="text-align: right; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); font-size: small;">MONTO TOTAL</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total - $expense->anticipo, 2, ',', '.') }}</th>
-  </tr> 
-  <tr>
-    <th style="text-align: right; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); font-size: small;">MONTO TOTAL Petro</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_petro, 6, ',', '.') }}</th>
   </tr> 
   
   

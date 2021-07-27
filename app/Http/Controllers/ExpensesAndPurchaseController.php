@@ -427,7 +427,9 @@ class ExpensesAndPurchaseController extends Controller
         $var->id_user = request('id_user');
         $var->id_account = request('Account');
         
-        $var->amount = request('amount');
+        $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+
+        $var->amount = $sin_formato_amount;
 
         $var->description = request('description');
 
@@ -475,7 +477,6 @@ class ExpensesAndPurchaseController extends Controller
         $data = request()->validate([
             
         ]);
-
     
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
@@ -1386,13 +1387,17 @@ class ExpensesAndPurchaseController extends Controller
                 
                     $header_voucher->save();
                 
-                    //Mercancia para la Venta
+                    $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+                    
+                    foreach($expense_details as $var){
+                        $account = Account::find($var->id_account);
                         
-                    $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
-    
-                    if(isset($account_mercancia_venta)){
-                        $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sub_total,0);
+                        if(isset($account)){
+                            $this->add_movement($bcv,$header_voucher->id,$account->id,$expense->id,$user_id,$var->price * $var->amount,0);
+                        }
                     }
+                        
+                    
     
                     //Credito Fiscal IVA por Pagar
     
@@ -1510,6 +1515,8 @@ class ExpensesAndPurchaseController extends Controller
         $expense->iva_percentage = request('iva');
 
         $expense->credit_days = $credit;
+
+        $expense->status = "P";
 
         $expense->save();
 
@@ -1723,16 +1730,12 @@ class ExpensesAndPurchaseController extends Controller
         * @param  int  $id
         * @return \Illuminate\Http\Response
         */
-    public function edit($id)
+    public function edit($id,$coin)
     {
-            $expensesandpurchase = expensesandpurchase::find($id);
-        
-            /*$segments    = Segment::all();
-            $subsegments  = Subsegment::all();
-        
-            $unitofmeasures   = UnitOfMeasure::all();*/
-        
-            return view('admin.expensesandpurchases.edit',compact('expensesandpurchase','segments','subsegments','unitofmeasures'));
+        /*$expense_detail = ExpensesDetail::find($id);
+    
+    
+        return view('admin.expensesandpurchases.edit_product',compact('expense_detail','coin'));*/
     
     }
     public function editexpensesandpurchaseproduct($id)
@@ -1751,21 +1754,24 @@ class ExpensesAndPurchaseController extends Controller
         
     
     }
-    public function editproduct($id)
+    public function editproduct($id,$coin)
     {
-            $expensesandpurchase_product = ExpensesAndPurchase::find($id);
-        
-            if(isset($expensesandpurchase_product)){
+        $expense_detail = ExpensesDetail::find($id);
+        $rate = null;
 
-                $inventory= Inventory::find($expensesandpurchase_product->id_inventory);
+        if(isset($expense_detail)){
 
-                return view('admin.expensesandpurchases.edit_product',compact('expensesandpurchase_product','inventory'));
-            }else{
-                return redirect('/expensesandpurchases')->withDanger('No se Encontro el Producto!');
+            $inventory= Inventory::find($expense_detail->id_inventory);
+
+            if($coin != 'bolivares'){
+                $rate = $expense_detail->rate;
             }
+
+            return view('admin.expensesandpurchases.edit_product',compact('rate','coin','expense_detail','inventory'));
+        }else{
+            return redirect('/expensesandpurchases')->withDanger('No se Encontro el Producto!');
+        }
         
-        
-    
     }
     
 
@@ -1807,7 +1813,7 @@ class ExpensesAndPurchaseController extends Controller
         
         ]);
 
-        $var = expensesandpurchase::findOrFail($id);
+        $var = ExpensesAndPurchase::findOrFail($id);
 
         $var->segment_id = request('segment_id');
         $var->subsegment_id= request('sub_segment_id');
@@ -1855,26 +1861,57 @@ class ExpensesAndPurchaseController extends Controller
 
         
 
-        public function updateexpensesandpurchaseproduct(Request $request, $id)
+        public function update_product(Request $request, $id)
         { 
-
+            //dd($request);
             $data = request()->validate([
                 
-                'amount'         =>'required',
-                'discount'         =>'required',
+                'description'   =>'required',
+                'amount'        =>'required',
+                
+
+                'coin'   =>'required',
+                'price'   =>'required',
             
             ]);
+            
+            $var = ExpensesDetail::findOrFail($id);
+
+            $coin = request('coin');
+
+            $valor_sin_formato_price = str_replace(',', '.', str_replace('.', '', request('price')));
+           
+            $var->price = $valor_sin_formato_price;
+
+            $rate_expense = request('rate_expense');
+
+            if($coin != 'bolivares'){
+                $var->price = $var->price * $rate_expense;
+            }
+            
+            $var->description = request('description');
+
+            $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
         
-            $var = ExpensesAndPurchase::findOrFail($id);
-        
-            $var->amount = request('amount');
-        
-            $var->discount = request('discount');
-        
+            $var->amount = $valor_sin_formato_amount;
+
+            $exento = request('exento');
+            if($exento == null){
+                $var->exento = false;
+            }else{
+                $var->exento = true;
+            }
+
+            $islr = request('islr');
+            if($islr == null){
+                $var->islr = false;
+            }else{
+                $var->islr = true;
+            }
         
             $var->save();
         
-            return redirect('/expensesandpurchases/register/'.$var->id_expensesandpurchase.'')->withSuccess('Actualizacion Exitosa!');
+            return redirect('/expensesandpurchases/register/'.$var->id_expense.'/'.$coin.'')->withSuccess('Actualizacion Exitosa!');
         
         }
 
@@ -1897,7 +1934,8 @@ class ExpensesAndPurchaseController extends Controller
    
 
 
-    public function listaccount(Request $request, $type = null){
+    public function listaccount(Request $request, $type = null)
+    {
         //validar si la peticion es asincrona
         if($request->ajax()){
             try{
