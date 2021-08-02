@@ -130,7 +130,10 @@
                                     @enderror
                                 </div>
                             @endif
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <div class="col-md-1">
+                                <a href="{{ route('anticipos.selectanticipo_provider',[$expense->id_provider,$coin,$expense->id]) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                            </div>
+                            <label for="iva" class="col-md-1 col-form-label text-md-right">IVA:</label>
                             <div class="col-md-2">
                             <select class="form-control" name="iva" id="iva">
                                 <option value="16">16%</option>

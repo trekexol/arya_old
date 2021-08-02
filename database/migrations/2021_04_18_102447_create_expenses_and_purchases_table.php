@@ -30,7 +30,6 @@ class CreateExpensesAndPurchasesTable extends Migration
             $table->integer('iva_percentage')->nullable();
             $table->integer('credit_days')->nullable();
            
-
             $table->decimal('base_imponible',64,2)->nullable();
             $table->decimal('amount',64,2)->nullable();
             $table->decimal('amount_iva',64,2)->nullable();

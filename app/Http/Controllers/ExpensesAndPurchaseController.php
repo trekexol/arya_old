@@ -15,6 +15,7 @@ use App\Provider;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Anticipo;
 
 class ExpensesAndPurchaseController extends Controller
 {
@@ -220,7 +221,24 @@ class ExpensesAndPurchaseController extends Controller
             return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
         } 
 
-            $anticipos_sum = 0;//Anticipo::where('status',1)->where('id_client',$expense->id_client)->sum('amount');
+            $anticipos_sum_bolivares = Anticipo::where('status',1)
+                                                ->where('id_provider',$expense->id_provider)
+                                                ->where('coin','like','bolivares')
+                                                ->sum('amount');
+
+            $total_dolar_anticipo =    DB::select('SELECT SUM(amount/rate) AS dolar
+                                        FROM anticipos
+                                        WHERE id_provider = ? AND
+                                        coin not like ? AND
+                                        status = ?
+                                        '
+                                        , [$expense->id_provider,'bolivares',1]);
+
+            $anticipos_sum_dolares = 0;
+            if(isset($total_dolar_anticipo[0]->dolar)){
+                $anticipos_sum_dolares = $total_dolar_anticipo[0]->dolar;
+                
+            }
 
             $accounts_bank = DB::table('accounts')->where('code_one', 1)
                         ->where('code_two', 1)
@@ -266,6 +284,23 @@ class ExpensesAndPurchaseController extends Controller
 
              $expense->total_factura = $total;
              $expense->base_imponible = $base_imponible;
+
+             $anticipos_sum = 0;
+             if(isset($coin)){
+                 if($coin == 'bolivares'){
+                    $bcv = null;
+                    //Si la factura es en BS, y tengo anticipos en dolares, los multiplico los dolares por la tasa a la que estoy facturando
+                    $anticipos_sum_dolares =  $anticipos_sum_dolares * $expense->rate;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
+                 }else{
+                    $bcv = $expense->rate;
+                     //Si la factura es en Dolares, y tengo anticipos en bolivares, divido los bolivares por la tasa a la que estoy facturando
+                    $anticipos_sum_bolivares =  $anticipos_sum_bolivares / $expense->rate;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
+                 }
+             }else{
+                $bcv = null;
+             }
              
      
              return view('admin.expensesandpurchases.create_payment',compact('coin','expense','datenow','expense_details','accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','anticipos_sum'));
@@ -1940,12 +1975,12 @@ class ExpensesAndPurchaseController extends Controller
         if($request->ajax()){
             try{
                     $code_one = 0;  $code_two = 0;
-                    $code_three = 0;
+                    
 
                 if($type == 1){
                     //Inventario
                     $code_one = 1;  $code_two = 1;
-                    $code_three = 8;
+                    
                 }
                 if($type == 2){
                     //Activos Fijos
@@ -1962,20 +1997,40 @@ class ExpensesAndPurchaseController extends Controller
                     return response()->json($respuesta,200);
                 }
                 if($type == 4){
-                    $code_one = 6;  $code_two = 1;
-                    $code_three = 1;
+                    $code_one = 6; 
+                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                                        ->where('code_two', '<>',0)
+                                        ->where('code_three', '<>',0)
+                                        ->where('code_four', '<>',0)
+                                        ->where('code_five', '<>',0)->get();
+                    return response()->json($respuesta,200);
                 }
                 if($type == 5){
-                    $code_one = 6;  $code_two = 1;
-                    $code_three = 2;
+                    $code_one = 6;  
+                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                                        ->where('code_two', '<>',0)
+                                        ->where('code_three', '<>',0)
+                                        ->where('code_four', '<>',0)
+                                        ->where('code_five', '<>',0)->get();
+                    return response()->json($respuesta,200);
                 }
                 if($type == 6){
-                    $code_one = 6;  $code_two = 1;
-                    $code_three = 3;
+                    $code_one = 6;  
+                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                                        ->where('code_two', '<>',0)
+                                        ->where('code_three', '<>',0)
+                                        ->where('code_four', '<>',0)
+                                        ->where('code_five', '<>',0)->get();
+                    return response()->json($respuesta,200);
                 }
                 if($type == 7){
-                    $code_one = 6;  $code_two = 1;
-                    $code_three = 4;
+                    $code_one = 6;  
+                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                                        ->where('code_two', '<>',0)
+                                        ->where('code_three', '<>',0)
+                                        ->where('code_four', '<>',0)
+                                        ->where('code_five', '<>',0)->get();
+                    return response()->json($respuesta,200);
                 }
                 
                 $respuesta = Account::select('id','description')->where('code_one',$code_one)

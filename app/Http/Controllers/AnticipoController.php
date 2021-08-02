@@ -9,6 +9,7 @@ use App\Color;
 use App\DetailVoucher;
 use App\HeaderVoucher;
 use App\Modelo;
+use App\Provider;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +28,7 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::where('status',1)->orderBy('id','desc')->get();
+        $anticipos = Anticipo::whereIn('status',[1,'M'])->orderBy('id','desc')->get();
         
 
         }elseif($users_role == '2'){
@@ -37,6 +38,40 @@ class AnticipoController extends Controller
        return view('admin.anticipos.index',compact('anticipos'));
    }
 
+   public function index_provider()
+   {
+       $user       =   auth()->user();
+       $users_role =   $user->role_id;
+       if($users_role == '1'){
+       
+        $anticipos = Anticipo::whereIn('status',[1,'M'])->where('id_provider','<>',null)->orderBy('id','desc')->get();
+        
+        $control = 'index';
+
+        }elseif($users_role == '2'){
+           return view('admin.index');
+       }
+       
+       return view('admin.anticipos.index_provider',compact('anticipos','control'));
+   }
+
+   public function indexhistoric_provider()
+   {
+       $user       =   auth()->user();
+       $users_role =   $user->role_id;
+       if($users_role == '1'){
+       
+        $anticipos = Anticipo::where('status','C')->where('id_provider','<>',null)->orderBy('id','desc')->get();
+
+        $control = 'historic';
+
+        }elseif($users_role == '2'){
+           return view('admin.index');
+       }
+       
+       return view('admin.anticipos.index_provider',compact('anticipos','control'));
+   }
+   
    public function indexhistoric()
    {
        $user       =   auth()->user();
@@ -62,6 +97,13 @@ class AnticipoController extends Controller
 
         return view('admin.anticipos.selectclient',compact('clients','id_anticipo'));
     }
+
+    public function selectprovider($id_anticipo = null)
+    {
+        $providers = Provider::orderBy('id' ,'DESC')->get();
+
+        return view('admin.anticipos.selectprovider',compact('providers','id_anticipo'));
+    }
     
     public function selectanticipo($id_client,$coin,$id_quotation)
     {
@@ -72,6 +114,14 @@ class AnticipoController extends Controller
         return view('admin.anticipos.selectanticipo',compact('anticipos','client','id_quotation','coin'));
     }
     
+    public function selectanticipo_provider($id_provider,$coin,$id_expense)
+    {
+        $anticipos = Anticipo::where('id_provider',$id_provider)->whereIn('status',[1,'M'])->orderBy('id' ,'DESC')->get();
+
+        $provider = Provider::find($id_provider);
+
+        return view('admin.anticipos.selectanticipo_provider',compact('anticipos','provider','id_expense','coin'));
+    }
   
 
    public function create()
@@ -79,7 +129,7 @@ class AnticipoController extends Controller
         $accounts = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
-                                            ->where('code_four', 1)
+                                            ->whereIn('code_four', [1, 2])
                                             ->where('code_five', '<>',0)
                                             ->get();
         $date = Carbon::now();
@@ -87,6 +137,26 @@ class AnticipoController extends Controller
         $bcv = $this->search_bcv();
 
         return view('admin.anticipos.create',compact('datenow','accounts','bcv'));
+   }
+
+   public function create_provider($id_provider = null)
+   {
+        $accounts = DB::table('accounts')->where('code_one', 1)
+                                            ->where('code_two', 1)
+                                            ->where('code_three', 1)
+                                            ->whereIn('code_four', [1, 2])
+                                            ->where('code_five', '<>',0)
+                                            ->get();
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');    
+        $bcv = $this->search_bcv();
+        $provider = null;
+
+        if(isset($id_provider)){
+            $provider =  Provider::find($id_provider);
+        }
+
+        return view('admin.anticipos.create_provider',compact('datenow','accounts','bcv','provider'));
    }
 
    public function createclient($id_client)
@@ -121,7 +191,6 @@ class AnticipoController extends Controller
             
         
             'date_begin'         =>'required',
-            'id_client'         =>'required',
             'id_account'         =>'required',
             'id_user'         =>'required',
 
@@ -135,6 +204,7 @@ class AnticipoController extends Controller
 
         $var->date = request('date_begin');
         $var->id_client = request('id_client');
+        $var->id_provider = request('id_provider');
         $var->id_account = request('id_account');
         $var->id_user = request('id_user');
         $var->coin = request('coin');
@@ -183,8 +253,12 @@ class AnticipoController extends Controller
         }
         
 
-
-        return redirect('/anticipos')->withSuccess('Registro Exitoso!');
+        if(isset($var->id_client)){
+            return redirect('/anticipos')->withSuccess('Registro Exitoso!');
+        }else{
+            return redirect('/anticipos/indexprovider')->withSuccess('Registro Exitoso!');
+        }
+        
     }
 
   

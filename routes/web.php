@@ -550,7 +550,13 @@ Route::group(["prefix"=>'anticipos'],function(){
     
     Route::get('changestatus/{id_anticipo}/{verify}','AnticipoController@changestatus')->name('anticipos.changestatus');
 
+    Route::get('indexprovider','AnticipoController@index_provider')->name('anticipos.index_provider');
+    Route::get('historicprovider','AnticipoController@indexhistoric_provider')->name('anticipos.historic_provider');
+    Route::get('registerprovider/{id_provider?}','AnticipoController@create_provider')->name('anticipos.create_provider');
+    Route::get('selectprovider/{id_anticipo?}','AnticipoController@selectprovider')->name('anticipos.selectprovider');
+    Route::get('selectanticipoexpense/{id_provider}/{coin}/{id_expense}','AnticipoController@selectanticipo_provider')->name('anticipos.selectanticipo_provider');
     
+
 });
 
 

@@ -13,4 +13,8 @@ class Anticipo extends Model
     public function accounts(){
         return $this->belongsTo('App\Permission\Models\Account','id_account');
     }
+
+    public function providers(){
+        return $this->belongsTo('App\Provider','id_provider');
+    }
 }

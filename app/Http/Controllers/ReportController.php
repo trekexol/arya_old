@@ -71,7 +71,7 @@ class ReportController extends Controller
         if(isset($level)){
             
         }else{
-            $level = 4;
+            $level = 5;
         }
 
         $accounts = $this->calculation($from,$to);
