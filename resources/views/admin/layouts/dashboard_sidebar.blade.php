@@ -79,7 +79,6 @@
       
             
             <a class="collapse-item" href="{{ route('users')}}" > <i class="fas fa-user fa-sm fa-fw mr-2 text-blue-400"></i><strong>Usuarios</strong></strong></a>
-            <a class="collapse-item" href="{{ route('companies')}}" > <i class="fas fa-building fa-sm fa-fw mr-2 text-blue-400"></i><strong>Compañias</strong></a>
             <a class="collapse-item" href="{{ route('branches')}}" > <i class="fas fa-code-branch fa-sm fa-fw mr-2 text-blue-400"></i><strong>Sucursales</strong></a>
             <a class="collapse-item" href="{{ route('positions')}}" > <i class="fas fa-user-plus fa-sm fa-fw mr-2 text-blue-400"></i><strong>Cargos</strong></a>
             <a class="collapse-item" href="{{ route('academiclevels')}}" > <i class="fas fa-graduation-cap fa-sm fa-fw mr-2 text-blue-400"></i><strong>Niveles Académicos</strong></a>
@@ -234,16 +233,17 @@
             <i class="fas fa-fw fa-boxes" ></i>
             <span>Inventario</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('companies.create') }}">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>General</span></a>
+    </li>
    <!-- <li class="nav-item">
         <a class="nav-link" href="charts.html">
             <i class="fas fa-fw fa-user-friends"></i>
             <span>Usuarios</span></a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>General</span></a>
-    </li>
+    
 
     <li class="nav-item">
         <a class="nav-link" href="charts.html">

@@ -875,39 +875,41 @@ class AccountController extends Controller
                 
                 foreach($accounts as $account){ 
                     
-                    $var = new AccountHistorial();
+                    if($account->level == 5){
+                        $var = new AccountHistorial();
 
-                    $var_account = Account::findOrFail($account->id);
-
-
-                    $var->id_account =  $account->id;
-                    $var->period =  $datenow;
-                    $var->date_begin = $last_detail_activate->created_at->format('Y-m-d');
-                    $var->date_end = $datenow2;
-
-                    $var->balance_previous = $account->balance_previus;
-
-                    if(isset($account->coin) && isset($account->rate)){
-                        $var->coin =  $account->coin;
-                        $var->rate =  $account->rate;
-                    }else{
-                       $var->coin =  $coin;
+                        $var_account = Account::findOrFail($account->id);
+    
+                        $var->id_account =  $account->id;
+                        $var->period =  $datenow;
+                        $var->date_begin = $last_detail_activate->created_at->format('Y-m-d');
+                        $var->date_end = $datenow2;
+    
+                        $var->balance_previous = $account->balance_previus;
+    
+                        if(isset($account->coin) && isset($account->rate)){
+                            $var->coin =  $account->coin;
+                            $var->rate =  $account->rate;
+                        }else{
+                           $var->coin =  $coin;
+                        }
+                        
+                            $var->balance_current = $account->balance_previus + $account->debe - $account->haber;
+                            
+                            $var->debe =  $account->debe ?? 0;
+                            $var->haber =  $account->haber ?? 0;
+                            $var->debe_coin =  $account->dolar_debe ?? 0;
+                            $var->haber_coin =  $account->dolar_haber ?? 0;
+                    
+                        $var->status =  "F";
+                    
+                        $var->save();
+    
+                        $var_account->balance_previus = $var->balance_current;
+                        //dd($var_account->description);
+                        $var_account->save();
                     }
                     
-                        $var->balance_current = $account->balance_previus + $account->debe - $account->haber;
-                        
-                        $var->debe =  $account->debe ?? 0;
-                        $var->haber =  $account->haber ?? 0;
-                        $var->debe_coin =  $account->dolar_debe ?? 0;
-                        $var->haber_coin =  $account->dolar_haber ?? 0;
-                
-                    $var->status =  "F";
-                
-                    $var->save();
-
-                    $var_account->balance_previus = $var->balance_current;
-                    //dd($var_account->description);
-                    $var_account->save();
 
                 }
             

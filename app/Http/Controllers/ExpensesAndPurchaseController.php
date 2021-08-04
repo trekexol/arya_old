@@ -1460,8 +1460,17 @@ class ExpensesAndPurchaseController extends Controller
                     $anticipo = request('anticipo_form');
 
                     if(isset($anticipo)){
-                    // $valor_sin_formato_anticipo = str_replace(',', '.', str_replace('.', '', $anticipo));
-                        $expense->anticipo =  $anticipo;
+                      $expense->anticipo =  $anticipo;
+
+                        $account_anticipo_proveedor = Account::where('code_one',1)
+                                                                ->where('code_two',1)
+                                                                ->where('code_three',4)
+                                                                ->where('code_four',2)
+                                                                ->where('code_five',1)->first(); 
+                    
+                        if(isset($account_anticipo_proveedor)){
+                            $this->add_movement($bcv,$header_voucher->id,$account_anticipo_proveedor->id,$expense->id,$user_id,0,$anticipo);
+                        }
                     }else{
                         $expense->anticipo = 0;
                     }

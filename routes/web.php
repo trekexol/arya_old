@@ -555,7 +555,7 @@ Route::group(["prefix"=>'anticipos'],function(){
     Route::get('registerprovider/{id_provider?}','AnticipoController@create_provider')->name('anticipos.create_provider');
     Route::get('selectprovider/{id_anticipo?}','AnticipoController@selectprovider')->name('anticipos.selectprovider');
     Route::get('selectanticipoexpense/{id_provider}/{coin}/{id_expense}','AnticipoController@selectanticipo_provider')->name('anticipos.selectanticipo_provider');
-    
+    Route::post('storeprovider', 'AnticipoController@store_provider')->name('anticipos.store_provider');
 
 });
 
@@ -657,6 +657,7 @@ Route::group(["prefix"=>'companies'],function(){
     Route::delete('{id}/delete','CompaniesController@destroy')->name('companies.delete');
     Route::patch('{id}/update','CompaniesController@update')->name('companies.update');
 
+    Route::get('bcvlist','CompaniesController@bcvlist')->name('companies.bcvlist');
 });
 
 Route::group(["prefix"=>'nominaformulas'],function(){

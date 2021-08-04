@@ -508,7 +508,7 @@
                 
                 },
                 error:(xhr)=>{
-                    alert('Presentamos Inconvenientes');
+                    alert('No se encontro la cuenta');
                 }
             })
         }
@@ -540,7 +540,7 @@
                    
                 },
                 error:(xhr)=>{
-                    alert('Presentamos Inconvenientes');
+                    alert('No se Encontro este numero de Referencia');
                 }
             })
         }

@@ -322,8 +322,23 @@ class FacturarController extends Controller
         $coin = request('coin');
 
         $price_cost_total = request('price_cost_total');// * $bcv;
-        
 
+        $anticipo = request('anticipo_form');
+
+        $sub_total = request('sub_total_form');
+
+        $base_imponible = request('base_imponible_form');
+
+        $sin_formato_base_imponible = request('base_imponible_form');
+        $sin_formato_amount = request('sub_total_form');
+        $iva_percentage = request('iva_form');
+        
+        $total_iva = 0;
+
+        if($base_imponible != 0){
+            $total_iva = ($base_imponible * $iva_percentage)/100;
+
+        }
      
         $payment_type = request('payment_type');
         if($come_pay >= 1){
@@ -1175,13 +1190,40 @@ class FacturarController extends Controller
                 $this->add_pay_movement($bcv,$payment_type7,$header_voucher->id,$var7->id_account,$quotation->id,$user_id,$var7->amount,0);
             
             }
+            
+            /*Anticipos*/
+            if(isset($anticipo) && ($anticipo != 0)){
+                $quotation->anticipo =  $anticipo;
+                 
+                //Si hay anticipo, entonces necesito registrar este monto tal cual el total de la factura sin restarle el anticipo
+                 $total_pay_form = $sub_total + $total_iva;
+                 if($coin != 'bolivares'){
+                     $total_pay_form = $total_pay_form * $bcv;
+                     $quotation->anticipo =  $anticipo * $bcv;
+                 }
+                 $account_anticipo_cliente = Account::where('code_one',2)
+                                                             ->where('code_two',3)
+                                                             ->where('code_three',1)
+                                                             ->where('code_four',1)
+                                                             ->where('code_five',2)->first(); 
+                 
+                 if(isset($account_anticipo_cliente)){
+                     $this->add_movement($bcv,$header_voucher->id,$account_anticipo_cliente->id,$quotation->id,$user_id,$quotation->anticipo,0);
+                 }
+             }else{
+                 $quotation->anticipo = 0;
+             }
+            /*---------- */
 
+            
+
+            $total_por_cobrar = $sub_total + $total_iva;
             
             //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
             $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
             
             if(isset($account_cuentas_por_cobrar)){
-                $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$total_pay_form);
+                $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$total_por_cobrar);
             }
             
 
@@ -1190,9 +1232,7 @@ class FacturarController extends Controller
             $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
             $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('total_pay_form')));
 
-            $sin_formato_base_imponible = request('base_imponible_form');
-            $sin_formato_amount = request('sub_total_form');
-            $iva_percentage = request('iva_form');
+            
 
             if($coin != 'bolivares'){
                 $total_pay_form = $total_pay_form * $bcv;
@@ -1216,32 +1256,12 @@ class FacturarController extends Controller
 
                 $quotation->iva_percentage = $iva_percentage;
 
-                $anticipo = request('anticipo_form');
-
-                $sub_total = request('sub_total_form');
-
-                $base_imponible = request('base_imponible_form');
-
-                $total_iva = 0 ;
-
-                if($base_imponible != 0){
-                    $total_iva = ($base_imponible * $iva_percentage)/100;
-
-                }
                 
 
-                if(isset($anticipo)){
-                   // $valor_sin_formato_anticipo = str_replace(',', '.', str_replace('.', '', $anticipo));
-                    $quotation->anticipo =  $anticipo;
-                    //Si hay anticipo, entonces necesito registrar este monto tal cual el total de la factura sin restarle el anticipo
-                    $total_pay_form = $sub_total + $total_iva;
-                    if($coin != 'bolivares'){
-                        $total_pay_form = $total_pay_form * $bcv;
-                        $quotation->anticipo =  $anticipo * $bcv;
-                    }
-                }else{
-                    $quotation->anticipo = 0;
-                }
+                
+                
+
+                
 
                 
 

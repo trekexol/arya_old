@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Company;
 use App\Inventory;
 use App\Product;
 use App\Quotation;
@@ -134,9 +135,20 @@ class QuotationController extends Controller
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');  
 
-                //esto es para que siempre se pueda guardar la tasa en la base de datos
-                $bcv_quotation_product = $this->search_bcv();
-                $bcv = $this->search_bcv();
+                $company = Company::find(1);
+
+                //Si la taza es automatica
+                if($company->tiporate_id == 1){
+                    //esto es para que siempre se pueda guardar la tasa en la base de datos
+                    $bcv_quotation_product = $this->search_bcv();
+                    $bcv = $this->search_bcv();
+                }else{
+                    //si la tasa es fija
+                    $bcv_quotation_product = $company->rate;
+                    $bcv = $company->rate;
+
+                }
+               
                 if(($coin == 'bolivares') ){
                     
                     $coin = 'bolivares';
@@ -206,10 +218,26 @@ class QuotationController extends Controller
 
                     $date = Carbon::now();
                     $datenow = $date->format('Y-m-d');    
-                    $bcv_quotation_product = $this->search_bcv();
+                    
+                    /*Revisa si la tasa de la empresa es automatica o fija*/
+                    $company = Company::find(1);
+                    //Si la taza es automatica
+                    if($company->tiporate_id == 1){
+                        $bcv_quotation_product = $this->search_bcv();
+                    }else{
+                        //si la tasa es fija
+                        $bcv_quotation_product = $company->rate;
+                    }
+
 
                     if(($coin == 'bolivares')){
-                        $bcv = $this->search_bcv();
+                        
+                        if($company->tiporate_id == 1){
+                            $bcv = $this->search_bcv();
+                        }else{
+                            //si la tasa es fija
+                            $bcv = $company->rate;
+                        }
                     }else{
                         //Cuando mi producto esta en Bolivares, pero estoy cotizando en dolares, convierto los bs a dolares
                         if($inventory->products['money'] == 'Bs'){
@@ -337,7 +365,14 @@ class QuotationController extends Controller
                 $var->observation = request('observation');
                 $var->note = request('note');
 
-                $bcv = $this->search_bcv();
+                $company = Company::find(1);
+                //Si la taza es automatica
+                if($company->tiporate_id == 1){
+                    $bcv = $this->search_bcv();
+                }else{
+                    //si la tasa es fija
+                    $bcv = $company->rate;
+                }
 
                 $var->bcv = $bcv;
         
@@ -480,7 +515,14 @@ class QuotationController extends Controller
 
                 $inventory= Inventory::find($quotation_product->id_inventory);
 
-                $bcv = $this->search_bcv();
+                $company = Company::find(1);
+                    //Si la taza es automatica
+                    if($company->tiporate_id == 1){
+                        $bcv = $this->search_bcv();
+                    }else{
+                        //si la tasa es fija
+                        $bcv = $company->rate;
+                    }
 
                 if(!isset($coin)){
                     $coin = 'bolivares';

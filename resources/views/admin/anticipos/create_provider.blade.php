@@ -15,7 +15,7 @@
                 <div class="card-header text-center font-weight-bold h3">Registro de Anticipo</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('anticipos.store') }}">
+                    <form method="POST" action="{{ route('anticipos.store_provider') }}">
                         @csrf
                         
                         <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required autocomplete="id_user">

@@ -39,44 +39,36 @@ class CompaniesController extends Controller
 
     public function create()
     {
-        
-
-        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
-        $pageDocument = @file_get_contents($urlToGet);
-        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
-
-        if ($cap[0] == array()){ // VALIDAR Concidencia
-            $titulo = '0,00';
-        } else {
-            $titulo = $cap[1][2];
-        }
-
-        $bcv            = $titulo;
+        $bcv = 0;
         $date           = Carbon::now();
         $periodo        = $date->format('Y');
 
         $tipoinvs       = InventaryType::orderBY('description','asc')->pluck('description','id')->toArray();
         $tiporates      = RateType::orderBY('description','asc')->pluck('description','id')->toArray();
 
-        return view('admin.companies.create',compact('periodo','tipoinvs','tiporates','bcv'));
+        $company = Company::first();
+
+        return view('admin.companies.create',compact('periodo','tipoinvs','tiporates','bcv','company'));
     }
 
     public function store(Request $request)
     {
+
+        
         $data = request()->validate([
             'Login'             =>'required|max:191',
             'Email'             =>'required|max:255',
             'Codigo'            =>'required|max:160',
             'Razon_Social'      =>'required|max:160',
-            'Telefono'          =>'required|max:11',
+            'phone'          =>'required|max:20',
             'Franqueo_Postal'   =>'required|max:255',
             'Direccion'         =>'required|max:255',
             'Impuesto'          =>'required|max:255',
-            'Impuesto_2'        =>'max:3',
-            'Impuesto_3'        =>'max:3',
-            'Retencion_ISRL'    =>'max:3',
+            'Impuesto_2'        =>'max:10',
+            'Impuesto_3'        =>'max:10',
+            'Retencion_ISRL'    =>'max:10',
             'Tipo_Inventario'   =>'required|integer|not_in:0',
-            'Tipo_Tasa'         =>'required|integer|not_in:0',
+            'rate_type'         =>'required|integer|not_in:0',
             'Tasa'              =>'required|max:255',
             'Tasa_Petro'        =>'required|max:255',
             'Periodo'           =>'required|max:4',
@@ -86,12 +78,9 @@ class CompaniesController extends Controller
         $razon_social           = strtoupper(request('Razon_Social'));
         $email                  = strtoupper(request('Email'));
         $direccion              = strtoupper(request('Direccion'));
-        $tasa                   = request('Tasa');
-        $rate_number            = str_replace(".","",$tasa);
-        $rate_number_2          = str_replace(",",".",$rate_number);
-
-        $companies  = new Company();
-/*
+        
+        $companies  = Company::findOrFail(1);
+        /*
         $user_companies = UserCompany::where('id_user',Auth::id())->first();
         $companies->setConnection($user_companies->name_connection);*/
 
@@ -99,24 +88,26 @@ class CompaniesController extends Controller
         $companies->email           = $email;
         $companies->code_rif        = request('Codigo');
         $companies->razon_social    = $razon_social;
-        $companies->phone           = request('Telefono');
+        $companies->phone           = request('phone');
         $companies->franqueo_postal = request('Franqueo_Postal');
         $companies->address         = $direccion;
-        $companies->tax_1           = request('Impuesto');
-        $companies->tax_2           = request('Impuesto_2');
-        $companies->tax_3           = request('Impuesto_3');;
-        $companies->retention_islr  = request('Retencion_ISRL');
+        $companies->tax_1           = str_replace(',', '.', str_replace('.', '', request('Impuesto')));
+
+        $companies->tax_2           = str_replace(',', '.', str_replace('.', '', request('Impuesto_2')));
+        $companies->tax_3           = str_replace(',', '.', str_replace('.', '', request('Impuesto_3')));
+        $companies->retention_islr  = str_replace(',', '.', str_replace('.', '', request('Retencion_ISRL')));
         $companies->tipoinv_id      = request('Tipo_Inventario');
-        $companies->tiporate_id     = request('Tipo_Tasa');
-        $companies->rate            = $rate_number_2;
-        $companies->rate_petro      = request('Tasa_Petro');
+        $companies->tiporate_id     = request('rate_type');
+        $companies->rate            = str_replace(',', '.', str_replace('.', '', request('Tasa')));
+        $companies->rate_petro      = str_replace(',', '.', str_replace('.', '', request('Tasa_Petro')));
         $companies->foto_company    = "default";
         $companies->period          = request('Periodo');
 
         $companies->status          = '1';
 
         $companies->save();
-        return redirect('/companies')->withSuccess('Registro Exitoso!');
+        
+        return redirect('/companies/register')->withSuccess('Actualizado Exitosamente!');
     }
 
     public function edit($id)
@@ -184,4 +175,46 @@ class CompaniesController extends Controller
         $user->delete();
         return redirect('users')->withDelete('Registro Eliminado Exitoso!');
     }
+
+
+
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        }else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
+    }
+
+    public function bcvlist(Request $request){
+        //validar si la peticion es asincrona
+        if($request->ajax()){
+            try{
+                
+                $respuesta = $this->search_bcv();
+                $respuesta = number_format($respuesta, 2, ',', '.');
+                
+                return response()->json($respuesta,200);
+
+            }catch(Throwable $th){
+                return response()->json(false,500);
+            }
+        }
+        
+    }
+
 }

@@ -204,7 +204,6 @@ class AnticipoController extends Controller
 
         $var->date = request('date_begin');
         $var->id_client = request('id_client');
-        $var->id_provider = request('id_provider');
         $var->id_account = request('id_account');
         $var->id_user = request('id_user');
         $var->coin = request('coin');
@@ -250,6 +249,88 @@ class AnticipoController extends Controller
             
         if(isset($account_anticipo)){
             $this->add_movement($header_voucher->id,$account_anticipo->id,$var->id_user,0,$var->amount,$var->rate);
+        }
+        
+
+        if(isset($var->id_client)){
+            return redirect('/anticipos')->withSuccess('Registro Exitoso!');
+        }else{
+            return redirect('/anticipos/indexprovider')->withSuccess('Registro Exitoso!');
+        }
+        
+    }
+
+
+    public function store_provider(Request $request)
+    {
+   
+        
+        $data = request()->validate([
+            
+        
+            'date_begin'         =>'required',
+            'id_account'         =>'required',
+            'id_user'         =>'required',
+
+            'amount'         =>'required',
+            'rate'         =>'required',
+            'coin'         =>'required',
+
+        ]);
+
+        $var = new Anticipo();
+
+        $var->date = request('date_begin');
+        $var->id_provider = request('id_provider');
+        $var->id_account = request('id_account');
+        $var->id_user = request('id_user');
+        $var->coin = request('coin');
+
+        if($var->id_provider == -1){
+            return redirect('/anticipos/registerprovider')->withDanger('Debe Seleccionar un Proveedor!');
+        }
+        
+        $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+        $valor_sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
+
+        if($var->coin != 'bolivares'){
+            $var->amount = $valor_sin_formato_amount * $valor_sin_formato_rate; 
+            $var->rate = $valor_sin_formato_rate;
+        }else{
+            $var->amount = $valor_sin_formato_amount;
+            $var->rate = $valor_sin_formato_rate;
+        }
+
+        
+        $var->reference = request('reference');
+        
+    
+        $var->status = 1;
+
+        $var->save();
+
+        /*Aplicamos el movimiento contable*/
+        $header_voucher  = new HeaderVoucher();
+
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');
+        $header_voucher->id_anticipo =  $var->id;
+        $header_voucher->description = "Anticipo Proveedor";
+        $header_voucher->date = $datenow;
+        $header_voucher->status =  "1";
+        $header_voucher->save();
+
+        $this->add_movement($header_voucher->id,$var->id_account,$var->id_user,0,$var->amount,$var->rate);
+
+
+        $account_anticipo_proveedor = Account::where('code_one',1)
+                                    ->where('code_two',1)
+                                    ->where('code_three',4)
+                                    ->where('code_four',2)
+                                    ->where('code_five',1)->first();  
+            
+        if(isset($account_anticipo_proveedor)){
+            $this->add_movement($header_voucher->id,$account_anticipo_proveedor->id,$var->id_user,$var->amount,0,$var->rate);
         }
         
 

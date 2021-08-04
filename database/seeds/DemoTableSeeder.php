@@ -19,7 +19,7 @@ class DemoTableSeeder extends Seeder
             'code_rif' => '003548625-9',
             'razon_social' => 'Empresa DEMO ARYA',
             'period' => 2021,
-            'phone' => '04242013215',
+            'phone' => '0424 201-3215',
             'address' => 'PLAZA VENEZUELA',
             'franqueo_postal' => '1010',
             'tax_1' => 16,
