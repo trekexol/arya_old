@@ -94,12 +94,12 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="observation" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
+                            <label for="iva_retencion" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
                             <div class="col-md-3">
-                                <input id="observation" type="text" class="form-control @error('observation') is-invalid @enderror" name="observation" value="{{ old('observation') }}" readonly required autocomplete="observation">
+                                <input id="iva_retencion" type="text" class="form-control @error('iva_retencion') is-invalid @enderror" name="iva_retencion" value="{{ number_format($total_retiene_iva ?? 0, 2, ',', '.') }}" readonly required autocomplete="iva_retencion">
 
-                                @error('observation')
+                                @error('iva_retencion')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -117,12 +117,12 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="note" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
+                            <label for="islr_retencion" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
 
                             <div class="col-md-3">
-                                <input id="retencion" type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" readonly required autocomplete="note">
+                                <input id="islr_retencion" type="text" class="form-control @error('islr_retencion') is-invalid @enderror" name="islr_retencion" value="{{ number_format($total_retiene_islr ?? 0, 2, ',', '.') }}" readonly required autocomplete="islr_retencion">
 
-                                @error('note')
+                                @error('islr_retencion')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

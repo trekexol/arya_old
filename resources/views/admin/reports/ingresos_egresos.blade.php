@@ -27,7 +27,7 @@
 
 
   <br><br><br><br><br><br><br><br><br>
-  <h2 style="color: black; text-align: center; font-weight: bold;">Balance General</h2>
+  <h2 style="color: black; text-align: center; font-weight: bold;">Ingresos y Egresos</h2>
 
   <h4 style="color: black; text-align: center; font-weight: bold;">Periodo desde {{ date('d-m-Y', strtotime( $date_begin ?? $detail_old->created_at ?? '')) }} al {{ date('d-m-Y', strtotime( $date_end ?? $datenow)) }}</h4>
    
@@ -62,7 +62,9 @@
     
 
   @foreach ($accounts as $account)
-
+  @if ($account->code_one >= 4)
+      
+  
     @if ($account->level == 1 )
       @if ($controlador_level1 == false)
         @if(isset($description4))
@@ -221,7 +223,7 @@
           <th style="text-align: left; font-weight: normal; width: 21%; border-color: white; "></th>
         </tr> 
       @endif
-  
+    @endif
   @endforeach
   <!-- Imprimir los ultimos totales -->
   @if(isset($description4))

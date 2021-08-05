@@ -36,7 +36,7 @@
 <table>
   <tr>
     <th style="font-weight: normal; width: 40%;">Concesión Postal:</th>
-    <th style="font-weight: normal;">N 10-000</th>
+    <th style="font-weight: normal;">Nº {{ $company->franqueo_postal ?? ''}}</th>
    
   </tr>
   <tr>

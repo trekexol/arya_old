@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App;
+use App\Company;
 use App\ExpensePayment;
 use App\ExpensesAndPurchase;
 use App\ExpensesDetail;
@@ -92,8 +93,9 @@ class PDFController extends Controller
                     $bcv = $quotation->bcv;
                 }
 
+                $company = Company::find(1);
                 
-                 $pdf = $pdf->loadView('pdf.factura',compact('quotation','inventories_quotations','payment_quotations','bcv'));
+                 $pdf = $pdf->loadView('pdf.factura',compact('company','quotation','inventories_quotations','payment_quotations','bcv'));
                  return $pdf->stream();
          
                 }else{
@@ -197,9 +199,9 @@ class PDFController extends Controller
                         $bcv = $quotation->bcv;
                     }
     
-
+                    $company = Company::find(1);
                 
-                 $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','inventories_quotations','bcv'));
+                 $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','inventories_quotations','bcv','company'));
                  return $pdf->stream();
          
                 }else{
@@ -262,7 +264,9 @@ class PDFController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
 
-        $pdf_inventory = $pdf_inventory->loadView('pdf.inventory',compact('inventories','datenow'));
+        $company = Company::find(1);
+
+        $pdf_inventory = $pdf_inventory->loadView('pdf.inventory',compact('inventories','datenow','company'));
         return $pdf_inventory->stream();
                  
     }
@@ -343,9 +347,9 @@ class PDFController extends Controller
                     $bcv = $quotation->bcv;
                 }
 
+                $company = Company::find(1);                
                 
-                
-                 $pdf = $pdf->loadView('pdf.factura_media',compact('quotation','inventories_quotations','payment_quotations','bcv'));
+                 $pdf = $pdf->loadView('pdf.factura_media',compact('quotation','inventories_quotations','payment_quotations','bcv','company'));
                  return $pdf->stream();
          
                 }else{
@@ -412,8 +416,9 @@ class PDFController extends Controller
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
 
-                 
-                 $pdf = $pdf->loadView('pdf.expense',compact('coin','expense','inventories_expenses','payment_expenses'));
+                 $company = Company::find(1);
+
+                 $pdf = $pdf->loadView('pdf.expense',compact('coin','expense','inventories_expenses','payment_expenses','company'));
                  return $pdf->stream();
          
                 }else{
@@ -482,8 +487,9 @@ class PDFController extends Controller
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
 
-                
-                 $pdf = $pdf->loadView('pdf.expense_media',compact('coin','expense','inventories_expenses','payment_expenses'));
+                 $company = Company::find(1);
+
+                 $pdf = $pdf->loadView('pdf.expense_media',compact('coin','expense','inventories_expenses','payment_expenses','company'));
                  return $pdf->stream();
          
                 }else{

@@ -415,6 +415,20 @@ class QuotationController extends Controller
             
             $var->id_inventory = request('id_inventory');
 
+            $islr = request('islr');
+            if($islr == null){
+                $var->retiene_islr = false;
+            }else{
+                $var->retiene_islr = true;
+            }
+
+            $exento = request('exento');
+            if($exento == null){
+                $var->retiene_iva = false;
+            }else{
+                $var->retiene_iva = true;
+            }
+
             $coin = request('coin');
 
             $quotation = Quotation::find($var->id_quotation);

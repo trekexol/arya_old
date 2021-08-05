@@ -14,10 +14,6 @@
             <div class="card">
                
                 <div class="card-body">
-  
-       
-             
-                 
                   <!--  <div class="list-group">
                       <a href="#" class="list-group-item list-group-item-action">A simple default list group item</a>
                     
@@ -30,44 +26,45 @@
                       <a href="#" class="list-group-item list-group-item-action list-group-item-light">A simple light list group item</a>
                       <a href="#" class="list-group-item list-group-item-action list-group-item-dark">A simple dark list group item</a>
                     </div> -->
-                    
+                 
                     <div class="row justify-content-center">
-                        <div class="col-xs-4 col-sm-2">
+                        <div class="col-sm-3">
                           <div class="list-group" id="list-tab" role="tablist">
                             <li class="list-group-item list-group-item-action list-group-item-primary text-center" style="padding: 0;" id="list-home-list" data-bs-toggle="list" role="tab" aria-controls="home"><font size="-1">Balance General</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Activo <br>144.500.000,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 2% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Pasivo <br>-11.400.000,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Capital <br>133.100.000,00</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Activo <br>{{ number_format($account_activo, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 2% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Pasivo <br>{{ number_format($account_pasivo, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Patrimonio <br>{{ number_format($account_patrimonio, 2, ',', '.')}}</font></li>
                           </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-sm-3">
                           <div class="list-group" id="list-tab" role="tablist">
                             <li class="list-group-item list-group-item-action list-group-item-danger text-center" style="padding: 0;" id="list-home-list" data-bs-toggle="list" role="tab" aria-controls="home"><font size="-1">Ganancias y Pérdidas</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Ingresos 49.225.211,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Egresos 15.262.427,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Gastos 3.309.615,40</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-warning text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Total 30.653.168,60</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Ingresos {{ number_format($account_ingresos, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Costos {{ number_format($account_costos, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Gastos {{ number_format($account_gastos, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-warning text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Total {{ number_format($account_ingresos+$account_costos+$account_gastos, 2, ',', '.')}}</font></li>
                           </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-sm-3">
                           <div class="list-group" id="list-tab" role="tablist">
                             <li class="list-group-item list-group-item-action list-group-item-info text-center" style="padding: 0;" id="list-home-list" data-bs-toggle="list" role="tab" aria-controls="home"><font size="-1">Saldos Pendientes</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Cuentas por Cobrar <br>-500,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 2% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Cuentas por Pagar <br>-2.552.873,40</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Préstamos Bancarios<br> 0,00</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Cuentas por Cobrar <br>{{ number_format($account_cuentas_por_cobrar, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 2% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Cuentas por Pagar <br>{{ number_format($account_cuentas_por_pagar, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 2% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Préstamos a largo plazo<br>{{ number_format($account_prestamos, 2, ',', '.')}}</font></li>
                           </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-sm-3">
                           <div class="list-group" id="list-tab" role="tablist">
                             <li class="list-group-item list-group-item-action list-group-item-success text-center" style="padding: 0;" id="list-home-list" data-bs-toggle="list" role="tab" aria-controls="home"><font size="-1">Balance de Bancos</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">Banesco -41.420.670,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Exterior 8.120.000,00</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">Mercantil 8.010.810,40</font></li>
-                            <li class="list-group-item list-group-item-action list-group-item-warning text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Total -25.289.860,00</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-profile-list" data-bs-toggle="list"  role="tab" aria-controls="profile"><font size="-1">{{ $account_banco1_name }} {{ number_format($account_banco1, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-ligh text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">{{ $account_banco2_name }} {{ number_format($account_banco2, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-light text-center" style="padding: 5% 0;" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="settings"><font size="-1">{{ $account_banco3_name }} {{ number_format($account_banco3, 2, ',', '.')}}</font></li>
+                            <li class="list-group-item list-group-item-action list-group-item-warning text-center" style="padding: 5% 0;" id="list-messages-list" data-bs-toggle="list"  role="tab" aria-controls="messages"><font size="-1">Total {{ number_format($account_banco1+$account_banco2+$account_banco3, 2, ',', '.')}}</font></li>
                           </div>
                         </div>
                         
                   </div>
+                
                <br>
               
                   <div class="row justify-content-center">
@@ -84,7 +81,7 @@
                             <code>/js/demo/chart-bar-demo.js</code> file.
                         </div>
                       </div>
-                      <div class="col-3" >
+                      <div class="col-sm-3" >
                           <div class="card shadow" style="background-color: white">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header"  style="background-color: rgb(255, 185, 81)">

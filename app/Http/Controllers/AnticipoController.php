@@ -6,6 +6,7 @@ use App\Account;
 use App\Anticipo;
 use App\Client;
 use App\Color;
+use App\Company;
 use App\DetailVoucher;
 use App\HeaderVoucher;
 use App\Modelo;
@@ -134,7 +135,15 @@ class AnticipoController extends Controller
                                             ->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
-        $bcv = $this->search_bcv();
+
+        $company = Company::find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
 
         return view('admin.anticipos.create',compact('datenow','accounts','bcv'));
    }
@@ -149,8 +158,16 @@ class AnticipoController extends Controller
                                             ->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
-        $bcv = $this->search_bcv();
         $provider = null;
+
+        $company = Company::find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
 
         if(isset($id_provider)){
             $provider =  Provider::find($id_provider);
@@ -171,7 +188,15 @@ class AnticipoController extends Controller
                                             ->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
-        $bcv = $this->search_bcv();
+        
+        $company = Company::find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
 
         return view('admin.anticipos.create',compact('datenow','client','accounts','bcv'));
    }
@@ -401,7 +426,15 @@ class AnticipoController extends Controller
                                             ->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
-        $bcv = $this->search_bcv();
+        
+        $company = Company::find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
 
         if($anticipo->coin != 'Bolivares'){
             

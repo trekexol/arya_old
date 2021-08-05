@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  
-<title></title>
+<title>Nota de Entrega</title>
 <style>
   table, td, th {
     border: 1px solid black;
@@ -35,7 +35,7 @@
 <table>
   <tr>
     <th style="font-weight: normal; width: 40%;">Concesión Postal:</th>
-    <th style="font-weight: normal;">N 10-000</th>
+    <th style="font-weight: normal;">Nº {{ $company->franqueo_postal ?? ''}}</th>
    
   </tr>
   <tr>
@@ -134,7 +134,7 @@
 
   $total = $quotation->sub_total_factura + $iva;
 
-  $total_petro = $total / 159765192.04;
+  $total_petro = $total / ($bcv ?? 1) / $company->rate_petro;
 
   $iva = $iva / ($bcv ?? 1);
 

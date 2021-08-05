@@ -20,7 +20,6 @@ class ReportController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-          //$receiptvacations = ReceiptVacation::orderBy('id', 'asc')->get();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
             $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
@@ -32,6 +31,24 @@ class ReportController extends Controller
         
     
         return view('admin.reports.index_balance_general',compact('datenow','detail_old'));
+      
+    }
+
+    public function index_ingresos()
+    {
+        
+        $user       =   auth()->user();
+        $users_role =   $user->role_id;
+        if($users_role == '1'){
+            $date = Carbon::now();
+            $datenow = $date->format('Y-m-d');    
+            $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
+
+        }elseif($users_role == '2'){
+            return view('admin.index');
+        }
+
+        return view('admin.reports.index_ingresos_egresos',compact('datenow','detail_old'));
       
     }
 
@@ -48,7 +65,8 @@ class ReportController extends Controller
         return view('admin.reports.index_balance_general',compact('date_begin','date_end','level'));
     }
 
-    function balance_pdf($date_begin = null,$date_end = null,$level = null){
+    function balance_pdf($date_begin = null,$date_end = null,$level = null)
+    {
       
         $pdf = App::make('dompdf.wrapper');
 
@@ -84,7 +102,40 @@ class ReportController extends Controller
                  
     }
 
-    //CORREGIR
+    function balance_ingresos_pdf($date_begin = null,$date_end = null,$level = null){
+      
+        $pdf = App::make('dompdf.wrapper');
+
+        
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d'); 
+        $period = $date->format('Y'); 
+        $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
+
+        if(isset($date_begin)){
+            $from = $date_begin;
+        }else{
+            $from = $detail_old->created_at->format('Y-m-d');
+        }
+        if(isset($date_end)){
+            $to = $date_end;
+        }else{
+            $to = $datenow;
+        }
+        if(isset($level)){
+            
+        }else{
+            $level = 5;
+        }
+
+        $accounts = $this->calculation($from,$to);
+
+        $pdf = $pdf->loadView('admin.reports.ingresos_egresos',compact('datenow','accounts','level','detail_old','date_begin','date_end'));
+        return $pdf->stream();
+                 
+    }
+
+    //agregar que retorne el monto en dolares
     public function calculation($date_begin,$date_end)
     {
         

@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  
-<title>Documento sin título</title>
+<title>Factura</title>
 <style>
   table, td, th {
     border: 1px solid black;
@@ -36,7 +36,7 @@
 <table>
   <tr>
     <th style="font-weight: normal; width: 40%;">Concesión Postal:</th>
-    <th style="">N 10-000</th>
+    <th style="">Nº {{ $company->franqueo_postal ?? ''}}</th>
    
   </tr>
   <tr>
@@ -171,8 +171,7 @@
   
   $total = $quotation->sub_total_factura + $iva - $quotation->anticipo;
 
-  $total_petro = ($total - $quotation->anticipo)/ 159765192.04;
-
+  $total_petro = ($total - $quotation->anticipo) / ($bcv ?? 1) / $company->rate_petro;
 
   $iva = $iva / ($bcv ?? 1);
   $total = $total / ($bcv ?? 1);

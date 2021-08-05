@@ -45,7 +45,7 @@
 <table style="width: 100%;">
   <tr>
     <th style="width: 28%; border-right: none;">Nombre de la Empresa:</th>
-    <th style="width: 72%;" class="font-weight-normal">Empresa de Prueba</th>
+    <th style="width: 72%;" class="font-weight-normal">{{ $company->razon_social ?? ''}}</th>
   </tr>
 </table>
 
@@ -54,7 +54,7 @@
 <table style="width: 100%;">
   <tr>
     <th style="width: 28%; ">Domicilio Fiscal:</th>
-    <th style="width: 72%;" class="font-weight-normal"></th>
+    <th style="width: 72%;" class="font-weight-normal">{{ $company->address ?? ''}}</th>
   </tr>
 </table>
 

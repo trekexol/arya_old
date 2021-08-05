@@ -23,6 +23,9 @@ class CreateQuotationProductsTable extends Migration
             $table->decimal('price',64,2);
             $table->decimal('rate',64,2);
 
+            $table->boolean('retiene_iva');
+            $table->boolean('retiene_islr');
+
             $table->string('status',1);
 
             $table->foreign('id_quotation')->references('id')->on('quotations');

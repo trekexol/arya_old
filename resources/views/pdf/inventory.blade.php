@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  
-<title></title>
+<title>Inventario</title>
 <style>
   table, td, th {
     border: 1px solid black;
@@ -27,9 +27,9 @@
 
 
  <br><br>
-  <h4 style="color: black">Empresa: *por hacer*</h4>
+  <h4 style="color: black">Empresa: {{ $company->razon_social ?? ''}}</h4>
   <br>
-  <h4 style="color: black">Rif: *por hacer*</h4>
+  <h4 style="color: black">Rif: {{ $company->code_rif ?? ''}}</h4>
 
   <br>
   <h2 style="color: black; text-align: center">Inventario</h2>

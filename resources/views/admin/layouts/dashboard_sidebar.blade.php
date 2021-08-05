@@ -215,9 +215,11 @@
              
            <!-- <a  class="collapse-header" href="">Contabilidad</a>-->
                 <a class="collapse-item" href="{{ route('accounts')}}" > <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Plan de Cuentas</strong></a>
-                <a class="collapse-item" href="{{ route('detailvouchers.create','bolivares')}}" > <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Ajustes Contables</strong></a>
+                <a class="collapse-item" href="{{ route('detailvouchers.create','bolivares')}}" > <i class="fas fa-cogs fa-sm fa-fw mr-2 text-black-400"></i><strong>Ajustes Contables</strong></a>
                 <a class="collapse-item" href="{{ route('balancegenerals') }}" > <i class="fas fa-clipboard-check fa-sm fa-fw mr-2 text-blue-400"></i><strong>Balance General</strong></a>
-           
+                <a class="collapse-item" href="{{ route('balanceingresos') }}" > <i class="fas fa-compress-alt fa-sm fa-fw mr-2 text-blue-400"></i><strong>Ingresos y Egresos</strong></a>
+                <a class="collapse-item" href="{{ route('daily_listing') }}" > <i class="fas fa-book-reader fa-sm fa-fw mr-2 text-blue-400"></i><strong>Listado Diario</strong></a>
+                
                <!-- <a class="collapse-item" href="buttons.html">Balance General</a>
                 <a class="collapse-item" href="buttons.html">Ingresos y Egresos</a>
                 <a class="collapse-item" href="buttons.html">Listado Diario</a>

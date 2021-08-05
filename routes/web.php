@@ -720,3 +720,15 @@ Route::group(["prefix"=>'threesubsegments'],function(){
     Route::get('list/{subsegment_id?}','ThreeSubSegmentController@list')->name('threesubsegments.list');
 
 });
+
+Route::group(["prefix"=>'balanceingresos'],function(){
+    Route::get('balance','ReportController@index_ingresos')->name('balanceingresos');
+    Route::post('store','ReportController@store_ingresos')->name('balanceingresos.store');
+    Route::get('balancepdf/{date_begin?}/{date_end?}/{level?}','ReportController@balance_ingresos_pdf')->name('balanceingresos.balance_pdf');
+   
+});
+
+Route::group(["prefix"=>'daily_listing'],function(){
+    Route::get('index','DailyListingController@index')->name('daily_listing');
+   
+});

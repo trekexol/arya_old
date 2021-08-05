@@ -131,9 +131,12 @@
                             <div class="col-md-3">
                                 <a href="{{ route('quotations.indexdeliverynote') }}" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Ver Notas de Entrega</a>  
                             </div>
-                          <div class="col-md-2">
+                            @if (empty($quotation->date_delivery_note))
+                            <div class="col-md-2">
                                 <a href="{{ route('quotations.create',[$quotation->id,$coin ?? 'bolivares']) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
                             </div>
+                            @endif
+                            
                         </div>
                         
                     

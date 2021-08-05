@@ -81,10 +81,10 @@
                 @else  
                     @foreach ($quotations as $quotation)
                         <tr>
-                            <td >
-                                
+                            <td>
                             <a href="{{ route('quotations.createfacturar',[$quotation->id,$quotation->coin])}}" title="Seleccionar"><i class="fa fa-check"></i></a>
-                            </td>
+                            <a href="{{ route('quotations.createdeliverynote',[$quotation->id,$quotation->coin])}}" title="Mostrar"><i class="fa fa-file-alt"></i></a>
+                           </td>
                             <td>{{$quotation->serie}}</td>
                             <td>{{ $quotation->clients['name']}}</td>
                             <td>{{ $quotation->vendors['name']}}</td>

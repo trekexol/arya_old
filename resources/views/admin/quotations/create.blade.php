@@ -173,7 +173,7 @@
                                         
                                     </div>
                                     
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label for="description" >Descripción</label>
                                         <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $inventory->products['description'] ?? old('description') ?? '' }}" readonly required autocomplete="description">
         
@@ -195,21 +195,43 @@
                                     </div>
                                     <div class="form-group col-md-1">
                                         @if (empty($inventory))
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" disabled id="gridCheck">
-                                                <label class="form-check-label" for="gridCheck">
-                                                    Exento
-                                                </label>
-                                            </div>
-                                        @else  
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exento
+                                            </label>
+                                        </div>
+                                        @else
+                                        <div class="form-check">
+                                            @if($inventory->products['exento'] == 1)
+                                                <input class="form-check-input" type="checkbox" name="exento" checked id="gridCheck">
+                                            @else
+                                                <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
+                                            @endif
+                                            <label class="form-check-label" for="gridCheck">
+                                                Exento
+                                            </label>
+                                        </div>
+                                        @endif
+                                            
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        @if (empty($inventory))
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
+                                            <label class="form-check-label" for="gridCheck">
+                                                Retiene ISLR
+                                            </label>
+                                        </div>
+                                        @else
                                             <div class="form-check">
                                                 @if($inventory->products['exento'] == 1)
-                                                    <input class="form-check-input" type="checkbox" disabled checked id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck2">
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" disabled id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="islr" id="gridCheck2">
                                                 @endif
-                                                <label class="form-check-label" for="gridCheck">
-                                                    Exento
+                                                <label class="form-check-label" for="gridCheck2">
+                                                    Retiene ISLR
                                                 </label>
                                             </div>
                                         @endif
