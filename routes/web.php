@@ -730,5 +730,7 @@ Route::group(["prefix"=>'balanceingresos'],function(){
 
 Route::group(["prefix"=>'daily_listing'],function(){
     Route::get('index','DailyListingController@index')->name('daily_listing');
+    Route::post('store','DailyListingController@store')->name('daily_listing.store');
+    Route::post('printjournalbook','DailyListingController@print_journalbook')->name('daily_listing.print_journalbook');
    
 });

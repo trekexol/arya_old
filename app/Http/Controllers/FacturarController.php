@@ -1242,6 +1242,27 @@ class FacturarController extends Controller
              }
             /*---------- */
 
+            $total_retiene_iva = request('total_retiene_iva');
+                
+            if($total_retiene_iva !=0){
+                $account_iva_retenido = Account::where('code_one',1)->where('code_two',1)
+                                                        ->where('code_three',4)->where('code_four',1)->where('code_five',2)->first();  
+            
+                if(isset($account_iva_retenido)){
+                    $this->add_movement($bcv,$header_voucher->id,$account_iva_retenido->id,$quotation->id,$user_id,$total_retiene_iva,0);
+                }
+            }
+
+            $total_retiene_islr = request('total_retiene_islr');
+
+            if($total_retiene_islr !=0){
+                $account_islr_pagago = Account::where('code_one',1)->where('code_two',1)->where('code_three',4)
+                                                ->where('code_four',1)->where('code_five',4)->first();  
+
+                if(isset($account_islr_pagago)){
+                    $this->add_movement($bcv,$header_voucher->id,$account_islr_pagago->id,$quotation->id,$user_id,$total_retiene_islr,0);
+                }
+            }
             
 
             $total_por_cobrar = $sub_total + $total_iva;
@@ -1283,15 +1304,6 @@ class FacturarController extends Controller
 
                 $quotation->iva_percentage = $iva_percentage;
 
-                
-
-                
-                
-
-                
-
-                
-
                 $quotation->amount_with_iva = $total_pay_form;
 
                 
@@ -1330,8 +1342,31 @@ class FacturarController extends Controller
                 $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
             
                 if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$total_pay_form,0);
+                    $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$total_por_cobrar,0);
                 }
+
+                $total_retiene_iva = request('total_retiene_iva');
+                
+                if($total_retiene_iva !=0){
+                    $account_iva_retenido = Account::where('code_one',1)->where('code_two',1)
+                                                            ->where('code_three',4)->where('code_four',1)->where('code_five',2)->first();  
+                
+                    if(isset($account_iva_retenido)){
+                        $this->add_movement($bcv,$header_voucher->id,$account_iva_retenido->id,$quotation->id,$user_id,0,$total_retiene_iva);
+                    }
+                }
+
+                $total_retiene_islr = request('total_retiene_islr');
+
+                if($total_retiene_islr !=0){
+                    $account_islr_pagago = Account::where('code_one',1)->where('code_two',1)->where('code_three',4)
+                                                    ->where('code_four',1)->where('code_five',4)->first();  
+
+                    if(isset($account_islr_pagago)){
+                        $this->add_movement($bcv,$header_voucher->id,$account_islr_pagago->id,$quotation->id,$user_id,0,$total_retiene_islr);
+                    }
+                }
+                
 
                 //Ingresos por SubSegmento de Bienes
 

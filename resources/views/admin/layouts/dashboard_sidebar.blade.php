@@ -294,17 +294,7 @@
         </div>
     </li>
     -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="fas fa-fw fa-sign-out-alt" ></i>
-            <span>Salir</span>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-    </li>
-
-  
+    
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

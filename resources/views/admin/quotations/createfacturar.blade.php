@@ -35,9 +35,9 @@
 
                         <!--Precio de costo de todos los productos-->
                         <input type="hidden" name="price_cost_total" value="{{$price_cost_total}}" readonly>
-
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                        
+                        
                         <div class="form-group row">
                             <label for="cedula_rif" class="col-md-2 col-form-label text-md-right">CI/Rif Cliente:</label>
                             <div class="col-md-4">
@@ -258,7 +258,9 @@
 
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                         
-                       
+                        <input type="hidden" id="total_retiene_iva" name="total_retiene_iva" value="{{$total_retiene_iva ?? 0}}" readonly>
+                        <input type="hidden" id="total_retiene_islr" name="total_retiene_islr" value="{{$total_retiene_islr ?? 0}}" readonly>
+
                         
                         <div class="form-group row" id="formulario1" >
                             <label for="amount_pays" class="col-md-2 col-form-label text-md-right">Forma de Pago:</label>
@@ -909,6 +911,12 @@
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
                // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
+
+                var total_iva_retencion = document.getElementById("total_retiene_iva").value;
+
+                var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+
+                var total_pay = total_pay - total_iva_retencion - total_islr_retencion;
 
                 var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
                 
