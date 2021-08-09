@@ -69,7 +69,7 @@
                                 <div class="form-group row">
                                     <label for="amount" class="col-md-2 col-form-label text-md-right">Cantidad</label>
         
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ number_format($quotation_product->amount, 0, ',', '.') }}" required autocomplete="amount">
         
                                         @error('amount')
@@ -78,14 +78,25 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    <label for="exento" class="col-md-2 col-form-label text-md-right">Exento</label>
+                                    <label for="gridCheck" class="col-md-1 col-form-label text-md-right">Exento</label>
                                     <div class="col-md-1">
-                                        @if($inventory->products['exento'] == 1)
-                                            <input id="exento" type="text" class="form-control @error('exento') is-invalid @enderror" name="exento" value="Si" readonly required autocomplete="exento">
-                                   
-                                        @else
-                                            <input id="exento" type="text" class="form-control @error('exento') is-invalid @enderror" name="exento" value="No" readonly required autocomplete="exento">
-                                        @endif
+                                        <div class="form-check">
+                                            @if($quotation_product->retiene_iva == 1)
+                                                <input class="form-check-input" type="checkbox" name="exento" checked id="gridCheck">
+                                            @else
+                                                <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
+                                            @endif
+                                        </div>
+                                     </div>
+                                     <label for="gridCheck2" class="col-md-1 col-form-label text-md-right">Islr</label>  
+                                     <div class="col-md-1">
+                                            <div class="form-check">
+                                                @if($quotation_product->retiene_islr == 1)
+                                                    <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck2">
+                                                @else
+                                                    <input class="form-check-input" type="checkbox" name="islr" id="gridCheck2">
+                                                @endif
+                                            </div>
                                      </div>  
                                      
                                      <label for="discount" class="col-md-2 col-form-label text-md-right">Descuento</label>

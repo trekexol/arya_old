@@ -97,7 +97,7 @@
                             <label for="iva_retencion" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
                             <div class="col-md-3">
-                                <input id="iva_retencion" type="text" class="form-control @error('iva_retencion') is-invalid @enderror" name="iva_retencion" value="{{ number_format($total_retiene_iva ?? 0, 2, ',', '.') }}" readonly required autocomplete="iva_retencion">
+                                <input id="iva_retencion" type="text" class="form-control @error('iva_retencion') is-invalid @enderror" name="iva_retencion" value="{{ number_format($total_retiene_iva / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="iva_retencion">
 
                                 @error('iva_retencion')
                                     <span class="invalid-feedback" role="alert">
@@ -120,7 +120,7 @@
                             <label for="islr_retencion" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
 
                             <div class="col-md-3">
-                                <input id="islr_retencion" type="text" class="form-control @error('islr_retencion') is-invalid @enderror" name="islr_retencion" value="{{ number_format($total_retiene_islr ?? 0, 2, ',', '.') }}" readonly required autocomplete="islr_retencion">
+                                <input id="islr_retencion" type="text" class="form-control @error('islr_retencion') is-invalid @enderror" name="islr_retencion" value="{{ number_format($total_retiene_islr / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="islr_retencion">
 
                                 @error('islr_retencion')
                                     <span class="invalid-feedback" role="alert">
@@ -136,7 +136,7 @@
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
                                 <div class="col-md-3">
-                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" readonly required autocomplete="anticipo"> 
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00"  value="0,00" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
                                         <span class="invalid-feedback" role="alert">
@@ -146,7 +146,7 @@
                                 </div>
                             @else
                                 <div class="col-md-3">
-                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum, 2, ',', '.') ?? 0.00 }}" readonly required autocomplete="anticipo"> 
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" value="{{ number_format($anticipos_sum ?? 0, 2, ',', '.') ?? 0.00 }}" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
                                         <span class="invalid-feedback" role="alert">
@@ -199,33 +199,39 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-2">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                    <label class="custom-control-label" for="customSwitches">Tiene Crédito</label>
-                                  </div>
-                            </div>
-                            <div class="col-md-2">
-                                <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" placeholder="Dias de Crédito" autocomplete="credit"> 
-                            </div>
+                            @if (isset($is_after) && ($is_after == true))
+                                <div class="col-md-2">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="customSwitches">
+                                        <label class="custom-control-label" for="customSwitches">Tiene Crédito</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <input id="credit" type="text" class="form-control @error('credit') is-invalid @enderror" name="credit" placeholder="Dias de Crédito" autocomplete="credit"> 
+                                </div>
+                            @endif
+                            
                         </div>
                         <br>
-                        <div class="form-group row" id="formenviarcredito">
-                            
-                            <div class="col-md-2">
+                        @if (isset($is_after) && ($is_after == true))
+                            <div class="form-group row" id="formenviarcredito">
+                                
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        Guardar Factura
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="{{ route('quotations.create',[$quotation->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary">
-                                    Guardar Factura
-                                 </button>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="{{ route('quotations.create',[$quotation->id,$coin]) }}" id="btnfacturar" name="btnfacturar" class="btn btn-danger" title="facturar">Volver</a>  
-                            </div>
-                        </div>
+                        @endif
+                        
                         
             </form>           
-            <form method="POST" action="{{ route('quotations.storefactura',$coin) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('quotations.storefactura') }}" enctype="multipart/form-data">
                 @csrf   
 
                         <input type="hidden" name="id_quotation" value="{{$quotation->id}}" readonly>
@@ -238,14 +244,18 @@
                         <!--CANTIDAD DE PAGOS QUE QUIERO ENVIAR-->
                         <input type="hidden" id="amount_of_payments" name="amount_of_payments"  readonly>
 
-                        <!--Total del pago que se va a realizar-->
-                        <input type="hidden" id="total_pay_form" name="total_pay_form"  readonly>
-
+                        
                         <!--Total del pago que se va a realizar-->
                         <input type="hidden" id="base_imponible_form" name="base_imponible_form"  readonly>
 
                         <!--Total del pago que se va a realizar-->
                         <input type="hidden" id="sub_total_form" name="sub_total_form" value="{{ $quotation->total_factura / ($bcv ?? 1)}}" readonly>
+                        
+                        <!--Total de la factura sin restarle nada que se va a realizar-->
+                        <input type="hidden" id="grandtotal_form" name="grandtotal_form"  readonly>
+                        
+                        <!--Total del pago que se va a realizar-->
+                        <input type="hidden" id="total_pay_form" name="total_pay_form"  readonly>
 
                       
 
@@ -258,8 +268,8 @@
 
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                         
-                        <input type="hidden" id="total_retiene_iva" name="total_retiene_iva" value="{{$total_retiene_iva ?? 0}}" readonly>
-                        <input type="hidden" id="total_retiene_islr" name="total_retiene_islr" value="{{$total_retiene_islr ?? 0}}" readonly>
+                        <input type="hidden" id="total_retiene_iva" name="total_retiene_iva" value="{{$total_retiene_iva / ($bcv ?? 1)}}" readonly>
+                        <input type="hidden" id="total_retiene_islr" name="total_retiene_islr" value="{{$total_retiene_islr / ($bcv ?? 1)}}" readonly>
 
                         
                         <div class="form-group row" id="formulario1" >
@@ -928,6 +938,7 @@
 
                 document.getElementById("iva_amount_form").value = document.getElementById("iva_amount").value;
                
+                document.getElementById("grandtotal_form").value = grand_totalformat;
                 
             }        
                 
@@ -1003,9 +1014,15 @@
                     document.getElementById("anticipo_form").value = 0;
                 }        
 
-
-
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
+
+                // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
+
+                var total_iva_retencion = document.getElementById("total_retiene_iva").value;
+
+                var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+
+                var total_pay = total_pay - total_iva_retencion - total_islr_retencion;
 
                 var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
@@ -1016,6 +1033,8 @@
                 document.getElementById("iva_form").value =  inputIva;
               
                 document.getElementById("iva_amount_form").value = document.getElementById("iva_amount").value;
+
+                document.getElementById("grandtotal_form").value = grand_totalformat;
                
             });
 
@@ -1099,6 +1118,14 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
+                // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
+
+                var total_iva_retencion = document.getElementById("total_retiene_iva").value;
+
+                var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+
+                var total_pay = total_pay - total_iva_retencion - total_islr_retencion;
+
                 var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
@@ -1109,7 +1136,7 @@
 
                 document.getElementById("iva_amount_form").value = document.getElementById("iva_amount").value;
                
-
+                document.getElementById("grandtotal_form").value = grand_totalformat;
                 
             });
 

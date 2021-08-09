@@ -149,9 +149,155 @@ class FacturarController extends Controller
 
             /*-------------- */
      
+            $is_after = false;
+            if(empty($quotation->credit_days)){
+                $is_after = true;
+            }
              return view('admin.quotations.createfacturar',compact('price_cost_total','coin','quotation'
                         ,'payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta'
-                        ,'datenow','bcv','anticipos_sum','total_retiene_iva','total_retiene_islr'));
+                        ,'datenow','bcv','anticipos_sum','total_retiene_iva','total_retiene_islr','is_after'));
+         }else{
+             return redirect('/quotations')->withDanger('La cotizacion no existe');
+         } 
+         
+    }
+
+    public function createfacturar_after($id_quotation,$coin)
+    {
+         $quotation = null;
+             
+         if(isset($id_quotation)){
+             $quotation = Quotation::find($id_quotation);
+         }
+ 
+         if(isset($quotation)){
+                                                            
+            $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+
+            $anticipos_sum_bolivares = Anticipo::where('status',1)
+                                        ->where('id_client',$quotation->id_client)
+                                        ->where('coin','like','bolivares')
+                                        ->sum('amount');
+
+            $total_dolar_anticipo =    DB::select('SELECT SUM(amount/rate) AS dolar
+                                        FROM anticipos
+                                        WHERE id_client = ? AND
+                                        coin not like ? AND
+                                        status = ?
+                                        '
+                                        , [$quotation->id_client,'bolivares',1]);
+
+            $anticipos_sum_dolares = 0;
+            if(isset($total_dolar_anticipo[0]->dolar)){
+                $anticipos_sum_dolares = $total_dolar_anticipo[0]->dolar;
+            }
+
+             $accounts_bank = DB::table('accounts')->where('code_one', 1)
+                                            ->where('code_two', 1)
+                                            ->where('code_three', 1)
+                                            ->where('code_four', 2)
+                                            ->where('code_five', '<>',0)
+                                            ->where('description','not like', 'Punto de Venta%')
+                                            ->get();
+             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+                                            ->where('code_two', 1)
+                                            ->where('code_three', 1)
+                                            ->where('code_four', 1)
+                                            ->where('code_five', '<>',0)
+                                            ->get();
+             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+                                            ->get();
+
+            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                            ->where('quotation_products.id_quotation',$quotation->id)
+                                                            ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
+                                                            'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva_quotation'
+                                                            ,'quotation_products.retiene_islr as retiene_islr_quotation')
+                                                            ->get(); 
+
+             $total= 0;
+             $base_imponible= 0;
+             $price_cost_total= 0;
+
+             //este es el total que se usa para guardar el monto de todos los productos que estan exentos de iva, osea retienen iva
+             $total_retiene_iva = 0;
+             $retiene_iva = 0;
+
+             $total_retiene_islr = 0;
+             $retiene_islr = 0;
+
+             foreach($inventories_quotations as $var){
+                 //Se calcula restandole el porcentaje de descuento (discount)
+                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
+
+                    $total += ($var->price * $var->amount_quotation) - $percentage;
+                //----------------------------- 
+
+                if($var->retiene_iva_quotation == 0){
+
+                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
+
+                }else{
+                    $retiene_iva += ($var->price * $var->amount_quotation) - $percentage; 
+                }
+
+                if($var->retiene_islr_quotation == 1){
+
+                    $retiene_islr += ($var->price * $var->amount_quotation) - $percentage; 
+
+                }
+
+                //me suma todos los precios de costo de los productos
+                 if($var->money == 'Bs'){
+                    $price_cost_total += $var->price_buy * $var->amount_quotation;
+                }else{
+                    $price_cost_total += $var->price_buy * $var->amount_quotation * $quotation->bcv;
+                }
+             }
+
+             $quotation->total_factura = $total;
+             $quotation->base_imponible = $base_imponible;
+            
+             $date = Carbon::now();
+             $datenow = $date->format('Y-m-d');    
+             $anticipos_sum = 0;
+             if(isset($coin)){
+                 if($coin == 'bolivares'){
+                    $bcv = null;
+                    //Si la factura es en BS, y tengo anticipos en dolares, los multiplico los dolares por la tasa a la que estoy facturando
+                    $anticipos_sum_dolares =  $anticipos_sum_dolares * $quotation->bcv;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
+                 }else{
+                    $bcv = $quotation->bcv;
+                     //Si la factura es en Dolares, y tengo anticipos en bolivares, divido los bolivares por la tasa a la que estoy facturando
+                    $anticipos_sum_bolivares =  $anticipos_sum_bolivares / $quotation->bcv;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
+                 }
+             }else{
+                $bcv = null;
+             }
+             
+
+            /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
+             $client = Client::find($quotation->id_client);
+
+                if($client->percentage_retencion_iva != 0){
+                    $total_retiene_iva = ($retiene_iva * $client->percentage_retencion_iva) /100;
+                }
+
+               
+                if($client->percentage_retencion_islr != 0){
+                    $total_retiene_islr = ($retiene_islr * $client->percentage_retencion_islr) /100;
+                }
+
+            /*-------------- */
+
+            $is_after = false;
+     
+             return view('admin.quotations.createfacturar',compact('price_cost_total','coin','quotation'
+                        ,'payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta'
+                        ,'datenow','bcv','anticipos_sum','total_retiene_iva','total_retiene_islr','is_after'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -159,6 +305,7 @@ class FacturarController extends Controller
     }
     public function storefacturacredit(Request $request)
     {
+        //dd($request);
         $id_quotation = request('id_quotation');
 
         $quotation = Quotation::findOrFail($id_quotation);
@@ -169,20 +316,29 @@ class FacturarController extends Controller
         //precio de costo de los productos, vienen en bolivares
         $price_cost_total = request('price_cost_total');// * $bcv;
         
-
+        $total_retiene_iva = str_replace(',', '.', str_replace('.', '', request('iva_retencion')));
+        $total_retiene_islr = str_replace(',', '.', str_replace('.', '', request('islr_retencion')));
+        $anticipo = str_replace(',', '.', str_replace('.', '', request('anticipo')));
         
 
         $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible')));
         $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('total_factura')));
         $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount')));
-        $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('grand_total')));
+        $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('total_pay')));
 
-        if($quotation->coin == 'dolares'){
+        $sin_formato_grand_total = str_replace(',', '.', str_replace('.', '', request('grand_total')));
+
+        if($quotation->coin != 'bolivares'){
             $sin_formato_amount_iva = $sin_formato_amount_iva * $bcv;
             $sin_formato_amount_with_iva = $sin_formato_amount_with_iva * $bcv;
             $sin_formato_base_imponible = $sin_formato_base_imponible * $bcv;
             $sin_formato_amount = $sin_formato_amount * $bcv;
        
+            $total_retiene_iva = $total_retiene_iva * $bcv;
+            $total_retiene_islr = $total_retiene_islr * $bcv;
+            $anticipo = $anticipo * $bcv;
+
+            $sin_formato_grand_total = $sin_formato_grand_total * $bcv;
         }
 
        
@@ -190,6 +346,10 @@ class FacturarController extends Controller
         $datenow = $date->format('Y-m-d'); 
 
         $quotation->date_billing = $datenow;
+
+        $quotation->retencion_iva =  $total_retiene_iva;
+        $quotation->retencion_islr =  $total_retiene_islr;
+        $quotation->anticipo =  $anticipo;
 
         $quotation->base_imponible = $sin_formato_base_imponible;
         $quotation->amount =  $sin_formato_amount;
@@ -229,7 +389,7 @@ class FacturarController extends Controller
         $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
     
         if(isset($account_cuentas_por_cobrar)){
-            $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_amount_with_iva,0);
+            $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_grand_total,0);
         }
 
         //Ingresos por SubSegmento de Bienes
@@ -271,31 +431,6 @@ class FacturarController extends Controller
     }
 
 
-    public function search_bcv()
-    {
-        /*Buscar el indice bcv*/
-        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
-        $pageDocument = @file_get_contents($urlToGet);
-        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
-
-        if ($cap[0] == array()){ // VALIDAR Concidencia
-            $titulo = '0,00';
-        } else {
-            $titulo = $cap[1][2];
-        }
-
-        $bcv_con_formato = $titulo;
-        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
-
-
-        /*-------------------------- */
-        return $bcv;
-
-    }
-
-
-
-
     public function storefactura(Request $request)
     {
         
@@ -307,9 +442,6 @@ class FacturarController extends Controller
 
         $quotation = Quotation::findOrFail(request('id_quotation'));
 
-
-        $anticipo = request('anticipo_form');
-
         $quotation_status = $quotation->status;
 
         if($quotation->status == 'C' ){
@@ -319,7 +451,7 @@ class FacturarController extends Controller
             
         
 
-       // dd($request);
+        //dd($request);
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
         
@@ -351,15 +483,23 @@ class FacturarController extends Controller
         $price_cost_total = request('price_cost_total');// * $bcv;
 
         $anticipo = request('anticipo_form');
+        $retencion_iva = request('total_retiene_iva');
+        $retencion_islr = request('total_retiene_islr');
+        $anticipo = request('anticipo_form');
+
 
         $sub_total = request('sub_total_form');
-
         $base_imponible = request('base_imponible_form');
-
-        $sin_formato_base_imponible = request('base_imponible_form');
         $sin_formato_amount = request('sub_total_form');
         $iva_percentage = request('iva_form');
+        $sin_formato_total_pay = request('total_pay_form');
+
+        $sin_formato_grandtotal = str_replace(',', '.', str_replace('.', '', request('grandtotal_form')));
+
+
         
+        $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
+
         $total_iva = 0;
 
         if($base_imponible != 0){
@@ -1134,10 +1274,10 @@ class FacturarController extends Controller
             /*--------------------------------------------*/
         } 
 
-        $total_pay_form = request('total_pay_form');
+        
 
         //VALIDA QUE LA SUMA MONTOS INGRESADOS SEAN IGUALES AL MONTO TOTAL DEL PAGO
-        if($total_pay == $total_pay_form){
+        if($total_pay == $sin_formato_total_pay){
 
             /*descontamos el inventario, si existe la fecha de nota de entrega, significa que ya hemos descontado del inventario, por ende no descontamos de nuevo*/
             if(!isset($quotation->date_delivery_note)){
@@ -1218,16 +1358,27 @@ class FacturarController extends Controller
             
             }
             
+
+            if($coin != 'bolivares'){
+                $anticipo =  $anticipo * $bcv;
+                $retencion_iva = $retencion_iva * $bcv;
+                $retencion_islr = $retencion_islr * $bcv;
+              
+                $sin_formato_amount_iva = $sin_formato_amount_iva * $bcv;
+                $base_imponible = $base_imponible * $bcv;
+                $sin_formato_amount = $sin_formato_amount * $bcv;
+                $sin_formato_total_pay = $sin_formato_total_pay * $bcv;
+
+                $sin_formato_grandtotal = $sin_formato_grandtotal * $bcv;
+
+                $sub_total = $sub_total * $bcv;
+    
+            }
+
             /*Anticipos*/
             if(isset($anticipo) && ($anticipo != 0)){
                 $quotation->anticipo =  $anticipo;
-                 
-                //Si hay anticipo, entonces necesito registrar este monto tal cual el total de la factura sin restarle el anticipo
-                 $total_pay_form = $sub_total + $total_iva;
-                 if($coin != 'bolivares'){
-                     $total_pay_form = $total_pay_form * $bcv;
-                     $quotation->anticipo =  $anticipo * $bcv;
-                 }
+                
                  $account_anticipo_cliente = Account::where('code_one',2)
                                                              ->where('code_two',3)
                                                              ->where('code_three',1)
@@ -1242,86 +1393,55 @@ class FacturarController extends Controller
              }
             /*---------- */
 
-            $total_retiene_iva = request('total_retiene_iva');
-                
-            if($total_retiene_iva !=0){
+            if($retencion_iva !=0){
                 $account_iva_retenido = Account::where('code_one',1)->where('code_two',1)
                                                         ->where('code_three',4)->where('code_four',1)->where('code_five',2)->first();  
             
                 if(isset($account_iva_retenido)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_iva_retenido->id,$quotation->id,$user_id,$total_retiene_iva,0);
+                    $this->add_movement($bcv,$header_voucher->id,$account_iva_retenido->id,$quotation->id,$user_id,$retencion_iva,0);
                 }
             }
 
-            $total_retiene_islr = request('total_retiene_islr');
-
-            if($total_retiene_islr !=0){
+            
+            if($retencion_islr !=0){
                 $account_islr_pagago = Account::where('code_one',1)->where('code_two',1)->where('code_three',4)
                                                 ->where('code_four',1)->where('code_five',4)->first();  
 
                 if(isset($account_islr_pagago)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_islr_pagago->id,$quotation->id,$user_id,$total_retiene_islr,0);
+                    $this->add_movement($bcv,$header_voucher->id,$account_islr_pagago->id,$quotation->id,$user_id,$retencion_islr,0);
                 }
             }
             
 
-            $total_por_cobrar = $sub_total + $total_iva;
+         
             
             //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
             $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
             
             if(isset($account_cuentas_por_cobrar)){
-                $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$total_por_cobrar);
+                $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$sin_formato_grandtotal);
             }
             
-
-            //$sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible_form')));
-            //$sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('sub_total_form')));
-            $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
-            $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('total_pay_form')));
-
-            
-
-            if($coin != 'bolivares'){
-                $total_pay_form = $total_pay_form * $bcv;
-                $sin_formato_amount_iva = $sin_formato_amount_iva * $bcv;
-                $sin_formato_amount_with_iva = $sin_formato_amount_with_iva * $bcv;
-                $sin_formato_base_imponible = $sin_formato_base_imponible * $bcv;
-                $sin_formato_amount = $sin_formato_amount * $bcv;
-            }
-            
-            $quotation->base_imponible = $sin_formato_base_imponible;
+            /*Modifica la cotizacion */
+            $quotation->date_billing = $datenow;
+                
+            $quotation->base_imponible = $base_imponible;
             $quotation->amount =  $sin_formato_amount;
             $quotation->amount_iva =  $sin_formato_amount_iva;
-            $quotation->amount_with_iva =  $sin_formato_amount_with_iva;
-         
+            $quotation->amount_with_iva = $sin_formato_total_pay;
+            $quotation->iva_percentage = $iva_percentage;
+
+            $quotation->anticipo =  $anticipo;
+            $quotation->retencion_iva = $retencion_iva;
+            $quotation->retencion_islr = $retencion_islr;
             
-        
-            /*Modifica la cotizacion */
-                $quotation->date_billing = $datenow;
-
-                $quotation->date_billing = $datenow;
-
-                $quotation->iva_percentage = $iva_percentage;
-
-                $quotation->amount_with_iva = $total_pay_form;
-
-                
-
-                $quotation->save();
+            $quotation->save();
 
             /*---------------------- */
 
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');   
 
-           
-
-            if($coin != 'bolivares'){
-                $sub_total = $sub_total * $bcv;
-                $base_imponible = $base_imponible * $bcv;
-            }
-           
             if(($quotation_status != 'C') && ($quotation_status != 'P')){
 
                 $header_voucher  = new HeaderVoucher();
@@ -1342,31 +1462,8 @@ class FacturarController extends Controller
                 $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
             
                 if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$total_por_cobrar,0);
+                    $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_grandtotal,0);
                 }
-
-                $total_retiene_iva = request('total_retiene_iva');
-                
-                if($total_retiene_iva !=0){
-                    $account_iva_retenido = Account::where('code_one',1)->where('code_two',1)
-                                                            ->where('code_three',4)->where('code_four',1)->where('code_five',2)->first();  
-                
-                    if(isset($account_iva_retenido)){
-                        $this->add_movement($bcv,$header_voucher->id,$account_iva_retenido->id,$quotation->id,$user_id,0,$total_retiene_iva);
-                    }
-                }
-
-                $total_retiene_islr = request('total_retiene_islr');
-
-                if($total_retiene_islr !=0){
-                    $account_islr_pagago = Account::where('code_one',1)->where('code_two',1)->where('code_three',4)
-                                                    ->where('code_four',1)->where('code_five',4)->first();  
-
-                    if(isset($account_islr_pagago)){
-                        $this->add_movement($bcv,$header_voucher->id,$account_islr_pagago->id,$quotation->id,$user_id,0,$total_retiene_islr);
-                    }
-                }
-                
 
                 //Ingresos por SubSegmento de Bienes
 
@@ -1408,25 +1505,25 @@ class FacturarController extends Controller
 
 
             
-                    /*Verificamos si el cliente tiene anticipos activos */
-                   // if($anticipo != 0){
-                        DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
-                        ->where('status', '=', '1')
-                        ->update(['status' => 'C']);
+            /*Verificamos si el cliente tiene anticipos activos */
+            // if($anticipo != 0){
+                DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+                ->where('status', '=', '1')
+                ->update(['status' => 'C']);
 
-                        //los que quedaron en espera, pasan a estar activos
-                        DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
-                        ->where('status', '=', 'M')
-                        ->update(['status' => '1']);
-            
-                   // }
-                    /*------------------------------------------------- */
+                //los que quedaron en espera, pasan a estar activos
+                DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+                ->where('status', '=', 'M')
+                ->update(['status' => '1']);
+    
+            // }
+            /*------------------------------------------------- */
 
-                    return redirect('quotations/facturado/'.$quotation->id.'/'.$coin.'')->withSuccess('Factura Guardada con Exito!');
+            return redirect('quotations/facturado/'.$quotation->id.'/'.$coin.'')->withSuccess('Factura Guardada con Exito!');
 
            
         }else{
-            return redirect('quotations/facturar/'.$quotation->id.'')->withDanger('La suma de los pagos es diferente al monto Total a Pagar!');
+            return redirect('quotations/facturar/'.$quotation->id.'/'.$coin.'')->withDanger('La suma de los pagos es diferente al monto Total a Pagar!');
         }
 
         
@@ -1596,35 +1693,7 @@ class FacturarController extends Controller
                 $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
 
            
-                $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
-                                                                ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
-                                                                ->where('quotation_products.id_quotation',$quotation->id)
-                                                                ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
-                                                                'quotation_products.amount as amount_quotation')
-                                                                ->get(); 
-
-                $total= 0;
-                $base_imponible= 0;
-
-                foreach($inventories_quotations as $var){
-                    //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-
-                    $total += ($var->price * $var->amount_quotation) - $percentage;
-                    //----------------------------- 
-
-                    if($var->exento == 0){
-
-                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-
-                    $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
-
-                    }
-                }
-
-
-             $quotation->total_factura = $total;
-             $quotation->base_imponible = $base_imponible;
+              
             
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
@@ -1634,7 +1703,7 @@ class FacturarController extends Controller
                    $bcv = null;
                 }else{
                     $bcv = $quotation->bcv;
-                    $quotation->anticipo = $quotation->anticipo / $quotation->bcv;
+                    $quotation->anticipo = $quotation->anticipo;
                 }
             }else{
                $bcv = null;
@@ -1648,7 +1717,7 @@ class FacturarController extends Controller
     }
 
 
-    public function createfacturar_after($id_quotation,$coin)
+    /*public function createfacturar_after($id_quotation,$coin)
     {
          $quotation = null;
              
@@ -1733,6 +1802,29 @@ class FacturarController extends Controller
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
          
-    }
+    }*/
    
+   
+
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        } else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
+    }
 }

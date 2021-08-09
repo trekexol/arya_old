@@ -35,10 +35,13 @@ class CreateQuotationsTable extends Migration
 
             $table->decimal('bcv',64,2)->nullable()->comment = 'Tasa de cambio a bolivares del banco central de venezuela';
 
+            $table->decimal('retencion_iva',64,2)->nullable();
+            $table->decimal('retencion_islr',64,2)->nullable();
             $table->decimal('base_imponible',64,2)->nullable();
             $table->decimal('amount',64,2)->nullable();
             $table->decimal('amount_iva',64,2)->nullable();
             $table->decimal('amount_with_iva',64,2)->nullable();
+            
 
 
 

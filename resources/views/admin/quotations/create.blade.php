@@ -269,7 +269,11 @@
                                     </div>
                                    
                                     <div class="form-group col-md-1">
-                                        <button type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
+                                        @if (isset($inventory))
+                                            <button type="submit" title="Agregar"><i class="fa fa-plus"></i></button>  
+                                        
+                                        @endif
+                                        
                                     </div>
                                 </div>    
                         </form>      

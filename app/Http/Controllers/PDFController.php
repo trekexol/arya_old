@@ -48,44 +48,14 @@ class PDFController extends Controller
 
 
                  $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
-                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
-                                                            ->where('quotation_products.id_quotation',$quotation->id)
-                                                            ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
-                                                            'quotation_products.amount as amount_quotation')
-                                                            ->get(); 
+                                                                ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                                ->where('quotation_products.id_quotation',$quotation->id)
+                                                                ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
+                                                                'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva_quotation'
+                                                                ,'quotation_products.retiene_islr as retiene_islr_quotation')
+                                                                ->get(); 
 
             
-                $total= 0;
-                $base_imponible= 0;
-                $ventas_exentas= 0;
-                foreach($inventories_quotations as $var){
-                    //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-
-                    $total += ($var->price * $var->amount_quotation) - $percentage;
-                    //----------------------------- 
-
-                    if($var->exento == 0){
-
-                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-
-                        $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
-
-                    }
-                    if($var->exento == 1){
-    
-                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-    
-                        $ventas_exentas += ($var->price * $var->amount_quotation) - $percentage; 
-    
-                    }
-                }
-    
-                 $quotation->sub_total_factura = $total;
-                 $quotation->base_imponible = $base_imponible;
-                 $quotation->ventas_exentas = $ventas_exentas;
-                 
-                
                 if($coin == 'bolivares'){
                     $bcv = null;
                     
@@ -298,47 +268,14 @@ class PDFController extends Controller
                         $var->amount = $var->amount / $var->rate;
                     }
                  }
-
-
+                 
                  $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
-                                                            ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
-                                                            ->where('quotation_products.id_quotation',$quotation->id)
-                                                            ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
-                                                            'quotation_products.amount as amount_quotation')
-                                                            ->get(); 
-
-            
-                $total= 0;
-                $base_imponible= 0;
-                $ventas_exentas= 0;
-                foreach($inventories_quotations as $var){
-                    //Se calcula restandole el porcentaje de descuento (discount)
-                    $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-
-                    $total += ($var->price * $var->amount_quotation) - $percentage;
-                    //----------------------------- 
-
-                    if($var->exento == 0){
-
-                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-
-                        $base_imponible += ($var->price * $var->amount_quotation) - $percentage; 
-
-                    }
-                    if($var->exento == 1){
-    
-                        $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
-    
-                        $ventas_exentas += ($var->price * $var->amount_quotation) - $percentage; 
-    
-                    }
-                }
-    
-               
-    
-                 $quotation->sub_total_factura = $total;
-                 $quotation->base_imponible = $base_imponible;
-                 $quotation->ventas_exentas = $ventas_exentas;
+                                                                ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
+                                                                ->where('quotation_products.id_quotation',$quotation->id)
+                                                                ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
+                                                                'quotation_products.amount as amount_quotation','quotation_products.retiene_iva as retiene_iva_quotation'
+                                                                ,'quotation_products.retiene_islr as retiene_islr_quotation')
+                                                                ->get(); 
                  
                  if($coin == 'bolivares'){
                     $bcv = null;

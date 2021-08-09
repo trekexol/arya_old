@@ -514,11 +514,9 @@ class QuotationController extends Controller
         */
     public function edit($id)
     {
-            $quotation = quotation::find($id);
-        
-            
-        
-            return view('admin.quotations.edit',compact('quotation','segments','subsegments','unitofmeasures'));
+        $quotation = quotation::find($id);
+    
+        return view('admin.quotations.edit',compact('quotation'));
     
     }
     public function editquotationproduct($id,$coin = null)
@@ -677,6 +675,21 @@ class QuotationController extends Controller
         
 
             $value_return = $this->check_amount($var->id_quotation,$var->id_inventory,$var->amount);
+
+
+            $islr = request('islr');
+            if($islr == null){
+                $var->retiene_islr = false;
+            }else{
+                $var->retiene_islr = true;
+            }
+
+            $exento = request('exento');
+            if($exento == null){
+                $var->retiene_iva = false;
+            }else{
+                $var->retiene_iva = true;
+            }
 
             if($value_return != 'exito'){
                 return redirect('quotations/quotationproduct/'.$var->id.'/'.$coin.'/edit')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario!');
