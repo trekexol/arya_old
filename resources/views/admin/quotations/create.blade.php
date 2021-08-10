@@ -343,7 +343,8 @@
                                                     
                                                 ?>
                                                     <td style="text-align: right">
-                                                    <a href="{{ route('quotations.productedit',[$var->quotation_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                        <a href="{{ route('quotations.productedit',[$var->quotation_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                                                        <a href="#" data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -398,6 +399,31 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Seguro desea eliminar?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('daily_listing.print_journalbook') }}"   target="print_popup" onsubmit="window.open('about:blank','print_popup','width=1000,height=800');">
+                @csrf
+            <div class="modal-body">
+                
+            </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-info" title="Buscar">Eliminar</button>  
+                    </div>
+            </form>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('quotation_create')

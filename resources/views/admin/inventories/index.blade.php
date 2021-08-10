@@ -41,10 +41,10 @@
         
         
        
-         
+         <!--
             <div class="col-md-6">
                 <a href="{{ route('inventories.select')}}" class="btn btn-success  float-md-right " role="button" aria-pressed="true">Registrar un Inventario</a>
-              </div>
+              </div>  -->
     </div>
   </div>
 
