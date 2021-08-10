@@ -528,13 +528,13 @@ class QuotationController extends Controller
                 $inventory= Inventory::find($quotation_product->id_inventory);
 
                 $company = Company::find(1);
-                    //Si la taza es automatica
-                    if($company->tiporate_id == 1){
-                        $bcv = $this->search_bcv();
-                    }else{
-                        //si la tasa es fija
-                        $bcv = $company->rate;
-                    }
+                //Si la taza es automatica
+                if($company->tiporate_id == 1){
+                    $bcv = $this->search_bcv();
+                }else{
+                    //si la tasa es fija
+                    $bcv = $company->rate;
+                }
 
                 if(!isset($coin)){
                     $coin = 'bolivares';
@@ -727,9 +727,27 @@ class QuotationController extends Controller
         * @param  int  $id
         * @return \Illuminate\Http\Response
         */
-    public function destroy($id)
+    public function deleteProduct(Request $request)
     {
-        //
+        
+        $product = QuotationProduct::find(request('id_quotation_product_modal')); 
+        $product->delete(); 
+
+        return redirect('/quotations/register/'.request('id_quotation_modal').'/'.request('coin_modal').'')->withDanger('Eliminacion exitosa!!');
+        
+    }
+
+    public function deleteQuotation(Request $request)
+    {
+        
+        $quotation = Quotation::find(request('id_quotation_modal')); 
+
+        QuotationProduct::where('id_quotation',$quotation->id)->delete();
+
+        $quotation->delete(); 
+
+        return redirect('/quotations')->withDanger('Eliminacion exitosa!!');
+        
     }
 
 

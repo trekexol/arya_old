@@ -41,11 +41,12 @@
                             <form>
                                 <input id="id_user" type="hidden" class="form-control @error('id_user') is-invalid @enderror" name="id_user" value="{{ Auth::user()->id }}" required autocomplete="id_user">
                                 <input id="id_client" type="hidden" class="form-control @error('id_client') is-invalid @enderror" name="id_client" value="{{ $client->id ?? $anticipo->clients['id'] ?? -1 }}" required autocomplete="id_client">
+                                <input id="id_provider" type="hidden" class="form-control @error('id_provider') is-invalid @enderror" name="id_provider" value="{{ $provider->id ?? $anticipo->providers['id'] ?? -1 }}" required autocomplete="id_provider">
                                
                                 <div class="form-group row">
                                     <label for="clients" class="col-md-3 col-form-label text-md-right">Cliente</label>
                                     <div class="col-md-5">
-                                        <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? $anticipo->clients['name'] ?? '' }}" readonly required >
+                                        <input id="client" type="text" class="form-control @error('client') is-invalid @enderror" name="client" value="{{ $client->name ?? $anticipo->clients['name'] ?? $provider->razon_social ?? $anticipo->providers['razon_social'] ?? '' }}" readonly required >
             
                                         @error('client')
                                             <span class="invalid-feedback" role="alert">
@@ -54,8 +55,12 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-md-1">
-                                        <a href="{{ route('anticipos.selectclient',$anticipo->id) }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>  
-                                    </div>
+                                        @if (isset($anticipo->clients['name']))
+                                            <a href="{{ route('anticipos.selectclient',$anticipo->id) }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>                                    
+                                        @else
+                                            <a href="{{ route('anticipos.selectprovider',$anticipo->id) }}" title="Seleccionar Cliente"><i class="fa fa-eye"></i></a>
+                                        @endif
+                                      </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="clients" class="col-md-3 col-form-label text-md-right">Cuentas</label>
@@ -89,8 +94,8 @@
                                         <select  id="coin" name="coin" class="form-control" required>
                                             <option value="{{ $anticipo->coin }}">{{ $anticipo->coin }}</option>
                                             <option disabled>------------</option>
-                                            <option  value="Bolivares">Bolivares</option>
-                                            <option  value="Dolares">Dolares</option>
+                                            <option  value="bolivares">Bolivares</option>
+                                            <option  value="dolares">Dolares</option>
                                         </select>
                                     </div>
                                 </div>
@@ -98,7 +103,7 @@
                                     <label for="amount" class="col-md-3 col-form-label text-md-right">Monto</label>
         
                                     <div class="col-md-5">
-                                        <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ $anticipo->amount }}" required autocomplete="amount">
+                                        <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ number_format($anticipo->amount ?? 0, 2, ',', '.') }}" required autocomplete="amount">
         
                                         @error('amount')
                                             <span class="invalid-feedback" role="alert">
@@ -126,7 +131,7 @@
                                     <label for="reference" class="col-md-3 col-form-label text-md-right">Referencia</label>
         
                                     <div class="col-md-5">
-                                        <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ $anticipo->reference ?? old('reference') }}" required autocomplete="reference">
+                                        <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ $anticipo->reference ?? old('reference') }}" autocomplete="reference">
         
                                         @error('reference')
                                             <span class="invalid-feedback" role="alert">
@@ -144,7 +149,11 @@
                                         <button type="submit" class="btn btn-success btn-block"><i class="fa fa-send-o"></i>Actualizar</button>
                                     </div>
                                     <div class="col-sm-2">
-                                        <a href="{{ route('anticipos') }}" name="danger" type="button" class="btn btn-danger btn-block">Cancelar</a>
+                                        @if (isset($anticipo->clients['id']))
+                                            <a href="{{ route('anticipos') }}" name="danger" type="button" class="btn btn-danger btn-block">Cancelar</a>                                 
+                                        @else
+                                            <a href="{{ route('anticipos.index_provider') }}" name="danger" type="button" class="btn btn-danger btn-block">Cancelar</a>                                 
+                                        @endif
                                     </div>
                                 </div>
 
@@ -169,5 +178,28 @@
             
         });
 
+        $("#coin").on('change',function(){
+            var coin = $(this).val();
+
+            var amount = document.getElementById("amount").value;
+            var montoFormat = amount.replace(/[$.]/g,'');
+            var amountFormat = montoFormat.replace(/[,]/g,'.');
+
+            var rate = document.getElementById("rate").value;
+            var rateFormat = rate.replace(/[$.]/g,'');
+            var rateFormat = rateFormat.replace(/[,]/g,'.');
+
+            if(coin != 'bolivares'){
+
+                var total = amountFormat / rateFormat;
+
+                document.getElementById("amount").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;
+            }else{
+                var total = amountFormat * rateFormat;
+
+                document.getElementById("amount").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;
+           
+            }
+        });
     </script>
 @endsection

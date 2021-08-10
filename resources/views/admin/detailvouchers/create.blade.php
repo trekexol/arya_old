@@ -147,23 +147,23 @@ $suma_haber = 0;
                                     
                                     <div class="form-group col-md-1">
                                         <label for="description" >Cuenta</label>
-                                        <input id="code_one" type="text" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required autocomplete="code_one"  autofocus>
+                                        <input id="code_one" type="text" class="form-control @error('code_one') is-invalid @enderror" name="code_one" value="{{ session()->get('detail')->code_one ?? $account->code_one ?? old('code_one') }}" required readonly autocomplete="code_one"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_two" type="text" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required autocomplete="code_two"  autofocus>
+                                        <input id="code_two" type="text" class="form-control @error('code_two') is-invalid @enderror" name="code_two" value="{{ session()->get('detail')->code_two ?? $account->code_two ?? old('code_two') }}" required readonly autocomplete="code_two"  autofocus>
                                     </div> 
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                    <input id="code_three" type="text" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required autocomplete="code_three"  autofocus>
+                                    <input id="code_three" type="text" class="form-control @error('code_three') is-invalid @enderror" name="code_three" value="{{ session()->get('detail')->code_three ?? $account->code_three ?? old('code_three') }}" required readonly autocomplete="code_three"  autofocus>
                                     </div>   
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_four" type="text" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required autocomplete="code_four"  autofocus>
+                                        <input id="code_four" type="text" class="form-control @error('code_four') is-invalid @enderror" name="code_four" value="{{ session()->get('detail')->code_four ?? $account->code_four ?? old('code_four') }}" required readonly autocomplete="code_four"  autofocus>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="description" >.</label>
-                                        <input id="code_five" type="text" class="form-control @error('code_five') is-invalid @enderror" name="code_five" value="{{ session()->get('detail')->code_five ?? $account->code_five ?? old('code_five') }}" required autocomplete="code_five"  autofocus>
+                                        <input id="code_five" type="text" class="form-control @error('code_five') is-invalid @enderror" name="code_five" value="{{ session()->get('detail')->code_five ?? $account->code_five ?? old('code_five') }}" required readonly autocomplete="code_five"  autofocus>
                                     </div>
                                     <div class="form-group ">
                                         <a href="{{ route('detailvouchers.selectaccount',[$coin,$header->id ?? -1,'detail']) }}" title="Editar"><i class="fa fa-eye"></i></a>  

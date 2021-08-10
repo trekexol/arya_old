@@ -344,7 +344,7 @@
                                                 ?>
                                                     <td style="text-align: right">
                                                         <a href="{{ route('quotations.productedit',[$var->quotation_products_id,$coin]) }}" title="Editar"><i class="fa fa-edit"></i></a>  
-                                                        <a href="#" data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
+                                                        <a href="#" class="delete" data-id={{$var->quotation_products_id}} data-description={{$var->description}} data-id-quotation={{$quotation->id}} data-coin={{$coin}} data-toggle="modal" data-target="#deleteModal" title="Eliminar"><i class="fa fa-trash text-danger"></i></a>  
                                                     </td>
                                             
                                                 </tr>
@@ -399,31 +399,36 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Delete Warning Modal -->
+<div class="modal modal-danger fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Seguro desea eliminar?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{ route('daily_listing.print_journalbook') }}"   target="print_popup" onsubmit="window.open('about:blank','print_popup','width=1000,height=800');">
-                @csrf
             <div class="modal-body">
+            <form action="{{ route('quotations.deleteProduct') }}" method="post">
+                @csrf
+                @method('DELETE')
+                <input id="id_quotation_product_modal" type="hidden" class="form-control @error('id_quotation_product_modal') is-invalid @enderror" name="id_quotation_product_modal" readonly required autocomplete="id_quotation_product_modal">
+                <input id="id_quotation_modal" type="hidden" class="form-control @error('id_quotation_modal') is-invalid @enderror" name="id_quotation_modal" readonly required autocomplete="id_quotation_modal">
+                <input id="coin_modal" type="hidden" class="form-control @error('coin_modal') is-invalid @enderror" name="coin_modal" readonly required autocomplete="coin_modal">
+                       
+                <h5 class="text-center">Seguro que desea eliminar?</h5>
                 
             </div>
-                <div class="modal-footer">
-                    <div class="form-group col-md-2">
-                        <button type="submit" class="btn btn-info" title="Buscar">Eliminar</button>  
-                    </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </div>
             </form>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                
-            </div>
         </div>
     </div>
+</div>
+
 @endsection
 
 @section('quotation_create')
@@ -456,7 +461,18 @@
             $("#cost").mask('000.000.000.000.000,00', { reverse: true });
             
         });
-       
+
+        $(document).on('click','.delete',function(){
+         let id = $(this).attr('data-id');
+         let id_quotation = $(this).attr('data-id-quotation');
+         let coin = $(this).attr('data-coin');
+         let description = $(this).attr('data-description');
+
+         $('#id_quotation_product_modal').val(id);
+         $('#id_quotation_modal').val(id_quotation);
+         $('#coin_modal').val(coin);
+         $('#description_modal').val(description);
+        });
     </script> 
 
 @endsection         

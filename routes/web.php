@@ -433,6 +433,9 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::get('facturarafter/{id_quotation}/{coin}','FacturarController@createfacturar_after')->name('quotations.createfacturar_after');
 
     Route::get('refreshrate/{id_quotation}/{coin}/{rate}','QuotationController@refreshrate')->name('quotations.refreshrate');
+
+    Route::delete('deleteproduct','QuotationController@deleteProduct')->name('quotations.deleteProduct');
+    Route::delete('deletequotation','QuotationController@deleteQuotation')->name('quotations.deleteQuotation');
    
 });
 
@@ -537,7 +540,7 @@ Route::group(["prefix"=>'anticipos'],function(){
     Route::get('register','AnticipoController@create')->name('anticipos.create');
     Route::post('store', 'AnticipoController@store')->name('anticipos.store');
    
-    Route::get('edit/{id}/{id_client?}','AnticipoController@edit')->name('anticipos.edit');
+    Route::get('edit/{id}/{id_client?}/{id_provider?}','AnticipoController@edit')->name('anticipos.edit');
     Route::delete('{id}/delete','AnticipoController@destroy')->name('anticipos.delete');
     Route::patch('{id}/update','AnticipoController@update')->name('anticipos.update');
 

@@ -83,8 +83,9 @@
                 <th class="text-center">Referencia</th>
                 <th class="text-center">Monto</th>
                 <th class="text-center">Moneda</th>
-               <th class="text-center"></th>
-              
+                @if (isset($control) && ($control == 'index'))
+                    <th class="text-center"></th>
+                @endif
             </tr>
             </thead>
             
@@ -98,17 +99,21 @@
                         }
                     ?>
                     <tr>
-                    <td class="text-center">{{$anticipo->clients['name']}}</td>
-                    <td class="text-center">{{$anticipo->accounts['description']}}</td>
-                    <td class="text-center">{{$anticipo->date}}</td>
-                    <td class="text-center">{{$anticipo->reference}}</td>
-                    <td class="text-right">{{number_format($anticipo->amount, 2, ',', '.')}}</td>
-                    <td class="text-center">{{$anticipo->coin}}</td>
+                    <td class="text-center">{{$anticipo->clients['name'] ?? ''}}</td>
+                    <td class="text-center">{{$anticipo->accounts['description'] ?? ''}}</td>
+                    <td class="text-center">{{$anticipo->date ?? ''}}</td>
+                    <td class="text-center">{{$anticipo->reference ?? ''}}</td>
+                    <td class="text-right">{{number_format($anticipo->amount ?? 0, 2, ',', '.')}}</td>
+                    <td class="text-center">{{$anticipo->coin ?? ''}}</td>
                    
                     @if (Auth::user()->role_id  == '1')
-                        <td>
-                            <a href="{{ route('anticipos.edit',$anticipo->id) }}"  title="Editar"><i class="fa fa-edit"></i></a>
-                        </td>
+                        
+                        @if (isset($control) && ($control == 'index'))
+                            <td>
+                                <a href="{{ route('anticipos.edit',$anticipo->id) }}"  title="Editar"><i class="fa fa-edit"></i></a>
+                            </td>
+                        @endif
+                        
                     @endif
                     </tr>
                     @endforeach

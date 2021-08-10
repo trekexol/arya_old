@@ -84,39 +84,22 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="exento" class="col-md-2 col-form-label text-md-right">Exento</label>
+                            <label for="gridCheck" class="col-md-2 col-form-label text-md-right">Exento</label>
                             <div class="col-md-1">
-                                @if (isset($inventory))
-                                    @if(($inventory->products['exento'] == 1))
-                                        <input class="form-check-input" type="checkbox" name="exento" checked id="gridCheck">
-                                    @else
-                                        <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
-                                    @endif
+                                @if(($expense_detail->exento == 1))
+                                    <input class="form-check-input" type="checkbox" name="exento" checked id="gridCheck">
                                 @else
-                                    @if(($expense_detail->exento == 1))
-                                        <input class="form-check-input" type="checkbox" name="exento" checked id="gridCheck">
-                                    @else
-                                        <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
-                                    @endif
+                                    <input class="form-check-input" type="checkbox" name="exento" id="gridCheck">
                                 @endif
                             </div>  
-                            <label for="islr" class="col-md-1 col-form-label text-md-right">ISLR</label>
+                            <label for="gridCheck2" class="col-md-1 col-form-label text-md-right">ISLR</label>
                             <div class="col-md-1">
-                                @if (isset($inventory))
-                                    @if(($inventory->products['islr'] == 1))
-                                        <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck">
-                                    @else
-                                        <input class="form-check-input" type="checkbox" name="islr" id="gridCheck">
-                                    @endif
+                                @if(($expense_detail->islr == 1))
+                                    <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck2">
                                 @else
-                                    @if(($expense_detail->islr == 1))
-                                        <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck">
-                                    @else
-                                        <input class="form-check-input" type="checkbox" name="islr" id="gridCheck">
-                                    @endif
+                                    <input class="form-check-input" type="checkbox" name="islr" id="gridCheck2">
                                 @endif
                             </div>  
-                               
                         </div>
                             
                                 <br>

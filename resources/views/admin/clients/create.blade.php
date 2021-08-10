@@ -260,7 +260,7 @@
     }
 
         $(document).ready(function () {
-            $("#cedula_rif").mask('000.000.000', { reverse: true });
+            $("#cedula_rif").mask('00000000000000', { reverse: true });
             
         });
         $(document).ready(function () {

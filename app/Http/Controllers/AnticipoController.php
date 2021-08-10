@@ -29,14 +29,15 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::whereIn('status',[1,'M'])->orderBy('id','desc')->get();
+        $anticipos = Anticipo::whereIn('status',[1,'M'])->where('id_client','<>',null)->orderBy('id','desc')->get();
         
+        $control = 'index';
 
         }elseif($users_role == '2'){
            return view('admin.index');
        }
        
-       return view('admin.anticipos.index',compact('anticipos'));
+       return view('admin.anticipos.index',compact('anticipos','control'));
    }
 
    public function index_provider()
@@ -79,12 +80,14 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::where('status','C')->orderBy('id','desc')->get();
+        $anticipos = Anticipo::where('status','C')->where('id_client','<>',null)->orderBy('id','desc')->get();
+        $control = 'historic';
+
         }elseif($users_role == '2'){
            return view('admin.index');
        }
        
-       return view('admin.anticipos.index',compact('anticipos'));
+       return view('admin.anticipos.index',compact('anticipos','control'));
    }
 
    /**
@@ -407,17 +410,23 @@ class AnticipoController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function edit($id,$id_client = null)
+   public function edit($id,$id_client = null,$id_provider = null)
    {
         $anticipo = Anticipo::find($id);
 
-        if(isset($id_client)){
+        if(isset($id_client) && ($id_client != -1)){
             $client = Client::find($id_client);
         }else{
             $client = null;
         }
-        
 
+        if(isset($id_provider) && ($id_provider != -1)){
+            $provider = Provider::find($id_provider);
+        }else{
+            $provider = null;
+        }
+        
+        
         $accounts = DB::table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three',1)
@@ -436,13 +445,13 @@ class AnticipoController extends Controller
             $bcv = $company->rate;
         }
 
-        if($anticipo->coin != 'Bolivares'){
+        if($anticipo->coin != 'bolivares'){
             
             $anticipo->amount = $anticipo->amount / $anticipo->rate;
             
         }
       
-        return view('admin.anticipos.edit',compact('anticipo','accounts','datenow','bcv','client'));
+        return view('admin.anticipos.edit',compact('anticipo','accounts','datenow','bcv','client','provider'));
   
    }
 
@@ -458,7 +467,6 @@ class AnticipoController extends Controller
 
         $data = request()->validate([
                 
-            
             'date_begin'         =>'required',
             'id_client'         =>'required',
             'id_account'         =>'required',
@@ -477,19 +485,27 @@ class AnticipoController extends Controller
 
        
         $var->date = request('date_begin');
-        $var->id_client = request('id_client');
+
+        if(request('id_client') != -1){
+            $var->id_client = request('id_client');
+        }
+        if(request('id_provider') != -1){
+            $var->id_provider = request('id_provider');
+        }
+        
+        
         $var->id_account = request('id_account');
         $var->id_user = request('id_user');
         $var->coin = request('coin');
 
-        if($var->id_client == -1){
-            return redirect('/anticipos/edit/'.$id.'')->withDanger('Debe Seleccionar un Cliente!');
+        if((empty($var->id_client)) && (empty($var->id_provider))){
+            return redirect('/anticipos/edit/'.$id.'')->withDanger('Debe Seleccionar un Cliente o un Proveedor!');
         }
         
         $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
         $valor_sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
 
-        if($var->coin != 'Bolivares'){
+        if($var->coin != 'bolivares'){
             $var->amount = $valor_sin_formato_amount * $valor_sin_formato_rate; 
             $var->rate = $valor_sin_formato_rate;
         }else{
@@ -517,12 +533,15 @@ class AnticipoController extends Controller
                         ->update([ 'd.haber' => $var->amount , 'd.tasa' => $var->rate]);
 
         
-
-        //$header_voucher->date = $datenow;
        
         $var->save();
 
-        return redirect('/anticipos')->withSuccess('Actualizacion Exitosa!');
+        if(isset($var->id_client)){
+            return redirect('/anticipos')->withSuccess('Actualizacion Exitosa!');
+        }else{
+            return redirect('/anticipos/indexprovider')->withSuccess('Actualizacion Exitosa!');
+        }
+        
     }
 
 

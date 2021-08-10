@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Anticipo;
+use App\Company;
 
 class ExpensesAndPurchaseController extends Controller
 {
@@ -94,9 +95,6 @@ class ExpensesAndPurchaseController extends Controller
     
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');  
-        
-       
-        
 
         return view('admin.expensesandpurchases.createexpense',compact('datenow','provider'));
     }
@@ -130,7 +128,14 @@ class ExpensesAndPurchaseController extends Controller
             
         $branches = Branch::orderBy('description','desc')->get();
 
-        $bcv = $this->search_bcv();
+        $company = Company::find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
@@ -425,7 +430,17 @@ class ExpensesAndPurchaseController extends Controller
         $var->date = request('date-begin');
 
         $var->coin = 'bolivares';
-        $var->rate = $this->search_bcv();
+
+        $company = Company::find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
+
+        $var->rate = $bcv;
 
         $var->status =  "1";
     
@@ -1399,15 +1414,8 @@ class ExpensesAndPurchaseController extends Controller
                 $expense->amount_with_iva =  $sin_formato_amount_with_iva;
                 $iva_percentage = request('iva_form');
 
-                
-            
-                
-
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');   
-
-                
-
 
                 if(($expense->status != 'C') && ($expense->status != 'P')){
                     

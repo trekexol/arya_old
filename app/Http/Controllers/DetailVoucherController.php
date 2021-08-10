@@ -58,6 +58,7 @@ class DetailVoucherController extends Controller
         $detailvouchers = null;
         $account = null;
         $detailvouchers_last = null;
+        
         if(isset($id_header)){
             $header = HeaderVoucher::find($id_header);
             $detailvouchers = DetailVoucher::where('id_header_voucher',$id_header)->get();
@@ -99,6 +100,9 @@ class DetailVoucherController extends Controller
             $header = HeaderVoucher::find($id_header);
             $accounts = $this->calculation($coin);
 
+            if($id_detail == 'detail'){
+                $id_detail = null;
+            }
             
             return view('admin.detailvouchers.selectaccount',compact('coin','accounts','header','id_detail'));
             

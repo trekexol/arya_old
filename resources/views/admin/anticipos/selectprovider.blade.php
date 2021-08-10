@@ -46,7 +46,7 @@
                             <tr>
                                 <td>
                                     @if (isset($id_anticipo))
-                                        <a href="{{ route('anticipos.edit',[$id_anticipo,$provider->id]) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
+                                        <a href="{{ route('anticipos.edit',[$id_anticipo,-1,$provider->id]) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
                                     @else
                                         <a href="{{ route('anticipos.create_provider',$provider->id) }}"  title="Seleccionar"><i class="fa fa-check"></i></a>
                                     @endif

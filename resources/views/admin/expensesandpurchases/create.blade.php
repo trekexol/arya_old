@@ -29,7 +29,7 @@
 
                         
                         <div class="form-group row">
-                            <label for="providers" class="col-md-2 col-form-label text-md-right">Proveedor</label>
+                            <label for="providers" class="col-md-2 col-form-label text-md-right">Proveedor:</label>
                             <div class="col-md-3">
                                 <input id="provider" type="text" class="form-control @error('provider') is-invalid @enderror" name="provider" value="{{ $provider->razon_social ?? '' }}" readonly required autocomplete="provider">
     
@@ -39,10 +39,8 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-group col-md-1">
-                                <a href="{{ route('expensesandpurchases.selectprovider') }}" title="Seleccionar Proveedor"><i class="fa fa-eye"></i></a>  
-                            </div>
-                            <label for="date-begin" class="col-md-2 col-form-label text-md-right">Fecha de Factura</label>
+                           
+                            <label for="date-begin" class="col-md-3 col-form-label text-md-right">Fecha de Factura:</label>
                             <div class="col-md-3">
                                 <input id="date-begin" type="date" class="form-control @error('date-begin') is-invalid @enderror" name="date-begin" value="{{ $datenow }}" readonly autocomplete="date-begin">
     
@@ -119,7 +117,7 @@
                             <input id="coin_hidde" type="hidden" class="form-control @error('coin_hidde') is-invalid @enderror" name="coin_hidde" value="{{ $coin ?? 'bolivares'}}" readonly required autocomplete="coin_hidde">
                             
                                 <div class="form-group row">
-                                    <label for="type" class="col-md-2 col-form-label text-md-right">Tipo de Compra</label>
+                                    <label for="type" class="col-md-2 col-form-label text-md-right">Tipo de Compra:</label>
                                 
                                     <div class="col-md-4">
                                         <select id="type_form"  name="type_form" class="form-control" required>
@@ -171,7 +169,7 @@
                                     
                                 </div>
                                 <div class="form-group row">
-                                    <label for="account" class="col-md-2 col-form-label text-md-right">Cargar a Cuenta</label>
+                                    <label for="account" class="col-md-2 col-form-label text-md-right">Cargar a Cuenta:</label>
                                 
                                     <div class="col-md-4">
                                         <select  id="account"  name="Account" class="form-control" required>
@@ -253,19 +251,19 @@
                                     <div class="form-group col-md-1">
                                         @if (empty($inventory))
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="islr" id="gridCheck">
-                                                <label class="form-check-label" for="gridCheck">
+                                                <input class="form-check-input" type="checkbox" name="islr" id="gridCheck2">
+                                                <label class="form-check-label" for="gridCheck2">
                                                     ISLR
                                                 </label>
                                             </div>
                                         @else  
                                             <div class="form-check">
                                                 @if($inventory->products['islr'] == 1)
-                                                    <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="islr" checked id="gridCheck2">
                                                 @else
-                                                    <input class="form-check-input" type="checkbox" name="islr" id="gridCheck">
+                                                    <input class="form-check-input" type="checkbox" name="islr" id="gridCheck2">
                                                 @endif
-                                                <label class="form-check-label" for="gridCheck">
+                                                <label class="form-check-label" for="gridCheck2">
                                                     ISLR
                                                 </label>
                                             </div>
