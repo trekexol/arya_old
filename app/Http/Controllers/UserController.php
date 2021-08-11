@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
-
-//use App\Role;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -147,4 +146,6 @@ class UserController extends Controller
         $user->delete();
         return redirect('users')->withDelete('Registro Eliminado Exitoso!');
     }
+
+    
 }

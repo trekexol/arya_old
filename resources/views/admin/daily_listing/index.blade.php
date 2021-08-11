@@ -15,12 +15,10 @@
     </div>
     <div class="row py-lg-2">
         <div class="col-sm-4">
-            <a class="btn btn-light2" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-eye" ></i>
+            <a class="btn btn-light2" href="#" data-toggle="modal" data-target="#libroModal"><i class="fas fa-eye" ></i>
                 &nbsp Imprimir Libro Diario por Cuentas
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
+            
         </div>
         <div class="col-sm-3">
             <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-eye" ></i>
@@ -168,7 +166,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="libroModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">

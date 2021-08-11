@@ -42,8 +42,8 @@
                 <th class="text-center">SKU</th>
                 <th class="text-center">Descripción</th>
                 <th class="text-center">Cantidad</th>
-                <th class="text-center">Costo Bs</th>
-                <th class="text-center">Costo Moneda</th>
+                <th class="text-center">Precio Bs</th>
+                <th class="text-center">Precio Moneda</th>
                 <th class="text-center">Moneda</th>
                 <th class="text-center">Foto del Producto</th>
                 

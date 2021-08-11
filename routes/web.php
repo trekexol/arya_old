@@ -41,6 +41,7 @@ Route::group(["prefix"=>'users'],function(){
     Route::delete('{id}/delete','UserController@destroy')->name('users.delete');
     Route::patch('{id}/update','UserController@update')->name('users.update');
 
+
 });
 
 /*MODULO DE FACTURACION
@@ -356,6 +357,9 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::get('movementheader/{id}/{type}/{id_account}','AccountController@header_movements')->name('accounts.header_movements');
 
     Route::get('yearend','AccountController@year_end')->name('accounts.year_end');
+
+    Route::get('indexpreviousexercise','AccountController@index_previous_exercise')->name('accounts.index_previous_exercise');
+
 });
 
 Route::group(["prefix"=>'headervouchers'],function(){
@@ -519,6 +523,8 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::get('expense/{id_expense}/{coin}','PDFController@imprimirExpense')->name('pdf.expense');
 
     Route::get('expensemedia/{id_expense}/{coin}','PDFController@imprimirExpenseMedia')->name('pdf.expense_media');
+
+    Route::get('previousexercise/{date_begin}/{date_end}','PDFController@print_previousexercise')->name('pdf.previousexercise');
  });
 
 

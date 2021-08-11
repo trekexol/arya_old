@@ -480,7 +480,7 @@ class FacturarController extends Controller
 
         $coin = request('coin');
 
-        $price_cost_total = request('price_cost_total');// * $bcv;
+        $price_cost_total = request('price_cost_total');
 
         $anticipo = request('anticipo_form');
         $retencion_iva = request('total_retiene_iva');

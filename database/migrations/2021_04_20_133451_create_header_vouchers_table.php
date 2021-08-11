@@ -16,11 +16,12 @@ class CreateHeaderVouchersTable extends Migration
         Schema::create('header_vouchers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_anticipo')->nullable();
-            $table->integer('reference')->nullable();
+            $table->unsignedBigInteger('id_payment_order')->nullable();
+
+            $table->string('reference',60)->nullable();
             $table->string('description',150);
             $table->date('date');
 
-            $table->string('setting',15)->nullable();
             $table->string('centro_cos',50)->nullable();
             $table->string('status',1);
 

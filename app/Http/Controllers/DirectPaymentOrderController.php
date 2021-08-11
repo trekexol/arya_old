@@ -7,7 +7,10 @@ use App\BankMovement;
 use App\BankVoucher;
 use App\Branch;
 use App\Client;
+use App\Company;
 use App\DetailVoucher;
+use App\HeaderVoucher;
+use App\PaymentOrder;
 use App\Provider;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,9 +21,10 @@ class DirectPaymentOrderController extends Controller
     public function createretirement()
    {
         $accounts = DB::table('accounts')->where('code_one', 1)
-                                        ->where('code_four','<>',0)
                                         ->where('code_two', 1)
-                                        ->whereIn('code_three', [1,2])
+                                        ->where('code_three', 1)
+                                        ->whereIn('code_four', [1,2])
+                                        ->where('code_five','<>',0)
                                         ->orderBY('description','asc')->pluck('description','id')->toArray();
 
 
@@ -29,14 +33,27 @@ class DirectPaymentOrderController extends Controller
             $contrapartidas     = Account::where('code_one', '<>',0)
                                             ->where('code_two', '<>',0)
                                             ->where('code_three', '<>',0)
-                                            ->where('code_four', '=',0)
+                                            ->where('code_four', '<>',0)
+                                            ->where('code_five', '=',0)
                                         ->orderBY('description','asc')->pluck('description','id')->toArray();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
 
             $branches = Branch::orderBY('description','asc')->get();
 
-           return view('admin.directpaymentorder.createretirement',compact('accounts','datenow','contrapartidas','branches'));
+            $coin = 'bolivares';
+
+            /*Revisa si la tasa de la empresa es automatica o fija*/
+            $company = Company::find(1);
+            //Si la taza es automatica
+            if($company->tiporate_id == 1){
+                $bcv = $this->search_bcv();
+            }else{
+                //si la tasa es fija
+                $bcv = $company->rate;
+            }
+
+           return view('admin.directpaymentorder.createretirement',compact('accounts','datenow','contrapartidas','branches','bcv','coin'));
 
         }else{
             return redirect('/directpaymentorders')->withDanger('No hay Cuentas!');
@@ -64,60 +81,95 @@ class DirectPaymentOrderController extends Controller
         
         
         ]);
-        
+        //dd($request);
         $account = request('account');
         $contrapartida = request('Subcontrapartida');
+        $coin = request('coin');
 
         if($account != $contrapartida){
 
             $amount = str_replace(',', '.', str_replace('.', '', request('amount')));
+            $rate = str_replace(',', '.', str_replace('.', '', request('rate')));
+
+            if($coin != 'bolivares'){
+                $amount = $amount * $rate;
+            }
+
+            if($rate == 0){
+                return redirect('/directpaymentorders')->withDanger('La tasa no puede ser cero!');
+            }
 
             $check_amount = $this->check_amount($account);
 
             if($check_amount->saldo_actual >= $amount){
-                $var = new BankVoucher();
 
-                /*$var->id_account = $contrapartida;
-            
-                $var->id_counterpart = $account;*/
-            
+                $payment_order = new PaymentOrder();
+
                 if(request('beneficiario') == 1){
-                    $var->id_client = request('Subbeneficiario');
+                    $payment_order->id_client = request('Subbeneficiario');
                     
                 }else{
-                    $var->id_provider = request('Subbeneficiario');
+                    $payment_order->id_provider = request('Subbeneficiario');
                 }
+                $payment_order->id_user = request('user_id');
+                if(request('branch') != 'ninguno'){
+                    $payment_order->id_branch = request('branch');
+                }
+                $payment_order->date = request('date');
+                $payment_order->reference = request('reference');
+                $payment_order->description = request('description');
+                $payment_order->amount = $amount;
+                $payment_order->rate = $rate;
+                $payment_order->coin = $coin;
 
-                $var->id_user = request('user_id');
-                $var->description = request('description');
-                $var->type_movement = request('type_movement');
-                $var->date = request('date');
-                $var->reference = request('reference');
-                $var->status =  1;
+                $payment_order->save();
+
+                $header = new HeaderVoucher();
+
+                $header->description = "Orden de Pago ". request('description');
+                $header->date = request('date');
+                $header->reference = request('reference');
+                $header->status =  1;
             
-                $var->save();
+                $header->save();
 
 
                 $movement = new DetailVoucher();
 
+                $movement->id_header_voucher = $header->id;
                 $movement->id_account = $account;
-                $movement->id_bank_voucher = $var->id;
                 $movement->user_id = request('user_id');
                 $movement->debe = 0;
                 $movement->haber = $amount;
+                $movement->tasa = $rate;
                 $movement->status = "C";
             
                 $movement->save();
+                
+                $account = Account::findOrFail($account);
+
+                if($account->status != "M"){
+                    $account->status = "M";
+                    $account->save();
+                }
 
                 $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->id_header_voucher = $header->id;
                 $movement_counterpart->id_account = $contrapartida;
-                $movement_counterpart->id_bank_voucher = $var->id;
                 $movement_counterpart->user_id = request('user_id');
                 $movement_counterpart->debe = $amount;
                 $movement_counterpart->haber = 0;
+                $movement_counterpart->tasa = $rate;
                 $movement_counterpart->status = "C";
 
                 $movement_counterpart->save();
+
+                $account = Account::findOrFail($contrapartida);
+
+                if($account->status != "M"){
+                    $account->status = "M";
+                    $account->save();
+                }
 
                 return redirect('/directpaymentorders')->withSuccess('Registro Exitoso!');
 
@@ -293,6 +345,29 @@ class DirectPaymentOrderController extends Controller
         }
         
     }
+    
+    public function search_bcv()
+    {
+        /*Buscar el indice bcv*/
+        $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
+        $pageDocument = @file_get_contents($urlToGet);
+        preg_match_all('|<div class="col-sm-6 col-xs-6"><strong> (.*?) </strong> </div>|s', $pageDocument, $cap);
+
+        if ($cap[0] == array()){ // VALIDAR Concidencia
+            $titulo = '0,00';
+        }else {
+            $titulo = $cap[1][2];
+        }
+
+        $bcv_con_formato = $titulo;
+        $bcv = str_replace(',', '.', str_replace('.', '',$bcv_con_formato));
+
+
+        /*-------------------------- */
+        return $bcv;
+
+    }
+
 
     public function listcontrapartida(Request $request, $id_var = null){
         //validar si la peticion es asincrona
@@ -303,7 +378,8 @@ class DirectPaymentOrderController extends Controller
                 $subcontrapartidas = Account::select('id','description')->where('code_one',$account->code_one)
                                                                     ->where('code_two',$account->code_two)
                                                                     ->where('code_three',$account->code_three)
-                                                                    ->where('code_four','<>',0)
+                                                                    ->where('code_four',$account->code_four)
+                                                                    ->where('code_five','<>',0)
                                                                     ->orderBy('description','asc')->get();
                     
                 return response()->json($subcontrapartidas,200);

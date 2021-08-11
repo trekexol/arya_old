@@ -29,9 +29,7 @@
                     <form method="POST" action="{{ route('directpaymentorders.store') }}" enctype="multipart/form-data">
                         @csrf
                        <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
-                        <input id="type_movement" type="hidden" class="form-control @error('type_movement') is-invalid @enderror" name="type_movement" value="RE" required autocomplete="type_movement" autofocus>
                         
-                       
                         <div class="form-group row">
                             @if (isset($accounts))
                             <label for="account" class="col-md-2 col-form-label text-md-right">Retirar desde:</label>
@@ -130,23 +128,6 @@
                             </div>
                         </div>  
                         <div class="form-group row">
-                            
-                            <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Retiro:</label>
-
-                            <div class="col-md-4">
-                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
-
-                                @error('amount')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            
-                        </div>
-                       
-                        
-                        <div class="form-group row">
                             @if (isset($contrapartidas))      
                             <label for="contrapartida" class="col-md-2 col-form-label text-md-right">Contrapartida:</label>
                         
@@ -166,33 +147,71 @@
                                     </span>
                                 @endif
                             </div>
-                       @endif
-                          <div class="col-md-4">
-                                <select  id="subcontrapartida"  name="Subcontrapartida" class="form-control" required>
-                                    <option value="">Seleccionar</option>
-                                </select>
-
-                                @if ($errors->has('subcontrapartida_id'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('subcontrapartida_id') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>  
-
-                        <div class="form-group row">
-                            @if (isset($branches))
-                                <label for="branch" class="col-md-2 col-form-label text-md-right">Centro de Costo:</label>
-                                <div class="col-md-4">
-                                    <select id="branch"  name="branch" class="form-control" >
-                                        <option value="Ninguno">Ninguno</option>
-                                        @foreach($branches as $var)
-                                            <option value="{{ $var->id }}">{{ $var->description}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             @endif
+                            <div class="col-md-4">
+                                    <select  id="subcontrapartida"  name="Subcontrapartida" class="form-control" required>
+                                        <option value="">Seleccionar</option>
+                                    </select>
+
+                                    @if ($errors->has('subcontrapartida_id'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('subcontrapartida_id') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                         </div>  
+                        <div class="form-group row">
+                            
+                            <label for="amount" class="col-md-2 col-form-label text-md-right">Monto del Retiro:</label>
+
+                            <div class="col-md-4">
+                                <input id="amount" type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" value="{{ old('amount') }}" required autocomplete="amount">
+
+                                @error('amount')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="rate" class="col-md-2 col-form-label text-md-right">Tasa:</label>
+
+                            <div class="col-md-4">
+                                <input id="rate" type="text" class="form-control @error('rate') is-invalid @enderror" name="rate" value="{{ number_format($bcv, 2, ',', '.')}}"  autocomplete="rate">
+
+                                @error('rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                       
+                        <div class="form-group row">
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
+                            </div>
+                            @if (isset($branches))
+                            <label for="branch" class="col-md-2 offset-md-2 col-form-label text-md-right">Centro de Costo:</label>
+                            <div class="col-md-2">
+                                <select id="branch"  name="branch" class="form-control" >
+                                    <option value="ninguno">Ninguno</option>
+                                    @foreach($branches as $var)
+                                        <option value="{{ $var->id }}">{{ $var->description}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endif
+                        </div>
+                       
                         <br>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -212,8 +231,36 @@
     
     <script>
         $(document).ready(function () {
-            $("#amount").mask('00.000.000.000.000,00', { reverse: true });
+            $("#amount").mask('000.000.000.000.000.000.000,00', { reverse: true });
             
+        });
+        $(document).ready(function () {
+            $("#rate").mask('000.000.000.000.000.000.000,00', { reverse: true });
+            
+        });
+
+        $("#coin").on('change',function(){
+            var coin = $(this).val();
+
+            var amount = document.getElementById("amount").value;
+            var montoFormat = amount.replace(/[$.]/g,'');
+            var amountFormat = montoFormat.replace(/[,]/g,'.');
+
+            var rate = document.getElementById("rate").value;
+            var rateFormat = rate.replace(/[$.]/g,'');
+            var rateFormat = rateFormat.replace(/[,]/g,'.');
+
+            if(coin != 'bolivares'){
+
+                var total = amountFormat / rateFormat;
+
+                document.getElementById("amount").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;
+            }else{
+                var total = amountFormat * rateFormat;
+
+                document.getElementById("amount").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});;
+           
+            }
         });
     </script> 
 

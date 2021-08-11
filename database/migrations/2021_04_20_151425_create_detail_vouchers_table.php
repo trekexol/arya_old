@@ -26,7 +26,7 @@ class CreateDetailVouchersTable extends Migration
             $table->decimal('haber',64,2);
 
             $table->string('status',1);
-            $table->string('date_end')->nullable();
+            $table->date('date_end')->nullable();
 
 
             $table->foreign('id_account')->references('id')->on('accounts');

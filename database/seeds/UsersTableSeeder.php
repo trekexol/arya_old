@@ -30,5 +30,14 @@ class UsersTableSeeder extends Seeder
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
+        DB::/*connection('logins')->*/table('users')->insert([
+            'name' => 'Demo',
+            'email' => 'demo@gmail.com',
+            'password' => Hash::make('demo'),
+            'role_id' => '1',
+            'status' => '1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
     }
 }

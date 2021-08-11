@@ -132,7 +132,7 @@
 <?php
   $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
 
-  $total = $quotation->sub_total_factura + $iva;
+  $total = $quotation->total_factura + $iva - ($total_retiene_iva ?? 0) - ($total_retiene_islr ?? 0);
 
   $total_petro = $total / ($bcv ?? 1) / $company->rate_petro;
 
@@ -144,7 +144,7 @@
 <table style="width: 100%;">
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Sub Total</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->sub_total_factura / ($bcv ?? 1), 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($quotation->total_factura / ($bcv ?? 1), 2, ',', '.') }}</th>
   </tr> 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Base Imponible</th>
@@ -158,6 +158,18 @@
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
   </tr> 
+  @if ($total_retiene_iva != 0)
+    <tr>
+      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de Iva</th>
+      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_retiene_iva / ($bcv ?? 1), 2, ',', '.') }}</th>
+    </tr> 
+  @endif 
+  @if ($total_retiene_islr != 0)
+    <tr>
+      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de ISLR</th>
+      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_retiene_islr / ($bcv ?? 1), 2, ',', '.') }}</th>
+    </tr> 
+  @endif 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total, 2, ',', '.') }}</th>

@@ -84,14 +84,40 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
-                            <div class="col-md-2">
-                            <select class="form-control" name="iva" id="iva">
-                                <option value="16">16%</option>
-                                <option value="12">12%</option>
-                            </select>
+                            <label for="iva_retencion" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
+
+                            <div class="col-md-3">
+                                <input id="iva_retencion" type="text" class="form-control @error('iva_retencion') is-invalid @enderror" name="iva_retencion" value="{{ number_format($total_retiene_iva / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="iva_retencion">
+
+                                @error('iva_retencion')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            
+                        </div>
+                        <div class="form-group row">
+                            <label for="sub_totals" class="col-md-2 col-form-label text-md-right">Sub Total</label>
+                            <div class="col-md-4">
+                                <input id="sub_total" type="text" class="form-control @error('sub_total') is-invalid @enderror" name="sub_total" value="{{ number_format($quotation->iva_amount, 2, ',', '.') ?? old('sub_total') }}" readonly required autocomplete="sub_total"> 
+                           
+                                @error('sub_total')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="islr_retencion" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
+
+                            <div class="col-md-3">
+                                <input id="islr_retencion" type="text" class="form-control @error('islr_retencion') is-invalid @enderror" name="islr_retencion" value="{{ number_format($total_retiene_islr / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="islr_retencion">
+
+                                @error('islr_retencion')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
@@ -104,7 +130,13 @@
                                     </span>
                                 @enderror
                             </div>
-                            
+                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <div class="col-md-2">
+                            <select class="form-control" name="iva" id="iva">
+                                <option value="16">16%</option>
+                                <option value="12">12%</option>
+                            </select>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
@@ -119,6 +151,7 @@
                                     @endif
                                 </select>
                             </div>
+                            
                         </div>
                         
                         <br>
@@ -200,9 +233,16 @@
 
                 var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
-                document.getElementById("grand_total").value = grand_totalformat;
+                document.getElementById("sub_total").value = grand_totalformat;
 
-                
+
+                var total_iva_retencion = "<?php echo $total_retiene_iva  / ($bcv ?? 1)?>";
+
+                var total_islr_retencion = "<?php echo $total_retiene_islr / ($bcv ?? 1)?>";
+
+                var total = grand_total - total_iva_retencion - total_islr_retencion;
+
+                document.getElementById("grand_total").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
                
             });
 </script>
@@ -264,7 +304,16 @@
         var grand_totalformat = grand_total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
 
-        document.getElementById("grand_total").value = grand_totalformat;
+        document.getElementById("sub_total").value = grand_totalformat;
+
+
+        var total_iva_retencion = "<?php echo $total_retiene_iva  / ($bcv ?? 1)?>";
+
+        var total_islr_retencion = "<?php echo $total_retiene_islr / ($bcv ?? 1)?>";
+
+        var total = grand_total - total_iva_retencion - total_islr_retencion;
+
+        document.getElementById("grand_total").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
     }        
   

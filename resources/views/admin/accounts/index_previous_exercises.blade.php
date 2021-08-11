@@ -9,7 +9,7 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
         <div class="col-sm-8 h4">
-            Listado de Comprobantes Contables detallados de la <br>cuenta: Nº {{ $account->code_one }}.{{ $account->code_two }}.{{ $account->code_three }}.{{ $account->code_four }} / {{ $account->description }}
+            Historial de Ejercicios Contables
         </div>
         <div class="col-sm-4">
             <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-eye" ></i>
@@ -30,81 +30,21 @@
         <table class="table table-light2 table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
             <tr>
-                <th>Fecha</th>
-                <th>Tipo de Movimiento</th>
+                <th class="text-center">Fecha de Inicio</th>
+                <th class="text-center">Fecha de Cierre</th>
                 
-                <th>Referencia</th>
-              
-                <th>Descripción</th>
-                <th>Debe</th>
-                <th>Haber</th>
-               
-               
-              
             </tr>
             </thead>
             
             <tbody>
-                @if (empty($detailvouchers))
+                @if (empty($account_historial))
                 @else
-                    @foreach ($detailvouchers as $var)
+                    @foreach ($account_historial as $var)
                     <tr>
-                    <td>{{$var->headers['date'] ?? $var->banks['date'] ?? ''}}</td>
-
-                    @if(isset($var->id_bank_voucher))
-                        <td>Bancario</td>
-                        <td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_bank_voucher,'bank',$account->id]) }}" title="Crear">{{ $var->id_bank_voucher }}</a>
-                        </td>
-                    @elseif(isset($var->id_invoice))
-                        <td>Factura</td>
-                        <td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_invoice,'invoice',$account->id]) }}" title="Crear">{{ $var->id_invoice }}</a>
-                        </td>
-                    @elseif(isset($var->id_expense))
-                        <td>Gasto o Compra</td>
-                        <td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_expense,'expense',$account->id]) }}" title="Crear">{{ $var->id_expense }}</a>
-                        </td>
-                    @elseif(isset($var->id_header_voucher)) 
-                        <td>Otro</td>
-                        <td>
-                        <a href="{{ route('accounts.header_movements',[$var->id_header_voucher,'header_voucher',$account->id]) }}" title="Crear">{{ $var->id_header_voucher }}</a>
-                        </td>
-                    @endif
-                    
-                                   
-                    @if(isset($var->id_bank_voucher))
-                      
-                        <td>{{$var->banks['description'] ?? ''}}</td>
-                    @elseif (isset($var->id_invoice))
-                        
-                        <td>{{$var->headers['description'] ?? ''}} fact({{ $var->id_invoice }}) / {{$var->accounts['description'] ?? ''}}</td>
-                    
-                    @elseif (isset($var->id_expense))
-                        
-                        <td>{{$var->headers['description'] ?? ''}} Compra({{ $var->id_expense }}) / {{$var->accounts['description'] ?? ''}}</td>
-                    @else
-                        
-                        <td>{{$var->headers['description'] ?? ''}}</td>
-                    @endif
-                   
-                    @if(isset($var->accounts['coin']))
-                        @if(($var->debe != 0) && ($var->tasa))
-                            <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}<br>{{number_format($var->debe/$var->tasa, 2, ',', '.')}}{{ $var->accounts['coin'] }}</td>
-                        @else
-                            <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
-                        @endif
-                        @if($var->haber != 0 && ($var->tasa))
-                            <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}<br>{{number_format($var->haber/$var->tasa, 2, ',', '.')}}{{ $var->accounts['coin'] }}</td>
-                        @else
-                            <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
-                        @endif
-                    @else
-                        <td class="text-right font-weight-bold">{{number_format($var->debe, 2, ',', '.')}}</td>
-                        <td class="text-right font-weight-bold">{{number_format($var->haber, 2, ',', '.')}}</td>
-                    @endif
-                    
+                    <td class="text-center">
+                        <a href="#" onclick="pdf();" title="Crear">{{$var->date_begin ?? ''}}</a>
+                    </td>
+                    <td class="text-center">{{$var->date_end ?? ''}}</td>
                     </tr>
                     @endforeach
                 @endif
@@ -122,5 +62,11 @@
         "order": [],
         'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "All"]]
     });
+
+    function pdf() {
+
+        var nuevaVentana= window.open("{{ route('pdf.previousexercise',[$var->date_begin,$var->date_end])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+ 
+    }
     </script> 
 @endsection

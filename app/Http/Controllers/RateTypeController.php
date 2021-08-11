@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use Illuminate\Http\Request;
 use App\RateType;
+use App\User;
 
 class RateTypeController extends Controller
 {

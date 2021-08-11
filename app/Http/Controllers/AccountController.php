@@ -41,6 +41,21 @@ class AccountController extends Controller
        return view('admin.accounts.index',compact('accounts','coin','level'));
    }
 
+   public function index_previous_exercise()
+   {
+       $user       =   auth()->user();
+       $users_role =   $user->role_id;
+       if($users_role == '1'){
+        
+        $account_historial = AccountHistorial::select('date_begin','date_end')->groupBy('date_begin','date_end')->get();
+
+        }else if($users_role == '2'){
+           return view('admin.index');
+       }
+
+       return view('admin.accounts.index_previous_exercises',compact('account_historial'));
+   }
+
 
    public function movements($id_account,$coin = null)
     {
@@ -870,12 +885,13 @@ class AccountController extends Controller
         //Verifica que existan movimientos con los cuales hacer el cierre
         if(isset($last_detail_activate)){
 
-            //Verifica que no se haga el cierre 2 veces un mismo dia
-            if(!(isset($last_detail_desactivate)) || ((isset($last_detail_desactivate)) && (var_dump($last_detail_desactivate->date_end != $datenow2)))){
+            //Verifica que no se haga el cierre 2 veces un mismo dia, empty es para cuando no existen cierres anteriores
+            if( empty($last_detail_desactivate->date_end) || ((isset($last_detail_desactivate->date_end)) && $last_detail_desactivate->date_end != $datenow2))
+            {
                 
                 foreach($accounts as $account){ 
                     
-                    if($account->level == 5){
+                    
                         $var = new AccountHistorial();
 
                         $var_account = Account::findOrFail($account->id);
@@ -904,11 +920,11 @@ class AccountController extends Controller
                         $var->status =  "F";
                     
                         $var->save();
-    
-                        $var_account->balance_previus = $var->balance_current;
-                        //dd($var_account->description);
-                        $var_account->save();
-                    }
+                        if($account->level == 5){
+                            $var_account->balance_previus = $var->balance_current;
+                            
+                            $var_account->save();
+                        }
                     
 
                 }
