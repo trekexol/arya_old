@@ -6,6 +6,7 @@ use App\Employee;
 use App\ReceiptVacation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReceiptVacationController extends Controller
 {
@@ -25,7 +26,7 @@ class ReceiptVacationController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $receiptvacations = ReceiptVacation::orderBy('id', 'asc')->get();
+           $receiptvacations = ReceiptVacation::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -38,7 +39,7 @@ class ReceiptVacationController extends Controller
     public function indexemployees()
     {
 
-        $employees = Employee::all();
+        $employees = Employee::on(Auth::user()->database_name)->get();
 
         return view('admin.receiptvacations.indexemployees',compact('employees'));
     }
@@ -47,11 +48,11 @@ class ReceiptVacationController extends Controller
 
     public function create($id)
     {
-        $employee = Employee::find($id);
+        $employee = Employee::on(Auth::user()->database_name)->find($id);
 
        //HACER VALIDACION DE LAS FECHAS DE INICIO Y FIN
 
-      // ReceiptVacation::where('employee_id',$employee->id)->beetween('date_begin',,'date_end');
+      // ReceiptVacation::on(Auth::user()->database_name)->where('employee_id',$employee->id)->beetween('date_begin',,'date_end');
 
         //Si el empleado existe
         if($employee){
@@ -99,6 +100,7 @@ class ReceiptVacationController extends Controller
         ]);
 
         $var = new Receiptvacation();
+        $var->setConnection(Auth::user()->database_name);
 
         $var->employee_id = request('employee_id');
         $var->date_begin = request('date_begin');
@@ -128,7 +130,7 @@ class ReceiptVacationController extends Controller
     public function edit($id)
     {
 
-        $var = Receiptvacation::find($id);
+        $var = Receiptvacation::on(Auth::user()->database_name)->find($id);
         
         return view('admin.receiptvacations.edit',compact('var'));
     }
@@ -139,7 +141,7 @@ class ReceiptVacationController extends Controller
     public function update(Request $request,$id)
     {
        
-        $vars =  Receiptvacation::find($id);
+        $vars =  Receiptvacation::on(Auth::user()->database_name)->find($id);
 
         $var_status = $vars->status;
       
@@ -168,7 +170,7 @@ class ReceiptVacationController extends Controller
            
         ]);
 
-        $var    = ReceiptVacation::findOrFail($id);
+        $var    = ReceiptVacation::on(Auth::user()->database_name)->findOrFail($id);
 
         $var->employee_id = request('employee_id');
         $var->date_begin = request('date_begin');

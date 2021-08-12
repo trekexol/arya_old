@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Provider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProviderController extends Controller
 {
@@ -17,7 +18,7 @@ class ProviderController extends Controller
    {
        $user= auth()->user();
 
-       $providers = Provider::orderBy('id' ,'DESC')->get();
+       $providers = Provider::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
       
        return view('admin.providers.index',compact('providers'));
    }
@@ -65,6 +66,7 @@ class ProviderController extends Controller
     ]);
 
     $users = new Provider();
+    $users->setConnection(Auth::user()->database_name);
 
     
     $users->code_provider = request('code_provider');
@@ -126,7 +128,7 @@ class ProviderController extends Controller
     */
    public function edit($id)
    {
-        $var = Provider::find($id);
+        $var = Provider::on(Auth::user()->database_name)->find($id);
         
      
       
@@ -167,7 +169,7 @@ class ProviderController extends Controller
        
     ]);
 
-    $users = Provider::findOrFail($id);
+    $users = Provider::on(Auth::user()->database_name)->findOrFail($id);
 
     
    

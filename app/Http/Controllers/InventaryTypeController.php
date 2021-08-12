@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use Illuminate\Http\Request;
 use App\InventaryType;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class InventaryTypeController extends Controller
 {
@@ -24,7 +27,7 @@ class InventaryTypeController extends Controller
 
         try{
             if($users_role == '1' || $users_role == '2' || $users_role == '3'  ){
-                $inventarytypes      =   InventaryType::orderBy('id', 'asc')->get();
+                $inventarytypes      =   InventaryType::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
                 return view('admin.inventarytypes.index',compact('inventarytypes'));
             }else{
                 dd('No tiene acceso');
@@ -51,6 +54,7 @@ class InventaryTypeController extends Controller
 
         $descripcion     = strtoupper(trim(request('Descripcion')));
         $inventaryTypes  = new InventaryType();
+        $inventaryTypes->setConnection(Auth::user()->database_name);
 
         $inventaryTypes->description      = $descripcion;
         $inventaryTypes->status          = '1';
@@ -61,7 +65,7 @@ class InventaryTypeController extends Controller
 
     public function edit($id)
     {
-        $company            = Company::find($id);
+        $company            = Company::on(Auth::user()->database_name)->find($id);
         $codigo             = substr($company->razon_social,0,2);
         $razon_social       = substr($company->razon_social,2);
 
@@ -70,7 +74,7 @@ class InventaryTypeController extends Controller
 
     public function update(Request $request,$id)
     {
-        $validar              =  Company::find($id);
+        $validar              =  Company::on(Auth::user()->database_name)->find($id);
 
         $request->validate([
             'Nombre'         =>'required|max:191,'.$validar->id,
@@ -88,7 +92,7 @@ class InventaryTypeController extends Controller
         $razon_social        = strtoupper(request('Razon_Social'));
         $resul_social        = $codigo.$razon_social;
 
-        $companies          = Company::findOrFail($id);
+        $companies          = Company::on(Auth::user()->database_name)->findOrFail($id);
         $companies->name                = $nombre;
         $companies->email               = $email;
         $companies->description         = $descripcion;
@@ -103,7 +107,7 @@ class InventaryTypeController extends Controller
     public function destroy(Request $request)
     {
         //find the Division
-        $user = User::find($request->user_id);
+        $user = User::on(Auth::user()->database_name)->find($request->user_id);
 
         //Elimina el Division
         $user->delete();

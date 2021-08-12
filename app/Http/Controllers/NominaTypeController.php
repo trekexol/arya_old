@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\NominaType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NominaTypeController extends Controller
 {
@@ -23,7 +24,7 @@ class NominaTypeController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $nominatypes =NominaType::orderBy('id', 'asc')->get();
+           $nominatypes =NominaType::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -53,6 +54,7 @@ class NominaTypeController extends Controller
         ]);
 
         $users = new Nominatype();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->description = request('description');
         $users->status =  request('status');
@@ -68,7 +70,7 @@ class NominaTypeController extends Controller
     public function edit($id)
     {
 
-        $var = Nominatype::find($id);
+        $var = Nominatype::on(Auth::user()->database_name)->find($id);
         
         return view('admin.nominatypes.edit',compact('var'));
     }
@@ -79,7 +81,7 @@ class NominaTypeController extends Controller
     public function update(Request $request,$id)
     {
        
-        $vars =  Nominatype::find($id);
+        $vars =  Nominatype::on(Auth::user()->database_name)->find($id);
 
         $var_status = $vars->status;
       
@@ -92,7 +94,7 @@ class NominaTypeController extends Controller
 
         
 
-        $var  = Nominatype::findOrFail($id);
+        $var  = Nominatype::on(Auth::user()->database_name)->findOrFail($id);
         $var->description        = request('description');
        
         if(request('status') == null){

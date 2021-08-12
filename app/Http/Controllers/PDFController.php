@@ -18,6 +18,7 @@ use App\QuotationPayment;
 use App\QuotationProduct;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PDFController extends Controller
 {
@@ -31,7 +32,7 @@ class PDFController extends Controller
              $quotation = null;
                  
              if(isset($id_quotation)){
-                 $quotation = Quotation::where('date_billing', '<>', null)->find($id_quotation);
+                 $quotation = Quotation::on(Auth::user()->database_name)->where('date_billing', '<>', null)->find($id_quotation);
               
                                      
              }else{
@@ -40,7 +41,7 @@ class PDFController extends Controller
      
              if(isset($quotation)){
 
-                 $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+                 $payment_quotations = QuotationPayment::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
 
                  foreach($payment_quotations as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
@@ -50,7 +51,7 @@ class PDFController extends Controller
                  }
 
 
-                 $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                 $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                                 ->where('quotation_products.id_quotation',$quotation->id)
                                                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
@@ -66,7 +67,7 @@ class PDFController extends Controller
                     $bcv = $quotation->bcv;
                 }
 
-                $company = Company::find(1);
+                $company = Company::on(Auth::user()->database_name)->find(1);
                 
                  $pdf = $pdf->loadView('pdf.factura',compact('company','quotation','inventories_quotations','payment_quotations','bcv'));
                  return $pdf->stream();
@@ -89,7 +90,7 @@ class PDFController extends Controller
              $quotation = null;
                  
              if(isset($id_quotation)){
-                 $quotation = Quotation::findOrFail($id_quotation);
+                 $quotation = Quotation::on(Auth::user()->database_name)->findOrFail($id_quotation);
 
                  if(!(isset($quotation->date_delivery_note))){
 
@@ -125,7 +126,7 @@ class PDFController extends Controller
      
              if(isset($quotation)){
                
-                $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                                 ->where('quotation_products.id_quotation',$quotation->id)
                                                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
@@ -186,7 +187,7 @@ class PDFController extends Controller
 
 
                 /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
-                $client = Client::find($quotation->id_client);
+                $client = Client::on(Auth::user()->database_name)->find($quotation->id_client);
 
                 if($client->percentage_retencion_iva != 0){
                 $total_retiene_iva = ($retiene_iva * $client->percentage_retencion_iva) /100;
@@ -200,7 +201,7 @@ class PDFController extends Controller
                 /*-------------- */
 
     
-                $company = Company::find(1);
+                $company = Company::on(Auth::user()->database_name)->find(1);
                 
                 $pdf = $pdf->loadView('pdf.deliverynote',compact('quotation','inventories_quotations','bcv','company'
                                                                 ,'total_retiene_iva','total_retiene_islr'));
@@ -262,11 +263,11 @@ class PDFController extends Controller
 
         $pdf_inventory = App::make('dompdf.wrapper');
 
-        $inventories = Inventory::orderBy('id','desc')->get();
+        $inventories = Inventory::on(Auth::user()->database_name)->orderBy('id','desc')->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
 
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
 
         $pdf_inventory = $pdf_inventory->loadView('pdf.inventory',compact('inventories','datenow','company'));
         return $pdf_inventory->stream();
@@ -283,7 +284,7 @@ class PDFController extends Controller
              $quotation = null;
                  
              if(isset($id_quotation)){
-                 $quotation = Quotation::where('date_billing', '<>', null)->find($id_quotation);
+                 $quotation = Quotation::on(Auth::user()->database_name)->where('date_billing', '<>', null)->find($id_quotation);
               
                                      
              }else{
@@ -292,7 +293,7 @@ class PDFController extends Controller
      
              if(isset($quotation)){
 
-                 $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+                 $payment_quotations = QuotationPayment::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
 
                  foreach($payment_quotations as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
@@ -301,7 +302,7 @@ class PDFController extends Controller
                     }
                  }
                  
-                 $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                 $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                                 ->where('quotation_products.id_quotation',$quotation->id)
                                                                 ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
@@ -316,7 +317,7 @@ class PDFController extends Controller
                     $bcv = $quotation->bcv;
                 }
 
-                $company = Company::find(1);                
+                $company = Company::on(Auth::user()->database_name)->find(1);                
                 
                  $pdf = $pdf->loadView('pdf.factura_media',compact('quotation','inventories_quotations','payment_quotations','bcv','company'));
                  return $pdf->stream();
@@ -341,7 +342,7 @@ class PDFController extends Controller
              $expense = null;
                  
              if(isset($id_expense)){
-                 $expense = ExpensesAndPurchase::find($id_expense);
+                 $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
               
                                      
              }else{
@@ -350,14 +351,14 @@ class PDFController extends Controller
      
              if(isset($expense)){
 
-                 $payment_expenses = ExpensePayment::where('id_expense',$expense->id)->get();
+                 $payment_expenses = ExpensePayment::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
                  
                  foreach($payment_expenses as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
                  }
 
 
-                $inventories_expenses = ExpensesDetail::where('id_expense',$expense->id)->get();
+                $inventories_expenses = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
             
                 $total= 0;
                 $base_imponible= 0;
@@ -385,7 +386,7 @@ class PDFController extends Controller
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
 
-                 $company = Company::find(1);
+                 $company = Company::on(Auth::user()->database_name)->find(1);
 
                  $pdf = $pdf->loadView('pdf.expense',compact('coin','expense','inventories_expenses','payment_expenses','company'));
                  return $pdf->stream();
@@ -408,7 +409,7 @@ class PDFController extends Controller
              $expense = null;
                  
              if(isset($id_expense)){
-                 $expense = ExpensesAndPurchase::find($id_expense);
+                 $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
               
                                      
              }else{
@@ -417,14 +418,14 @@ class PDFController extends Controller
      
              if(isset($expense)){
 
-                 $payment_expenses = ExpensePayment::where('id_expense',$expense->id)->get();
+                 $payment_expenses = ExpensePayment::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
 
                  foreach($payment_expenses as $var){
                     $var->payment_type = $this->asignar_payment_type($var->payment_type);
                  }
 
 
-                $inventories_expenses = ExpensesDetail::where('id_expense',$expense->id)->get();
+                $inventories_expenses = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
             
                 $total= 0;
                 $base_imponible= 0;
@@ -456,7 +457,7 @@ class PDFController extends Controller
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
 
-                 $company = Company::find(1);
+                 $company = Company::on(Auth::user()->database_name)->find(1);
 
                  $pdf = $pdf->loadView('pdf.expense_media',compact('coin','expense','inventories_expenses','payment_expenses','company'));
                  return $pdf->stream();
@@ -475,12 +476,12 @@ class PDFController extends Controller
       
         $pdf = App::make('dompdf.wrapper');
 
-        $account_historial = AccountHistorial::where('date_begin',$date_begin)->where('date_end',$date_end)->orderBy('id','asc')->get();
+        $account_historial = AccountHistorial::on(Auth::user()->database_name)->where('date_begin',$date_begin)->where('date_end',$date_end)->orderBy('id','asc')->get();
         
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
 
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
 
         $pdf = $pdf->loadView('pdf.previousexercise',compact('account_historial','datenow','company'));
         return $pdf->stream();
@@ -516,7 +517,7 @@ class PDFController extends Controller
     public function discount_inventory($id_quotation)
     {
             /*Primero Revisa que todos los productos tengan inventario suficiente*/
-            $no_hay_cantidad_suficiente = DB::table('inventories')
+            $no_hay_cantidad_suficiente = DB::connection(Auth::user()->database_name)->table('inventories')
                                     ->join('quotation_products', 'quotation_products.id_inventory','=','inventories.id')
                                     ->where('quotation_products.id_quotation','=',$id_quotation)
                                     ->where('quotation_products.amount','<','inventories.amount')
@@ -529,7 +530,7 @@ class PDFController extends Controller
             }
 
             /*Luego, descuenta del Inventario*/
-                $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+                $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                 ->where('quotation_products.id_quotation',$id_quotation)
                 ->select('products.*','quotation_products.id as id_quotation','quotation_products.discount as discount',
@@ -538,10 +539,10 @@ class PDFController extends Controller
 
             foreach($inventories_quotations as $inventories_quotation){
 
-                $quotation_product = QuotationProduct::findOrFail($inventories_quotation->id_quotation);
+                $quotation_product = QuotationProduct::on(Auth::user()->database_name)->findOrFail($inventories_quotation->id_quotation);
 
                 if(isset($quotation_product)){
-                    $inventory = Inventory::findOrFail($quotation_product->id_inventory);
+                    $inventory = Inventory::on(Auth::user()->database_name)->findOrFail($quotation_product->id_inventory);
 
                     if(isset($inventory)){
                         //REVISO QUE SEA MAYOR EL MONTO DEL INVENTARIO Y LUEGO DESCUENTO
@@ -574,7 +575,7 @@ class PDFController extends Controller
     public function calculation($coin)
     {
         
-        $accounts = Account::orderBy('code_one', 'asc')
+        $accounts = Account::on(Auth::user()->database_name)->orderBy('code_one', 'asc')
                          ->orderBy('code_two', 'asc')
                          ->orderBy('code_three', 'asc')
                          ->orderBy('code_four', 'asc')
@@ -599,7 +600,7 @@ class PDFController extends Controller
                                      /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
                                 
                                      if($coin == 'bolivares'){
-                                        $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                        $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe) AS debe
                                                         FROM accounts a
                                                         INNER JOIN detail_vouchers d 
                                                             ON d.id_account = a.id
@@ -611,20 +612,7 @@ class PDFController extends Controller
                                                         d.status = ?
                                                         '
                                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
-                                        $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
-                                                        FROM accounts a
-                                                        INNER JOIN detail_vouchers d 
-                                                            ON d.id_account = a.id
-                                                        WHERE a.code_one = ? AND
-                                                        a.code_two = ? AND
-                                                        a.code_three = ? AND
-                                                        a.code_four = ? AND
-                                                        a.code_five = ? AND
-                                                        d.status = ?
-                                                        '
-                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
-    
-                                        $total_dolar_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                        $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber) AS haber
                                                         FROM accounts a
                                                         INNER JOIN detail_vouchers d 
                                                             ON d.id_account = a.id
@@ -637,7 +625,20 @@ class PDFController extends Controller
                                                         '
                                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
     
-                                        $total_dolar_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS dolar
+                                        $total_dolar_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                                        FROM accounts a
+                                                        INNER JOIN detail_vouchers d 
+                                                            ON d.id_account = a.id
+                                                        WHERE a.code_one = ? AND
+                                                        a.code_two = ? AND
+                                                        a.code_three = ? AND
+                                                        a.code_four = ? AND
+                                                        a.code_five = ? AND
+                                                        d.status = ?
+                                                        '
+                                                        , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
+    
+                                        $total_dolar_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber/d.tasa) AS dolar
                                                         FROM accounts a
                                                         INNER JOIN detail_vouchers d 
                                                             ON d.id_account = a.id
@@ -654,7 +655,7 @@ class PDFController extends Controller
     
                                        
                                         }else{
-                                            $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                            $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS debe
                                             FROM accounts a
                                             INNER JOIN detail_vouchers d 
                                                 ON d.id_account = a.id
@@ -667,7 +668,7 @@ class PDFController extends Controller
                                             '
                                             , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,$var->code_five,'C']);
                                             
-                                            $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                            $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber/d.tasa) AS haber
                                             FROM accounts a
                                             INNER JOIN detail_vouchers d 
                                                 ON d.id_account = a.id
@@ -707,7 +708,7 @@ class PDFController extends Controller
                                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
                                 
                                     if($coin == 'bolivares'){
-                                    $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                    $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe) AS debe
                                                     FROM accounts a
                                                     INNER JOIN detail_vouchers d 
                                                         ON d.id_account = a.id
@@ -718,19 +719,7 @@ class PDFController extends Controller
                                                     d.status = ?
                                                     '
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
-                                    $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
-                                                    FROM accounts a
-                                                    INNER JOIN detail_vouchers d 
-                                                        ON d.id_account = a.id
-                                                    WHERE a.code_one = ? AND
-                                                    a.code_two = ? AND
-                                                    a.code_three = ? AND
-                                                    a.code_four = ? AND
-                                                    d.status = ?
-                                                    '
-                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
-
-                                    $total_dolar_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                    $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber) AS haber
                                                     FROM accounts a
                                                     INNER JOIN detail_vouchers d 
                                                         ON d.id_account = a.id
@@ -742,7 +731,19 @@ class PDFController extends Controller
                                                     '
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
-                                    $total_dolar_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS dolar
+                                    $total_dolar_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS dolar
+                                                    FROM accounts a
+                                                    INNER JOIN detail_vouchers d 
+                                                        ON d.id_account = a.id
+                                                    WHERE a.code_one = ? AND
+                                                    a.code_two = ? AND
+                                                    a.code_three = ? AND
+                                                    a.code_four = ? AND
+                                                    d.status = ?
+                                                    '
+                                                    , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
+
+                                    $total_dolar_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber/d.tasa) AS dolar
                                                     FROM accounts a
                                                     INNER JOIN detail_vouchers d 
                                                         ON d.id_account = a.id
@@ -756,7 +757,7 @@ class PDFController extends Controller
 
                                                     $var->balance =  $var->balance_previus;
 
-                                    $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                    $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus) AS balance
                                                     FROM accounts a
                                                     WHERE a.code_one = ? AND
                                                     a.code_two = ?  AND
@@ -766,7 +767,7 @@ class PDFController extends Controller
                                                     , [$var->code_one,$var->code_two,$var->code_three,$var->code_four]);
                                 
                                     }else{
-                                        $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                        $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS debe
                                         FROM accounts a
                                         INNER JOIN detail_vouchers d 
                                             ON d.id_account = a.id
@@ -778,7 +779,7 @@ class PDFController extends Controller
                                         '
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
                                         
-                                        $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                        $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber/d.tasa) AS haber
                                         FROM accounts a
                                         INNER JOIN detail_vouchers d 
                                             ON d.id_account = a.id
@@ -790,7 +791,7 @@ class PDFController extends Controller
                                         '
                                         , [$var->code_one,$var->code_two,$var->code_three,$var->code_four,'C']);
 
-                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                        $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                                     FROM accounts a
                                                     WHERE a.code_one = ? AND
                                                     a.code_two = ?  AND
@@ -822,7 +823,7 @@ class PDFController extends Controller
                             }else{          
                             
                                 if($coin == 'bolivares'){
-                                $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe) AS debe
                                                 FROM accounts a
                                                 INNER JOIN detail_vouchers d 
                                                     ON d.id_account = a.id
@@ -833,7 +834,7 @@ class PDFController extends Controller
                                                 d.status = ?
                                                 '
                                                 , [$var->code_one,$var->code_two,$var->code_three,'C']);
-                                $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber) AS haber
                                                 FROM accounts a
                                                 INNER JOIN detail_vouchers d 
                                                     ON d.id_account = a.id
@@ -845,7 +846,7 @@ class PDFController extends Controller
                                                 '
                                                 , [$var->code_one,$var->code_two,$var->code_three,'C']);
 
-                                $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ? AND
                                             a.code_two = ?  AND
@@ -854,7 +855,7 @@ class PDFController extends Controller
                                             , [$var->code_one,$var->code_two,$var->code_three]);
                                 
                                 }else{
-                                        $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                        $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS debe
                                         FROM accounts a
                                         INNER JOIN detail_vouchers d 
                                             ON d.id_account = a.id
@@ -866,7 +867,7 @@ class PDFController extends Controller
                                         '
                                         , [$var->code_one,$var->code_two,$var->code_three,'C']);
                                         
-                                        $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                        $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber/d.tasa) AS haber
                                         FROM accounts a
                                         INNER JOIN detail_vouchers d 
                                             ON d.id_account = a.id
@@ -878,7 +879,7 @@ class PDFController extends Controller
                                         '
                                         , [$var->code_one,$var->code_two,$var->code_three,'C']);
                         
-                                        $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                        $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ? AND
                                             a.code_two = ? AND
@@ -903,7 +904,7 @@ class PDFController extends Controller
                         }else{
                                             
                             if($coin == 'bolivares'){
-                                $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                                $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe) AS debe
                                                 FROM accounts a
                                                 INNER JOIN detail_vouchers d 
                                                     ON d.id_account = a.id
@@ -912,7 +913,7 @@ class PDFController extends Controller
                                                 d.status = ?
                                                 '
                                                 , [$var->code_one,$var->code_two,'C']);
-                                $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                                $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber) AS haber
                                                 FROM accounts a
                                                 INNER JOIN detail_vouchers d 
                                                     ON d.id_account = a.id
@@ -922,7 +923,7 @@ class PDFController extends Controller
                                                 '
                                                 , [$var->code_one,$var->code_two,'C']);
                                 
-                                $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                                $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ? AND
                                             a.code_two = ?
@@ -930,7 +931,7 @@ class PDFController extends Controller
                                             , [$var->code_one,$var->code_two]);
                                 
                                 }else{
-                                    $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                    $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS debe
                                     FROM accounts a
                                     INNER JOIN detail_vouchers d 
                                         ON d.id_account = a.id
@@ -940,7 +941,7 @@ class PDFController extends Controller
                                     '
                                     , [$var->code_one,$var->code_two,'C']);
                                     
-                                    $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                    $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber/d.tasa) AS haber
                                     FROM accounts a
                                     INNER JOIN detail_vouchers d 
                                         ON d.id_account = a.id
@@ -950,7 +951,7 @@ class PDFController extends Controller
                                     '
                                     , [$var->code_one,$var->code_two,'C']);
 
-                                    $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                    $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ? AND
                                             a.code_two = ?
@@ -971,7 +972,7 @@ class PDFController extends Controller
                         }
                     }else{
                         if($coin == 'bolivares'){
-                            $total_debe =   DB::select('SELECT SUM(d.debe) AS debe
+                            $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe) AS debe
                                             FROM accounts a
                                             INNER JOIN detail_vouchers d 
                                                 ON d.id_account = a.id
@@ -979,7 +980,7 @@ class PDFController extends Controller
                                             d.status = ?
                                             '
                                             , [$var->code_one,'C']);
-                            $total_haber =   DB::select('SELECT SUM(d.haber) AS haber
+                            $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber) AS haber
                                             FROM accounts a
                                             INNER JOIN detail_vouchers d 
                                                 ON d.id_account = a.id
@@ -988,14 +989,14 @@ class PDFController extends Controller
                                             '
                                             , [$var->code_one,'C']);
 
-                            $total_balance =   DB::select('SELECT SUM(a.balance_previus) AS balance
+                            $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ?
                                             '
                                             , [$var->code_one]);
                             
                             }else{
-                                $total_debe =   DB::select('SELECT SUM(d.debe/d.tasa) AS debe
+                                $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS debe
                                 FROM accounts a
                                 INNER JOIN detail_vouchers d 
                                     ON d.id_account = a.id
@@ -1004,7 +1005,7 @@ class PDFController extends Controller
                                 '
                                 , [$var->code_one,'C']);
                                 
-                                $total_haber =   DB::select('SELECT SUM(d.haber/d.tasa) AS haber
+                                $total_haber =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.haber/d.tasa) AS haber
                                 FROM accounts a
                                 INNER JOIN detail_vouchers d 
                                     ON d.id_account = a.id
@@ -1013,7 +1014,7 @@ class PDFController extends Controller
                                 '
                                 , [$var->code_one,'C']);
 
-                                $total_balance =   DB::select('SELECT SUM(a.balance_previus/a.rate) AS balance
+                                $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus/a.rate) AS balance
                                             FROM accounts a
                                             WHERE a.code_one = ?
                                             '

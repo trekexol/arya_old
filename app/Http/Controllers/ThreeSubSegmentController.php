@@ -6,6 +6,7 @@ use App\Subsegment;
 use App\ThreeSubsegment;
 use App\TwoSubsegment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ThreeSubSegmentController extends Controller
 {
@@ -19,7 +20,7 @@ class ThreeSubSegmentController extends Controller
         if($request->ajax()){
             try{
                 
-                $subsegment = ThreeSubsegment::select('id','description')->where('twosubsegment_id',$id_subsegment)->orderBy('description','asc')->get();
+                $subsegment = ThreeSubsegment::on(Auth::user()->database_name)->select('id','description')->where('twosubsegment_id',$id_subsegment)->orderBy('description','asc')->get();
                 return response()->json($subsegment,200);
             
             }catch(Throwable $th){
@@ -38,7 +39,7 @@ class ThreeSubSegmentController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $subsegments      =   ThreeSubsegment::orderBy('id', 'asc')->get();
+           $subsegments      =   ThreeSubsegment::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -49,7 +50,7 @@ class ThreeSubSegmentController extends Controller
 
     public function create()
     {
-        $twosubsegments   = TwoSubsegment::orderBy('description', 'asc')->get();
+        $twosubsegments   = TwoSubsegment::on(Auth::user()->database_name)->orderBy('description', 'asc')->get();
 
         return view('admin.threesubsegments.create',compact('twosubsegments'));
     }
@@ -64,6 +65,7 @@ class ThreeSubSegmentController extends Controller
         ]);
 
         $users = new ThreeSubsegment();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->description = request('description');
         $users->twosubsegment_id = request('segment_id');
@@ -85,8 +87,8 @@ class ThreeSubSegmentController extends Controller
     public function edit($id)
     {
 
-        $var        = ThreeSubsegment::find($id);
-        $twosubsegments   = TwoSubsegment::all();
+        $var        = ThreeSubsegment::on(Auth::user()->database_name)->find($id);
+        $twosubsegments   = TwoSubsegment::on(Auth::user()->database_name)->get();
 
         return view('admin.threesubsegments.edit',compact('var','twosubsegments'));
     }
@@ -96,7 +98,7 @@ class ThreeSubSegmentController extends Controller
 
     public function update(Request $request,$id)
     {
-        $subsegment =  ThreeSubsegment::find($id);
+        $subsegment =  ThreeSubsegment::on(Auth::user()->database_name)->find($id);
        
         $subsegment_status = $subsegment->status;
 
@@ -107,7 +109,7 @@ class ThreeSubSegmentController extends Controller
         ]);
 
         
-        $var = ThreeSubsegment::findOrFail($id);
+        $var = ThreeSubsegment::on(Auth::user()->database_name)->findOrFail($id);
         $var->description         = request('description');
         $var->twosubsegment_id       = request('segment_id');
       

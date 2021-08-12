@@ -6,6 +6,7 @@ use App\Company;
 use Illuminate\Http\Request;
 use App\RateType;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class RateTypeController extends Controller
 {
@@ -27,7 +28,7 @@ class RateTypeController extends Controller
 
         try{
             if($users_role == '1' || $users_role == '2' || $users_role == '3'  ){
-                $ratetypes      =   RateType::orderBy('id', 'asc')->get();
+                $ratetypes      =   RateType::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
                 return view('admin.ratetypes.index',compact('ratetypes'));
             }else{
                 dd('No tiene acceso');
@@ -54,6 +55,7 @@ class RateTypeController extends Controller
 
         $descripcion     = strtoupper(trim(request('Descripcion')));
         $rateTypes  = new RateType();
+        $rateTypes->setConnection(Auth::user()->database_name);
 
         $rateTypes->description      = $descripcion;
         $rateTypes->status          = '1';
@@ -64,7 +66,7 @@ class RateTypeController extends Controller
 
     public function edit($id)
     {
-        $company            = Company::find($id);
+        $company            = Company::on(Auth::user()->database_name)->find($id);
         $codigo             = substr($company->razon_social,0,2);
         $razon_social       = substr($company->razon_social,2);
 
@@ -73,7 +75,7 @@ class RateTypeController extends Controller
 
     public function update(Request $request,$id)
     {
-        $validar              =  Company::find($id);
+        $validar              =  Company::on(Auth::user()->database_name)->find($id);
 
         $request->validate([
             'Nombre'         =>'required|max:191,'.$validar->id,
@@ -91,7 +93,7 @@ class RateTypeController extends Controller
         $razon_social        = strtoupper(request('Razon_Social'));
         $resul_social        = $codigo.$razon_social;
 
-        $companies          = Company::findOrFail($id);
+        $companies          = Company::on(Auth::user()->database_name)->findOrFail($id);
         $companies->name                = $nombre;
         $companies->email               = $email;
         $companies->description         = $descripcion;
@@ -106,7 +108,7 @@ class RateTypeController extends Controller
     public function destroy(Request $request)
     {
         //find the Division
-        $user = User::find($request->user_id);
+        $user = User::on(Auth::user()->database_name)->find($request->user_id);
 
         //Elimina el Division
         $user->delete();

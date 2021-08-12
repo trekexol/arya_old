@@ -13,6 +13,7 @@ use App\Vendor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class QuotationController extends Controller
 {
@@ -27,7 +28,7 @@ class QuotationController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $quotations = Quotation::orderBy('id' ,'DESC')
+        $quotations = Quotation::on(Auth::user()->database_name)->orderBy('id' ,'DESC')
                                 ->where('date_billing','=',null)
                                 ->where('date_delivery_note','=',null)
                                 ->get();
@@ -46,7 +47,7 @@ class QuotationController extends Controller
     
     public function createquotation()
     {
-        $transports     = Transport::all();
+        $transports     = Transport::on(Auth::user()->database_name)->get();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
@@ -59,13 +60,13 @@ class QuotationController extends Controller
         $client = null;
                 
         if(isset($id_client)){
-            $client = Client::find($id_client);
+            $client = Client::on(Auth::user()->database_name)->find($id_client);
         }
         if(isset($client)){
 
-        /* $vendors     = Vendor::all();*/
+        /* $vendors     = Vendor::on(Auth::user()->database_name)->get();*/
 
-            $transports     = Transport::all();
+            $transports     = Transport::on(Auth::user()->database_name)->get();
 
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
@@ -82,20 +83,20 @@ class QuotationController extends Controller
         $client = null;
                 
         if(isset($id_client)){
-            $client = Client::find($id_client);
+            $client = Client::on(Auth::user()->database_name)->find($id_client);
         }
         if(isset($client)){
 
             $vendor = null;
                 
             if(isset($id_vendor)){
-                $vendor = Vendor::find($id_vendor);
+                $vendor = Vendor::on(Auth::user()->database_name)->find($id_vendor);
             }
             if(isset($vendor)){
 
-                /* $vendors     = Vendor::all();*/
+                /* $vendors     = Vendor::on(Auth::user()->database_name)->get();*/
 
-                $transports     = Transport::all();
+                $transports     = Transport::on(Auth::user()->database_name)->get();
 
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');    
@@ -118,12 +119,12 @@ class QuotationController extends Controller
             $quotation = null;
                 
             if(isset($id_quotation)){
-                $quotation = Quotation::find($id_quotation);
+                $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
             }
 
             if(isset($quotation)){
-                //$inventories_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
-                $inventories_quotations = DB::table('products')
+                //$inventories_quotations = QuotationProduct::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
+                $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')
                                 ->join('inventories', 'products.id', '=', 'inventories.product_id')
                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                 ->where('quotation_products.id_quotation',$id_quotation)
@@ -135,7 +136,7 @@ class QuotationController extends Controller
                 $date = Carbon::now();
                 $datenow = $date->format('Y-m-d');  
 
-                $company = Company::find(1);
+                $company = Company::on(Auth::user()->database_name)->find(1);
 
                 //Si la taza es automatica
                 if($company->tiporate_id == 1){
@@ -197,13 +198,13 @@ class QuotationController extends Controller
         $quotation = null;
                 
         if(isset($id_quotation)){
-            $quotation = Quotation::find($id_quotation);
+            $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
         }
 
         if(isset($quotation)){
-            //$product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
+            //$product_quotations = QuotationProduct::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
                 $product = null;
-                $inventories_quotations = DB::table('products')
+                $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')
                                 ->join('inventories', 'products.id', '=', 'inventories.product_id')
                                 ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                 ->where('quotation_products.id_quotation',$id_quotation)
@@ -212,7 +213,7 @@ class QuotationController extends Controller
                                 ->get(); 
                 
                 if(isset($id_inventory)){
-                    $inventory = Inventory::find($id_inventory);
+                    $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
                 }
                 if(isset($inventory)){
 
@@ -220,7 +221,7 @@ class QuotationController extends Controller
                     $datenow = $date->format('Y-m-d');    
                     
                     /*Revisa si la tasa de la empresa es automatica o fija*/
-                    $company = Company::find(1);
+                    $company = Company::on(Auth::user()->database_name)->find(1);
                     //Si la taza es automatica
                     if($company->tiporate_id == 1){
                         $bcv_quotation_product = $this->search_bcv();
@@ -259,9 +260,9 @@ class QuotationController extends Controller
 
     public function selectproduct($id_quotation,$coin = null)
     {
-            $inventories     = Inventory::all();
+            $inventories     = Inventory::on(Auth::user()->database_name)->get();
             $bcv = $this->search_bcv();
-            $quotation = Quotation::find($id_quotation);
+            $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
 
             $bcv_quotation_product = $quotation->bcv;
             if(!isset($coin)){
@@ -278,14 +279,14 @@ class QuotationController extends Controller
             $vendor = null;
             
             if(isset($id_vendor)){
-                $vendor = vendor::find($id_vendor);
+                $vendor = vendor::on(Auth::user()->database_name)->find($id_vendor);
             }
 
-            $clients     = Client::all();
+            $clients     = Client::on(Auth::user()->database_name)->get();
         
-            $vendors     = Vendor::all();
+            $vendors     = Vendor::on(Auth::user()->database_name)->get();
 
-            $transports     = Transport::all();
+            $transports     = Transport::on(Auth::user()->database_name)->get();
 
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
@@ -297,7 +298,7 @@ class QuotationController extends Controller
     {
             if($id_client != -1){
 
-                $vendors     = vendor::all();
+                $vendors     = vendor::on(Auth::user()->database_name)->get();
 
                 
         
@@ -314,7 +315,7 @@ class QuotationController extends Controller
     {
 
 
-            $clients     = Client::all();
+            $clients     = Client::on(Auth::user()->database_name)->get();
         
             return view('admin.quotations.selectclient',compact('clients'));
     }
@@ -349,6 +350,7 @@ class QuotationController extends Controller
         if($id_client != '-1'){
             if($id_vendor != '-1'){
                 $var = new Quotation();
+                $var->setConnection(Auth::user()->database_name);
 
                 $var->id_client = $id_client;
                 $var->id_vendor = $id_vendor;
@@ -365,7 +367,7 @@ class QuotationController extends Controller
                 $var->observation = request('observation');
                 $var->note = request('note');
 
-                $company = Company::find(1);
+                $company = Company::on(Auth::user()->database_name)->find(1);
                 //Si la taza es automatica
                 if($company->tiporate_id == 1){
                     $bcv = $this->search_bcv();
@@ -410,6 +412,7 @@ class QuotationController extends Controller
 
             
             $var = new QuotationProduct();
+            $var->setConnection(Auth::user()->database_name);
 
             $var->id_quotation = request('id_quotation');
             
@@ -431,7 +434,7 @@ class QuotationController extends Controller
 
             $coin = request('coin');
 
-            $quotation = Quotation::find($var->id_quotation);
+            $quotation = Quotation::on(Auth::user()->database_name)->find($var->id_quotation);
 
             $var->rate = $quotation->bcv;
 
@@ -483,9 +486,9 @@ class QuotationController extends Controller
     public function check_amount($id_quotation,$id_inventory,$amount_new)
     {
         
-        $inventory = Inventory::find($id_inventory);
+        $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
 
-        $sum_amount = db::table('quotation_products')
+        $sum_amount = DB::connection(Auth::user()->database_name)->table('quotation_products')
                         ->where('id_quotation',$id_quotation)
                         ->where('id_inventory',$id_inventory)
                         ->sum('amount');
@@ -514,20 +517,20 @@ class QuotationController extends Controller
         */
     public function edit($id)
     {
-        $quotation = quotation::find($id);
+        $quotation = quotation::on(Auth::user()->database_name)->find($id);
     
         return view('admin.quotations.edit',compact('quotation'));
     
     }
     public function editquotationproduct($id,$coin = null)
     {
-            $quotation_product = QuotationProduct::find($id);
+            $quotation_product = QuotationProduct::on(Auth::user()->database_name)->find($id);
         
             if(isset($quotation_product)){
 
-                $inventory= Inventory::find($quotation_product->id_inventory);
+                $inventory= Inventory::on(Auth::user()->database_name)->find($quotation_product->id_inventory);
 
-                $company = Company::find(1);
+                $company = Company::on(Auth::user()->database_name)->find(1);
                 //Si la taza es automatica
                 if($company->tiporate_id == 1){
                     $bcv = $this->search_bcv();
@@ -566,7 +569,7 @@ class QuotationController extends Controller
     public function update(Request $request, $id)
     {
 
-        $vars =  Quotation::find($id);
+        $vars =  Quotation::on(Auth::user()->database_name)->find($id);
 
         $vars_status = $vars->status;
         $vars_exento = $vars->exento;
@@ -594,7 +597,7 @@ class QuotationController extends Controller
         
         ]);
 
-        $var = Quotation::findOrFail($id);
+        $var = Quotation::on(Auth::user()->database_name)->findOrFail($id);
 
         $var->segment_id = request('segment_id');
         $var->subsegment_id= request('sub_segment_id');
@@ -655,7 +658,7 @@ class QuotationController extends Controller
 
             
         
-            $var = QuotationProduct::findOrFail($id);
+            $var = QuotationProduct::on(Auth::user()->database_name)->findOrFail($id);
 
             $sin_formato_price = str_replace(',', '.', str_replace('.', '', request('price')));
             $sin_formato_rate = str_replace(',', '.', str_replace('.', '', request('rate')));
@@ -708,11 +711,11 @@ class QuotationController extends Controller
             $sin_formato_rate = str_replace(',', '.', str_replace('.', '', $rate));
 
 
-            QuotationProduct::where('id_quotation',$id_quotation)
+            QuotationProduct::on(Auth::user()->database_name)->where('id_quotation',$id_quotation)
                                     ->update(['rate' => $sin_formato_rate]);
         
 
-            Quotation::where('id',$id_quotation)
+            Quotation::on(Auth::user()->database_name)->where('id',$id_quotation)
                                     ->update(['bcv' => $sin_formato_rate]);
 
             
@@ -730,7 +733,7 @@ class QuotationController extends Controller
     public function deleteProduct(Request $request)
     {
         
-        $product = QuotationProduct::find(request('id_quotation_product_modal')); 
+        $product = QuotationProduct::on(Auth::user()->database_name)->find(request('id_quotation_product_modal')); 
         $product->delete(); 
 
         return redirect('/quotations/register/'.request('id_quotation_modal').'/'.request('coin_modal').'')->withDanger('Eliminacion exitosa!!');
@@ -740,9 +743,9 @@ class QuotationController extends Controller
     public function deleteQuotation(Request $request)
     {
         
-        $quotation = Quotation::find(request('id_quotation_modal')); 
+        $quotation = Quotation::on(Auth::user()->database_name)->find(request('id_quotation_modal')); 
 
-        QuotationProduct::where('id_quotation',$quotation->id)->delete();
+        QuotationProduct::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->delete();
 
         $quotation->delete(); 
 
@@ -756,7 +759,7 @@ class QuotationController extends Controller
         if($request->ajax()){
             try{
                 
-                $respuesta = Inventory::select('id')->where('code',$var)->get();
+                $respuesta = Inventory::on(Auth::user()->database_name)->select('id')->where('code',$var)->get();
                 return response()->json($respuesta,200);
 
             }catch(Throwable $th){

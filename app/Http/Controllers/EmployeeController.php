@@ -12,7 +12,8 @@ use App\Parroquia;              //IMPORTANTE NOMBRE DE LA CLASE
 
 use App\Position;                 
 use App\SalaryType;              
-use App\Profession;              
+use App\Profession;        
+use Illuminate\Support\Facades\Auth;      
 
 
 class EmployeeController extends Controller
@@ -26,7 +27,7 @@ class EmployeeController extends Controller
    public function index()
    {
        $user= auth()->user();
-       $employees = Employee::orderBy('id' ,'DESC')->get();
+       $employees = Employee::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
       
        return view('admin.employees.index',compact('employees'));
    }
@@ -41,14 +42,14 @@ class EmployeeController extends Controller
 
 
        $datetime = date('d/m/Y T08:30');
-       $estados            = Estado::orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
-       $municipios         = Municipio::all();
-       $parroquias         = Parroquia::all();
+       $estados            = Estado::on(Auth::user()->database_name)->orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
+       $municipios         = Municipio::on(Auth::user()->database_name)->get();
+       $parroquias         = Parroquia::on(Auth::user()->database_name)->get();
      
-       $position           = Position::all();
-       $salarytype         = Salarytype::all();
-       $profession         = Profession::all();
-       $centro_costo       = Branch::orderBy('description','asc')->get();
+       $position           = Position::on(Auth::user()->database_name)->get();
+       $salarytype         = Salarytype::on(Auth::user()->database_name)->get();
+       $profession         = Profession::on(Auth::user()->database_name)->get();
+       $centro_costo       = Branch::on(Auth::user()->database_name)->orderBy('description','asc')->get();
        return view('admin.employees.create',compact('estados','municipios','parroquias','position','salarytype','profession','centro_costo'));
    }
 
@@ -90,7 +91,7 @@ class EmployeeController extends Controller
     ]);
 
     $users = new Employee();
-
+    $users->setConnection(Auth::user()->database_name);
     
     $users->nombres = request('nombres');
     $users->apellidos = request('apellidos');
@@ -156,16 +157,16 @@ class EmployeeController extends Controller
     */
    public function edit($id)
    {
-        $var = Employee::find($id);
+        $var = Employee::on(Auth::user()->database_name)->find($id);
         
-        $estados            = Estado::all();
-        $municipios         = Municipio::all();
-        $parroquias         = Parroquia::all();
+        $estados            = Estado::on(Auth::user()->database_name)->get();
+        $municipios         = Municipio::on(Auth::user()->database_name)->get();
+        $parroquias         = Parroquia::on(Auth::user()->database_name)->get();
       
 
-        $positions           = Position::all();
-        $salarytypes         = Salarytype::all();
-        $professions         = Profession::all();
+        $positions           = Position::on(Auth::user()->database_name)->get();
+        $salarytypes         = Salarytype::on(Auth::user()->database_name)->get();
+        $professions         = Profession::on(Auth::user()->database_name)->get();
       
 
         return view('admin.employees.edit',compact('var','estados','municipios','parroquias','positions','salarytypes','professions'));
@@ -182,7 +183,7 @@ class EmployeeController extends Controller
    public function update(Request $request, $id)
    {
 
-    $users =  Employee::find($id);
+    $users =  Employee::on(Auth::user()->database_name)->find($id);
    
     $data = request()->validate([
         'nombres'         =>'required|max:160',
@@ -221,7 +222,7 @@ class EmployeeController extends Controller
        
     ]);
 
-    $users = Employee::findOrFail($id);
+    $users = Employee::on(Auth::user()->database_name)->findOrFail($id);
       
     
     $users->nombres = request('nombres');

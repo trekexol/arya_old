@@ -10,6 +10,7 @@ use App\Parroquia;
 use App\User;
 use App\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VendorController extends Controller
 {
@@ -24,7 +25,7 @@ class VendorController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $vendors = Vendor::orderBy('id' ,'DESC')->get();
+        $vendors = Vendor::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -42,12 +43,12 @@ class VendorController extends Controller
 
 
      
-       $estados     = Estado::orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
-       $municipios  = Municipio::all();
-       $parroquias  = Parroquia::all();
+       $estados     = Estado::on(Auth::user()->database_name)->orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
+       $municipios  = Municipio::on(Auth::user()->database_name)->get();
+       $parroquias  = Parroquia::on(Auth::user()->database_name)->get();
      
-       $comisions   = ComisionType::all();
-       $employees   = Employee::all();
+       $comisions   = ComisionType::on(Auth::user()->database_name)->get();
+       $employees   = Employee::on(Auth::user()->database_name)->get();
 
        
 
@@ -84,6 +85,7 @@ class VendorController extends Controller
     ]);
 
     $var = new Vendor();
+    $var->setConnection(Auth::user()->database_name);
 
     
     $var->parroquia_id = request('Parroquia');
@@ -137,15 +139,15 @@ class VendorController extends Controller
     */
    public function edit($id)
    {
-        $var = vendor::find($id);
+        $var = vendor::on(Auth::user()->database_name)->find($id);
         
-        $estados            = Estado::all();
-        $municipios         = Municipio::all();
-        $parroquias         = Parroquia::all();
+        $estados            = Estado::on(Auth::user()->database_name)->get();
+        $municipios         = Municipio::on(Auth::user()->database_name)->get();
+        $parroquias         = Parroquia::on(Auth::user()->database_name)->get();
       
 
-        $comisions   = ComisionType::all();
-        $employees   = Employee::all();
+        $comisions   = ComisionType::on(Auth::user()->database_name)->get();
+        $employees   = Employee::on(Auth::user()->database_name)->get();
        
         return view('admin.vendors.edit',compact('var','estados','municipios','parroquias','comisions','employees'));
   
@@ -160,7 +162,7 @@ class VendorController extends Controller
     */
    public function update(Request $request, $id)
    {
-    $vars =  Vendor::find($id);
+    $vars =  Vendor::on(Auth::user()->database_name)->find($id);
 
     $vars_status = $vars->status;
   
@@ -191,7 +193,7 @@ class VendorController extends Controller
        
     ]);
 
-    $var = Vendor::findOrFail($id);
+    $var = Vendor::on(Auth::user()->database_name)->findOrFail($id);
     
     $var->parroquia_id = request('Parroquia');
     $var->comision_id = request('comision_id');

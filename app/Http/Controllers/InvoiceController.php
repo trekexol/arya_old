@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DetailVoucher;
 use App\Quotation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -15,7 +16,7 @@ class InvoiceController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-         $quotations = Quotation::orderBy('id' ,'desc')
+         $quotations = Quotation::on(Auth::user()->database_name)->orderBy('id' ,'desc')
                                         ->where('date_billing','<>',null)
                                         ->get();
          }elseif($users_role == '2'){
@@ -32,8 +33,8 @@ class InvoiceController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-            $quotation = Quotation::find($id_invoice);
-            $detailvouchers = DetailVoucher::where('id_invoice',$id_invoice)->get();
+            $quotation = Quotation::on(Auth::user()->database_name)->find($id_invoice);
+            $detailvouchers = DetailVoucher::on(Auth::user()->database_name)->where('id_invoice',$id_invoice)->get();
 
             if(!isset($coin)){
                 $coin = 'bolivares';

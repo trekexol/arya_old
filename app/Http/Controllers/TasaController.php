@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Tasa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TasaController extends Controller
 {
@@ -24,7 +25,7 @@ class TasaController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $tasas      =   Tasa::orderBy('id', 'desc')->get();
+           $tasas      =   Tasa::on(Auth::user()->database_name)->orderBy('id', 'desc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -52,7 +53,7 @@ class TasaController extends Controller
            
         ]);
 
-        $tasa_old = Tasa::where('date_end','=',null)->first();
+        $tasa_old = Tasa::on(Auth::user()->database_name)->where('date_end','=',null)->first();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');  
@@ -64,6 +65,7 @@ class TasaController extends Controller
 
 
         $users = new Tasa();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->id_user = request('id_user');
 
@@ -84,7 +86,7 @@ class TasaController extends Controller
     public function edit($id)
     {
 
-        $user    = Tasa::find($id);
+        $user    = Tasa::on(Auth::user()->database_name)->find($id);
         
         return view('admin.tasas.edit',compact('user'));
     }
@@ -103,7 +105,7 @@ class TasaController extends Controller
 
         
 
-        $user          = Tasa::findOrFail($id);
+        $user          = Tasa::on(Auth::user()->database_name)->findOrFail($id);
         $user->description        = request('description');
        
      

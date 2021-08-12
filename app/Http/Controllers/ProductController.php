@@ -9,6 +9,7 @@ use App\Subsegment;
 use App\TwoSubSegment;
 use App\UnitOfMeasure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -16,6 +17,7 @@ class ProductController extends Controller
     public function __construct(){
 
        $this->middleware('auth');
+
    }
 
    public function index()
@@ -23,7 +25,9 @@ class ProductController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $products = Product::orderBy('id' ,'DESC')->get();
+
+        $products = Product::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
+
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -40,11 +44,11 @@ class ProductController extends Controller
    {
 
 
-        $segments     = Segment::orderBY('description','asc')->pluck('description','id')->toArray();
+        $segments     = Segment::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
       
-        $subsegments  = Subsegment::all();
+        $subsegments  = Subsegment::on(Auth::user()->database_name)->orderBY('description','asc')->get();
      
-        $unitofmeasures   = UnitOfMeasure::all();
+        $unitofmeasures   = UnitOfMeasure::on(Auth::user()->database_name)->orderBY('description','asc')->get();
 
         return view('admin.products.create',compact('segments','subsegments','unitofmeasures'));
    }
@@ -80,7 +84,10 @@ class ProductController extends Controller
         
         ]);
 
+        //dd($request);
+        //dd(Auth::on(Auth::user()->database_name);
         $var = new Product();
+        $var->setConnection(Auth::user()->database_name);
 
         $var->segment_id = request('segment');
         $var->subsegment_id= request('Subsegment');
@@ -127,6 +134,7 @@ class ProductController extends Controller
         $var->save();
 
         $inventory = new Inventory();
+        $inventory->setConnection(Auth::user()->database_name);
 
         $inventory->product_id = $var->id;
         $inventory->id_user = $var->id_user;
@@ -158,12 +166,12 @@ class ProductController extends Controller
     */
    public function edit($id)
    {
-        $product = Product::find($id);
-        $segments     = Segment::orderBY('description','asc')->get();
+        $product = Product::on(Auth::user()->database_name)->find($id);
+        $segments     = Segment::on(Auth::user()->database_name)->orderBY('description','asc')->get();
        
-        $subsegments  = Subsegment::orderBY('description','asc')->get();
+        $subsegments  = Subsegment::on(Auth::user()->database_name)->orderBY('description','asc')->get();
      
-        $unitofmeasures   = UnitOfMeasure::orderBY('description','asc')->get();
+        $unitofmeasures   = UnitOfMeasure::on(Auth::user()->database_name)->orderBY('description','asc')->get();
        
         return view('admin.products.edit',compact('product','segments','subsegments','unitofmeasures'));
   
@@ -179,7 +187,7 @@ class ProductController extends Controller
    public function update(Request $request, $id)
    {
 
-    $vars =  Product::find($id);
+    $vars =  Product::on(Auth::user()->database_name)->find($id);
 
     $vars_status = $vars->status;
     $vars_exento = $vars->exento;
@@ -207,7 +215,7 @@ class ProductController extends Controller
        
     ]);
 
-    $var = Product::findOrFail($id);
+    $var = Product::on(Auth::user()->database_name)->findOrFail($id);
 
     $var->segment_id = request('segment');
     $var->subsegment_id= request('Subsegment');

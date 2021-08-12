@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ComisionType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ComisionTypeController extends Controller
 {
@@ -23,7 +24,7 @@ class ComisionTypeController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $comisiontypes      =   ComisionType::orderBy('id', 'asc')->get();
+           $comisiontypes      =   ComisionType::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -54,7 +55,7 @@ class ComisionTypeController extends Controller
         ]);
 
         $users = new Comisiontype();
-
+        $users->setConnection(Auth::user()->database_name);
       
         $users->description = request('description');
         $users->status =  request('status');
@@ -70,7 +71,7 @@ class ComisionTypeController extends Controller
     public function edit($id)
     {
 
-        $var = Comisiontype::find($id);
+        $var = Comisiontype::on(Auth::user()->database_name)->find($id);
         
         return view('admin.comisiontypes.edit',compact('var'));
     }
@@ -81,7 +82,7 @@ class ComisionTypeController extends Controller
     public function update(Request $request,$id)
     {
        
-        $users =  Comisiontype::find($id);
+        $users =  Comisiontype::on(Auth::user()->database_name)->find($id);
         
         $user_status = $users->status;
       
@@ -94,7 +95,7 @@ class ComisionTypeController extends Controller
 
         
 
-        $user          = comisiontype::findOrFail($id);
+        $user          = comisiontype::on(Auth::user()->database_name)->findOrFail($id);
        
         $user->description        = request('description');
        

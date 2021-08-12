@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Academiclevel;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AcademiclevelsController extends Controller
 {
@@ -23,7 +25,7 @@ class AcademiclevelsController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $academiclevels      =   Academiclevel::orderBy('id', 'asc')->get();
+           $academiclevels      =   Academiclevel::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -54,7 +56,7 @@ class AcademiclevelsController extends Controller
         ]);
 
         $users = new Academiclevel();
-
+        $users->setConnection(Auth::user()->database_name);
         $users->name = request('name');
         $users->description = request('description');
         $users->status =  request('status');
@@ -70,7 +72,7 @@ class AcademiclevelsController extends Controller
     public function edit($id)
     {
 
-        $user                   = Academiclevel::find($id);
+        $user = Academiclevel::on(Auth::user()->database_name)->find($id);
         
         return view('admin.academiclevels.edit',compact('user'));
     }
@@ -81,7 +83,7 @@ class AcademiclevelsController extends Controller
     public function update(Request $request,$id)
     {
        
-        $users =  Academiclevel::find($id);
+        $users =  Academiclevel::on(Auth::user()->database_name)->find($id);
         $user_rol = $users->role_id;
         $user_status = $users->status;
       
@@ -94,7 +96,7 @@ class AcademiclevelsController extends Controller
 
         
 
-        $user          = Academiclevel::findOrFail($id);
+        $user          = Academiclevel::on(Auth::user()->database_name)->findOrFail($id);
         $user->name         = request('name');
         $user->description        = request('description');
        
@@ -116,7 +118,7 @@ class AcademiclevelsController extends Controller
     public function destroy(Request $request)
     {
         //find the Division
-        $user = User::find($request->user_id);
+        $user = User::on(Auth::user()->database_name)->find($request->user_id);
 
         //Elimina el Division
         $user->delete();

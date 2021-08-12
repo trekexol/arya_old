@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Modelo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ModeloController extends Controller
 {
@@ -23,7 +24,7 @@ class ModeloController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $modelos      =   Modelo::orderBy('id', 'asc')->get();
+           $modelos      =   Modelo::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -53,6 +54,7 @@ class ModeloController extends Controller
         ]);
 
         $users = new Modelo();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->description = request('description');
         $users->status = request('status');
@@ -68,7 +70,7 @@ class ModeloController extends Controller
     public function edit($id)
     {
 
-        $var   = Modelo::find($id);
+        $var   = Modelo::on(Auth::user()->database_name)->find($id);
         
         return view('admin.modelos.edit',compact('var'));
     }
@@ -78,7 +80,7 @@ class ModeloController extends Controller
 
     public function update(Request $request,$id)
     {
-        $vars =  Modelo::find($id);
+        $vars =  Modelo::on(Auth::user()->database_name)->find($id);
 
         $var_status = $vars->status;
 
@@ -90,7 +92,7 @@ class ModeloController extends Controller
 
         
 
-        $var          = Modelo::findOrFail($id);
+        $var          = Modelo::on(Auth::user()->database_name)->findOrFail($id);
         $var->description        = request('description');
        
         if(request('status') == null){

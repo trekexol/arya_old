@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Anticipo;
 use App\Company;
+use Illuminate\Support\Facades\Auth;
 
 class ExpensesAndPurchaseController extends Controller
 {
@@ -32,7 +33,7 @@ class ExpensesAndPurchaseController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
 
-        $expensesandpurchases = ExpensesAndPurchase::orderBy('id' ,'DESC')
+        $expensesandpurchases = ExpensesAndPurchase::on(Auth::user()->database_name)->orderBy('id' ,'DESC')
                                                     ->where('amount_with_iva','=',null)
                                                     ->get();
 
@@ -50,7 +51,7 @@ class ExpensesAndPurchaseController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
 
-        $expensesandpurchases = ExpensesAndPurchase::orderBy('id' ,'DESC')
+        $expensesandpurchases = ExpensesAndPurchase::on(Auth::user()->database_name)->orderBy('id' ,'DESC')
                                                     ->where('amount_with_iva','<>',null)
                                                     ->get();
 
@@ -69,8 +70,8 @@ class ExpensesAndPurchaseController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-           $expense = ExpensesAndPurchase::find($id_expense);
-           $detailvouchers = DetailVoucher::where('id_expense',$id_expense)->get();
+           $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
+           $detailvouchers = DetailVoucher::on(Auth::user()->database_name)->where('id_expense',$id_expense)->get();
 
         }elseif($users_role == '2'){
            return view('admin.index');
@@ -90,7 +91,7 @@ class ExpensesAndPurchaseController extends Controller
         $provider = null;
 
         if(isset($id_provider)){
-            $provider = Provider::find($id_provider);
+            $provider = Provider::on(Auth::user()->database_name)->find($id_provider);
         }
     
         $date = Carbon::now();
@@ -109,15 +110,15 @@ class ExpensesAndPurchaseController extends Controller
         $accounts_inventory = null;
 
         if(isset($id_expense)){
-            $expense = ExpensesAndPurchase::find($id_expense);
+            $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
 
-            $provider = Provider::find($expense->id_provider);
+            $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
 
-            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+            $expense_details = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
 
             if(isset($id_inventory)){
-                $inventory = Inventory::find($id_inventory);
-                $accounts_inventory = Account::select('id','description')->where('code_one',1)
+                $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
+                $accounts_inventory = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',1)
                                                                 ->where('code_two', 1)
                                                                 ->where('code_three', 3)
                                                                 ->where('code_four',1)
@@ -126,9 +127,9 @@ class ExpensesAndPurchaseController extends Controller
             }
         }
             
-        $branches = Branch::orderBy('description','desc')->get();
+        $branches = Branch::on(Auth::user()->database_name)->orderBy('description','desc')->get();
 
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
         //Si la taza es automatica
         if($company->tiporate_id == 1){
             $bcv = $this->search_bcv();
@@ -167,9 +168,9 @@ class ExpensesAndPurchaseController extends Controller
         $expense_details = null;
 
         if(isset($id_expense)){
-            $expense = ExpensesAndPurchase::find($id_expense);
+            $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
 
-            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+            $expense_details = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
         }else{
             return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
         } 
@@ -217,21 +218,21 @@ class ExpensesAndPurchaseController extends Controller
         $expense_details = null;
 
         if(isset($id_expense)){
-            $expense = ExpensesAndPurchase::find($id_expense);
+            $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
 
-            $provider = Provider::find($expense->id_provider);
+            $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
 
-            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+            $expense_details = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
         }else{
             return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
         } 
 
-            $anticipos_sum_bolivares = Anticipo::where('status',1)
+            $anticipos_sum_bolivares = Anticipo::on(Auth::user()->database_name)->where('status',1)
                                                 ->where('id_provider',$expense->id_provider)
                                                 ->where('coin','like','bolivares')
                                                 ->sum('amount');
 
-            $total_dolar_anticipo =    DB::select('SELECT SUM(amount/rate) AS dolar
+            $total_dolar_anticipo =    DB::connection(Auth::user()->database_name)->select('SELECT SUM(amount/rate) AS dolar
                                         FROM anticipos
                                         WHERE id_provider = ? AND
                                         coin not like ? AND
@@ -245,20 +246,20 @@ class ExpensesAndPurchaseController extends Controller
                 
             }
 
-            $accounts_bank = DB::table('accounts')->where('code_one', 1)
+            $accounts_bank = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                         ->where('code_two', 1)
                         ->where('code_three', 1)
                         ->where('code_four', 2)
                         ->where('code_five', '<>',0)
                         ->where('description','not like', 'Punto de Venta%')
                         ->get();
-            $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+            $accounts_efectivo = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                         ->where('code_two', 1)
                         ->where('code_three', 1)
                         ->where('code_four', 1)
                         ->where('code_five', '<>',0)
                         ->get();
-            $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+            $accounts_punto_de_venta = DB::connection(Auth::user()->database_name)->table('accounts')->where('description','LIKE', 'Punto de Venta%')
                         ->get();
           
              $total= 0;
@@ -320,31 +321,31 @@ class ExpensesAndPurchaseController extends Controller
         $expense_details = null;
 
         if(isset($id_expense)){
-            $expense = ExpensesAndPurchase::find($id_expense);
+            $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
 
-            $provider = Provider::find($expense->id_provider);
+            $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
 
-            $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+            $expense_details = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
         }else{
             return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
         } 
 
-            $anticipos_sum = 0;//Anticipo::where('status',1)->where('id_client',$expense->id_client)->sum('amount');
+            $anticipos_sum = 0;//Anticipo::on(Auth::user()->database_name)->where('status',1)->where('id_client',$expense->id_client)->sum('amount');
 
-            $accounts_bank = DB::table('accounts')->where('code_one', 1)
+            $accounts_bank = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                         ->where('code_two', 1)
                         ->where('code_three', 1)
                         ->where('code_four', 2)
                         ->where('code_five', '<>',0)
                         ->where('description','not like', 'Punto de Venta%')
                         ->get();
-            $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+            $accounts_efectivo = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                         ->where('code_two', 1)
                         ->where('code_three', 1)
                         ->where('code_four', 1)
                         ->where('code_five', '<>',0)
                         ->get();
-            $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+            $accounts_punto_de_venta = DB::connection(Auth::user()->database_name)->table('accounts')->where('description','LIKE', 'Punto de Venta%')
                         ->get();
           
              $total= 0;
@@ -383,7 +384,7 @@ class ExpensesAndPurchaseController extends Controller
 
     public function selectprovider()
     {
-            $providers     = Provider::all();
+            $providers     = Provider::on(Auth::user()->database_name)->get();
         
             return view('admin.expensesandpurchases.selectprovider',compact('providers'));
     }
@@ -391,7 +392,7 @@ class ExpensesAndPurchaseController extends Controller
     
     public function selectinventary($id_expense,$coin)
     {
-            $inventories     = Inventory::all();
+            $inventories     = Inventory::on(Auth::user()->database_name)->get();
         
             return view('admin.expensesandpurchases.selectinventary',compact('coin','inventories','id_expense'));
     }
@@ -414,6 +415,7 @@ class ExpensesAndPurchaseController extends Controller
         ]);
 
         $var = new ExpensesAndPurchase();
+        $var->setConnection(Auth::user()->database_name);
 
         $var->id_provider = request('id_provider');
 
@@ -431,7 +433,7 @@ class ExpensesAndPurchaseController extends Controller
 
         $var->coin = 'bolivares';
 
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
         //Si la taza es automatica
         if($company->tiporate_id == 1){
             $bcv = $this->search_bcv();
@@ -469,6 +471,7 @@ class ExpensesAndPurchaseController extends Controller
 
         
         $var = new ExpensesDetail();
+        $var->setConnection(Auth::user()->database_name);
 
         $var->id_expense = request('id_expense');
         $var->rate = request('rate_expense');
@@ -550,7 +553,7 @@ class ExpensesAndPurchaseController extends Controller
 
         //-----------------------
 
-        $expense = ExpensesAndPurchase::findOrFail(request('id_expense'));
+        $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->findOrFail(request('id_expense'));
 
         $bcv = $expense->rate;
         $coin = request('coin');
@@ -564,6 +567,7 @@ class ExpensesAndPurchaseController extends Controller
                 /*-------------PAGO NUMERO 1----------------------*/
 
                 $var = new ExpensePayment();
+                $var->setConnection(Auth::user()->database_name);
 
                 $amount_pay = request('amount_pay');
         
@@ -672,6 +676,7 @@ class ExpensesAndPurchaseController extends Controller
                 /*-------------PAGO NUMERO 2----------------------*/
 
                 $var2 = new ExpensePayment();
+                $var2->setConnection(Auth::user()->database_name);
 
                 $amount_pay2 = request('amount_pay2');
 
@@ -780,6 +785,7 @@ class ExpensesAndPurchaseController extends Controller
                     /*-------------PAGO NUMERO 3----------------------*/
 
                     $var3 = new ExpensePayment();
+                    $var3->setConnection(Auth::user()->database_name);
 
                     $amount_pay3 = request('amount_pay3');
 
@@ -888,6 +894,7 @@ class ExpensesAndPurchaseController extends Controller
                     /*-------------PAGO NUMERO 4----------------------*/
 
                     $var4 = new expensePayment();
+                    $var4->setConnection(Auth::user()->database_name);
 
                     $amount_pay4 = request('amount_pay4');
 
@@ -996,6 +1003,7 @@ class ExpensesAndPurchaseController extends Controller
                 /*-------------PAGO NUMERO 5----------------------*/
 
                 $var5 = new expensePayment();
+                $var5->setConnection(Auth::user()->database_name);
 
                 $amount_pay5 = request('amount_pay5');
 
@@ -1104,6 +1112,7 @@ class ExpensesAndPurchaseController extends Controller
                 /*-------------PAGO NUMERO 6----------------------*/
 
                 $var6 = new expensePayment();
+                $var6->setConnection(Auth::user()->database_name);
 
                 $amount_pay6 = request('amount_pay6');
 
@@ -1212,6 +1221,7 @@ class ExpensesAndPurchaseController extends Controller
                 /*-------------PAGO NUMERO 7----------------------*/
 
                 $var7 = new expensePayment();
+                $var7->setConnection(Auth::user()->database_name);
 
                 $amount_pay7 = request('amount_pay7');
 
@@ -1322,6 +1332,7 @@ class ExpensesAndPurchaseController extends Controller
 
             
                 $header_voucher  = new HeaderVoucher();
+                $header_voucher->setConnection(Auth::user()->database_name);
 
 
                 $header_voucher->description = "Pago de Bienes o servicios.";
@@ -1337,7 +1348,7 @@ class ExpensesAndPurchaseController extends Controller
                 }    
                 
                 //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
-                $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
+                $account_cuentas_por_pagar_proveedores = Account::on(Auth::user()->database_name)->where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                     
                 if(isset($account_cuentas_por_pagar_proveedores)){
                     $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,$total_pay_form,0);
@@ -1420,6 +1431,7 @@ class ExpensesAndPurchaseController extends Controller
                 if(($expense->status != 'C') && ($expense->status != 'P')){
                     
                     $header_voucher  = new HeaderVoucher();
+                    $header_voucher->setConnection(Auth::user()->database_name);
 
 
                     $header_voucher->description = "Compras de Bienes o servicios.";
@@ -1430,10 +1442,10 @@ class ExpensesAndPurchaseController extends Controller
                 
                     $header_voucher->save();
                 
-                    $expense_details = ExpensesDetail::where('id_expense',$expense->id)->get();
+                    $expense_details = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
                     
                     foreach($expense_details as $var){
-                        $account = Account::find($var->id_account);
+                        $account = Account::on(Auth::user()->database_name)->find($var->id_account);
                         
                         if(isset($account)){
                             $this->add_movement($bcv,$header_voucher->id,$account->id,$expense->id,$user_id,$var->price * $var->amount,0);
@@ -1444,7 +1456,7 @@ class ExpensesAndPurchaseController extends Controller
     
                     //Credito Fiscal IVA por Pagar
     
-                    $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
+                    $account_credito_iva_fiscal = Account::on(Auth::user()->database_name)->where('description', 'like', 'IVA (Credito Fiscal)')->first();
                         
                     if(isset($account_credito_iva_fiscal)){
                         if($sin_formato_amount_iva != 0){
@@ -1453,7 +1465,7 @@ class ExpensesAndPurchaseController extends Controller
                     }
     
                     //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
-                    $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
+                    $account_cuentas_por_pagar_proveedores = Account::on(Auth::user()->database_name)->where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                     
                     if(isset($account_cuentas_por_pagar_proveedores)){
                         $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$total_pay_form);
@@ -1470,7 +1482,7 @@ class ExpensesAndPurchaseController extends Controller
                     if(isset($anticipo)){
                       $expense->anticipo =  $anticipo;
 
-                        $account_anticipo_proveedor = Account::where('code_one',1)
+                        $account_anticipo_proveedor = Account::on(Auth::user()->database_name)->where('code_one',1)
                                                                 ->where('code_two',1)
                                                                 ->where('code_three',4)
                                                                 ->where('code_four',2)
@@ -1506,7 +1518,7 @@ class ExpensesAndPurchaseController extends Controller
                 /*Verificamos si el cliente tiene anticipos activos */
 
                 if($anticipo != 0){
-                        DB::table('anticipos')->where('id_provider', '=', $expense->id_provider)
+                        DB::connection(Auth::user()->database_name)->table('anticipos')->where('id_provider', '=', $expense->id_provider)
                         ->where('status', '=', '1')
                         ->update(['status' => 'C']);
             
@@ -1546,7 +1558,7 @@ class ExpensesAndPurchaseController extends Controller
 
         $coin = request('coin');
 
-        $expense = ExpensesAndPurchase::findOrFail($id_expense);
+        $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->findOrFail($id_expense);
 
         if($expense->coin == 'dolares'){
             $sin_formato_amount_iva = $sin_formato_amount_iva * $expense->rate;
@@ -1573,6 +1585,7 @@ class ExpensesAndPurchaseController extends Controller
         $expense->save();
 
         $header_voucher  = new HeaderVoucher();
+        $header_voucher->setConnection(Auth::user()->database_name);
 
 
         $header_voucher->description = "Compras de Bienes o servicios.";
@@ -1585,7 +1598,7 @@ class ExpensesAndPurchaseController extends Controller
     
         //Mercancia para la Venta
             
-        $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
+        $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
 
         if(isset($account_mercancia_venta)){
             $this->add_movement($expense->rate,$header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sin_formato_amount,0);
@@ -1593,7 +1606,7 @@ class ExpensesAndPurchaseController extends Controller
 
         //IVA credito Fiscal
 
-        $account_credito_iva_fiscal = Account::where('description', 'like', 'IVA (Credito Fiscal)')->first();
+        $account_credito_iva_fiscal = Account::on(Auth::user()->database_name)->where('description', 'like', 'IVA (Credito Fiscal)')->first();
             
         if(isset($account_credito_iva_fiscal)){
             if($sin_formato_amount_iva != 0){
@@ -1602,7 +1615,7 @@ class ExpensesAndPurchaseController extends Controller
         }
 
         //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
-        $account_cuentas_por_pagar_proveedores = Account::where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
+        $account_cuentas_por_pagar_proveedores = Account::on(Auth::user()->database_name)->where('description', 'like', 'Cuentas por Pagar Proveedores')->first(); 
                     
         if(isset($account_cuentas_por_pagar_proveedores)){
             $this->add_movement($expense->rate,$header_voucher->id,$account_cuentas_por_pagar_proveedores->id,$expense->id,$user_id,0,$sin_formato_amount_with_iva);
@@ -1615,14 +1628,14 @@ class ExpensesAndPurchaseController extends Controller
     {
        
         
-        $expense_detail = ExpensesDetail::where('id_expense',$id_expense)->get();
+        $expense_detail = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$id_expense)->get();
         
         if(isset($expense_detail)){
            
            foreach($expense_detail as $var){
             
                 if(isset($var->id_inventory)){
-                    $inventory = Inventory::findOrFail($var->id_inventory);
+                    $inventory = Inventory::on(Auth::user()->database_name)->findOrFail($var->id_inventory);
                     
                     if(isset($inventory)){
                            
@@ -1654,6 +1667,7 @@ class ExpensesAndPurchaseController extends Controller
     {
 
         $detail = new DetailVoucher();
+        $detail->setConnection(Auth::user()->database_name);
 
         $detail->id_account = $id_account;
         $detail->id_header_voucher = $id_header;
@@ -1669,7 +1683,7 @@ class ExpensesAndPurchaseController extends Controller
 
         /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
         
-            $account = Account::findOrFail($detail->id_account);
+            $account = Account::on(Auth::user()->database_name)->findOrFail($detail->id_account);
 
             if($account->status != "M"){
                 $account->status = "M";
@@ -1719,7 +1733,7 @@ class ExpensesAndPurchaseController extends Controller
             }//SIN DETERMINAR
             else if($payment_type == 7){
                 
-                $account_sin_determinar = Account::where('description', 'like', 'Otros Ingresos No Identificados')->first(); 
+                $account_sin_determinar = Account::on(Auth::user()->database_name)->where('description', 'like', 'Otros Ingresos No Identificados')->first(); 
         
                 if(isset($account_sin_determinar)){
                     $this->add_movement($bcv,$header_voucher,$account_sin_determinar->id,$id_expense,$user_id,$amount_debe,$amount_haber);
@@ -1727,7 +1741,7 @@ class ExpensesAndPurchaseController extends Controller
             }//PAGO DE CONTADO
             else if($payment_type == 2){
                 
-                $account_contado = Account::where('description', 'like', 'Caja Chica')->first(); 
+                $account_contado = Account::on(Auth::user()->database_name)->where('description', 'like', 'Caja Chica')->first(); 
         
                 if(isset($account_contado)){
                     $this->add_movement($bcv,$header_voucher,$account_contado->id,$id_expense,$user_id,$amount_debe,$amount_haber);
@@ -1735,7 +1749,7 @@ class ExpensesAndPurchaseController extends Controller
             }//CONTRA ANTICIPO
             else if($payment_type == 3){
                 
-                $account_contra_anticipo = Account::where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
+                $account_contra_anticipo = Account::on(Auth::user()->database_name)->where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
         
                 if(isset($account_contra_anticipo)){
                     $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$id_expense,$user_id,$amount_debe,$amount_haber);
@@ -1752,11 +1766,11 @@ class ExpensesAndPurchaseController extends Controller
         $sin_formato_rate = str_replace(',', '.', str_replace('.', '', $rate));
 
 
-        ExpensesDetail::where('id_expense',$id_expense)
+        ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$id_expense)
                                 ->update(['rate' => $sin_formato_rate]);
 
 
-        ExpensesAndPurchase::where('id',$id_expense)
+        ExpensesAndPurchase::on(Auth::user()->database_name)->where('id',$id_expense)
                                 ->update(['rate' => $sin_formato_rate]);
 
         
@@ -1784,7 +1798,7 @@ class ExpensesAndPurchaseController extends Controller
         */
     public function edit($id,$coin)
     {
-        /*$expense_detail = ExpensesDetail::find($id);
+        /*$expense_detail = ExpensesDetail::on(Auth::user()->database_name)->find($id);
     
     
         return view('admin.expensesandpurchases.edit_product',compact('expense_detail','coin'));*/
@@ -1792,11 +1806,11 @@ class ExpensesAndPurchaseController extends Controller
     }
     public function editexpensesandpurchaseproduct($id)
     {
-            $expensesandpurchase_product = ExpensesAndPurchase::find($id);
+            $expensesandpurchase_product = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id);
         
             if(isset($expensesandpurchase_product)){
 
-                $inventory= Inventory::find($expensesandpurchase_product->id_inventory);
+                $inventory= Inventory::on(Auth::user()->database_name)->find($expensesandpurchase_product->id_inventory);
 
                 return view('admin.expensesandpurchases.edit_product',compact('expensesandpurchase_product','inventory'));
             }else{
@@ -1808,12 +1822,12 @@ class ExpensesAndPurchaseController extends Controller
     }
     public function editproduct($id,$coin)
     {
-        $expense_detail = ExpensesDetail::find($id);
+        $expense_detail = ExpensesDetail::on(Auth::user()->database_name)->find($id);
         $rate = null;
 
         if(isset($expense_detail)){
 
-            $inventory= Inventory::find($expense_detail->id_inventory);
+            $inventory= Inventory::on(Auth::user()->database_name)->find($expense_detail->id_inventory);
 
             if($coin != 'bolivares'){
                 $rate = $expense_detail->rate;
@@ -1837,7 +1851,7 @@ class ExpensesAndPurchaseController extends Controller
     public function update(Request $request, $id)
     {
 
-        $vars =  expensesandpurchase::find($id);
+        $vars =  expensesandpurchase::on(Auth::user()->database_name)->find($id);
 
         $vars_status = $vars->status;
         $vars_exento = $vars->exento;
@@ -1865,7 +1879,7 @@ class ExpensesAndPurchaseController extends Controller
         
         ]);
 
-        $var = ExpensesAndPurchase::findOrFail($id);
+        $var = ExpensesAndPurchase::on(Auth::user()->database_name)->findOrFail($id);
 
         $var->segment_id = request('segment_id');
         $var->subsegment_id= request('sub_segment_id');
@@ -1927,7 +1941,7 @@ class ExpensesAndPurchaseController extends Controller
             
             ]);
             
-            $var = ExpensesDetail::findOrFail($id);
+            $var = ExpensesDetail::on(Auth::user()->database_name)->findOrFail($id);
 
             $coin = request('coin');
 
@@ -2006,7 +2020,7 @@ class ExpensesAndPurchaseController extends Controller
                 }
                 if($type == 3){
                     $code_one = 5;  
-                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                    $respuesta = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',$code_one)
                                                                 ->where('code_two', '<>',0)
                                                                 ->where('code_three', '<>',0)
                                                                 ->where('code_four', '<>',0)
@@ -2015,7 +2029,7 @@ class ExpensesAndPurchaseController extends Controller
                 }
                 if($type == 4){
                     $code_one = 6; 
-                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                    $respuesta = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',$code_one)
                                         ->where('code_two', '<>',0)
                                         ->where('code_three', '<>',0)
                                         ->where('code_four', '<>',0)
@@ -2024,7 +2038,7 @@ class ExpensesAndPurchaseController extends Controller
                 }
                 if($type == 5){
                     $code_one = 6;  
-                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                    $respuesta = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',$code_one)
                                         ->where('code_two', '<>',0)
                                         ->where('code_three', '<>',0)
                                         ->where('code_four', '<>',0)
@@ -2033,7 +2047,7 @@ class ExpensesAndPurchaseController extends Controller
                 }
                 if($type == 6){
                     $code_one = 6;  
-                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                    $respuesta = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',$code_one)
                                         ->where('code_two', '<>',0)
                                         ->where('code_three', '<>',0)
                                         ->where('code_four', '<>',0)
@@ -2042,7 +2056,7 @@ class ExpensesAndPurchaseController extends Controller
                 }
                 if($type == 7){
                     $code_one = 6;  
-                    $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                    $respuesta = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',$code_one)
                                         ->where('code_two', '<>',0)
                                         ->where('code_three', '<>',0)
                                         ->where('code_four', '<>',0)
@@ -2050,7 +2064,7 @@ class ExpensesAndPurchaseController extends Controller
                     return response()->json($respuesta,200);
                 }
                 
-                $respuesta = Account::select('id','description')->where('code_one',$code_one)
+                $respuesta = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',$code_one)
                                                                 ->where('code_two', $code_two)
                                                                 ->where('code_three', '<>',0)
                                                                 ->where('code_four', '<>',0)
@@ -2069,7 +2083,7 @@ class ExpensesAndPurchaseController extends Controller
         if($request->ajax()){
             try{
                 
-                $respuesta = Inventory::select('id')->where('code',$var)->get();
+                $respuesta = Inventory::on(Auth::user()->database_name)->select('id')->where('code',$var)->get();
                 return response()->json($respuesta,200);
 
             }catch(Throwable $th){

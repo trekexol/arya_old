@@ -63,6 +63,8 @@ return [
             ]) : [],
         ],
 
+       
+
         'logins' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -83,16 +85,16 @@ return [
             ]) : [],
         ],
 
-
-        'arya1' => [
+        
+        'arya' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('ARYA1_HOST', '127.0.0.1'),
-            'port' => env('ARYA1_PORT', '3306'),
-            'database' => env('ARYA1_DATABASE', 'forge'),
-            'username' => env('ARYA1_USERNAME', 'forge'),
-            'password' => env('ARYA1_PASSWORD', ''),
-            'unix_socket' => env('ARYA1_SOCKET', ''),
+            'host' => env('ARYA_HOST', '127.0.0.1'),
+            'port' => env('ARYA_PORT', '3306'),
+            'database' => env('ARYA_DATABASE', 'forge'),
+            'username' => env('ARYA_USERNAME', 'forge'),
+            'password' => env('ARYA_PASSWORD', ''),
+            'unix_socket' => env('ARYA_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
@@ -104,6 +106,26 @@ return [
             ]) : [],
         ],
 
+        'aryanorthdelivery' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('ARYANORTHDELIVERY_HOST', '127.0.0.1'),
+            'port' => env('ARYANORTHDELIVERY_PORT', '3306'),
+            'database' => env('ARYANORTHDELIVERY_DATABASE', 'forge'),
+            'username' => env('ARYANORTHDELIVERY_USERNAME', 'forge'),
+            'password' => env('ARYANORTHDELIVERY_PASSWORD', ''),
+            'unix_socket' => env('ARYANORTHDELIVERY_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+        
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

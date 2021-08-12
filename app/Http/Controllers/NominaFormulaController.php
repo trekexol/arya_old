@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\NominaFormula;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NominaFormulaController extends Controller
 {
@@ -23,7 +24,7 @@ class NominaFormulaController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $nomina_formulas      =   NominaFormula::orderBy('id', 'asc')->get();
+           $nomina_formulas      =   NominaFormula::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -54,6 +55,7 @@ class NominaFormulaController extends Controller
         ]);
 
         $users = new NominaFormula();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->description = request('description');
         $users->type = request('type');
@@ -70,7 +72,7 @@ class NominaFormulaController extends Controller
     public function edit($id)
     {
 
-        $var   = NominaFormula::find($id);
+        $var   = NominaFormula::on(Auth::user()->database_name)->find($id);
         
         return view('admin.nominaformulas.edit',compact('var'));
     }
@@ -80,7 +82,7 @@ class NominaFormulaController extends Controller
 
     public function update(Request $request,$id)
     {
-        $vars =  NominaFormula::find($id);
+        $vars =  NominaFormula::on(Auth::user()->database_name)->find($id);
         $var_status = $vars->status;
 
         $request->validate([
@@ -91,7 +93,7 @@ class NominaFormulaController extends Controller
 
         
 
-        $var          = NominaFormula::findOrFail($id);
+        $var          = NominaFormula::on(Auth::user()->database_name)->findOrFail($id);
         $var->description        = request('description');
         $var->type        = request('type');
        

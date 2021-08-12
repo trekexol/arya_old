@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Segment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SegmentController extends Controller
 {
@@ -23,7 +24,7 @@ class SegmentController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $segments      =   Segment::orderBy('id', 'asc')->get();
+           $segments      =   Segment::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -53,6 +54,7 @@ class SegmentController extends Controller
         ]);
 
         $users = new Segment();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->description = request('description');
         
@@ -68,7 +70,7 @@ class SegmentController extends Controller
     public function edit($id)
     {
 
-        $user                   = Segment::find($id);
+        $user                   = Segment::on(Auth::user()->database_name)->find($id);
         
         return view('admin.segments.edit',compact('user'));
     }
@@ -87,7 +89,7 @@ class SegmentController extends Controller
 
         
 
-        $user          = Segment::findOrFail($id);
+        $user          = Segment::on(Auth::user()->database_name)->findOrFail($id);
         $user->description        = request('description');
        
      

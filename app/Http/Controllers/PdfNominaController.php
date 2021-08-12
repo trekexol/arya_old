@@ -10,13 +10,14 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PdfNominaController extends Controller
 {
 
     public function create_recibo_vacaciones()
     {
-        $employees = Employee::orderBY('nombres','asc')->get();
+        $employees = Employee::on(Auth::user()->database_name)->orderBY('nombres','asc')->get();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -31,7 +32,7 @@ class PdfNominaController extends Controller
 
     public function create_recibo_prestaciones()
     {
-        $employees = Employee::orderBY('nombres','asc')->get();
+        $employees = Employee::on(Auth::user()->database_name)->orderBY('nombres','asc')->get();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -41,7 +42,7 @@ class PdfNominaController extends Controller
 
     public function create_recibo_utilidades()
     {
-        $employees = Employee::orderBY('nombres','asc')->get();
+        $employees = Employee::on(Auth::user()->database_name)->orderBY('nombres','asc')->get();
 
         $date = Carbon::now(); 
         $datenow = $date->format('Y-m-d');
@@ -54,7 +55,7 @@ class PdfNominaController extends Controller
 
     public function create_recibo_liquidacion_auto()
     {
-        $employees = Employee::orderBY('nombres','asc')->get();
+        $employees = Employee::on(Auth::user()->database_name)->orderBY('nombres','asc')->get();
 
         $date = Carbon::now(); 
         $datenow = $date->format('Y-m-d');
@@ -73,7 +74,7 @@ class PdfNominaController extends Controller
 
         $pdf = App::make('dompdf.wrapper');
 
-        $employee = Employee::find(request('id_employee'));
+        $employee = Employee::on(Auth::user()->database_name)->find(request('id_employee'));
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -120,7 +121,7 @@ class PdfNominaController extends Controller
       
         $pdf = App::make('dompdf.wrapper');
 
-        $employee = Employee::find(request('id_employee'));
+        $employee = Employee::on(Auth::user()->database_name)->find(request('id_employee'));
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -130,11 +131,11 @@ class PdfNominaController extends Controller
 
             $employee->date_begin = request('date_begin');
            
-            $ultima_nomina = Nomina::where('id_profession',$employee->profession_id)
+            $ultima_nomina = Nomina::on(Auth::user()->database_name)->where('id_profession',$employee->profession_id)
                                                 ->latest()->first();
 
             if(isset($ultima_nomina)){
-                $nomina_calculation = NominaCalculation::where('id_nomina',$ultima_nomina->id)->get();                                    
+                $nomina_calculation = NominaCalculation::on(Auth::user()->database_name)->where('id_nomina',$ultima_nomina->id)->get();                                    
             }else{
                 return redirect('/nominas')->withDanger('El empleado no tiene ninguna nomina registrada');
             } 
@@ -152,7 +153,7 @@ class PdfNominaController extends Controller
         
         $pdf = App::make('dompdf.wrapper');
 
-        $employee = Employee::find($id_employee);
+        $employee = Employee::on(Auth::user()->database_name)->find($id_employee);
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -160,10 +161,10 @@ class PdfNominaController extends Controller
 
         if(isset($employee)){
 
-            $nomina = Nomina::find($id_nomina);
+            $nomina = Nomina::on(Auth::user()->database_name)->find($id_nomina);
 
             if(isset($nomina)){
-                $nomina_calculation = NominaCalculation::where('id_nomina',$nomina->id)
+                $nomina_calculation = NominaCalculation::on(Auth::user()->database_name)->where('id_nomina',$nomina->id)
                                                         ->where('id_employee',$employee->id)->get();                                    
             }else{
                 return redirect('/nominas')->withDanger('El empleado no tiene ninguna nomina registrada');
@@ -185,7 +186,7 @@ class PdfNominaController extends Controller
 
         $pdf = App::make('dompdf.wrapper');
 
-        $employee = Employee::find(request('id_employee'));
+        $employee = Employee::on(Auth::user()->database_name)->find(request('id_employee'));
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -218,7 +219,7 @@ class PdfNominaController extends Controller
 
         $pdf = App::make('dompdf.wrapper');
 
-        $employee = Employee::find(request('id_employee'));
+        $employee = Employee::on(Auth::user()->database_name)->find(request('id_employee'));
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -247,10 +248,10 @@ class PdfNominaController extends Controller
             $employee->otras_deducciones = $sin_formato_otras_deducciones;
 
 
-            $ultima_nomina = Nomina::where('id_profession',$employee->profession_id)
+            $ultima_nomina = Nomina::on(Auth::user()->database_name)->where('id_profession',$employee->profession_id)
                                     ->latest()->first();
 
-            $nomina_calculation = NominaCalculation::where('id_nomina',$ultima_nomina->id)->get();     
+            $nomina_calculation = NominaCalculation::on(Auth::user()->database_name)->where('id_nomina',$ultima_nomina->id)->get();     
 
             $pdf = $pdf->loadView('pdf.liquidacion',compact('employee','datenow','ultima_nomina','nomina_calculation'));
 

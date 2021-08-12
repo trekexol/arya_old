@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Estado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EstadoController extends Controller
 {
@@ -14,7 +15,7 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        $estados =Estado::orderBy('id', 'asc')->get();
+        $estados =Estado::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
 
         return view('admin.estados.index',['estados'=> $estados]);
 
@@ -47,6 +48,7 @@ class EstadoController extends Controller
 
 
         $estados = new Estado();
+        $estados->setConnection(Auth::user()->database_name);
         $estados->descripcion    = request('nombre');
         $estados->save();
         return redirect('/estados');
@@ -72,7 +74,7 @@ class EstadoController extends Controller
     public function edit(Estado $estado)
     {
         // get the post with the id $post->idata
-        $estado = Estado::find($estado->id);
+        $estado = Estado::on(Auth::user()->database_name)->find($estado->id);
         // dd($estado);
         return view('admin/estados/edit', ['estado' =>$estado]);
     }
@@ -90,7 +92,7 @@ class EstadoController extends Controller
         $data = request()->validate([
             'nombre'         =>'required|max:255',
         ]);
-        $estado =  Estado::findOrFail($estado->id);
+        $estado =  Estado::on(Auth::user()->database_name)->findOrFail($estado->id);
         $estado->descripcion    = request('nombre');
         // dd($estado);
         $estado->save();
@@ -107,7 +109,7 @@ class EstadoController extends Controller
     {
         //
         //find the Estado
-        $estado = Estado::find($request->estado_id);
+        $estado = Estado::on(Auth::user()->database_name)->find($request->estado_id);
 
         //Elimina el Estado
         $estado->delete();

@@ -8,6 +8,7 @@ use App\Estado;
 use App\Municipio;
 use App\Parroquia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BranchController extends Controller
 {
@@ -21,12 +22,12 @@ class BranchController extends Controller
    {
        $user= auth()->user();
 
-       $branches = Branch::orderBy('id' ,'DESC')->get();
+       $branches = Branch::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
        //dd($user->estado_id);
 
        //$rol = $user->roles();
        //dd($rol);
-       //$persons = Person::where('estado_id', $user->estado_id)
+       //$persons = Person::on(Auth::user()->database_name)->where('estado_id', $user->estado_id)
                            //->orderBy('id', 'DESC')
                            //->get();
        // dd($persons);
@@ -40,10 +41,10 @@ class BranchController extends Controller
     */
    public function create()
    {
-        $estados            = Estado::orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
-        $municipios         = Municipio::all();
-        $companies     = Company::orderBy('razon_social', 'DESC')->get();
-        $parroquias         = Parroquia::orderBy('descripcion', 'ASC')->get();
+        $estados            = Estado::on(Auth::user()->database_name)->orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
+        $municipios         = Municipio::on(Auth::user()->database_name)->get();
+        $companies     = Company::on(Auth::user()->database_name)->orderBy('razon_social', 'DESC')->get();
+        $parroquias         = Parroquia::on(Auth::user()->database_name)->orderBy('descripcion', 'ASC')->get();
 
        return view('admin.branches.create',compact('companies','parroquias','estados','municipios'));
    }
@@ -73,6 +74,7 @@ class BranchController extends Controller
     ]);
 
     $users = new Branch();
+    $users->setConnection(Auth::user()->database_name);
 
     $users->company_id = request('company_id');
     $users->parroquia_id = request('Parroquia');
@@ -113,15 +115,15 @@ class BranchController extends Controller
     */
    public function edit($id)
    {
-        $var = Branch::find($id);
+        $var = Branch::on(Auth::user()->database_name)->find($id);
       
         //SIRVE PARA OBTENER EL ID DE SU ESTADO Y DE SU MUNICIPIO, YA QUE NO ESTA GUARDADO EN LA TABLA BRANCH
-        $parroquia_guia = Parroquia::find($var->parroquia_id);
+        $parroquia_guia = Parroquia::on(Auth::user()->database_name)->find($var->parroquia_id);
 
-        $parroquias = Parroquia::all();
-        $estados = Estado::all();
-        $municipios = Municipio::all();
-        $companies = Company::all();
+        $parroquias = Parroquia::on(Auth::user()->database_name)->get();
+        $estados = Estado::on(Auth::user()->database_name)->get();
+        $municipios = Municipio::on(Auth::user()->database_name)->get();
+        $companies = Company::on(Auth::user()->database_name)->get();
       
 
         return view('admin.branches.edit',compact('var','parroquia_guia','parroquias',
@@ -157,7 +159,7 @@ class BranchController extends Controller
 
 
 
-    $users = Branch::findOrFail($id);
+    $users = Branch::on(Auth::user()->database_name)->findOrFail($id);
 
     
     

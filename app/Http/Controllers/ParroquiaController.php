@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Parroquia;
+use Illuminate\Support\Facades\Auth;
+
+
 class ParroquiaController extends Controller
 {
     //
@@ -13,7 +16,7 @@ class ParroquiaController extends Controller
         if($request->ajax()){
             try{
 
-                $parroquia = Parroquia::select('id','descripcion')->where('municipio_id',$id_municipio)->where('estado_id',$id_estado)->orderBy('descripcion','asc')->get();
+                $parroquia = Parroquia::on(Auth::user()->database_name)->select('id','descripcion')->where('municipio_id',$id_municipio)->where('estado_id',$id_estado)->orderBy('descripcion','asc')->get();
                 return response()->json($parroquia,200);
             }catch(Throwable $th){
                 return response()->json(false,500);

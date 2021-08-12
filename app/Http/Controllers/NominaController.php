@@ -9,6 +9,7 @@ use App\NominaConcept;
 use App\Profession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NominaController extends Controller
 {
@@ -28,7 +29,7 @@ class NominaController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $nominas      =   Nomina::orderBy('id', 'desc')->get();
+           $nominas      =   Nomina::on(Auth::user()->database_name)->orderBy('id', 'desc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -40,7 +41,7 @@ class NominaController extends Controller
 
     public function create()
     {
-        $professions = Profession::orderBY('name','asc')->get();
+        $professions = Profession::on(Auth::user()->database_name)->orderBY('name','asc')->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
 
@@ -51,9 +52,9 @@ class NominaController extends Controller
     public function selectemployee($id)
     {
 
-        $var  = Nomina::find($id);
+        $var  = Nomina::on(Auth::user()->database_name)->find($id);
 
-        $employees = Employee::where('profession_id',$var->id_profession)->get();
+        $employees = Employee::on(Auth::user()->database_name)->where('profession_id',$var->id_profession)->get();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -66,9 +67,9 @@ class NominaController extends Controller
     public function calculate($id_nomina)
     {
 
-        $nomina = Nomina::find($id_nomina);
+        $nomina = Nomina::on(Auth::user()->database_name)->find($id_nomina);
         
-        $employees = Employee::where('profession_id',$nomina->id_profession)->get();
+        $employees = Employee::on(Auth::user()->database_name)->where('profession_id',$nomina->id_profession)->get();
 
         foreach($employees as $employee){
             $this->addNominaCalculation($nomina,$employee);
@@ -85,35 +86,35 @@ class NominaController extends Controller
         
         if(($nomina->type == "Primera Quincena") || ($nomina->type == "Segunda Quincena")){
             
-            $nominaconcepts_comun = NominaConcept::where('type','LIKE','Quincenal')
+            $nominaconcepts_comun = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE','Quincenal')
                                                 ->where('calculate','LIKE','S')->get();
         }
 
         if(($nomina->type == "Primera Quincena")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','%Primera Quincena%')
+            $nominaconcepts = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE','%Primera Quincena%')
                                                 ->where('calculate','LIKE','S')->get();
 
         }else if(($nomina->type == "Segunda Quincena")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','%Segunda Quincena%')
+            $nominaconcepts = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE','%Segunda Quincena%')
                                                 ->where('calculate','LIKE','S')->get();
 
         }else if(($nomina->type == "Quincenal")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','Quincenal')
+            $nominaconcepts = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE','Quincenal')
                                                 ->where('calculate','LIKE','S')->get();
 
         }else if(($nomina->type == "Mensual")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','%Mensual%')
+            $nominaconcepts = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE','%Mensual%')
                                                 ->where('calculate','LIKE','S')->get();
 
         }else if(($nomina->type == "Semanal")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','%Semanal%')
+            $nominaconcepts = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE','%Semanal%')
                                                 ->where('calculate','LIKE','S')->get();
 
         }else if(($nomina->type == "Especial")){
-            $nominaconcepts = NominaConcept::where('type','LIKE','Especial')
+            $nominaconcepts = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE','Especial')
                                                 ->where('calculate','LIKE','S')->get();
         }else{
-            $nominaconcepts = NominaConcept::where('type','LIKE',$nomina->type)
+            $nominaconcepts = NominaConcept::on(Auth::user()->database_name)->where('type','LIKE',$nomina->type)
                                                 ->where('calculate','LIKE','S')->get();
         }
        
@@ -121,6 +122,7 @@ class NominaController extends Controller
             foreach($nominaconcepts as $nominaconcept){
 
                 $vars = new NominaCalculation();
+                $vars->setConnection(Auth::user()->database_name);
 
                 $vars->id_nomina = $nomina->id;
                 $vars->id_nomina_concept = $nominaconcept->id;
@@ -176,6 +178,7 @@ class NominaController extends Controller
             foreach($nominaconcepts_comun as $nominaconcept){
 
                 $vars = new NominaCalculation();
+                $vars->setConnection(Auth::user()->database_name);
     
                 $vars->id_nomina = $nomina->id;
                 $vars->id_nomina_concept = $nominaconcept->id;
@@ -366,6 +369,7 @@ class NominaController extends Controller
         ]);
 
         $users = new Nomina();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->id_profession = request('id_profession');
         $users->description = request('description');
@@ -388,9 +392,9 @@ class NominaController extends Controller
     public function edit($id)
     {
 
-        $var  = Nomina::find($id);
+        $var  = Nomina::on(Auth::user()->database_name)->find($id);
 
-        $professions = Profession::orderBY('name','asc')->get();
+        $professions = Profession::on(Auth::user()->database_name)->orderBY('name','asc')->get();
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
 
@@ -405,7 +409,7 @@ class NominaController extends Controller
     public function update(Request $request,$id)
     {
        
-        $vars =  Nomina::find($id);
+        $vars =  Nomina::on(Auth::user()->database_name)->find($id);
         $var_status = $vars->status;
       
 
@@ -420,7 +424,7 @@ class NominaController extends Controller
            
         ]);
 
-        $var          = Nomina::findOrFail($id);
+        $var          = Nomina::on(Auth::user()->database_name)->findOrFail($id);
 
         $var->id_profession = request('id_profession');
         $var->description = request('description');

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
+
 use App\Permission\Models\Role;
 
 class UserController extends Controller
@@ -30,12 +31,12 @@ class UserController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $users      =   User::orderBy('id', 'asc')->get();
+           $users      =   User::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
 
-    //dd('llego');
+    
         return view('admin.users.index',compact('users'));
       
     }
@@ -43,10 +44,10 @@ class UserController extends Controller
     public function create()
     {
 
-       /* $personregister         = Person::find($id);
-        $estados                = Estado::orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
-        $municipios             = Municipio::orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
-       */ $roles                  = Role::all();
+       /* $personregister         = Person::on(Auth::user()->database_name)->find($id);
+        $estados                = Estado::on(Auth::user()->database_name)->orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
+        $municipios             = Municipio::on(Auth::user()->database_name)->orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
+       */ $roles                  = Role::on(Auth::user()->database_name)->orderBY('descripcion','asc')->pluck('descripcion','id')->toArray();
 
         return view('admin.users.create',compact('roles'));
     }
@@ -63,6 +64,7 @@ class UserController extends Controller
         ]);
 
         $users = new User();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->name = request('name');
         $users->email = request('email');
@@ -79,8 +81,8 @@ class UserController extends Controller
     public function edit($id)
     {
 
-        $user                   = User::find($id);
-        $roles                  = Role::all();
+        $user   = User::on(Auth::user()->database_name)->find($id);
+        $roles  = Role::on(Auth::user()->database_name)->get();
 
         return view('admin.users.edit',compact('user','roles'));
     }
@@ -91,7 +93,7 @@ class UserController extends Controller
     public function update(Request $request,$id)
     {
        
-        $users =  User::find($id);
+        $users =  User::on(Auth::user()->database_name)->find($id);
         $user_rol = $users->role_id;
         $user_status = $users->status;
       
@@ -111,7 +113,7 @@ class UserController extends Controller
         }else{
             $password = $users->password;
         }
-        $user          = User::findOrFail($id);
+        $user          = User::on(Auth::user()->database_name)->findOrFail($id);
         $user->name         = request('name');
         $user->email        = request('email');
         $user->password     = $password;
@@ -140,12 +142,14 @@ class UserController extends Controller
     public function destroy(Request $request)
     {
         //find the Division
-        $user = User::find($request->user_id);
+        $user = User::on(Auth::user()->database_name)->find($request->user_id);
 
         //Elimina el Division
         $user->delete();
         return redirect('users')->withDelete('Registro Eliminado Exitoso!');
     }
 
+
+   
     
 }

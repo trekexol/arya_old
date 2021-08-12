@@ -15,12 +15,13 @@ use App\Provider;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DirectPaymentOrderController extends Controller
 {
     public function createretirement()
    {
-        $accounts = DB::table('accounts')->where('code_one', 1)
+        $accounts = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                         ->where('code_two', 1)
                                         ->where('code_three', 1)
                                         ->whereIn('code_four', [1,2])
@@ -30,7 +31,7 @@ class DirectPaymentOrderController extends Controller
 
         if(isset($accounts)){   
 
-            $contrapartidas     = Account::where('code_one', '<>',0)
+            $contrapartidas     = Account::on(Auth::user()->database_name)->where('code_one', '<>',0)
                                             ->where('code_two', '<>',0)
                                             ->where('code_three', '<>',0)
                                             ->where('code_four', '<>',0)
@@ -39,12 +40,12 @@ class DirectPaymentOrderController extends Controller
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
 
-            $branches = Branch::orderBY('description','asc')->get();
+            $branches = Branch::on(Auth::user()->database_name)->orderBY('description','asc')->get();
 
             $coin = 'bolivares';
 
             /*Revisa si la tasa de la empresa es automatica o fija*/
-            $company = Company::find(1);
+            $company = Company::on(Auth::user()->database_name)->find(1);
             //Si la taza es automatica
             if($company->tiporate_id == 1){
                 $bcv = $this->search_bcv();
@@ -104,6 +105,7 @@ class DirectPaymentOrderController extends Controller
             if($check_amount->saldo_actual >= $amount){
 
                 $payment_order = new PaymentOrder();
+                $payment_order->setConnection(Auth::user()->database_name);
 
                 if(request('beneficiario') == 1){
                     $payment_order->id_client = request('Subbeneficiario');
@@ -125,6 +127,7 @@ class DirectPaymentOrderController extends Controller
                 $payment_order->save();
 
                 $header = new HeaderVoucher();
+                $header->setConnection(Auth::user()->database_name);
 
                 $header->description = "Orden de Pago ". request('description');
                 $header->date = request('date');
@@ -135,6 +138,7 @@ class DirectPaymentOrderController extends Controller
 
 
                 $movement = new DetailVoucher();
+                $movement->setConnection(Auth::user()->database_name);
 
                 $movement->id_header_voucher = $header->id;
                 $movement->id_account = $account;
@@ -146,7 +150,7 @@ class DirectPaymentOrderController extends Controller
             
                 $movement->save();
                 
-                $account = Account::findOrFail($account);
+                $account = Account::on(Auth::user()->database_name)->findOrFail($account);
 
                 if($account->status != "M"){
                     $account->status = "M";
@@ -154,6 +158,8 @@ class DirectPaymentOrderController extends Controller
                 }
 
                 $movement_counterpart = new DetailVoucher();
+                $movement_counterpart->setConnection(Auth::user()->database_name);
+
                 $movement_counterpart->id_header_voucher = $header->id;
                 $movement_counterpart->id_account = $contrapartida;
                 $movement_counterpart->user_id = request('user_id');
@@ -164,7 +170,7 @@ class DirectPaymentOrderController extends Controller
 
                 $movement_counterpart->save();
 
-                $account = Account::findOrFail($contrapartida);
+                $account = Account::on(Auth::user()->database_name)->findOrFail($contrapartida);
 
                 if($account->status != "M"){
                     $account->status = "M";
@@ -185,7 +191,7 @@ class DirectPaymentOrderController extends Controller
     public function check_amount($id_account)
     {       
         
-        $var = Account::find($id_account);
+        $var = Account::on(Auth::user()->database_name)->find($id_account);
 
                       
        if(isset($var)) {
@@ -201,7 +207,7 @@ class DirectPaymentOrderController extends Controller
                            if($var->code_four != 0){
                              
                             /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
-                            $total_debe = DB::table('accounts')
+                            $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                        ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                        ->where('accounts.code_one', $var->code_one)
                                                        ->where('accounts.code_two', $var->code_two)
@@ -210,7 +216,7 @@ class DirectPaymentOrderController extends Controller
                                                        ->where('detail_vouchers.status', 'C')
                                                        ->sum('debe');
    
-                            $total_haber = DB::table('accounts')
+                            $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
                                                        ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                        ->where('accounts.code_one', $var->code_one)
                                                        ->where('accounts.code_two', $var->code_two)
@@ -232,7 +238,7 @@ class DirectPaymentOrderController extends Controller
                              
                          
                         /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
-                           $total_debe = DB::table('accounts')
+                           $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                        ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                        ->where('accounts.code_one', $var->code_one)
                                                        ->where('accounts.code_two', $var->code_two)
@@ -240,7 +246,7 @@ class DirectPaymentOrderController extends Controller
                                                        ->where('detail_vouchers.status', 'C')
                                                        ->sum('debe');
    
-                           $total_haber =  DB::table('accounts')
+                           $total_haber =  DB::connection(Auth::user()->database_name)->table('accounts')
                                                        ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                        ->where('accounts.code_one', $var->code_one)
                                                        ->where('accounts.code_two', $var->code_two)
@@ -263,7 +269,7 @@ class DirectPaymentOrderController extends Controller
                            
                       
                         /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                   
-                           $total_debe = DB::table('accounts')
+                           $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                            ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                            ->where('accounts.code_one', $var->code_one)
                                                            ->where('accounts.code_two', $var->code_two)
@@ -271,7 +277,7 @@ class DirectPaymentOrderController extends Controller
                                                            ->sum('debe');
    
                          
-                           $total_haber = DB::table('accounts')
+                           $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
                                                            ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                            ->where('accounts.code_one', $var->code_one)
                                                            ->where('accounts.code_two', $var->code_two)
@@ -292,7 +298,7 @@ class DirectPaymentOrderController extends Controller
                    }else{
                        //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
                      /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
-                            $total_debe = DB::table('accounts')
+                            $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                        ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                        ->where('accounts.code_one', $var->code_one)
                                                        ->where('detail_vouchers.status', 'C')
@@ -300,7 +306,7 @@ class DirectPaymentOrderController extends Controller
    
                         
                           
-                           $total_haber = DB::table('accounts')
+                           $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
                                                        ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                        ->where('accounts.code_one', $var->code_one)
                                                        ->where('detail_vouchers.status', 'C')
@@ -330,10 +336,10 @@ class DirectPaymentOrderController extends Controller
             try{
                 
                 if($id_var == 1){
-                    $clients = Client::orderBy('name','asc')->get();
+                    $clients = Client::on(Auth::user()->database_name)->orderBy('name','asc')->get();
                     return response()->json($clients,200);
                 }else{
-                    $providers = Provider::orderBy('razon_social','asc')->get();
+                    $providers = Provider::on(Auth::user()->database_name)->orderBy('razon_social','asc')->get();
                     return response()->json($providers,200);
                 }
                
@@ -374,8 +380,8 @@ class DirectPaymentOrderController extends Controller
         if($request->ajax()){
             try{
 
-                $account = Account::find($id_var);
-                $subcontrapartidas = Account::select('id','description')->where('code_one',$account->code_one)
+                $account = Account::on(Auth::user()->database_name)->find($id_var);
+                $subcontrapartidas = Account::on(Auth::user()->database_name)->select('id','description')->where('code_one',$account->code_one)
                                                                     ->where('code_two',$account->code_two)
                                                                     ->where('code_three',$account->code_three)
                                                                     ->where('code_four',$account->code_four)

@@ -14,6 +14,7 @@ use App\Provider;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AnticipoController extends Controller
 {
@@ -29,7 +30,7 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::whereIn('status',[1,'M'])->where('id_client','<>',null)->orderBy('id','desc')->get();
+        $anticipos = Anticipo::on(Auth::user()->database_name)->whereIn('status',[1,'M'])->where('id_client','<>',null)->orderBy('id','desc')->get();
         
         $control = 'index';
 
@@ -46,7 +47,7 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::whereIn('status',[1,'M'])->where('id_provider','<>',null)->orderBy('id','desc')->get();
+        $anticipos = Anticipo::on(Auth::user()->database_name)->whereIn('status',[1,'M'])->where('id_provider','<>',null)->orderBy('id','desc')->get();
         
         $control = 'index';
 
@@ -63,7 +64,7 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::where('status','C')->where('id_provider','<>',null)->orderBy('id','desc')->get();
+        $anticipos = Anticipo::on(Auth::user()->database_name)->where('status','C')->where('id_provider','<>',null)->orderBy('id','desc')->get();
 
         $control = 'historic';
 
@@ -80,7 +81,7 @@ class AnticipoController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
        
-        $anticipos = Anticipo::where('status','C')->where('id_client','<>',null)->orderBy('id','desc')->get();
+        $anticipos = Anticipo::on(Auth::user()->database_name)->where('status','C')->where('id_client','<>',null)->orderBy('id','desc')->get();
         $control = 'historic';
 
         }elseif($users_role == '2'){
@@ -97,32 +98,32 @@ class AnticipoController extends Controller
     */
     public function selectclient($id_anticipo = null)
     {
-        $clients = Client::orderBy('id' ,'DESC')->get();
+        $clients = Client::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
 
         return view('admin.anticipos.selectclient',compact('clients','id_anticipo'));
     }
 
     public function selectprovider($id_anticipo = null)
     {
-        $providers = Provider::orderBy('id' ,'DESC')->get();
+        $providers = Provider::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
 
         return view('admin.anticipos.selectprovider',compact('providers','id_anticipo'));
     }
     
     public function selectanticipo($id_client,$coin,$id_quotation)
     {
-        $anticipos = Anticipo::where('id_client',$id_client)->whereIn('status',[1,'M'])->orderBy('id' ,'DESC')->get();
+        $anticipos = Anticipo::on(Auth::user()->database_name)->where('id_client',$id_client)->whereIn('status',[1,'M'])->orderBy('id' ,'DESC')->get();
 
-        $client = Client::find($id_client);
+        $client = Client::on(Auth::user()->database_name)->find($id_client);
 
         return view('admin.anticipos.selectanticipo',compact('anticipos','client','id_quotation','coin'));
     }
     
     public function selectanticipo_provider($id_provider,$coin,$id_expense)
     {
-        $anticipos = Anticipo::where('id_provider',$id_provider)->whereIn('status',[1,'M'])->orderBy('id' ,'DESC')->get();
+        $anticipos = Anticipo::on(Auth::user()->database_name)->where('id_provider',$id_provider)->whereIn('status',[1,'M'])->orderBy('id' ,'DESC')->get();
 
-        $provider = Provider::find($id_provider);
+        $provider = Provider::on(Auth::user()->database_name)->find($id_provider);
 
         return view('admin.anticipos.selectanticipo_provider',compact('anticipos','provider','id_expense','coin'));
     }
@@ -130,7 +131,7 @@ class AnticipoController extends Controller
 
    public function create()
    {
-        $accounts = DB::table('accounts')->where('code_one', 1)
+        $accounts = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->whereIn('code_four', [1, 2])
@@ -139,7 +140,7 @@ class AnticipoController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
 
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
         //Si la taza es automatica
         if($company->tiporate_id == 1){
             $bcv = $this->search_bcv();
@@ -153,7 +154,7 @@ class AnticipoController extends Controller
 
    public function create_provider($id_provider = null)
    {
-        $accounts = DB::table('accounts')->where('code_one', 1)
+        $accounts = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->whereIn('code_four', [1, 2])
@@ -163,7 +164,7 @@ class AnticipoController extends Controller
         $datenow = $date->format('Y-m-d');    
         $provider = null;
 
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
         //Si la taza es automatica
         if($company->tiporate_id == 1){
             $bcv = $this->search_bcv();
@@ -173,7 +174,7 @@ class AnticipoController extends Controller
         }
 
         if(isset($id_provider)){
-            $provider =  Provider::find($id_provider);
+            $provider =  Provider::on(Auth::user()->database_name)->find($id_provider);
         }
 
         return view('admin.anticipos.create_provider',compact('datenow','accounts','bcv','provider'));
@@ -182,8 +183,8 @@ class AnticipoController extends Controller
    public function createclient($id_client)
    {
 
-        $client =  Client::find($id_client);
-        $accounts = DB::table('accounts')->where('code_one', 1)
+        $client =  Client::on(Auth::user()->database_name)->find($id_client);
+        $accounts = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three',1)
                                             ->whereIn('code_four', [1, 2])
@@ -192,7 +193,7 @@ class AnticipoController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
         
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
         //Si la taza es automatica
         if($company->tiporate_id == 1){
             $bcv = $this->search_bcv();
@@ -229,7 +230,8 @@ class AnticipoController extends Controller
         ]);
 
         $var = new Anticipo();
-
+        $var->setConnection(Auth::user()->database_name);
+        
         $var->date = request('date_begin');
         $var->id_client = request('id_client');
         $var->id_account = request('id_account');
@@ -261,6 +263,7 @@ class AnticipoController extends Controller
 
         /*Aplicamos el movimiento contable*/
         $header_voucher  = new HeaderVoucher();
+        $var->setConnection(Auth::user()->database_name);
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -273,7 +276,7 @@ class AnticipoController extends Controller
         $this->add_movement($header_voucher->id,$var->id_account,$var->id_user,$var->amount,0,$var->rate);
 
 
-        $account_anticipo = Account::where('description', 'like', 'Anticipos Clientes Nacionales')->first();  
+        $account_anticipo = Account::on(Auth::user()->database_name)->where('description', 'like', 'Anticipos Clientes Nacionales')->first();  
             
         if(isset($account_anticipo)){
             $this->add_movement($header_voucher->id,$account_anticipo->id,$var->id_user,0,$var->amount,$var->rate);
@@ -307,6 +310,7 @@ class AnticipoController extends Controller
         ]);
 
         $var = new Anticipo();
+        $var->setConnection(Auth::user()->database_name);
 
         $var->date = request('date_begin');
         $var->id_provider = request('id_provider');
@@ -339,6 +343,7 @@ class AnticipoController extends Controller
 
         /*Aplicamos el movimiento contable*/
         $header_voucher  = new HeaderVoucher();
+        $var->setConnection(Auth::user()->database_name);
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -351,7 +356,7 @@ class AnticipoController extends Controller
         $this->add_movement($header_voucher->id,$var->id_account,$var->id_user,0,$var->amount,$var->rate);
 
 
-        $account_anticipo_proveedor = Account::where('code_one',1)
+        $account_anticipo_proveedor = Account::on(Auth::user()->database_name)->where('code_one',1)
                                     ->where('code_two',1)
                                     ->where('code_three',4)
                                     ->where('code_four',2)
@@ -379,6 +384,7 @@ class AnticipoController extends Controller
        
 
         $detail = new DetailVoucher();
+        $detail->setConnection(Auth::user()->database_name);
 
         $detail->id_account = $id_account;
         $detail->id_header_voucher = $id_header;
@@ -392,7 +398,7 @@ class AnticipoController extends Controller
 
          /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
          
-            $account = Account::findOrFail($detail->id_account);
+            $account = Account::on(Auth::user()->database_name)->findOrFail($detail->id_account);
 
             if($account->status != "M"){
                 $account->status = "M";
@@ -412,22 +418,22 @@ class AnticipoController extends Controller
     */
    public function edit($id,$id_client = null,$id_provider = null)
    {
-        $anticipo = Anticipo::find($id);
+        $anticipo = Anticipo::on(Auth::user()->database_name)->find($id);
 
         if(isset($id_client) && ($id_client != -1)){
-            $client = Client::find($id_client);
+            $client = Client::on(Auth::user()->database_name)->find($id_client);
         }else{
             $client = null;
         }
 
         if(isset($id_provider) && ($id_provider != -1)){
-            $provider = Provider::find($id_provider);
+            $provider = Provider::on(Auth::user()->database_name)->find($id_provider);
         }else{
             $provider = null;
         }
         
         
-        $accounts = DB::table('accounts')->where('code_one', 1)
+        $accounts = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three',1)
                                             ->whereIn('code_four', [1, 2])
@@ -436,7 +442,7 @@ class AnticipoController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');    
         
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
         //Si la taza es automatica
         if($company->tiporate_id == 1){
             $bcv = $this->search_bcv();
@@ -481,7 +487,7 @@ class AnticipoController extends Controller
         
 
 
-        $var = Anticipo::findOrFail($id);
+        $var = Anticipo::on(Auth::user()->database_name)->findOrFail($id);
 
        
         $var->date = request('date_begin');
@@ -520,13 +526,13 @@ class AnticipoController extends Controller
             $var->status = request('status');
         }
     
-        DB::table('detail_vouchers as d')
+        DB::connection(Auth::user()->database_name)->table('detail_vouchers as d')
                         ->join('header_vouchers as h', 'h.id', '=', 'd.id_header_voucher')
                         ->where('h.id_anticipo',$var->id)
                         ->where('d.haber',0)
                         ->update([ 'd.debe' => $var->amount, 'd.tasa' => $var->rate,'d.id_account' => $var->id_account]);
         
-        DB::table('detail_vouchers as d')
+        DB::connection(Auth::user()->database_name)->table('detail_vouchers as d')
                         ->join('header_vouchers as h', 'h.id', '=', 'd.id_header_voucher')
                         ->where('h.id_anticipo',$var->id)
                         ->where('d.debe',0)
@@ -584,10 +590,10 @@ class AnticipoController extends Controller
         if($request->ajax()){
             try{
                 if($verify == 'true'){
-                    $anticipo = Anticipo::where('id',$id_anticipo)->update([ 'status' => 1 ]);
+                    $anticipo = Anticipo::on(Auth::user()->database_name)->where('id',$id_anticipo)->update([ 'status' => 1 ]);
                     
                 }else{
-                    $anticipo = Anticipo::where('id',$id_anticipo)->update([ 'status' => 'M' ]);
+                    $anticipo = Anticipo::on(Auth::user()->database_name)->where('id',$id_anticipo)->update([ 'status' => 'M' ]);
                    
                 }
                 return response()->json($anticipo,200);

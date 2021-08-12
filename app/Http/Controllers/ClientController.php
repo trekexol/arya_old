@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -18,7 +19,7 @@ class ClientController extends Controller
    {
        $user= auth()->user();
 
-       $clients = Client::orderBy('id' ,'DESC')->get();
+       $clients = Client::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
        
        return view('admin.clients.index',compact('clients'));
    }
@@ -30,7 +31,7 @@ class ClientController extends Controller
     */
    public function create()
    {
-        $vendors = Vendor::orderBy('name','asc')->get();
+        $vendors = Vendor::on(Auth::user()->database_name)->orderBy('name','asc')->get();
       
        return view('admin.clients.create',compact('vendors'));
    }
@@ -61,6 +62,7 @@ class ClientController extends Controller
         ]);
 
     $users = new client();
+    $users->setConnection(Auth::user()->database_name);
 
     $users->id_vendor = request('id_vendor');
     $users->id_user = request('id_user');
@@ -113,9 +115,9 @@ class ClientController extends Controller
     */
    public function edit($id)
    {
-        $var = client::find($id);
+        $var = client::on(Auth::user()->database_name)->find($id);
         
-        $vendors = Vendor::orderBy('name','asc')->get();
+        $vendors = Vendor::on(Auth::user()->database_name)->orderBy('name','asc')->get();
 
         return view('admin.clients.edit',compact('var','vendors'));
   
@@ -131,7 +133,7 @@ class ClientController extends Controller
    public function update(Request $request, $id)
    {
 
-    $vars =  client::find($id);
+    $vars =  client::on(Auth::user()->database_name)->find($id);
     $vars_status = $vars->status;
    
     $data = request()->validate([
@@ -154,7 +156,7 @@ class ClientController extends Controller
     ]);
     
 
-    $users = client::findOrFail($id);
+    $users = client::on(Auth::user()->database_name)->findOrFail($id);
     
     $users->id_vendor = request('id_vendor');
 

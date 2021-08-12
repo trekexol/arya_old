@@ -27,6 +27,10 @@ Route::get('contact', function () {
     return view('contact');
 });
 
+Route::post('asignacnioasd','UserController@assigndatabase')->name('assigndatabase');
+
+
+
 
 Auth::routes();
 

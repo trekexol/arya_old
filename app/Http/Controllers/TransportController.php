@@ -6,6 +6,7 @@ use App\Color;
 use App\Modelo;
 use App\Transport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransportController extends Controller
 {
@@ -20,7 +21,7 @@ class TransportController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $transports = Transport::orderBy('id' ,'DESC')->get();
+        $transports = Transport::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -37,11 +38,11 @@ class TransportController extends Controller
    {
 
 
-      //  $modelos     = Modelo::orderBY('description','asc')->pluck('description','id')->toArray();
+      //  $modelos     = Modelo::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
       
-       // $colors     = Color::orderBY('description','asc')->pluck('description','id')->toArray();
-       $modelos     = Modelo::all();
-       $colors      = Color::all();
+       // $colors     = Color::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
+       $modelos     = Modelo::on(Auth::user()->database_name)->get();
+       $colors      = Color::on(Auth::user()->database_name)->get();
 
         return view('admin.transports.create',compact('modelos','colors'));
    }
@@ -71,6 +72,7 @@ class TransportController extends Controller
     ]);
 
     $var = new Transport();
+    $var->setConnection(Auth::user()->database_name);
 
     $var->modelo_id = request('modelo_id');
     $var->color_id = request('color_id');
@@ -106,11 +108,11 @@ class TransportController extends Controller
     */
    public function edit($id)
    {
-        $transport = Transport::find($id);
+        $transport = Transport::on(Auth::user()->database_name)->find($id);
        
-        $modelos     = Modelo::orderBY('description','asc')->pluck('description','id')->toArray();
+        $modelos     = Modelo::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
       
-        $colors     = Color::orderBY('description','asc')->pluck('description','id')->toArray();
+        $colors     = Color::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
       
         return view('admin.transports.edit',compact('transport','modelos','colors'));
   
@@ -126,7 +128,7 @@ class TransportController extends Controller
    public function update(Request $request, $id)
    {
 
-    $vars =  Transport::find($id);
+    $vars =  Transport::on(Auth::user()->database_name)->find($id);
 
     $vars_status = $vars->status;
     $vars_exento = $vars->exento;
@@ -147,7 +149,7 @@ class TransportController extends Controller
        
     ]);
 
-    $var = Transport::findOrFail($id);
+    $var = Transport::on(Auth::user()->database_name)->findOrFail($id);
 
     $var->modelo_id = request('modelo_id');
     $var->color_id = request('color_id');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\UnitOfMeasure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UnitOfMeasureController extends Controller
 {
@@ -23,7 +24,7 @@ class UnitOfMeasureController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $unitofmeasures      =   UnitOfMeasure::orderBy('id', 'asc')->get();
+           $unitofmeasures      =   UnitOfMeasure::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -54,7 +55,8 @@ class UnitOfMeasureController extends Controller
         ]);
 
         $users = new UnitOfMeasure();
-
+        $users->setConnection(Auth::user()->database_name);
+        
         $users->code = request('code');
         $users->description = request('description');
         $users->status =  request('status');
@@ -70,7 +72,7 @@ class UnitOfMeasureController extends Controller
     public function edit($id)
     {
 
-        $var = UnitOfMeasure::find($id);
+        $var = UnitOfMeasure::on(Auth::user()->database_name)->find($id);
         
         return view('admin.unitofmeasures.edit',compact('var'));
     }
@@ -81,7 +83,7 @@ class UnitOfMeasureController extends Controller
     public function update(Request $request,$id)
     {
        
-        $users =  UnitOfMeasure::find($id);
+        $users =  UnitOfMeasure::on(Auth::user()->database_name)->find($id);
        
         $user_status = $users->status;
       
@@ -94,7 +96,7 @@ class UnitOfMeasureController extends Controller
 
         
 
-        $user          = UnitOfMeasure::findOrFail($id);
+        $user          = UnitOfMeasure::on(Auth::user()->database_name)->findOrFail($id);
         $user->code = request('code');
         $user->description = request('description');
        

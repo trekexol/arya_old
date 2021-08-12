@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Color;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ColorController extends Controller
 {
@@ -23,7 +24,7 @@ class ColorController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $colors      =   Color::orderBy('id', 'asc')->get();
+           $colors      =   Color::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -53,6 +54,7 @@ class ColorController extends Controller
         ]);
 
         $users = new Color();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->description = request('description');
         $users->status = request('status');
@@ -68,7 +70,7 @@ class ColorController extends Controller
     public function edit($id)
     {
 
-        $var   = Color::find($id);
+        $var   = Color::on(Auth::user()->database_name)->find($id);
         
         return view('admin.colors.edit',compact('var'));
     }
@@ -78,7 +80,7 @@ class ColorController extends Controller
 
     public function update(Request $request,$id)
     {
-        $vars =  Color::find($id);
+        $vars =  Color::on(Auth::user()->database_name)->find($id);
 
         $var_status = $vars->status;
 
@@ -90,7 +92,7 @@ class ColorController extends Controller
 
         
 
-        $var          = Color::findOrFail($id);
+        $var          = Color::on(Auth::user()->database_name)->findOrFail($id);
         $var->description        = request('description');
        
         if(request('status') == null){

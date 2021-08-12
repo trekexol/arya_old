@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 
 class Product extends Model
 {
+    
     public function segments(){
         return $this->belongsTo('App\Permission\Models\Segment','segment_id');
     }

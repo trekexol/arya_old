@@ -7,6 +7,7 @@ use App\HistoricTransport;
 use App\Transport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HistoricTransportController extends Controller
 {
@@ -21,8 +22,8 @@ class HistoricTransportController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        //$historictransports = HistoricTransport::orderBy('id' ,'DESC')->get();
-        $employees = Employee::with('transports')->get();
+        //$historictransports = HistoricTransport::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
+        $employees = Employee::on(Auth::user()->database_name)->with('transports')->get();
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -37,13 +38,13 @@ class HistoricTransportController extends Controller
     */
     public function selecttransport()
     {
-        $transports = Transport::orderBy('id' ,'DESC')->get();
+        $transports = Transport::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
 
          return view('admin.historictransports.selecttransport',compact('transports'));
     }
     public function selectemployee($transport_id)
     {
-        $employees = Employee::orderBy('nombres' ,'DESC')->get();
+        $employees = Employee::on(Auth::user()->database_name)->orderBy('nombres' ,'DESC')->get();
 
  
         return view('admin.historictransports.selectemployee',compact('employees','transport_id'));
@@ -78,6 +79,7 @@ class HistoricTransportController extends Controller
     ]);
 
     $var = new HistoricTransport();
+    $var->setConnection(Auth::user()->database_name);
 
     $var->employee_id = request('employee_id');
     $var->transport_id = request('transport_id');
@@ -109,11 +111,11 @@ class HistoricTransportController extends Controller
     */
    public function edit($id)
    {
-        $historictransport = HistoricTransport::find($id);
+        $historictransport = HistoricTransport::on(Auth::user()->database_name)->find($id);
        
-        $modelos     = Modelo::orderBY('description','asc')->pluck('description','id')->toArray();
+        $modelos     = Modelo::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
       
-        $colors     = Color::orderBY('description','asc')->pluck('description','id')->toArray();
+        $colors     = Color::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
       
         return view('admin.historictransports.edit',compact('historictransport','modelos','colors'));
   
@@ -129,7 +131,7 @@ class HistoricTransportController extends Controller
    public function update(Request $request, $id)
    {
 
-    $vars =  HistoricTransport::find($id);
+    $vars =  HistoricTransport::on(Auth::user()->database_name)->find($id);
 
     $vars_status = $vars->status;
     $vars_exento = $vars->exento;
@@ -150,7 +152,7 @@ class HistoricTransportController extends Controller
        
     ]);
 
-    $var = HistoricTransport::findOrFail($id);
+    $var = HistoricTransport::on(Auth::user()->database_name)->findOrFail($id);
 
     $var->modelo_id = request('modelo_id');
     $var->color_id = request('color_id');

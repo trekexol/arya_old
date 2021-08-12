@@ -7,6 +7,7 @@ use App\Segment;
 use App\Subsegment;
 use App\UnitOfMeasure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PositionsController extends Controller
 {
@@ -26,7 +27,7 @@ class PositionsController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $positions      =   Position::orderBy('id', 'asc')->get();
+           $positions      =   Position::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -57,6 +58,7 @@ class PositionsController extends Controller
         ]);
 
         $users = new Position();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->name = request('name');
         $users->description = request('description');
@@ -73,7 +75,7 @@ class PositionsController extends Controller
     public function edit($id)
     {
 
-        $user                   = Position::find($id);
+        $user                   = Position::on(Auth::user()->database_name)->find($id);
         
         return view('admin.positions.edit',compact('user'));
     }
@@ -84,7 +86,7 @@ class PositionsController extends Controller
     public function update(Request $request,$id)
     {
        
-        $users =  Position::find($id);
+        $users =  Position::on(Auth::user()->database_name)->find($id);
         $user_rol = $users->role_id;
         $user_status = $users->status;
       
@@ -97,7 +99,7 @@ class PositionsController extends Controller
 
         
 
-        $user          = Position::findOrFail($id);
+        $user          = Position::on(Auth::user()->database_name)->findOrFail($id);
         $user->name         = request('name');
         $user->description        = request('description');
        
@@ -119,7 +121,7 @@ class PositionsController extends Controller
     public function destroy(Request $request)
     {
         //find the Division
-        $user = User::find($request->user_id);
+        $user = User::on(Auth::user()->database_name)->find($request->user_id);
 
         //Elimina el Division
         $user->delete();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Profession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfessionsController extends Controller
 {
@@ -23,7 +24,7 @@ class ProfessionsController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $professions      =   Profession::orderBy('id', 'asc')->get();
+           $professions      =   Profession::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -54,6 +55,7 @@ class ProfessionsController extends Controller
         ]);
 
         $users = new Profession();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->name = request('name');
         $users->description = request('description');
@@ -70,7 +72,7 @@ class ProfessionsController extends Controller
     public function edit($id)
     {
 
-        $user  = Profession::find($id);
+        $user  = Profession::on(Auth::user()->database_name)->find($id);
         
         return view('admin.professions.edit',compact('user'));
     }
@@ -81,7 +83,7 @@ class ProfessionsController extends Controller
     public function update(Request $request,$id)
     {
        
-        $users =  Profession::find($id);
+        $users =  Profession::on(Auth::user()->database_name)->find($id);
         $user_rol = $users->role_id;
         $user_status = $users->status;
       
@@ -94,7 +96,7 @@ class ProfessionsController extends Controller
 
         
 
-        $user          = Profession::findOrFail($id);
+        $user          = Profession::on(Auth::user()->database_name)->findOrFail($id);
         $user->name         = request('name');
         $user->description        = request('description');
        

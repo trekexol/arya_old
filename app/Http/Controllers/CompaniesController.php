@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\InventaryType;
 use App\RateType;
+use App\User;
 use App\UserCompany;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,9 +28,9 @@ class CompaniesController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           /* $user_companies = UserCompany::where('id_user',Auth::id())->first();
-            $users      =   Company::on($user_companies->name_connection)->orderBy('id', 'asc')->get();*/
-            $users      =   Company::orderBy('id', 'asc')->get();
+           /* $user_companies = UserCompany::on(Auth::user()->database_name)->where('id_user',Auth::on(Auth::user()->database_name)->id())->first();
+            $users      =   Company::on(Auth::user()->database_name)->on($user_companies->name_connection)->orderBy('id', 'asc')->get();*/
+            $users      =   Company::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         
         }elseif($users_role == '2'){
             return view('admin.index');
@@ -43,10 +44,10 @@ class CompaniesController extends Controller
         $date           = Carbon::now();
         $periodo        = $date->format('Y');
 
-        $tipoinvs       = InventaryType::orderBY('description','asc')->pluck('description','id')->toArray();
-        $tiporates      = RateType::orderBY('description','asc')->pluck('description','id')->toArray();
+        $tipoinvs       = InventaryType::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
+        $tiporates      = RateType::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
 
-        $company = Company::first();
+        $company = Company::on(Auth::user()->database_name)->first();
 
         return view('admin.companies.create',compact('periodo','tipoinvs','tiporates','bcv','company'));
     }
@@ -79,9 +80,9 @@ class CompaniesController extends Controller
         $email                  = strtoupper(request('Email'));
         $direccion              = strtoupper(request('Direccion'));
         
-        $companies  = Company::findOrFail(1);
+        $companies  = Company::on(Auth::user()->database_name)->findOrFail(1);
         /*
-        $user_companies = UserCompany::where('id_user',Auth::id())->first();
+        $user_companies = UserCompany::on(Auth::user()->database_name)->where('id_user',Auth::on(Auth::user()->database_name)->id())->first();
         $companies->setConnection($user_companies->name_connection);*/
 
         $companies->login           = request('Login');
@@ -112,7 +113,7 @@ class CompaniesController extends Controller
 
     public function edit($id)
     {
-        $company            = Company::find($id);
+        $company            = Company::on(Auth::user()->database_name)->find($id);
 
         $urlToGet ='http://www.bcv.org.ve/tasas-informativas-sistema-bancario';
         $pageDocument = @file_get_contents($urlToGet);
@@ -127,8 +128,8 @@ class CompaniesController extends Controller
         $bcv            = $titulo;
         $date           = Carbon::now();
         $periodo        = $date->format('Y');
-        $tipoinvs       = InventaryType::orderBY('description','asc')->pluck('description','id')->toArray();
-        $tiporates      = RateType::orderBY('description','asc')->pluck('description','id')->toArray();
+        $tipoinvs       = InventaryType::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
+        $tiporates      = RateType::on(Auth::user()->database_name)->orderBY('description','asc')->pluck('description','id')->toArray();
 
 
         return view('admin.companies.edit',compact('company','bcv','periodo','tipoinvs','tiporates'));
@@ -136,7 +137,7 @@ class CompaniesController extends Controller
 
     public function update(Request $request,$id)
     {
-        $validar              =  Company::find($id);
+        $validar              =  Company::on(Auth::user()->database_name)->find($id);
 
         $request->validate([
             'Nombre'         =>'required|max:191,'.$validar->id,
@@ -154,7 +155,7 @@ class CompaniesController extends Controller
         $razon_social        = strtoupper(request('Razon_Social'));
         $resul_social        = $codigo.$razon_social;
 
-        $companies          = Company::findOrFail($id);
+        $companies          = Company::on(Auth::user()->database_name)->findOrFail($id);
         $companies->name                = $nombre;
         $companies->email               = $email;
         $companies->description         = $descripcion;
@@ -169,7 +170,7 @@ class CompaniesController extends Controller
     public function destroy(Request $request)
     {
         //find the Division
-        $user = User::find($request->user_id);
+        $user = User::on(Auth::user()->database_name)->find($request->user_id);
 
         //Elimina el Division
         $user->delete();

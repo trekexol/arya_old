@@ -8,6 +8,7 @@ use App\QuotationProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DeliveryNoteController extends Controller
 {
@@ -17,7 +18,7 @@ class DeliveryNoteController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-         $quotations = Quotation::orderBy('id' ,'DESC')
+         $quotations = Quotation::on(Auth::user()->database_name)->orderBy('id' ,'DESC')
                                  ->where('date_delivery_note','<>',null)
                                  ->where('date_billing',null)
                                  ->get();
@@ -39,7 +40,7 @@ class DeliveryNoteController extends Controller
          $quotation = null;
              
          if(isset($id_quotation)){
-            $quotation = Quotation::findOrFail($id_quotation);
+            $quotation = Quotation::on(Auth::user()->database_name)->findOrFail($id_quotation);
             
             $quotation->coin = $coin;
             
@@ -48,7 +49,7 @@ class DeliveryNoteController extends Controller
  
          if(isset($quotation)){
             
-            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+            $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.id_quotation',$quotation->id)
                                                             ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
@@ -105,7 +106,7 @@ class DeliveryNoteController extends Controller
             }
             
             /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
-            $client = Client::find($quotation->id_client);
+            $client = Client::on(Auth::user()->database_name)->find($quotation->id_client);
 
             if($client->percentage_retencion_iva != 0){
                 $total_retiene_iva = ($retiene_iva * $client->percentage_retencion_iva) /100;

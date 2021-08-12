@@ -10,6 +10,7 @@ use App;
 use App\Account;
 use App\DetailVoucher;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 
 class ReportController extends Controller
@@ -22,7 +23,7 @@ class ReportController extends Controller
         if($users_role == '1'){
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
-            $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
+            $detail_old = DetailVoucher::on(Auth::user()->database_name)->orderBy('created_at','asc')->first();
 
         }elseif($users_role == '2'){
             return view('admin.index');
@@ -42,7 +43,7 @@ class ReportController extends Controller
         if($users_role == '1'){
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
-            $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
+            $detail_old = DetailVoucher::on(Auth::user()->database_name)->orderBy('created_at','asc')->first();
 
         }elseif($users_role == '2'){
             return view('admin.index');
@@ -74,7 +75,7 @@ class ReportController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
         $period = $date->format('Y'); 
-        $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
+        $detail_old = DetailVoucher::on(Auth::user()->database_name)->orderBy('created_at','asc')->first();
 
         if(isset($date_begin)){
             $from = $date_begin;
@@ -110,7 +111,7 @@ class ReportController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
         $period = $date->format('Y'); 
-        $detail_old = DetailVoucher::orderBy('created_at','asc')->first();
+        $detail_old = DetailVoucher::on(Auth::user()->database_name)->orderBy('created_at','asc')->first();
 
         if(isset($date_begin)){
             $from = $date_begin;
@@ -140,7 +141,7 @@ class ReportController extends Controller
     {
         
         //dd($date_begin);
-        $accounts = Account::orderBy('code_one', 'asc')
+        $accounts = Account::on(Auth::user()->database_name)->orderBy('code_one', 'asc')
                          ->orderBy('code_two', 'asc')
                          ->orderBy('code_three', 'asc')
                          ->orderBy('code_four', 'asc')
@@ -164,7 +165,7 @@ class ReportController extends Controller
 
                                                 if($var->code_five != 0){
                                                         /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
-                                                        $total_debe = DB::table('accounts')
+                                                        $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                         ->where('accounts.code_one', $var->code_one)
                                                         ->where('accounts.code_two', $var->code_two)
@@ -180,7 +181,7 @@ class ReportController extends Controller
                                                         
                                                        
 
-                                                        $total_haber = DB::table('accounts')
+                                                        $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                         ->where('accounts.code_one', $var->code_one)
                                                         ->where('accounts.code_two', $var->code_two)
@@ -205,7 +206,7 @@ class ReportController extends Controller
                                                 }else
                                                 {
                                                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
-                                                    $total_debe = DB::table('accounts')
+                                                    $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                         ->where('accounts.code_one', $var->code_one)
                                                                         ->where('accounts.code_two', $var->code_two)
@@ -218,7 +219,7 @@ class ReportController extends Controller
                                                     [$date_begin, $date_end])
                                                                         ->sum('debe');
                     
-                                                    $total_haber = DB::table('accounts')
+                                                    $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                         ->where('accounts.code_one', $var->code_one)
                                                                         ->where('accounts.code_two', $var->code_two)
@@ -245,7 +246,7 @@ class ReportController extends Controller
                                               
                                           
                                          /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
-                                            $total_debe = DB::table('accounts')
+                                            $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                         ->where('accounts.code_one', $var->code_one)
                                                                         ->where('accounts.code_two', $var->code_two)
@@ -257,7 +258,7 @@ class ReportController extends Controller
             [$date_begin, $date_end])
                                                                                     ->sum('debe');
                                 
-                                                        $total_haber =  DB::table('accounts')
+                                                        $total_haber =  DB::connection(Auth::user()->database_name)->table('accounts')
                                                                                     ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                                     ->where('accounts.code_one', $var->code_one)
                                                                                     ->where('accounts.code_two', $var->code_two)
@@ -282,7 +283,7 @@ class ReportController extends Controller
                                                         
                                                 
                                                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                   
-                                                        $total_debe = DB::table('accounts')
+                                                        $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                                         ->where('accounts.code_one', $var->code_one)
                                                                                         ->where('accounts.code_two', $var->code_two)
@@ -294,7 +295,7 @@ class ReportController extends Controller
                                                                                         ->sum('debe');
                                 
                                                     
-                                                        $total_haber = DB::table('accounts')
+                                                        $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                                         ->where('accounts.code_one', $var->code_one)
                                                                                         ->where('accounts.code_two', $var->code_two)
@@ -314,7 +315,7 @@ class ReportController extends Controller
                                                 }else{
                                                     //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
                                                 /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
-                                                        $total_debe = DB::table('accounts')
+                                                        $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                                     ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                                     ->where('accounts.code_one', $var->code_one)
                                                                                     ->where('detail_vouchers.status', 'C')
@@ -326,7 +327,7 @@ class ReportController extends Controller
                                 
                                                     
                                                     
-                                                        $total_haber = DB::table('accounts')
+                                                        $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                                     ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                                     ->where('accounts.code_one', $var->code_one)
                                                                                     ->where('detail_vouchers.status', 'C')

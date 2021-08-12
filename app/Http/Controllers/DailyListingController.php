@@ -8,6 +8,7 @@ use App\DetailVoucher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DailyListingController extends Controller
 {
@@ -19,7 +20,7 @@ class DailyListingController extends Controller
          
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
-        $detailvouchers = DB::table('detail_vouchers')
+        $detailvouchers = DB::connection(Auth::user()->database_name)->table('detail_vouchers')
                             ->join('header_vouchers', 'header_vouchers.id', '=', 'detail_vouchers.id_header_voucher')
                             ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
                             ->where('header_vouchers.date', $datenow)
@@ -50,7 +51,7 @@ class DailyListingController extends Controller
         $date_begin = request('date_begin');
         $date_end = request('date_end');
 
-        $detailvouchers =  DB::table('detail_vouchers')
+        $detailvouchers =  DB::connection(Auth::user()->database_name)->table('detail_vouchers')
                                 ->join('header_vouchers', 'header_vouchers.id', '=', 'detail_vouchers.id_header_voucher')
                                 ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
                                 ->whereBetween('header_vouchers.date', [$date_begin, $date_end])
@@ -73,9 +74,9 @@ class DailyListingController extends Controller
 
         $pdf = App::make('dompdf.wrapper');
 
-        $company = Company::find(1);
+        $company = Company::on(Auth::user()->database_name)->find(1);
 
-        $detailvouchers =  DB::table('detail_vouchers')
+        $detailvouchers =  DB::connection(Auth::user()->database_name)->table('detail_vouchers')
                             ->join('header_vouchers', 'header_vouchers.id', '=', 'detail_vouchers.id_header_voucher')
                             ->join('accounts', 'accounts.id', '=', 'detail_vouchers.id_account')
                             ->whereBetween('header_vouchers.date', [$date_begin, $date_end])

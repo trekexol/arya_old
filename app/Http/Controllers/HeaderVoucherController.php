@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\HeaderVoucher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HeaderVoucherController extends Controller
 {
@@ -20,7 +21,7 @@ class HeaderVoucherController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
 
-        $headervouchers = HeaderVoucher::where('status','LIKE','U')->get();
+        $headervouchers = HeaderVoucher::on(Auth::user()->database_name)->where('status','LIKE','U')->get();
         
         }elseif($users_role == '2'){
            return view('admin.index');
@@ -66,9 +67,11 @@ class HeaderVoucherController extends Controller
             ]);
 
             $var = new HeaderVoucher();
+            $var->setConnection(Auth::user()->database_name);
+
 
             $header_id = request('reference');
-            $header = HeaderVoucher::find($header_id);
+            $header = HeaderVoucher::on(Auth::user()->database_name)->find($header_id);
 
             if(isset($header)){
                 return redirect('/detailvouchers/register')->withDanger('Ya el numero de cabecera existe! , elija uno correctamente');
@@ -108,7 +111,7 @@ class HeaderVoucherController extends Controller
     */
    public function edit($id)
    {
-        $var = HeaderVoucher::find($id);
+        $var = HeaderVoucher::on(Auth::user()->database_name)->find($id);
        
         return view('admin.headervouchers.edit',compact('var'));
   
@@ -124,7 +127,7 @@ class HeaderVoucherController extends Controller
    public function update(Request $request, $id)
    {
 
-    $vars =  HeaderVoucher::find($id);
+    $vars =  HeaderVoucher::on(Auth::user()->database_name)->find($id);
 
     $vars_status = $vars->status;
   
@@ -139,7 +142,7 @@ class HeaderVoucherController extends Controller
     
     ]);
 
-    $var = HeaderVoucher::findOrFail($id);
+    $var = HeaderVoucher::on(Auth::user()->database_name)->findOrFail($id);
 
     $var->reference = request('reference');
     $var->description = request('description');

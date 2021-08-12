@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\PaymentType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentTypeController extends Controller
 {
@@ -23,7 +24,7 @@ class PaymentTypeController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $paymenttypes = PaymentType::orderBy('id', 'asc')->get();
+           $paymenttypes = PaymentType::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -61,6 +62,7 @@ class PaymentTypeController extends Controller
         ]);
 
         $users = new Paymenttype();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->description = request('description');
         $users->type = request('type');
@@ -83,7 +85,7 @@ class PaymentTypeController extends Controller
     public function edit($id)
     {
 
-        $var = Paymenttype::find($id);
+        $var = Paymenttype::on(Auth::user()->database_name)->find($id);
         
         return view('admin.paymenttypes.edit',compact('var'));
     }
@@ -94,7 +96,7 @@ class PaymentTypeController extends Controller
     public function update(Request $request,$id)
     {
        
-        $vars =  Paymenttype::find($id);
+        $vars =  Paymenttype::on(Auth::user()->database_name)->find($id);
 
         $var_status = $vars->status;
       
@@ -115,7 +117,7 @@ class PaymentTypeController extends Controller
            
         ]);
 
-        $var  = Paymenttype::findOrFail($id);
+        $var  = Paymenttype::on(Auth::user()->database_name)->findOrFail($id);
         $var->description        = request('description');
        
         $var->type = request('type');

@@ -15,6 +15,7 @@ use App\QuotationPayment;
 use App\QuotationProduct;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class FacturarController extends Controller
 {
@@ -23,19 +24,19 @@ class FacturarController extends Controller
          $quotation = null;
              
          if(isset($id_quotation)){
-             $quotation = Quotation::find($id_quotation);
+             $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
          }
  
          if(isset($quotation)){
                                                             
-            $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+            $payment_quotations = QuotationPayment::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
 
-            $anticipos_sum_bolivares = Anticipo::where('status',1)
+            $anticipos_sum_bolivares = Anticipo::on(Auth::user()->database_name)->where('status',1)
                                         ->where('id_client',$quotation->id_client)
                                         ->where('coin','like','bolivares')
                                         ->sum('amount');
 
-            $total_dolar_anticipo =    DB::select('SELECT SUM(amount/rate) AS dolar
+            $total_dolar_anticipo =    DB::connection(Auth::user()->database_name)->select('SELECT SUM(amount/rate) AS dolar
                                         FROM anticipos
                                         WHERE id_client = ? AND
                                         coin not like ? AND
@@ -48,23 +49,23 @@ class FacturarController extends Controller
                 $anticipos_sum_dolares = $total_dolar_anticipo[0]->dolar;
             }
 
-             $accounts_bank = DB::table('accounts')->where('code_one', 1)
+             $accounts_bank = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->where('code_four', 2)
                                             ->where('code_five', '<>',0)
                                             ->where('description','not like', 'Punto de Venta%')
                                             ->get();
-             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+             $accounts_efectivo = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->where('code_four', 1)
                                             ->where('code_five', '<>',0)
                                             ->get();
-             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+             $accounts_punto_de_venta = DB::connection(Auth::user()->database_name)->table('accounts')->where('description','LIKE', 'Punto de Venta%')
                                             ->get();
 
-            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+            $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.id_quotation',$quotation->id)
                                                             ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
@@ -136,7 +137,7 @@ class FacturarController extends Controller
              
 
             /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
-             $client = Client::find($quotation->id_client);
+             $client = Client::on(Auth::user()->database_name)->find($quotation->id_client);
 
                 if($client->percentage_retencion_iva != 0){
                     $total_retiene_iva = ($retiene_iva * $client->percentage_retencion_iva) /100;
@@ -167,19 +168,19 @@ class FacturarController extends Controller
          $quotation = null;
              
          if(isset($id_quotation)){
-             $quotation = Quotation::find($id_quotation);
+             $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
          }
  
          if(isset($quotation)){
                                                             
-            $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+            $payment_quotations = QuotationPayment::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
 
-            $anticipos_sum_bolivares = Anticipo::where('status',1)
+            $anticipos_sum_bolivares = Anticipo::on(Auth::user()->database_name)->where('status',1)
                                         ->where('id_client',$quotation->id_client)
                                         ->where('coin','like','bolivares')
                                         ->sum('amount');
 
-            $total_dolar_anticipo =    DB::select('SELECT SUM(amount/rate) AS dolar
+            $total_dolar_anticipo =    DB::connection(Auth::user()->database_name)->select('SELECT SUM(amount/rate) AS dolar
                                         FROM anticipos
                                         WHERE id_client = ? AND
                                         coin not like ? AND
@@ -192,23 +193,23 @@ class FacturarController extends Controller
                 $anticipos_sum_dolares = $total_dolar_anticipo[0]->dolar;
             }
 
-             $accounts_bank = DB::table('accounts')->where('code_one', 1)
+             $accounts_bank = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->where('code_four', 2)
                                             ->where('code_five', '<>',0)
                                             ->where('description','not like', 'Punto de Venta%')
                                             ->get();
-             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+             $accounts_efectivo = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->where('code_four', 1)
                                             ->where('code_five', '<>',0)
                                             ->get();
-             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+             $accounts_punto_de_venta = DB::connection(Auth::user()->database_name)->table('accounts')->where('description','LIKE', 'Punto de Venta%')
                                             ->get();
 
-            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+            $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.id_quotation',$quotation->id)
                                                             ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',
@@ -280,7 +281,7 @@ class FacturarController extends Controller
              
 
             /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
-             $client = Client::find($quotation->id_client);
+             $client = Client::on(Auth::user()->database_name)->find($quotation->id_client);
 
                 if($client->percentage_retencion_iva != 0){
                     $total_retiene_iva = ($retiene_iva * $client->percentage_retencion_iva) /100;
@@ -308,7 +309,7 @@ class FacturarController extends Controller
         //dd($request);
         $id_quotation = request('id_quotation');
 
-        $quotation = Quotation::findOrFail($id_quotation);
+        $quotation = Quotation::on(Auth::user()->database_name)->findOrFail($id_quotation);
         $quotation->coin = request('coin');
         $bcv = $quotation->bcv;
 
@@ -371,6 +372,7 @@ class FacturarController extends Controller
 
 
         $header_voucher  = new HeaderVoucher();
+        $header_voucher->setConnection(Auth::user()->database_name);
 
 
         $header_voucher->description = "Ventas de Bienes o servicios.";
@@ -386,7 +388,7 @@ class FacturarController extends Controller
 
         //Cuentas por Cobrar Clientes
 
-        $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
+        $account_cuentas_por_cobrar = Account::on(Auth::user()->database_name)->where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
     
         if(isset($account_cuentas_por_cobrar)){
             $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_grand_total,0);
@@ -394,7 +396,7 @@ class FacturarController extends Controller
 
         //Ingresos por SubSegmento de Bienes
 
-        $account_subsegmento = Account::where('description', 'like', 'Ventas por Bienes')->first();
+        $account_subsegmento = Account::on(Auth::user()->database_name)->where('description', 'like', 'Ventas por Bienes')->first();
 
         if(isset($account_cuentas_por_cobrar)){
             $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sin_formato_amount);
@@ -402,7 +404,7 @@ class FacturarController extends Controller
 
         //Debito Fiscal IVA por Pagar
 
-        $account_debito_iva_fiscal = Account::where('description', 'like', 'Debito Fiscal IVA por Pagar')->first();
+        $account_debito_iva_fiscal = Account::on(Auth::user()->database_name)->where('description', 'like', 'Debito Fiscal IVA por Pagar')->first();
         
         if($sin_formato_amount_iva != 0){
            
@@ -413,7 +415,7 @@ class FacturarController extends Controller
         
         //Mercancia para la Venta
         
-        $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
+        $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
 
         if(isset($account_cuentas_por_cobrar)){
             $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
@@ -421,7 +423,7 @@ class FacturarController extends Controller
 
         //Costo de Mercancia
 
-        $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancia')->first();
+        $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancia')->first();
 
         if(isset($account_cuentas_por_cobrar)){
             $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
@@ -440,7 +442,7 @@ class FacturarController extends Controller
         
         ]);
 
-        $quotation = Quotation::findOrFail(request('id_quotation'));
+        $quotation = Quotation::on(Auth::user()->database_name)->findOrFail(request('id_quotation'));
 
         $quotation_status = $quotation->status;
 
@@ -513,6 +515,7 @@ class FacturarController extends Controller
             /*-------------PAGO NUMERO 1----------------------*/
 
             $var = new QuotationPayment();
+            $var->setConnection(Auth::user()->database_name);
 
             $amount_pay = request('amount_pay');
     
@@ -623,6 +626,7 @@ class FacturarController extends Controller
             /*-------------PAGO NUMERO 2----------------------*/
 
             $var2 = new QuotationPayment();
+            $var2->setConnection(Auth::user()->database_name);
 
             $amount_pay2 = request('amount_pay2');
 
@@ -732,6 +736,7 @@ class FacturarController extends Controller
                 /*-------------PAGO NUMERO 3----------------------*/
 
                 $var3 = new QuotationPayment();
+                $var3->setConnection(Auth::user()->database_name);
 
                 $amount_pay3 = request('amount_pay3');
 
@@ -841,6 +846,7 @@ class FacturarController extends Controller
                 /*-------------PAGO NUMERO 4----------------------*/
 
                 $var4 = new QuotationPayment();
+                $var4->setConnection(Auth::user()->database_name);
 
                 $amount_pay4 = request('amount_pay4');
 
@@ -950,6 +956,7 @@ class FacturarController extends Controller
             /*-------------PAGO NUMERO 5----------------------*/
 
             $var5 = new QuotationPayment();
+            $var5->setConnection(Auth::user()->database_name);
 
             $amount_pay5 = request('amount_pay5');
 
@@ -1060,6 +1067,7 @@ class FacturarController extends Controller
             /*-------------PAGO NUMERO 6----------------------*/
 
             $var6 = new QuotationPayment();
+            $var6->setConnection(Auth::user()->database_name);
 
             $amount_pay6 = request('amount_pay6');
 
@@ -1170,6 +1178,7 @@ class FacturarController extends Controller
             /*-------------PAGO NUMERO 7----------------------*/
 
             $var7 = new QuotationPayment();
+            $var7->setConnection(Auth::user()->database_name);
 
             $amount_pay7 = request('amount_pay7');
 
@@ -1292,6 +1301,7 @@ class FacturarController extends Controller
             /*---------------- */
 
                 $header_voucher  = new HeaderVoucher();
+                $header_voucher->setConnection(Auth::user()->database_name);
 
 
                 $header_voucher->description = "Cobro de Bienes o servicios.";
@@ -1379,7 +1389,7 @@ class FacturarController extends Controller
             if(isset($anticipo) && ($anticipo != 0)){
                 $quotation->anticipo =  $anticipo;
                 
-                 $account_anticipo_cliente = Account::where('code_one',2)
+                 $account_anticipo_cliente = Account::on(Auth::user()->database_name)->where('code_one',2)
                                                              ->where('code_two',3)
                                                              ->where('code_three',1)
                                                              ->where('code_four',1)
@@ -1394,7 +1404,7 @@ class FacturarController extends Controller
             /*---------- */
 
             if($retencion_iva !=0){
-                $account_iva_retenido = Account::where('code_one',1)->where('code_two',1)
+                $account_iva_retenido = Account::on(Auth::user()->database_name)->where('code_one',1)->where('code_two',1)
                                                         ->where('code_three',4)->where('code_four',1)->where('code_five',2)->first();  
             
                 if(isset($account_iva_retenido)){
@@ -1404,7 +1414,7 @@ class FacturarController extends Controller
 
             
             if($retencion_islr !=0){
-                $account_islr_pagago = Account::where('code_one',1)->where('code_two',1)->where('code_three',4)
+                $account_islr_pagago = Account::on(Auth::user()->database_name)->where('code_one',1)->where('code_two',1)->where('code_three',4)
                                                 ->where('code_four',1)->where('code_five',4)->first();  
 
                 if(isset($account_islr_pagago)){
@@ -1416,7 +1426,7 @@ class FacturarController extends Controller
          
             
             //Al final de agregar los movimientos de los pagos, agregamos el monto total de los pagos a cuentas por cobrar clientes
-            $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
+            $account_cuentas_por_cobrar = Account::on(Auth::user()->database_name)->where('description', 'like', 'Cuentas por Cobrar Clientes')->first(); 
             
             if(isset($account_cuentas_por_cobrar)){
                 $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,0,$sin_formato_grandtotal);
@@ -1445,7 +1455,7 @@ class FacturarController extends Controller
             if(($quotation_status != 'C') && ($quotation_status != 'P')){
 
                 $header_voucher  = new HeaderVoucher();
-
+                $header_voucher->setConnection(Auth::user()->database_name);
 
                 $header_voucher->description = "Ventas de Bienes o servicios.";
                 $header_voucher->date = $datenow;
@@ -1459,7 +1469,7 @@ class FacturarController extends Controller
 
                 //Cuentas por Cobrar Clientes
 
-                $account_cuentas_por_cobrar = Account::where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
+                $account_cuentas_por_cobrar = Account::on(Auth::user()->database_name)->where('description', 'like', 'Cuentas por Cobrar Clientes')->first();  
             
                 if(isset($account_cuentas_por_cobrar)){
                     $this->add_movement($bcv,$header_voucher->id,$account_cuentas_por_cobrar->id,$quotation->id,$user_id,$sin_formato_grandtotal,0);
@@ -1467,7 +1477,7 @@ class FacturarController extends Controller
 
                 //Ingresos por SubSegmento de Bienes
 
-                $account_subsegmento = Account::where('description', 'like', 'Ventas por Bienes')->first();
+                $account_subsegmento = Account::on(Auth::user()->database_name)->where('description', 'like', 'Ventas por Bienes')->first();
 
                 if(isset($account_subsegmento)){
                     $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
@@ -1475,7 +1485,7 @@ class FacturarController extends Controller
 
                 //Debito Fiscal IVA por Pagar
 
-                $account_debito_iva_fiscal = Account::where('description', 'like', 'Debito Fiscal IVA por Pagar')->first();
+                $account_debito_iva_fiscal = Account::on(Auth::user()->database_name)->where('description', 'like', 'Debito Fiscal IVA por Pagar')->first();
                 
                 if($base_imponible != 0){
                     $total_iva = ($base_imponible * $iva_percentage)/100;
@@ -1487,7 +1497,7 @@ class FacturarController extends Controller
                 
                 //Mercancia para la Venta
                 
-                $account_mercancia_venta = Account::where('description', 'like', 'Mercancia para la Venta')->first();
+                $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
 
                 if(isset($account_cuentas_por_cobrar)){
                     $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
@@ -1495,7 +1505,7 @@ class FacturarController extends Controller
 
                 //Costo de Mercancia
 
-                $account_costo_mercancia = Account::where('description', 'like', 'Costo de Mercancía')->first();
+                $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancía')->first();
 
                 if(isset($account_cuentas_por_cobrar)){
                     $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
@@ -1507,12 +1517,12 @@ class FacturarController extends Controller
             
             /*Verificamos si el cliente tiene anticipos activos */
             // if($anticipo != 0){
-                DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+                DB::connection(Auth::user()->database_name)->table('anticipos')->where('id_client', '=', $quotation->id_client)
                 ->where('status', '=', '1')
                 ->update(['status' => 'C']);
 
                 //los que quedaron en espera, pasan a estar activos
-                DB::table('anticipos')->where('id_client', '=', $quotation->id_client)
+                DB::connection(Auth::user()->database_name)->table('anticipos')->where('id_client', '=', $quotation->id_client)
                 ->where('status', '=', 'M')
                 ->update(['status' => '1']);
     
@@ -1538,6 +1548,8 @@ class FacturarController extends Controller
     public function add_movement($bcv,$id_header,$id_account,$id_invoice,$id_user,$debe,$haber){
 
         $detail = new DetailVoucher();
+        $detail->setConnection(Auth::user()->database_name);
+
 
         $detail->id_account = $id_account;
         $detail->id_header_voucher = $id_header;
@@ -1557,7 +1569,7 @@ class FacturarController extends Controller
 
          /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
          
-            $account = Account::findOrFail($detail->id_account);
+            $account = Account::on(Auth::user()->database_name)->findOrFail($detail->id_account);
 
             if($account->status != "M"){
                 $account->status = "M";
@@ -1573,7 +1585,7 @@ class FacturarController extends Controller
 
     public function discount_inventory($id_quotation){
             /*Primero Revisa que todos los productos tengan inventario suficiente*/
-            $no_hay_cantidad_suficiente = DB::table('inventories')
+            $no_hay_cantidad_suficiente = DB::connection(Auth::user()->database_name)->table('inventories')
                                     ->join('quotation_products', 'quotation_products.id_inventory','=','inventories.id')
                                     ->where('quotation_products.id_quotation','=',$id_quotation)
                                     ->where('quotation_products.amount','<','inventories.amount')
@@ -1586,7 +1598,7 @@ class FacturarController extends Controller
             }
 
         /*Luego, descuenta del Inventario*/
-            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+            $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
             ->where('quotation_products.id_quotation',$id_quotation)
             ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id as id_quotation','quotation_products.discount as discount',
@@ -1595,10 +1607,10 @@ class FacturarController extends Controller
 
                 foreach($inventories_quotations as $inventories_quotation){
 
-                    $quotation_product = QuotationProduct::findOrFail($inventories_quotation->id_quotation);
+                    $quotation_product = QuotationProduct::on(Auth::user()->database_name)->findOrFail($inventories_quotation->id_quotation);
 
                     if(isset($quotation_product)){
-                    $inventory = Inventory::findOrFail($quotation_product->id_inventory);
+                    $inventory = Inventory::on(Auth::user()->database_name)->findOrFail($quotation_product->id_inventory);
 
                         if(isset($inventory)){
                             //REVISO QUE SEA MAYOR EL MONTO DEL INVENTARIO Y LUEGO DESCUENTO
@@ -1643,7 +1655,7 @@ class FacturarController extends Controller
                 }//SIN DETERMINAR
                 else if($payment_type == 7){
                             //------------------Sin Determinar
-                    $account_sin_determinar = Account::where('description', 'like', 'Otros Ingresos No Identificados')->first(); 
+                    $account_sin_determinar = Account::on(Auth::user()->database_name)->where('description', 'like', 'Otros Ingresos No Identificados')->first(); 
             
                     if(isset($account_sin_determinar)){
                         $this->add_movement($bcv,$header_voucher,$account_sin_determinar->id,$quotation_id,$user_id,$amount_debe,0);
@@ -1651,7 +1663,7 @@ class FacturarController extends Controller
                 }//PAGO DE CONTADO
                 else if($payment_type == 2){
                     
-                    $account_contado = Account::where('description', 'like', 'Caja Chica')->first(); 
+                    $account_contado = Account::on(Auth::user()->database_name)->where('description', 'like', 'Caja Chica')->first(); 
             
                     if(isset($account_contado)){
                         $this->add_movement($bcv,$header_voucher,$account_contado->id,$quotation_id,$user_id,$amount_debe,0);
@@ -1659,7 +1671,7 @@ class FacturarController extends Controller
                 }//CONTRA ANTICIPO
                 else if($payment_type == 3){
                             //--------------
-                    $account_contra_anticipo = Account::where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
+                    $account_contra_anticipo = Account::on(Auth::user()->database_name)->where('description', 'like', 'Anticipos a Proveedores Nacionales')->first(); 
             
                     if(isset($account_contra_anticipo)){
                         $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
@@ -1668,7 +1680,7 @@ class FacturarController extends Controller
                 //Tarjeta Corporativa 
                /* else if($payment_type == 8){
                             //---------------
-                    $account_contra_anticipo = Account::where('description', 'like', 'Tarjeta Corporativa')->first(); 
+                    $account_contra_anticipo = Account::on(Auth::user()->database_name)->where('description', 'like', 'Tarjeta Corporativa')->first(); 
             
                     if(isset($account_contra_anticipo)){
                         $this->add_movement($bcv,$header_voucher,$account_contra_anticipo->id,$quotation_id,$user_id,$amount_debe,0);
@@ -1684,13 +1696,13 @@ class FacturarController extends Controller
          $quotation = null;
              
          if(isset($id_quotation)){
-             $quotation = Quotation::where('date_billing', '<>', null)->find($id_quotation);
+             $quotation = Quotation::on(Auth::user()->database_name)->where('date_billing', '<>', null)->find($id_quotation);
                                  
          }
  
          if(isset($quotation)){
-                // $product_quotations = QuotationProduct::where('id_quotation',$quotation->id)->get();
-                $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+                // $product_quotations = QuotationProduct::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
+                $payment_quotations = QuotationPayment::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
 
            
               
@@ -1722,29 +1734,29 @@ class FacturarController extends Controller
          $quotation = null;
              
          if(isset($id_quotation)){
-             $quotation = Quotation::find($id_quotation);
+             $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
          }
  
          if(isset($quotation)){
                                                                        
-             $payment_quotations = QuotationPayment::where('id_quotation',$quotation->id)->get();
+             $payment_quotations = QuotationPayment::on(Auth::user()->database_name)->where('id_quotation',$quotation->id)->get();
 
-             $anticipos_sum = Anticipo::where('status',1)->where('id_client',$quotation->id_client)->sum('amount');
+             $anticipos_sum = Anticipo::on(Auth::user()->database_name)->where('status',1)->where('id_client',$quotation->id_client)->sum('amount');
 
-             $accounts_bank = DB::table('accounts')->where('code_one', 1)
+             $accounts_bank = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 2)
                                             ->where('code_four', '<>',0)
                                             ->get();
-             $accounts_efectivo = DB::table('accounts')->where('code_one', 1)
+             $accounts_efectivo = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->where('code_four', '<>',0)
                                             ->get();
-             $accounts_punto_de_venta = DB::table('accounts')->where('description','LIKE', 'Punto de Venta%')
+             $accounts_punto_de_venta = DB::connection(Auth::user()->database_name)->table('accounts')->where('description','LIKE', 'Punto de Venta%')
                                             ->get();
 
-            $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+            $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                             ->where('quotation_products.id_quotation',$quotation->id)
                                                             ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.discount as discount',

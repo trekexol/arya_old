@@ -11,6 +11,7 @@ use App\QuotationProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
@@ -25,7 +26,7 @@ class InventoryController extends Controller
        $user       =   auth()->user();
        $users_role =   $user->role_id;
        if($users_role == '1'){
-        $inventories = Inventory::orderBy('id' ,'DESC')->get();
+        $inventories = Inventory::on(Auth::user()->database_name)->orderBy('id' ,'DESC')->get();
         }elseif($users_role == '2'){
            return view('admin.index');
        }
@@ -39,7 +40,7 @@ class InventoryController extends Controller
        $users_role =   $user->role_id;
        if($users_role == '1'){
 
-        $inventories_quotations = DB::table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
+        $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
                                                         ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
                                                         ->join('quotations', 'quotations.id', '=', 'quotation_products.id_quotation')
                                                         ->where('quotations.date_billing','<>',null)
@@ -74,14 +75,14 @@ class InventoryController extends Controller
     public function selectproduct()
     {
  
-         $products    = Product::orderBy('description','asc')->get();
+         $products    = Product::on(Auth::user()->database_name)->orderBy('description','asc')->get();
  
          return view('admin.inventories.selectproduct',compact('products'));
     }
  
    public function create($id)
    {
-        $product = Product::find($id);
+        $product = Product::on(Auth::user()->database_name)->find($id);
 
         return view('admin.inventories.create',compact('product'));
    }
@@ -90,11 +91,11 @@ class InventoryController extends Controller
    {
 
        
-        $inventory = Inventory::find($id_inventory);
+        $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
 
         $bcv = $this->search_bcv();
 
-        /*$accounts = DB::table('accounts')->where('code_one', 3)
+        /*$accounts = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 3)
                                             ->where('code_two', 1)
                                             ->where('code_three', 1)
                                             ->where('code_four',1)
@@ -106,7 +107,7 @@ class InventoryController extends Controller
 
    public function create_decrease_inventory($id_inventory)
    {
-        $inventory = Inventory::find($id_inventory);
+        $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
         $bcv = $this->search_bcv();
 
         return view('admin.inventories.create_decrease_inventory',compact('inventory','bcv'));
@@ -130,6 +131,7 @@ class InventoryController extends Controller
             
         ]);
         $var = new Inventory;
+        $var->setConnection(Auth::user()->database_name);
         
         $valor_sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('amount')));
 
@@ -181,7 +183,7 @@ class InventoryController extends Controller
 
             
 
-            $var = Inventory::findOrFail($id_inventory);
+            $var = Inventory::on(Auth::user()->database_name)->findOrFail($id_inventory);
         
             $var->code = request('code');
             
@@ -194,6 +196,7 @@ class InventoryController extends Controller
             $datenow = $date->format('Y-m-d');   
 
             $header_voucher  = new HeaderVoucher();
+            $header_voucher->setConnection(Auth::user()->database_name);
 
             $header_voucher->description = "Incremento de Inventario";
             $header_voucher->date = $datenow;
@@ -212,12 +215,12 @@ class InventoryController extends Controller
             
 
            //$account = request('account');
-            $account_mecancia_para_venta = Account::where('code_one',1)->where('code_two',1)->where('code_three',3)->where('code_four',1)->where('code_five',1)->first();  
+            $account_mecancia_para_venta = Account::on(Auth::user()->database_name)->where('code_one',1)->where('code_two',1)->where('code_three',3)->where('code_four',1)->where('code_five',1)->first();  
 
             $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_mecancia_para_venta->id,
                                 $id_user,$total,0);
 
-            $account_gastos_ajuste_inventario = Account::where('code_one',6)->where('code_two',1)->where('code_three',3)->where('code_four',2)->where('code_five',1)->first();  
+            $account_gastos_ajuste_inventario = Account::on(Auth::user()->database_name)->where('code_one',6)->where('code_two',1)->where('code_three',3)->where('code_four',2)->where('code_five',1)->first();  
 
             $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_gastos_ajuste_inventario->id,
                                 $id_user,0,$total);
@@ -261,7 +264,7 @@ class InventoryController extends Controller
         if($valor_sin_formato_amount_new > 0){
             if($valor_sin_formato_amount_new < $amount_old){
 
-                $var = Inventory::findOrFail($id_inventory);
+                $var = Inventory::on(Auth::user()->database_name)->findOrFail($id_inventory);
             
                 $var->code = request('code');
                 
@@ -290,12 +293,12 @@ class InventoryController extends Controller
     
 
             //$account = request('account');
-                $account_mecancia_para_venta = Account::where('code_one',1)->where('code_two',1)->where('code_three',3)->where('code_four',1)->where('code_five',1)->first();  
+                $account_mecancia_para_venta = Account::on(Auth::user()->database_name)->where('code_one',1)->where('code_two',1)->where('code_three',3)->where('code_four',1)->where('code_five',1)->first();  
 
                 $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_mecancia_para_venta->id,
                                     $id_user,0,$total);
 
-                $account_gastos_ajuste_inventario = Account::where('code_one',6)->where('code_two',1)->where('code_three',3)->where('code_four',2)->where('code_five',1)->first();  
+                $account_gastos_ajuste_inventario = Account::on(Auth::user()->database_name)->where('code_one',6)->where('code_two',1)->where('code_three',3)->where('code_four',2)->where('code_five',1)->first();  
 
                 $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_gastos_ajuste_inventario->id,
                                     $id_user,$total,0);
@@ -318,6 +321,7 @@ class InventoryController extends Controller
     public function add_movement($tasa,$id_header,$id_account,$id_user,$debe,$haber){
 
         $detail = new DetailVoucher();
+        $detail->setConnection(Auth::user()->database_name);
 
         $detail->id_account = $id_account;
         $detail->id_header_voucher = $id_header;
@@ -336,7 +340,7 @@ class InventoryController extends Controller
 
          /*Le cambiamos el status a la cuenta a M, para saber que tiene Movimientos en detailVoucher */
          
-            $account = Account::findOrFail($detail->id_account);
+            $account = Account::on(Auth::user()->database_name)->findOrFail($detail->id_account);
 
             if($account->status != "M"){
                 $account->status = "M";
@@ -369,9 +373,9 @@ class InventoryController extends Controller
     */
    public function edit($id)
    {
-        $inventory = Inventory::find($id);
+        $inventory = Inventory::on(Auth::user()->database_name)->find($id);
        
-        $products   = Product::all();
+        $products   = Product::on(Auth::user()->database_name)->get();
        
         return view('admin.inventories.edit',compact('inventory','products'));
   
@@ -387,7 +391,7 @@ class InventoryController extends Controller
    public function update(Request $request, $id)
    {
 
-    $vars =  Inventory::find($id);
+    $vars =  Inventory::on(Auth::user()->database_name)->find($id);
 
     $vars_status = $vars->status;
    
@@ -403,7 +407,7 @@ class InventoryController extends Controller
        
     ]);
 
-    $var = Inventory::findOrFail($id);
+    $var = Inventory::on(Auth::user()->database_name)->findOrFail($id);
 
     $var->code = request('code');
    

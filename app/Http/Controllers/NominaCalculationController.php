@@ -10,6 +10,7 @@ use App\Profession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class NominaCalculationController extends Controller
 {
@@ -29,12 +30,12 @@ class NominaCalculationController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-            $nomina      =   Nomina::find($id_nomina);
-            $employee    =   Employee::find($id_employee);
+            $nomina      =   Nomina::on(Auth::user()->database_name)->find($id_nomina);
+            $employee    =   Employee::on(Auth::user()->database_name)->find($id_employee);
             if(isset($nomina)){
                 if(isset($employee)){
 
-                        $nominacalculations   =   NominaCalculation::where('id_nomina', $id_nomina)
+                        $nominacalculations   =   NominaCalculation::on(Auth::user()->database_name)->where('id_nomina', $id_nomina)
                                                                     ->where('id_employee', $id_employee)
                                                                     ->orderby('id','desc')
                                                                     ->get();
@@ -69,13 +70,13 @@ class NominaCalculationController extends Controller
     public function create($id_nomina,$id_employee)
     {
        
-        $nomina      =   Nomina::find($id_nomina);
-        $employee    =   Employee::find($id_employee);
+        $nomina      =   Nomina::on(Auth::user()->database_name)->find($id_nomina);
+        $employee    =   Employee::on(Auth::user()->database_name)->find($id_employee);
 
         if(isset($nomina)){
             if(isset($employee)){
 
-                $nominaconcepts   =   NominaConcept::orderBy('description','asc')->get();
+                $nominaconcepts   =   NominaConcept::on(Auth::user()->database_name)->orderBy('description','asc')->get();
                
                 return view('admin.nominacalculations.create',compact('nominaconcepts','nomina','employee'));
 
@@ -90,9 +91,9 @@ class NominaCalculationController extends Controller
     public function selectemployee($id)
     {
 
-        $var  = NominaCalculation::find($id);
+        $var  = NominaCalculation::on(Auth::user()->database_name)->find($id);
 
-        $employees = Employee::where('profession_id',$var->id_profession)->get();
+        $employees = Employee::on(Auth::user()->database_name)->where('profession_id',$var->id_profession)->get();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -115,6 +116,7 @@ class NominaCalculationController extends Controller
         ]);
 
         $nomina_calculation = new NominaCalculation();
+        $nomina_calculation->setConnection(Auth::user()->database_name);
 
 
         $nomina_calculation->id_nomina = request('id_nomina');
@@ -125,9 +127,9 @@ class NominaCalculationController extends Controller
         
         $nomina_calculation->type = 'No';
 
-        $nomina = Nomina::find($nomina_calculation->id_nomina);
-        $employee = Employee::find($nomina_calculation->id_employee);
-        $nomina_concept = NominaConcept::find($nomina_calculation->id_nomina_concept);
+        $nomina = Nomina::on(Auth::user()->database_name)->find($nomina_calculation->id_nomina);
+        $employee = Employee::on(Auth::user()->database_name)->find($nomina_calculation->id_employee);
+        $nomina_concept = NominaConcept::on(Auth::user()->database_name)->find($nomina_calculation->id_nomina_concept);
 
         
         
@@ -346,13 +348,13 @@ class NominaCalculationController extends Controller
     public function edit($id)
     {
 
-        $nomina_calculation  = NominaCalculation::find($id);
+        $nomina_calculation  = NominaCalculation::on(Auth::user()->database_name)->find($id);
 
-        $nomina      =   Nomina::find($nomina_calculation->id_nomina);
-        $employee    =   Employee::find($nomina_calculation->id_employee);
-        $nomina_concept      =   NominaConcept::find($nomina_calculation->id_nomina_concept);
+        $nomina      =   Nomina::on(Auth::user()->database_name)->find($nomina_calculation->id_nomina);
+        $employee    =   Employee::on(Auth::user()->database_name)->find($nomina_calculation->id_employee);
+        $nomina_concept      =   NominaConcept::on(Auth::user()->database_name)->find($nomina_calculation->id_nomina_concept);
 
-        $nominaconcepts   =   NominaConcept::orderBy('description','asc')->get();
+        $nominaconcepts   =   NominaConcept::on(Auth::user()->database_name)->orderBy('description','asc')->get();
 
        
         return view('admin.nominacalculations.edit',compact('nomina_calculation','nomina','employee','nomina_concept','nominaconcepts'));
@@ -364,7 +366,7 @@ class NominaCalculationController extends Controller
     public function update(Request $request,$id)
     {
        
-        $vars =  NominaCalculation::find($id);
+        $vars =  NominaCalculation::on(Auth::user()->database_name)->find($id);
         $var_status = $vars->status;
       
         $data = request()->validate([
@@ -375,7 +377,7 @@ class NominaCalculationController extends Controller
             
         ]);
 
-        $nomina_calculation = NominaCalculation::findOrFail($id);
+        $nomina_calculation = NominaCalculation::on(Auth::user()->database_name)->findOrFail($id);
 
 
         $nomina_calculation->id_nomina = request('id_nomina');
@@ -386,9 +388,9 @@ class NominaCalculationController extends Controller
         
         $nomina_calculation->type = 'No';
 
-        $nomina = Nomina::find($nomina_calculation->id_nomina);
-        $employee = Employee::find($nomina_calculation->id_employee);
-        $nomina_concept = NominaConcept::find($nomina_calculation->id_nomina_concept);
+        $nomina = Nomina::on(Auth::user()->database_name)->find($nomina_calculation->id_nomina);
+        $employee = Employee::on(Auth::user()->database_name)->find($nomina_calculation->id_employee);
+        $nomina_concept = NominaConcept::on(Auth::user()->database_name)->find($nomina_calculation->id_nomina_concept);
 
         
         
@@ -454,7 +456,7 @@ class NominaCalculationController extends Controller
         //validar si la peticion es asincrona
         if($request->ajax()){
             try{
-                $formula_q = DB::table('nomina_concepts')
+                $formula_q = DB::connection(Auth::user()->database_name)->table('nomina_concepts')
                                                         ->join('nomina_formulas', 'nomina_formulas.id', '=', 'nomina_concepts.id_formula_q')
                                                         ->where('nomina_concepts.id', $id_concept)
                                                         ->select('nomina_formulas.description as description')
@@ -471,7 +473,7 @@ class NominaCalculationController extends Controller
         //validar si la peticion es asincrona
         if($request->ajax()){
             try{
-                $formula_q = DB::table('nomina_concepts')
+                $formula_q = DB::connection(Auth::user()->database_name)->table('nomina_concepts')
                                                         ->join('nomina_formulas', 'nomina_formulas.id', '=', 'nomina_concepts.id_formula_m')
                                                         ->where('nomina_concepts.id', $id_concept)
                                                         ->select('nomina_formulas.description as description')
@@ -488,7 +490,7 @@ class NominaCalculationController extends Controller
         //validar si la peticion es asincrona
         if($request->ajax()){
             try{
-                $formula_q = DB::table('nomina_concepts')
+                $formula_q = DB::connection(Auth::user()->database_name)->table('nomina_concepts')
                                                         ->join('nomina_formulas', 'nomina_formulas.id', '=', 'nomina_concepts.id_formula_s')
                                                         ->where('nomina_concepts.id', $id_concept)
                                                         ->select('nomina_formulas.description as description')
@@ -507,7 +509,7 @@ class NominaCalculationController extends Controller
 
     public function destroy($id)
     {
-        $nomina_calculation = NominaCalculation::find($id);
+        $nomina_calculation = NominaCalculation::on(Auth::user()->database_name)->find($id);
         
         $nomina_calculation->delete();
         return redirect('/nominacalculations/index/'.$nomina_calculation->id_nomina.'/'.$nomina_calculation->id_employee.'')->withDanger('Se ha Eliminado Correctamente!');

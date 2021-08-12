@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\SalaryType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SalarytypeController extends Controller
 {
@@ -23,7 +24,7 @@ class SalarytypeController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $salarytypes     =   SalaryType::orderBy('id', 'asc')->get();
+           $salarytypes     =   SalaryType::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -54,6 +55,7 @@ class SalarytypeController extends Controller
         ]);
 
         $users = new Salarytype();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->name = request('name');
         $users->description = request('description');
@@ -70,7 +72,7 @@ class SalarytypeController extends Controller
     public function edit($id)
     {
 
-        $user  = Salarytype::find($id);
+        $user  = Salarytype::on(Auth::user()->database_name)->find($id);
         
         return view('admin.salarytypes.edit',compact('user'));
     }
@@ -81,7 +83,7 @@ class SalarytypeController extends Controller
     public function update(Request $request,$id)
     {
        
-        $users =  Salarytype::find($id);
+        $users =  Salarytype::on(Auth::user()->database_name)->find($id);
         $user_rol = $users->role_id;
         $user_status = $users->status;
       
@@ -94,7 +96,7 @@ class SalarytypeController extends Controller
 
         
 
-        $user          = Salarytype::findOrFail($id);
+        $user          = Salarytype::on(Auth::user()->database_name)->findOrFail($id);
         $user->name         = request('name');
         $user->description        = request('description');
        

@@ -8,6 +8,7 @@ use App\NominaFormula;
 use App\Profession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NominaConceptController extends Controller
 {
@@ -27,7 +28,7 @@ class NominaConceptController extends Controller
         $user       =   auth()->user();
         $users_role =   $user->role_id;
         if($users_role == '1'){
-           $nominaconcepts      =   NominaConcept::orderBy('id', 'asc')->get();
+           $nominaconcepts      =   NominaConcept::on(Auth::user()->database_name)->orderBy('id', 'asc')->get();
         }elseif($users_role == '2'){
             return view('admin.index');
         }
@@ -42,7 +43,7 @@ class NominaConceptController extends Controller
        
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
-        $formulas = NominaFormula::orderBy('id','asc')->get();
+        $formulas = NominaFormula::on(Auth::user()->database_name)->orderBy('id','asc')->get();
 
 
         return view('admin.nominaconcepts.create',compact('datenow','formulas'));
@@ -70,6 +71,7 @@ class NominaConceptController extends Controller
         ]);
 
         $users = new NominaConcept();
+        $users->setConnection(Auth::user()->database_name);
 
         $users->order = request('order');
         $users->abbreviation = request('abbreviation');
@@ -105,9 +107,9 @@ class NominaConceptController extends Controller
     public function edit($id)
     {
 
-        $var  = NominaConcept::find($id);
+        $var  = NominaConcept::on(Auth::user()->database_name)->find($id);
 
-        $formulas  = NominaFormula::orderBy('description','asc')->get();
+        $formulas  = NominaFormula::on(Auth::user()->database_name)->orderBy('description','asc')->get();
 
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');
@@ -124,7 +126,7 @@ class NominaConceptController extends Controller
     public function update(Request $request,$id)
     {
        
-        $vars =  NominaConcept::find($id);
+        $vars =  NominaConcept::on(Auth::user()->database_name)->find($id);
         $var_status = $vars->status;
       
 
@@ -146,7 +148,7 @@ class NominaConceptController extends Controller
            
         ]);
 
-        $var = NominaConcept::findOrFail($id);
+        $var = NominaConcept::on(Auth::user()->database_name)->findOrFail($id);
 
         $var->order = request('order');
         $var->abbreviation = request('abbreviation');
