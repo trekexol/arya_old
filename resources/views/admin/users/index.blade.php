@@ -69,7 +69,8 @@
                             <td>Inactivo</td>
                         @endif
                     <td>
-                       <a href="{{route('users.edit',$user->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                      <!-- <a href="{{route('users.edit',$user->id) }}" title="Editar"><i class="fa fa-edit"></i></a>  
+                      -->
                     </td>
                     @endif
                     </tr>
