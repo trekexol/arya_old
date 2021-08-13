@@ -193,10 +193,19 @@
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Base Imponible</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->base_imponible, 2, ',', '.') }}</th>
   </tr> 
-  <tr>
-    <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Ventas Exentas</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->ventas_exentas, 2, ',', '.') }}</th>
-  </tr> 
+  
+  @if ($expense->retencion_iva != 0)
+    <tr>
+      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de Iva</th>
+      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->retencion_iva / ($bcv ?? 1), 2, ',', '.') }}</th>
+    </tr> 
+  @endif 
+  @if ($expense->retencion_islr != 0)
+    <tr>
+      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de ISLR</th>
+      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->retencion_islr / ($bcv ?? 1), 2, ',', '.') }}</th>
+    </tr> 
+  @endif 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $expense->iva_percentage }}%</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
@@ -210,7 +219,7 @@
  
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); font-size: small;">MONTO TOTAL</th>
-    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total - $expense->anticipo, 2, ',', '.') }}</th>
+    <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($expense->amount_with_iva, 2, ',', '.') }}</th>
   </tr> 
   
 </table>

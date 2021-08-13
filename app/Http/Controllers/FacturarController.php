@@ -461,11 +461,7 @@ class FacturarController extends Controller
 
         //Saber cuantos pagos vienen
         $come_pay = request('amount_of_payments');
-
-
         $user_id = request('user_id');
-
-        
 
         /*Validar cuales son los pagos a guardar */
             $validate_boolean1 = false;
@@ -489,7 +485,6 @@ class FacturarController extends Controller
         $retencion_islr = request('total_retiene_islr');
         $anticipo = request('anticipo_form');
 
-
         $sub_total = request('sub_total_form');
         $base_imponible = request('base_imponible_form');
         $sin_formato_amount = request('sub_total_form');
@@ -497,9 +492,6 @@ class FacturarController extends Controller
         $sin_formato_total_pay = request('total_pay_form');
 
         $sin_formato_grandtotal = str_replace(',', '.', str_replace('.', '', request('grandtotal_form')));
-
-
-        
         $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
 
         $total_iva = 0;
@@ -532,8 +524,6 @@ class FacturarController extends Controller
             $account_punto_de_venta = request('account_punto_de_venta');
     
             $credit_days = request('credit_days');
-    
-            
     
             $reference = request('reference');
     
@@ -1314,7 +1304,7 @@ class FacturarController extends Controller
 
                 
 
-            /*TERMINAR ESTO */
+            
             if($validate_boolean1 == true){
                 $var->save();
 

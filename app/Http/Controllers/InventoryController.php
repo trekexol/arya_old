@@ -95,14 +95,14 @@ class InventoryController extends Controller
 
         $bcv = $this->search_bcv();
 
-        /*$accounts = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 3)
-                                            ->where('code_two', 1)
-                                            ->where('code_three', 1)
-                                            ->where('code_four',1)
-                                            ->where('code_five', '<>',0)
-                                            ->get();*/
+        $contrapartidas     = Account::on(Auth::user()->database_name)->where('code_one', '<>',0)
+                                                                    ->where('code_two', '<>',0)
+                                                                    ->where('code_three', '<>',0)
+                                                                    ->where('code_four', '<>',0)
+                                                                    ->where('code_five', '=',0)
+                                                                ->orderBY('description','asc')->pluck('description','id')->toArray();
 
-        return view('admin.inventories.create_increase_inventory',compact('inventory','bcv'));
+        return view('admin.inventories.create_increase_inventory',compact('inventory','bcv','contrapartidas'));
    }
 
    public function create_decrease_inventory($id_inventory)
@@ -220,9 +220,11 @@ class InventoryController extends Controller
             $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_mecancia_para_venta->id,
                                 $id_user,$total,0);
 
-            $account_gastos_ajuste_inventario = Account::on(Auth::user()->database_name)->where('code_one',6)->where('code_two',1)->where('code_three',3)->where('code_four',2)->where('code_five',1)->first();  
+            
+            $account_counterpart = Account::on(Auth::user()->database_name)->find(request('Subcontrapartida'));            
+            //$account_gastos_ajuste_inventario = Account::on(Auth::user()->database_name)->where('code_one',6)->where('code_two',1)->where('code_three',3)->where('code_four',2)->where('code_five',1)->first();  
 
-            $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_gastos_ajuste_inventario->id,
+            $this->add_movement($valor_sin_formato_rate,$header_voucher->id,$account_counterpart->id,
                                 $id_user,0,$total);
         
             return redirect('/inventories')->withSuccess('Actualizado el inventario del producto: '.$var->products['description'].' Exitosamente!');

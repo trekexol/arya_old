@@ -9,7 +9,7 @@
     <!-- Page Heading -->
     <div class="row py-lg-2">
         <div class="col-sm-8 h4">
-            Listado de Comprobantes Contables detallados de la <br>cuenta: Nº {{ $account->code_one }}.{{ $account->code_two }}.{{ $account->code_three }}.{{ $account->code_four }} / {{ $account->description }}
+            Listado de Comprobantes Contables detallados de la <br>cuenta: Nº {{ $account->code_one }}.{{ $account->code_two }}.{{ $account->code_three }}.{{ $account->code_four }}.{{ $account->code_five }} / {{ $account->description }}
         </div>
         <div class="col-sm-4">
             <a href="{{ route('accounts') }}" class="btn btn-light2"><i class="fas fa-eye" ></i>

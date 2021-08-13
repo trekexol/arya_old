@@ -25,6 +25,9 @@ class CreateExpensesAndPurchasesTable extends Migration
 
             $table->date('date');
             $table->date('date_payment')->nullable();
+
+            $table->decimal('retencion_iva',64,2)->nullable();
+            $table->decimal('retencion_islr',64,2)->nullable();
          
             $table->decimal('anticipo',64,2)->nullable();
             $table->integer('iva_percentage')->nullable();

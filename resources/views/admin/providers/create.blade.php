@@ -91,17 +91,7 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <label for="porc_retencion_iva" class="col-md-2 col-form-label text-md-right">Porcentaje Retención de Iva</label>
-
-                                <div class="col-md-4">
-                                    <input id="porc_retencion_iva" type="text" class="form-control @error('porc_retencion_iva') is-invalid @enderror" name="porc_retencion_iva" value="{{ old('porc_retencion_iva') }}" required autocomplete="porc_retencion_iva">
-    
-                                    @error('porc_retencion_iva')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                                
                             </div>
                             
                         </div>
@@ -168,7 +158,7 @@
                                 <div class="col-md-2">
                                     <label id="days_credit_label" for="days_credit_label" class=" col-form-label text-md-right">Dias de Crédito</label>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                   <input id="days_credit" type="text" class="form-control @error('days_credit') is-invalid @enderror" name="days_credit" value="{{ old('days_credit') ?? 0 }}" autocomplete="days_credit">
   
                                   @error('days_credit')
@@ -177,16 +167,33 @@
                                       </span>
                                   @enderror
                                 </div>
-                                <label for="retiene_islr" class="col-md-2 col-form-label text-md-right">Retiene ISLR</label>
-
-                                <div class="form-check">
-                                    <input class="form-check-input position-static" type="checkbox" id="retiene_islr" name="retiene_islr" value="1" aria-label="...">
-                                </div>
+                               
                         </div>
 
+                        <div class="form-group row">
+                            <label for="porc_retencion_iva" class="col-md-2 col-form-label text-md-right">Porcentaje Retención de IVA</label>
 
-                       
+                            <div class="col-md-4">
+                                <input id="porc_retencion_iva" type="text" class="form-control @error('porc_retencion_iva') is-invalid @enderror" name="porc_retencion_iva" value="{{ old('porc_retencion_iva') }}" required autocomplete="porc_retencion_iva">
 
+                                @error('porc_retencion_iva')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="porc_retencion_islr" class="col-md-2 col-form-label text-md-right">Porcentaje Retención de ISLR</label>
+
+                            <div class="col-md-4">
+                                <input id="porc_retencion_islr" type="text" class="form-control @error('porc_retencion_islr') is-invalid @enderror" name="porc_retencion_islr" value="{{ old('porc_retencion_islr') }}" required autocomplete="porc_retencion_islr">
+
+                                @error('porc_retencion_islr')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                        
                         
                         <br>
@@ -221,6 +228,10 @@
         });
         $(document).ready(function () {
             $("#porc_retencion_iva").mask('000', { reverse: true });
+            
+        });
+        $(document).ready(function () {
+            $("#porc_retencion_islr").mask('000', { reverse: true });
             
         });
         $(document).ready(function () {

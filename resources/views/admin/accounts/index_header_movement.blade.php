@@ -61,7 +61,7 @@
                     <tr>
                     <td>{{$var->headers['date'] ?? ''}}</td>
                     
-                    <td>{{$var->accounts['code_one'] ?? ''}}.{{$var->accounts['code_two'] ?? ''}}.{{$var->accounts['code_three'] ?? ''}}.{{$var->accounts['code_four'] ?? ''}}</td>
+                    <td>{{$var->accounts['code_one'] ?? ''}}.{{$var->accounts['code_two'] ?? ''}}.{{$var->accounts['code_three'] ?? ''}}.{{$var->accounts['code_four'] ?? ''}}.{{$var->accounts['code_five'] ?? ''}}</td>
                     <td>{{$var->accounts['description'] ?? ''}}</td>
                     
                     @if(isset($var->id_invoice))

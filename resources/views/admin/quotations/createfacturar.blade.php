@@ -285,8 +285,8 @@
                             </div>
                           
                             <div class="col-md-3">
-                                    <select  id="payment_type"  name="payment_type" class="form-control">
-                                        <option selected value="0">Tipo de Pago 1</option>
+                                    <select  id="payment_type" required name="payment_type" class="form-control">
+                                        <option selected value="">Tipo de Pago 1</option>
                                         <option value="1">Cheque</option>
                                         <option value="2">Contado</option>
                                         <option value="3">Contra Anticipo</option>
@@ -294,7 +294,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                         <!-- <option value="8">Tarjeta Coorporativa</option>-->
+                                        
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -355,7 +355,7 @@
                                 </div>
                           
                                 <div class="col-md-3">
-                                    <select  id="payment_type2"  name="payment_type2" class="form-control">
+                                    <select  id="payment_type2" name="payment_type2" class="form-control">
                                         <option selected value="0">Tipo de Pago 2</option>
                                         <option value="1">Cheque</option>
                                         <option value="2">Contado</option>
@@ -364,7 +364,7 @@
                                         <option value="5">Depósito Bancario</option>
                                         <option value="6">Efectivo</option>
                                         <option value="7">Indeterminado</option>
-                                       <!-- <option value="8">Tarjeta Coorporativa</option>-->
+                                    
                                         <option value="9">Tarjeta de Crédito</option>
                                         <option value="10">Tarjeta de Débito</option>
                                         <option value="11">Transferencia</option>
@@ -436,7 +436,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -507,7 +507,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -578,7 +578,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                    <!-- <option value="8">Tarjeta Coorporativa</option>-->
+                                
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -649,7 +649,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -720,7 +720,7 @@
                                     <option value="5">Depósito Bancario</option>
                                     <option value="6">Efectivo</option>
                                     <option value="7">Indeterminado</option>
-                                     <!-- <option value="8">Tarjeta Coorporativa</option>-->
+                                    
                                     <option value="9">Tarjeta de Crédito</option>
                                     <option value="10">Tarjeta de Débito</option>
                                     <option value="11">Transferencia</option>
@@ -1053,8 +1053,6 @@
                 let totalBaseImponible = "<?php echo $quotation->base_imponible ?>";
 
                 let totalIvaMenos = (inputIva * "<?php echo $quotation->base_imponible; ?>") / 100;  
-
-
 
 
                 /*Toma la Base y la envia por form*/

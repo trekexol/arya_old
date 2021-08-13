@@ -334,12 +334,12 @@
 @section('consultadeposito')
     <script>
             
-            $("#contrapartida").on('change',function(){
-                var contrapartida_id = $(this).val();
-                $("#subcontrapartida").val("");
-               
-                getSubcontrapartida(contrapartida_id);
-            });
+        $("#contrapartida").on('change',function(){
+            var contrapartida_id = $(this).val();
+            $("#subcontrapartida").val("");
+            
+            getSubcontrapartida(contrapartida_id);
+        });
 
         function getSubcontrapartida(contrapartida_id){
             

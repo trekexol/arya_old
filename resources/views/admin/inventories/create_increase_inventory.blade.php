@@ -144,6 +144,40 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            @if (isset($contrapartidas))      
+                            <label for="contrapartida" class="col-md-2 col-form-label text-md-right">Contrapartida:</label>
+                        
+                            <div class="col-md-4">
+                            <select id="contrapartida"  name="contrapartida" class="form-control" required>
+                                <option value="">Seleccione una Contrapartida</option>
+                                @foreach($contrapartidas as $index => $value)
+                                    <option value="{{ $index }}" {{ old('Contrapartida') == $index ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                                </select>
+
+                                @if ($errors->has('contrapartida_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('contrapartida_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            @endif
+                            <div class="col-md-4">
+                                    <select  id="subcontrapartida"  name="Subcontrapartida" class="form-control" required>
+                                        <option value="">Seleccionar</option>
+                                    </select>
+
+                                    @if ($errors->has('subcontrapartida_id'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('subcontrapartida_id') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                        </div>  
                        
                         <br>
                             <div class="form-group row">
@@ -180,5 +214,50 @@
             $("#rate").mask('000.000.000.000.000.000.000,00', { reverse: true });
             
         });
+
+        $("#contrapartida").on('change',function(){
+            var contrapartida_id = $(this).val();
+            $("#subcontrapartida").val("");
+            
+            getSubcontrapartida(contrapartida_id);
+        });
+
+        function getSubcontrapartida(contrapartida_id){
+            
+            $.ajax({
+                url:"{{ route('directpaymentorders.listcontrapartida') }}" + '/' + contrapartida_id,
+                beforSend:()=>{
+                    alert('consultando datos');
+                },
+                success:(response)=>{
+                    let subcontrapartida = $("#subcontrapartida");
+                    let htmlOptions = `<option value='' >Seleccione..</option>`;
+                    // console.clear();
+                    if(response.length > 0){
+                        response.forEach((item, index, object)=>{
+                            let {id,description} = item;
+                            htmlOptions += `<option value='${id}' {{ old('Subcontrapartida') == '${id}' ? 'selected' : '' }}>${description}</option>`
+
+                        });
+                    }
+                    //console.clear();
+                    // console.log(htmlOptions);
+                    subcontrapartida.html('');
+                    subcontrapartida.html(htmlOptions);
+                
+                    
+                
+                },
+                error:(xhr)=>{
+                    alert('Presentamos inconvenientes al consultar los datos');
+                }
+            })
+        }
+
+        $("#subcontrapartida").on('change',function(){
+                var subcontrapartida_id = $(this).val();
+                var contrapartida_id    = document.getElementById("contrapartida").value;
+                
+            });
     </script>
 @endsection

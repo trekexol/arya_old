@@ -55,16 +55,17 @@ class ProviderController extends Controller
         'phone2'         =>'required|max:20',
 
         
-        'days_credit'         =>'required|integer',
-        'amount_max_credit'    =>'required',
-        'porc_retencion_iva'    =>'required',
+        'days_credit'           =>  'required|integer',
+        'amount_max_credit'     =>  'required',
+        'porc_retencion_iva'    =>  'numeric|min:0|max:100',
+        'porc_retencion_islr'    => 'numeric|min:0|max:100',
         
         'balance'         =>'required',
         
        
        
     ]);
-
+    
     $users = new Provider();
     $users->setConnection(Auth::user()->database_name);
 
@@ -83,14 +84,7 @@ class ProviderController extends Controller
     }else{
         $users->has_credit = true;
     }
-    
-    $retiene_islr = request('retiene_islr');
-    if($retiene_islr == null){
-        $users->retiene_islr = false;
-    }else{
-        $users->retiene_islr = true;
-    }
-
+   
     $users->days_credit = request('days_credit');
 
     $sin_formato_amount_max_credit = str_replace(',', '.', str_replace('.', '', request('amount_max_credit')));
@@ -99,9 +93,10 @@ class ProviderController extends Controller
     
     $users->amount_max_credit = $sin_formato_amount_max_credit;
     $users->porc_retencion_iva = request('porc_retencion_iva');
+    $users->porc_retencion_islr = request('porc_retencion_islr');
     
     $users->balance = $sin_formato_balance;
-    $users->select_balance = 0;
+
     $users->status =  1;
    
     $users->save();
@@ -150,20 +145,21 @@ class ProviderController extends Controller
    
     $data = request()->validate([
         'code_provider'         =>'required|max:20',
-        'razon_social'         =>'required|max:80',
-        'direction'         =>'required|max:100',
+        'razon_social'          =>'required|max:80',
+        'direction'             =>'required|max:100',
 
-        'city'         =>'required|max:20',
-        'country'         =>'required|max:20',
-        'phone1'         =>'required|max:20',
-        'phone2'         =>'required|max:20',
+        'city'                  =>'required|max:20',
+        'country'               =>'required|max:20',
+        'phone1'                =>'required|max:20',
+        'phone2'                =>'required|max:20',
 
         
-        'days_credit'         =>'required|integer',
-        'amount_max_credit'    =>'required|numeric',
-        'porc_retencion_iva'    =>'required|numeric',
+        'days_credit'           =>'required',
+        'amount_max_credit'     =>'required',
+        'porc_retencion_iva'    =>  'numeric|min:0|max:100',
+        'porc_retencion_islr'   => 'numeric|min:0|max:100',
         
-        'balance'         =>'required|numeric',
+        'balance'               =>'required',
         
        
        
@@ -188,24 +184,20 @@ class ProviderController extends Controller
         $users->has_credit = true;
     }
     
-    $retiene_islr = request('retiene_islr');
-    if($retiene_islr == null){
-        $users->retiene_islr = false;
-    }else{
-        $users->retiene_islr = true;
-    }
+    $sin_formato_amount_max_credit = str_replace(',', '.', str_replace('.', '', request('amount_max_credit')));
+    $sin_formato_balance = str_replace(',', '.', str_replace('.', '', request('balance')));
+   
+    
     
     $users->days_credit = request('days_credit');
-    $users->amount_max_credit = request('amount_max_credit');
+    $users->amount_max_credit = $sin_formato_amount_max_credit;
     $users->porc_retencion_iva = request('porc_retencion_iva');
+    $users->porc_retencion_islr = request('porc_retencion_islr');
     
-    $users->balance = request('balance');
-    $users->select_balance = 0;
+    $users->balance = $sin_formato_balance;
     $users->status =  request('status');
-   
 
-  
-      
+    
 
     $users->save();
 
