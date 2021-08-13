@@ -40,7 +40,7 @@ Route::group(["prefix"=>'users'],function(){
     Route::get('/','UserController@index')->name('users');
     Route::get('register','UserController@create')->name('users.create');
     Route::post('store', 'UserController@store')->name('users.store');
-   
+
     Route::get('{id}/edit','UserController@edit')->name('users.edit');
     Route::delete('{id}/delete','UserController@destroy')->name('users.delete');
     Route::patch('{id}/update','UserController@update')->name('users.update');
@@ -66,7 +66,7 @@ Route::group(["prefix"=>'salarytypes'],function(){
     Route::get('/','SalarytypeController@index')->name('salarytypes');
     Route::get('register','SalarytypeController@create')->name('salarytypes.create');
     Route::post('store','SalarytypeController@store')->name('salarytypes.store');
-   
+
     Route::get('{id}/edit','SalarytypeController@edit')->name('salarytypes.edit');
     Route::delete('{id}/delete','SalarytypeController@destroy')->name('salarytypes.delete');
     Route::patch('{id}/update','SalarytypeController@update')->name('salarytypes.update');
@@ -78,7 +78,7 @@ Route::group(["prefix"=>'positions'],function(){
     Route::get('/','PositionsController@index')->name('positions');
     Route::get('register','PositionsController@create')->name('positions.create');
     Route::post('store','PositionsController@store')->name('positions.store');
-   
+
     Route::get('{id}/edit','PositionsController@edit')->name('positions.edit');
     Route::delete('{id}/delete','PositionsController@destroy')->name('positions.delete');
     Route::patch('{id}/update','PositionsController@update')->name('positions.update');
@@ -89,7 +89,7 @@ Route::group(["prefix"=>'academiclevels'],function(){
     Route::get('/','AcademiclevelsController@index')->name('academiclevels');
     Route::get('register','AcademiclevelsController@create')->name('academiclevels.create');
     Route::post('store','AcademiclevelsController@store')->name('academiclevels.store');
-   
+
     Route::get('{id}/edit','AcademiclevelsController@edit')->name('academiclevels.edit');
     Route::delete('{id}/delete','AcademiclevelsController@destroy')->name('academiclevels.delete');
     Route::patch('{id}/update','AcademiclevelsController@update')->name('academiclevels.update');
@@ -101,7 +101,7 @@ Route::group(["prefix"=>'professions'],function(){
     Route::get('/','ProfessionsController@index')->name('professions');
     Route::get('register','ProfessionsController@create')->name('professions.create');
     Route::post('store','ProfessionsController@store')->name('professions.store');
-   
+
     Route::get('{id}/edit','ProfessionsController@edit')->name('professions.edit');
     Route::delete('{id}/delete','ProfessionsController@destroy')->name('professions.delete');
     Route::patch('{id}/update','ProfessionsController@update')->name('professions.update');
@@ -112,7 +112,7 @@ Route::group(["prefix"=>'employees'],function(){
     Route::get('/','EmployeeController@index')->name('employees');
     Route::get('register','EmployeeController@create')->name('employees.create');
     Route::post('store', 'EmployeeController@store')->name('employees.store');
-   
+
     Route::get('{id}/edit','EmployeeController@edit')->name('employees.edit');
     Route::delete('{id}/delete','EmployeeController@destroy')->name('employees.delete');
     Route::patch('{id}/update','EmployeeController@update')->name('employees.update');
@@ -141,7 +141,7 @@ Route::group(["prefix"=>'segments'],function(){
     Route::get('/','SegmentController@index')->name('segments');
     Route::get('register','SegmentController@create')->name('segments.create');
     Route::post('store', 'SegmentController@store')->name('segments.store');
-   
+
     Route::get('{id}/edit','SegmentController@edit')->name('segments.edit');
     Route::delete('{id}/delete','SegmentController@destroy')->name('segments.delete');
     Route::patch('{id}/update','SegmentController@update')->name('segments.update');
@@ -151,7 +151,7 @@ Route::group(["prefix"=>'subsegment'],function(){
     Route::get('/','SubsegmentController@index')->name('subsegment');
     Route::get('register','SubsegmentController@create')->name('subsegment.create');
     Route::post('store', 'SubsegmentController@store')->name('subsegment.store');
-   
+
     Route::get('{id}/edit','SubsegmentController@edit')->name('subsegment.edit');
     Route::delete('{id}/delete','SubsegmentController@destroy')->name('subsegment.delete');
     Route::patch('{id}/update','SubsegmentController@update')->name('subsegment.update');
@@ -164,7 +164,7 @@ Route::group(["prefix"=>'unitofmeasures'],function(){
     Route::get('/','UnitOfMeasureController@index')->name('unitofmeasures');
     Route::get('register','UnitOfMeasureController@create')->name('unitofmeasures.create');
     Route::post('store','UnitOfMeasureController@store')->name('unitofmeasures.store');
-   
+
     Route::get('{id}/edit','UnitOfMeasureController@edit')->name('unitofmeasures.edit');
     Route::delete('{id}/delete','UnitOfMeasureController@destroy')->name('unitofmeasures.delete');
     Route::patch('{id}/update','UnitOfMeasureController@update')->name('unitofmeasures.update');
@@ -175,7 +175,7 @@ Route::group(["prefix"=>'clients'],function(){
     Route::get('/','ClientController@index')->name('clients');
     Route::get('register','ClientController@create')->name('clients.create');
     Route::post('store','ClientController@store')->name('clients.store');
-   
+
     Route::get('{id}/edit','ClientController@edit')->name('clients.edit');
     Route::delete('{id}/delete','ClientController@destroy')->name('clients.delete');
     Route::patch('{id}/update','ClientController@update')->name('clients.update');
@@ -186,7 +186,7 @@ Route::group(["prefix"=>'providers'],function(){
     Route::get('/','ProviderController@index')->name('providers');
     Route::get('register','ProviderController@create')->name('providers.create');
     Route::post('store','ProviderController@store')->name('providers.store');
-   
+
     Route::get('{id}/edit','ProviderController@edit')->name('providers.edit');
     Route::delete('{id}/delete','ProviderController@destroy')->name('providers.delete');
     Route::patch('{id}/update','ProviderController@update')->name('providers.update');
@@ -197,7 +197,7 @@ Route::group(["prefix"=>'branches'],function(){
     Route::get('/','BranchController@index')->name('branches');
     Route::get('register','BranchController@create')->name('branches.create');
     Route::post('store','BranchController@store')->name('branches.store');
-   
+
     Route::get('{id}/edit','BranchController@edit')->name('branches.edit');
     Route::delete('{id}/delete','BranchController@destroy')->name('branches.delete');
     Route::patch('{id}/update','BranchController@update')->name('branches.update');
@@ -208,7 +208,7 @@ Route::group(["prefix"=>'nominatypes'],function(){
     Route::get('/','NominaTypeController@index')->name('nominatypes');
     Route::get('register','NominaTypeController@create')->name('nominatypes.create');
     Route::post('store','NominaTypeController@store')->name('nominatypes.store');
-   
+
     Route::get('{id}/edit','NominaTypeController@edit')->name('nominatypes.edit');
     Route::delete('{id}/delete','NominaTypeController@destroy')->name('nominatypes.delete');
     Route::patch('{id}/update','NominaTypeController@update')->name('nominatypes.update');
@@ -219,7 +219,7 @@ Route::group(["prefix"=>'paymenttypes'],function(){
     Route::get('/','PaymentTypeController@index')->name('paymenttypes');
     Route::get('register','PaymentTypeController@create')->name('paymenttypes.create');
     Route::post('store','PaymentTypeController@store')->name('paymenttypes.store');
-   
+
     Route::get('{id}/edit','PaymentTypeController@edit')->name('paymenttypes.edit');
     Route::delete('{id}/delete','PaymentTypeController@destroy')->name('paymenttypes.delete');
     Route::patch('{id}/update','PaymentTypeController@update')->name('paymenttypes.update');
@@ -230,7 +230,7 @@ Route::group(["prefix"=>'indexbcvs'],function(){
     Route::get('/','IndexBcvController@index')->name('indexbcvs');
     Route::get('register','IndexBcvController@create')->name('indexbcvs.create');
     Route::post('store','IndexBcvController@store')->name('indexbcvs.store');
-   
+
     Route::get('{id}/edit','IndexBcvController@edit')->name('indexbcvs.edit');
     Route::delete('{id}/delete','IndexBcvController@destroy')->name('indexbcvs.delete');
     Route::patch('{id}/update','IndexBcvController@update')->name('indexbcvs.update');
@@ -253,7 +253,7 @@ Route::group(["prefix"=>'comisiontypes'],function(){
     Route::get('/','ComisionTypeController@index')->name('comisiontypes');
     Route::get('register','ComisionTypeController@create')->name('comisiontypes.create');
     Route::post('store','ComisionTypeController@store')->name('comisiontypes.store');
-   
+
     Route::get('{id}/edit','ComisionTypeController@edit')->name('comisiontypes.edit');
     Route::delete('{id}/delete','ComisionTypeController@destroy')->name('comisiontypes.delete');
     Route::patch('{id}/update','ComisionTypeController@update')->name('comisiontypes.update');
@@ -264,19 +264,19 @@ Route::group(["prefix"=>'vendors'],function(){
     Route::get('/','VendorController@index')->name('vendors');
     Route::get('register','VendorController@create')->name('vendors.create');
     Route::post('store','VendorController@store')->name('vendors.store');
-   
+
     Route::get('{id}/edit','VendorController@edit')->name('vendors.edit');
     Route::delete('{id}/delete','VendorController@destroy')->name('vendors.delete');
     Route::patch('{id}/update','VendorController@update')->name('vendors.update');
 
-   
+
 });
 
 Route::group(["prefix"=>'products'],function(){
     Route::get('/','ProductController@index')->name('products');
     Route::get('register','ProductController@create')->name('products.create');
     Route::post('store','ProductController@store')->name('products.store');
-   
+
     Route::get('{id}/edit','ProductController@edit')->name('products.edit');
     Route::delete('{id}/delete','ProductController@destroy')->name('products.delete');
     Route::patch('{id}/update','ProductController@update')->name('products.update');
@@ -289,7 +289,7 @@ Route::group(["prefix"=>'inventories'],function(){
     Route::get('/','InventoryController@index')->name('inventories');
     Route::get('selectproduct','InventoryController@selectproduct')->name('inventories.select');
     Route::post('store','InventoryController@store')->name('inventories.store');
-    
+
     Route::get('{id}/edit','InventoryController@edit')->name('inventories.edit');
     Route::delete('{id}/delete','InventoryController@destroy')->name('inventories.delete');
     Route::patch('{id}/update','InventoryController@update')->name('inventories.update');
@@ -298,11 +298,11 @@ Route::group(["prefix"=>'inventories'],function(){
 
     Route::post('storeincreaseinventory','InventoryController@store_increase_inventory')->name('inventories.store_increase_inventory');
     Route::get('createincreaseinventory/{id_inventario}','InventoryController@create_increase_inventory')->name('inventories.create_increase_inventory');
-   
+
     Route::post('storedecreaseinventory','InventoryController@store_decrease_inventory')->name('inventories.store_decrease_inventory');
     Route::get('createdecreaseinventory/{id_inventario}','InventoryController@create_decrease_inventory')->name('inventories.create_decrease_inventory');
     Route::get('movements','InventoryController@indexmovements')->name('inventories.movement');
-   
+
 });
 
 Route::group(["prefix"=>'modelos'],function(){
@@ -352,10 +352,10 @@ Route::group(["prefix"=>'accounts'],function(){
     Route::patch('{id}/update','AccountController@update')->name('accounts.update');
 
     Route::post('store/newlevel','AccountController@storeNewLevel')->name('accounts.storeNewLevel');
-    
+
 
     Route::get('register/{id_account}','AccountController@createlevel')->name('accounts.createlevel');
-    
+
     Route::get('movementaccount/{id_account}/{coin?}','AccountController@movements')->name('accounts.movements');
 
     Route::get('movementheader/{id}/{type}/{id_account}','AccountController@header_movements')->name('accounts.header_movements');
@@ -383,9 +383,9 @@ Route::group(["prefix"=>'detailvouchers'],function(){
     Route::get('edit/{coin}/{id}/{id_account?}','DetailVoucherController@edit')->name('detailvouchers.edit');
     Route::delete('{id}/delete','DetailVoucherController@destroy')->name('detailvouchers.delete');
     Route::patch('{id}/update','DetailVoucherController@update')->name('detailvouchers.update');
-   
+
     Route::get('selectaccount/{coin}/{id_header}/{id_detail?}','DetailVoucherController@selectaccount')->name('detailvouchers.selectaccount');
-    
+
     Route::get('selectheadervouche','DetailVoucherController@selectheader')->name('detailvouchers.selectheadervouche');
 
    // Route::get('register/{coin}/{id_header}','DetailVoucherController@createselect')->name('detailvouchers.createselect');
@@ -393,7 +393,7 @@ Route::group(["prefix"=>'detailvouchers'],function(){
     //Route::get('register/{coin}/{id_header}/{code_one}/{code_two}/{code_three}/{code_four}/{period}','DetailVoucherController@createselectaccount')->name('detailvouchers.createselectaccount');
 
     Route::get('contabilizar/{coin}/{id_header}','DetailVoucherController@contabilizar')->name('detailvouchers.contabilizar');
-    
+
     Route::get('listheader/{var?}','DetailVoucherController@listheader')->name('detailvouchers.listheader');
 });
 
@@ -409,7 +409,7 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::get('registerquotation/{id_client}','QuotationController@createquotationclient')->name('quotations.createquotationclient');
     Route::get('selectclient','QuotationController@selectclient')->name('quotations.selectclient');
-    
+
     Route::get('registerquotation/{id_client}/{id_vendor}','QuotationController@createquotationvendor')->name('quotations.createquotationvendor');
     Route::get('selectvendor/{id_client}','QuotationController@selectvendor')->name('quotations.selectvendor');
 
@@ -417,7 +417,7 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::get('selectproduct/{id_quotation}/{coin}','QuotationController@selectproduct')->name('quotations.selectproduct');
     Route::get('registerproduct/{id_quotation}/{coin}/{id_product}','QuotationController@createproduct')->name('quotations.createproduct');
 
-    
+
     Route::post('storeproduct','QuotationController@storeproduct')->name('quotations.storeproduct');
 
     Route::get('facturar/{id_quotation}/{coin}','FacturarController@createfacturar')->name('quotations.createfacturar');
@@ -444,7 +444,7 @@ Route::group(["prefix"=>'quotations'],function(){
 
     Route::delete('deleteproduct','QuotationController@deleteProduct')->name('quotations.deleteProduct');
     Route::delete('deletequotation','QuotationController@deleteQuotation')->name('quotations.deleteQuotation');
-   
+
 });
 
 Route::group(["prefix"=>'bankmovements'],function(){
@@ -459,14 +459,14 @@ Route::group(["prefix"=>'bankmovements'],function(){
 
     Route::get('list/{contrapartida_id?}','BankMovementController@list')->name('bankmovements.list');
     Route::get('listbeneficiario/{beneficiario_id?}','BankMovementController@listbeneficiario')->name('bankmovements.listbeneficiario');
-    
+
     Route::post('storeretirement','BankMovementController@storeretirement')->name('bankmovements.storeretirement');
 
     Route::get('registertransfer/{id_account}','BankMovementController@createtransfer')->name('bankmovements.createtransfer');
     Route::post('storetransfer','BankMovementController@storetransfer')->name('bankmovements.storetransfer');
 
     Route::get('seemovements','BankMovementController@indexmovement')->name('bankmovements.indexmovement');
-    
+
 });
 
 Route::group(["prefix"=>'nominas'],function(){
@@ -478,10 +478,10 @@ Route::group(["prefix"=>'nominas'],function(){
     Route::patch('{id}/update','NominaController@update')->name('nominas.update');
 
     Route::get('selectemployee/{id}','NominaController@selectemployee')->name('nominas.selectemployee');
- 
+
     Route::get('calculate/{id}','NominaController@calculate')->name('nominas.calculate');
 
-    
+
 });
 
 
@@ -493,7 +493,7 @@ Route::group(["prefix"=>'nominaconcepts'],function(){
     Route::delete('{id}/delete','NominaConceptController@destroy')->name('nominaconcepts.delete');
     Route::patch('{id}/update','NominaConceptController@update')->name('nominaconcepts.update');
 
-    
+
 });
 
 Route::group(["prefix"=>'nominacalculations'],function(){
@@ -513,8 +513,8 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::get('/','InvoiceController@index')->name('invoices');
 
     Route::get('movementinvoice/{id_invoice}/{coin?}','InvoiceController@movementsinvoice')->name('invoices.movement');
-    
-   
+
+
  });
 
  Route::group(["prefix"=>'pdf'],function(){
@@ -536,7 +536,7 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::get('/','TasaController@index')->name('tasas');
     Route::get('register','TasaController@create')->name('tasas.create');
     Route::post('store', 'tasaController@store')->name('tasas.store');
-   
+
     Route::get('{id}/edit','TasaController@edit')->name('tasas.edit');
     Route::delete('{id}/delete','TasaController@destroy')->name('tasas.delete');
     Route::patch('{id}/update','TasaController@update')->name('tasas.update');
@@ -549,7 +549,7 @@ Route::group(["prefix"=>'anticipos'],function(){
     Route::get('/','AnticipoController@index')->name('anticipos');
     Route::get('register','AnticipoController@create')->name('anticipos.create');
     Route::post('store', 'AnticipoController@store')->name('anticipos.store');
-   
+
     Route::get('edit/{id}/{id_client?}/{id_provider?}','AnticipoController@edit')->name('anticipos.edit');
     Route::delete('{id}/delete','AnticipoController@destroy')->name('anticipos.delete');
     Route::patch('{id}/update','AnticipoController@update')->name('anticipos.update');
@@ -560,7 +560,7 @@ Route::group(["prefix"=>'anticipos'],function(){
     Route::get('historic','AnticipoController@indexhistoric')->name('anticipos.historic');
 
     Route::get('selectanticipo/{id_client}/{coin}/{id_quotation}','AnticipoController@selectanticipo')->name('anticipos.selectanticipo');
-    
+
     Route::get('changestatus/{id_anticipo}/{verify}','AnticipoController@changestatus')->name('anticipos.changestatus');
 
     Route::get('indexprovider','AnticipoController@index_provider')->name('anticipos.index_provider');
@@ -577,7 +577,7 @@ Route::group(["prefix"=>'sales'],function(){
     Route::get('/','SaleController@index')->name('sales');
     /*Route::get('register','SaleController@create')->name('sales.create');
     Route::post('store', 'saleController@store')->name('sales.store');
-   
+
     Route::get('{id}/edit','SaleController@edit')->name('sales.edit');
     Route::delete('{id}/delete','SaleController@destroy')->name('sales.delete');
     Route::patch('{id}/update','SaleController@update')->name('sales.update');*/
@@ -589,7 +589,7 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     Route::get('/','ExpensesAndPurchaseController@index')->name('expensesandpurchases');
     Route::get('registerexpense/{id_provider?}','ExpensesAndPurchaseController@create_expense')->name('expensesandpurchases.create');
     Route::post('store', 'ExpensesAndPurchaseController@store')->name('expensesandpurchases.store');
-   
+
     Route::get('{id}/edit','ExpensesAndPurchaseController@edit')->name('expensesandpurchases.edit');
     Route::delete('{id}/delete','ExpensesAndPurchaseController@destroy')->name('expensesandpurchases.delete');
     Route::patch('{id}/update','ExpensesAndPurchaseController@update')->name('expensesandpurchases.update');
@@ -598,13 +598,13 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     Route::get('selectprovider','ExpensesAndPurchaseController@selectprovider')->name('expensesandpurchases.selectprovider');
 
     Route::get('register/{id_expense}/{coin}/{id_inventory?}','ExpensesAndPurchaseController@create_expense_detail')->name('expensesandpurchases.create_detail');
-    
+
     Route::get('listaccount/{type_var?}','ExpensesAndPurchaseController@listaccount')->name('expensesandpurchases.listaccount');
 
     Route::post('storedetail', 'ExpensesAndPurchaseController@store_detail')->name('expensesandpurchases.store_detail');
 
     Route::get('registerpayment/{id_expense}/{coin}','ExpensesAndPurchaseController@create_payment')->name('expensesandpurchases.create_payment');
-    
+
     Route::patch('storepayment','ExpensesAndPurchaseController@store_payment')->name('expensesandpurchases.store_payment');
 
     Route::get('indexhistorial','ExpensesAndPurchaseController@index_historial')->name('expensesandpurchases.index_historial');
@@ -616,11 +616,11 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
     Route::get('expensevoucher/{id_expense}/{coin}','ExpensesAndPurchaseController@create_expense_voucher')->name('expensesandpurchases.create_expense_voucher');
 
     Route::get('registerpaymentafter/{id_expense}/{coin}','ExpensesAndPurchaseController@create_payment_after')->name('expensesandpurchases.create_payment_after');
-    
+
     Route::post('storeexpensepayment', 'ExpensesAndPurchaseController@store_expense_payment')->name('expensesandpurchases.store_expense_payment');
 
     Route::get('movementexpense/{id_expense}/{coin}','ExpensesAndPurchaseController@movements_expense')->name('expensesandpurchases.movement');
-    
+
     Route::get('refreshrate/{id_expense}/{coin}/{rate}','ExpensesAndPurchaseController@refreshrate')->name('expensesandpurchases.refreshrate');
 
     Route::get('productedit/{id_product}/{coin}','ExpensesAndPurchaseController@editproduct')->name('expensesandpurchases.editproduct');
@@ -638,7 +638,7 @@ Route::group(["prefix"=>'directpaymentorders'],function(){
     Route::get('listbeneficiary/{type_var?}','DirectPaymentOrderController@listbeneficiary')->name('directpaymentorders.listbeneficiary');
     Route::get('listcontrapartida/{type_var?}','DirectPaymentOrderController@listcontrapartida')->name('directpaymentorders.listcontrapartida');
 
-   
+
 
 });
 
@@ -694,23 +694,23 @@ Route::group(["prefix"=>'pdfnomina'],function(){
     Route::get('reciboprestaciones','PdfNominaController@create_recibo_prestaciones')->name('nominas.create_recibo_prestaciones');
     Route::get('reciboutilidades','PdfNominaController@create_recibo_utilidades')->name('nominas.create_recibo_utilidades');
     Route::get('reciboliquidacionauto','PdfNominaController@create_recibo_liquidacion_auto')->name('nominas.create_recibo_liquidacion_auto');
-    
+
     Route::get('printnominacalculation/{id_nomina}/{id_employee}','PdfNominaController@print_nomina_calculation')->name('nominas.print_nomina_calculation');
-    
+
  });
 
  Route::group(["prefix"=>'balancegenerals'],function(){
     Route::get('balancegeneral','ReportController@index')->name('balancegenerals');
     Route::post('store','ReportController@store')->name('balancegenerals.store');
     Route::get('balancepdf/{date_begin?}/{date_end?}/{level?}','ReportController@balance_pdf')->name('balancegenerals.balance_pdf');
-   
+
 });
 
 Route::group(["prefix"=>'twosubsegments'],function(){
     Route::get('/','TwoSubSegmentController@index')->name('twosubsegments');
     Route::get('register','TwoSubSegmentController@create')->name('twosubsegments.create');
     Route::post('store', 'TwoSubSegmentController@store')->name('twosubsegments.store');
-   
+
     Route::get('{id}/edit','TwoSubSegmentController@edit')->name('twosubsegments.edit');
     Route::delete('{id}/delete','TwoSubSegmentController@destroy')->name('twosubsegments.delete');
     Route::patch('{id}/update','TwoSubSegmentController@update')->name('twosubsegments.update');
@@ -724,7 +724,7 @@ Route::group(["prefix"=>'threesubsegments'],function(){
     Route::get('/','ThreeSubSegmentController@index')->name('threesubsegments');
     Route::get('register','ThreeSubSegmentController@create')->name('threesubsegments.create');
     Route::post('store', 'ThreeSubSegmentController@store')->name('threesubsegments.store');
-   
+
     Route::get('{id}/edit','ThreeSubSegmentController@edit')->name('threesubsegments.edit');
     Route::delete('{id}/delete','ThreeSubSegmentController@destroy')->name('threesubsegments.delete');
     Route::patch('{id}/update','ThreeSubSegmentController@update')->name('threesubsegments.update');
@@ -738,12 +738,20 @@ Route::group(["prefix"=>'balanceingresos'],function(){
     Route::get('balance','ReportController@index_ingresos')->name('balanceingresos');
     Route::post('store','ReportController@store_ingresos')->name('balanceingresos.store');
     Route::get('balancepdf/{date_begin?}/{date_end?}/{level?}','ReportController@balance_ingresos_pdf')->name('balanceingresos.balance_pdf');
-   
+
 });
 
 Route::group(["prefix"=>'daily_listing'],function(){
     Route::get('index','DailyListingController@index')->name('daily_listing');
     Route::post('store','DailyListingController@store')->name('daily_listing.store');
     Route::post('printjournalbook','DailyListingController@print_journalbook')->name('daily_listing.print_journalbook');
-   
+
+});
+
+
+Route::group(["prefix"=>'nominagenerals'],function(){
+    Route::get('index','NominaGeneralController@index')->name('nominagenerals.index');
+    Route::post('store','NominaGeneralController@store')->name('nominagenerals.store');
+    Route::get('{id}/edit','NominaGeneralController@edit')->name('nominagenerals.edit');
+    Route::patch('{id}/update','NominaGeneralController@update')->name('nominagenerals.update');
 });
