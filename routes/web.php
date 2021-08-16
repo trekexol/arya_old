@@ -414,7 +414,7 @@ Route::group(["prefix"=>'quotations'],function(){
     Route::get('selectvendor/{id_client}','QuotationController@selectvendor')->name('quotations.selectvendor');
 
 
-    Route::get('selectproduct/{id_quotation}/{coin}','QuotationController@selectproduct')->name('quotations.selectproduct');
+    Route::get('selectproduct/{id_quotation}/{coin}/{type}','QuotationController@selectproduct')->name('quotations.selectproduct');
     Route::get('registerproduct/{id_quotation}/{coin}/{id_product}','QuotationController@createproduct')->name('quotations.createproduct');
 
     

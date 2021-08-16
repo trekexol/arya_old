@@ -169,7 +169,7 @@
                                         
                                         <a href="" title="Buscar Producto Por Codigo" onclick="searchCode()"><i class="fa fa-search"></i></a>  
                                     
-                                            <a href="{{ route('quotations.selectproduct',[$quotation->id,$coin]) }}" title="Productos"><i class="fa fa-eye"></i></a>  
+                                            <a href="{{ route('quotations.selectproduct',[$quotation->id,$coin,'productos']) }}" title="Productos"><i class="fa fa-eye"></i></a>  
                                         
                                     </div>
                                     

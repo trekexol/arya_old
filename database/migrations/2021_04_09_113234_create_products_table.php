@@ -16,10 +16,10 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('segment_id');
-            $table->unsignedBigInteger('subsegment_id');
+            $table->unsignedBigInteger('subsegment_id')->nullable();
             $table->unsignedBigInteger('twosubsegment_id')->nullable();
             $table->unsignedBigInteger('threesubsegment_id')->nullable();
-            $table->unsignedBigInteger('unit_of_measure_id');
+            $table->unsignedBigInteger('unit_of_measure_id')->nullable();
             $table->unsignedBigInteger('id_user');
             $table->string('code_comercial',20)->nullable();
             $table->string('type',15);

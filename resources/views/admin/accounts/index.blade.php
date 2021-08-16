@@ -416,7 +416,7 @@
     $('#dataTable').DataTable({
         "ordering": false,
         "order": [],
-        'aLengthMenu': [[50, 100, 150, -1], [50, 100, 150, "Todo"]]
+        'aLengthMenu': [[-1, 50, 100, 150, 200], ["Todo",50, 100, 150, 200]]
     });
 
     $("#coin").on('change',function(){

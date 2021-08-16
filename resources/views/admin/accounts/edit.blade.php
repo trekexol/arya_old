@@ -56,9 +56,9 @@
         
                                     <div class="col-md-4">
                                             @if($var->coin != null)
-                                                <input id="balance_previus" type="text" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ $var->balance_previus / $var->rate }}" required autocomplete="balance_previus">
+                                                <input id="balance_previus" type="text" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ $var->balance_previus / $var->rate }}" maxlength="60" required autocomplete="balance_previus">
                                             @else
-                                                <input id="balance_previus" type="text" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ $var->balance_previus }}" required autocomplete="balance_previus">
+                                                <input id="balance_previus" type="text" class="form-control @error('balance_previus') is-invalid @enderror" name="balance_previus" value="{{ $var->balance_previus }}" maxlength="60" required autocomplete="balance_previus">
                                             @endif
                                         
                                         @error('balance_previus')
@@ -144,8 +144,24 @@
     });
 
     $(document).ready(function () {
-        $("#balance_previus").mask('000.000.000.000.000.000.000,00', { reverse: true });
         
+        $('#balance_previus').mask('###.###.###.###.###.###.###.###.###.###.###.###,##', {
+            reverse: true,
+            translation: {
+                '#': {
+                pattern: /-|\d/,
+                recursive: true
+                }
+            },
+            onChange: function(value, e) {
+                var target = e.target,
+                    position = target.selectionStart; // Capture initial position
+
+                target.value = value.replace(/(?!^)-/g, '').replace(/^,/, '').replace(/^-,/, '-');
+
+                target.selectionEnd = position; // Set the cursor back to the initial position.
+            }
+        });
     });
     $(document).ready(function () {
         $("#rate").mask('000.000.000.000.000.000.000,00', { reverse: true });

@@ -6,8 +6,9 @@
     <div class="row py-lg-2">
        
         <div class="col-sm-10">
-            <h2>Seleccione un Producto del Inventario</h2>
+            <h2>Seleccione un Servicio</h2>
         </div>
+        
         <div class="col-sm-2">
             <select class="form-control" name="type" id="type">
                 @if(isset($type))
@@ -27,7 +28,6 @@
                 <option value="servicios">servicios</option>
             </select>
         </div>
-    
     </div>
 </div>
 
@@ -59,7 +59,6 @@
                 <th class="text-center"></th>
                 <th class="text-center">SKU</th>
                 <th class="text-center">Descripción</th>
-                <th class="text-center">Cantidad</th>
                 <th class="text-center">Precio Bs</th>
                 <th class="text-center">Precio Moneda</th>
                 <th class="text-center">Moneda</th>
@@ -72,16 +71,16 @@
             </thead>
             
             <tbody>
-                @if (empty($inventories))
+                @if (empty($services))
                 @else  
-                    @foreach ($inventories as $var)
+                    @foreach ($services as $var)
                         <tr>
                             <td>
                                 <a href="{{ route('quotations.createproduct',[$id_quotation,$coin,$var->id]) }}" title="Seleccionar"><i class="fa fa-check"></i></a>
                             </td>
                             <td>{{ $var->code_comercial }}</td>
                             <td>{{ $var->description}}</td>
-                            <td>{{ $var->amount ?? 0}}</td>
+                           
                            
                             @if($var->money != 'Bs')
                                 <td style="text-align: right">{{number_format($var->price * $bcv_quotation_product, 2, ',', '.')}}</td>
@@ -99,6 +98,7 @@
                             @endif
 
                             <td>{{ $var->photo_product ?? ''}}</td> 
+                            
                             
                         </tr>     
                     @endforeach   
@@ -123,8 +123,6 @@
             window.location = "{{route('quotations.selectproduct', [$id_quotation,$coin,''])}}"+"/"+type;
         });
 
-
-        
         $("body").toggleClass("sidebar-toggled");
         $(".sidebar").toggleClass("toggled");
         if ($(".sidebar").hasClass("toggled")) {

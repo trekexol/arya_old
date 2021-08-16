@@ -258,18 +258,42 @@ class QuotationController extends Controller
 
     }
 
-    public function selectproduct($id_quotation,$coin = null)
+    public function selectproduct($id_quotation,$coin,$type)
     {
-            $inventories     = Inventory::on(Auth::user()->database_name)->get();
-            $bcv = $this->search_bcv();
-            $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
 
-            $bcv_quotation_product = $quotation->bcv;
-            if(!isset($coin)){
-                $coin = 'bolivares';
-            }
+        $services = null;
+
+        $inventories = DB::connection(Auth::user()->database_name)->table('inventories')
+            ->join('products', 'products.id', '=', 'inventories.product_id')
+            ->where('products.type','MERCANCIA')
+            ->select('products.*','inventories.amount as amount')
+            ->get();
         
-            return view('admin.quotations.selectinventary',compact('inventories','id_quotation','coin','bcv','bcv_quotation_product'));
+        $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
+
+        $bcv_quotation_product = $quotation->bcv;
+        
+        $company = Company::on(Auth::user()->database_name)->find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
+
+        if(($type == 'servicios')){
+
+            $services = DB::connection(Auth::user()->database_name)->table('inventories')
+            ->join('products', 'products.id', '=', 'inventories.product_id')
+            ->where('products.type','SERVICIO')
+            ->select('products.*')
+            ->get();
+            
+            return view('admin.quotations.selectservice',compact('type','services','id_quotation','coin','bcv','bcv_quotation_product'));
+        }
+    
+        return view('admin.quotations.selectinventary',compact('type','inventories','id_quotation','coin','bcv','bcv_quotation_product'));
     }
 
 
@@ -396,86 +420,88 @@ class QuotationController extends Controller
     }
 
 
-        public function storeproduct(Request $request)
-        {
-    
-            $data = request()->validate([
-                
+    public function storeproduct(Request $request)
+    {
+
+        $data = request()->validate([
             
-                'id_quotation'         =>'required',
-                'id_inventory'         =>'required',
-                'amount'         =>'required',
-                'discount'         =>'required',
-            
-            
-            ]);
-
-            
-            $var = new QuotationProduct();
-            $var->setConnection(Auth::user()->database_name);
-
-            $var->id_quotation = request('id_quotation');
-            
-            $var->id_inventory = request('id_inventory');
-
-            $islr = request('islr');
-            if($islr == null){
-                $var->retiene_islr = false;
-            }else{
-                $var->retiene_islr = true;
-            }
-
-            $exento = request('exento');
-            if($exento == null){
-                $var->retiene_iva = false;
-            }else{
-                $var->retiene_iva = true;
-            }
-
-            $coin = request('coin');
-
-            $quotation = Quotation::on(Auth::user()->database_name)->find($var->id_quotation);
-
-            $var->rate = $quotation->bcv;
-
-            if($var->id_inventory == -1){
-                return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
-            }
-
-            $amount = request('amount');
-            $cost = str_replace(',', '.', str_replace('.', '',request('cost')));
-            
-            $value_return = $this->check_amount($quotation->id,$var->id_inventory,$amount);
-
-            if($value_return != 'exito'){
-                 return redirect('quotations/registerproduct/'.$var->id_quotation.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario!');
-            }
-
-           
-
-            if($coin == 'dolares'){
-                $cost_sin_formato = ($cost) * $var->rate;
-            }else{
-                $cost_sin_formato = $cost;
-            }
-
-            $var->price = $cost_sin_formato;
-            
-
-            $var->amount = $amount;
-
-            $var->discount = request('discount');
-
-            if(($var->discount < 0) || ($var->discount > 100)){
-                return redirect('quotations/register/'.$var->id_quotation.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('El descuento debe estar entre 0% y 100%!');
-            }
-            
-            $var->status =  1;
         
-            $var->save();
+            'id_quotation'         =>'required',
+            'id_inventory'         =>'required',
+            'amount'         =>'required',
+            'discount'         =>'required',
+        
+        
+        ]);
 
-            return redirect('quotations/register/'.$var->id_quotation.'/'.$coin.'')->withSuccess('Producto agregado Exitosamente!');
+        
+        $var = new QuotationProduct();
+        $var->setConnection(Auth::user()->database_name);
+
+        $var->id_quotation = request('id_quotation');
+        
+        $var->id_inventory = request('id_inventory');
+
+        $islr = request('islr');
+        if($islr == null){
+            $var->retiene_islr = false;
+        }else{
+            $var->retiene_islr = true;
         }
+
+        $exento = request('exento');
+        if($exento == null){
+            $var->retiene_iva = false;
+        }else{
+            $var->retiene_iva = true;
+        }
+
+        $coin = request('coin');
+
+        $quotation = Quotation::on(Auth::user()->database_name)->find($var->id_quotation);
+
+        $var->rate = $quotation->bcv;
+
+        if($var->id_inventory == -1){
+            return redirect('quotations/register/'.$var->id_quotation.'')->withDanger('No se encontro el producto!');
+        }
+
+        $amount = request('amount');
+        $cost = str_replace(',', '.', str_replace('.', '',request('cost')));
+
+        
+        
+        $value_return = $this->check_amount($quotation->id,$var->id_inventory,$amount);
+
+        if($value_return != 'exito'){
+                return redirect('quotations/registerproduct/'.$var->id_quotation.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('La cantidad de este producto excede a la cantidad puesta en inventario!');
+        }
+
+        
+
+        if($coin == 'dolares'){
+            $cost_sin_formato = ($cost) * $var->rate;
+        }else{
+            $cost_sin_formato = $cost;
+        }
+
+        $var->price = $cost_sin_formato;
+        
+
+        $var->amount = $amount;
+
+        $var->discount = request('discount');
+
+        if(($var->discount < 0) || ($var->discount > 100)){
+            return redirect('quotations/register/'.$var->id_quotation.'/'.$coin.'/'.$var->id_inventory.'')->withDanger('El descuento debe estar entre 0% y 100%!');
+        }
+        
+        $var->status =  1;
+    
+        $var->save();
+
+        return redirect('quotations/register/'.$var->id_quotation.'/'.$coin.'')->withSuccess('Producto agregado Exitosamente!');
+    }
     /**
         * Display the specified resource.
         *
