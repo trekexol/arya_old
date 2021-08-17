@@ -24,6 +24,7 @@ class ReportController extends Controller
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');    
             $detail_old = DetailVoucher::on(Auth::user()->database_name)->orderBy('created_at','asc')->first();
+            $date_begin = $detail_old;
 
         }elseif($users_role == '2'){
             return view('admin.index');
@@ -31,7 +32,7 @@ class ReportController extends Controller
 
         
     
-        return view('admin.reports.index_balance_general',compact('datenow','detail_old'));
+        return view('admin.reports.index_balance_general',compact('datenow','detail_old','date_begin'));
       
     }
 
@@ -93,10 +94,18 @@ class ReportController extends Controller
             $level = 5;
         }
 
-        $accounts = $this->calculation($from,$to);
+        $accounts_all = $this->calculation($from,$to);
 
-       
-        
+        $accounts = $accounts_all->filter(function($account)
+        {
+            if($account->code_one <= 3){
+                $total = $account->balance_previus + $account->debe - $account->haber;
+                if ($total != 0) {
+                    return $account;
+                }
+            }
+            
+        });
 
         $pdf = $pdf->loadView('admin.reports.balance_general',compact('datenow','accounts','level','detail_old','date_begin','date_end'));
         return $pdf->stream();
@@ -164,6 +173,11 @@ class ReportController extends Controller
                                             if($var->code_four != 0){
 
                                                 if($var->code_five != 0){
+                                                    //Calculo de superavit
+                                                    if(($var->code_one == 3) && ($var->code_two == 2) && ($var->code_three == 1) && 
+                                                    ($var->code_four == 1) && ($var->code_five == 1) ){
+                                                        $var = $this->calculation_superavit($var,4,'bolivares',$date_begin,$date_end);
+                                                    }else{
                                                         /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
                                                         $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
@@ -202,7 +216,7 @@ class ReportController extends Controller
 
                                                         $var->debe = $total_debe;
                                                         $var->haber = $total_haber;
-                                                
+                                                    }
                                                 }else
                                                 {
                                                     /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */                                                   
@@ -231,12 +245,20 @@ class ReportController extends Controller
                                                     "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
                                                     [$date_begin, $date_end])
                                                                         ->sum('haber');   
+
+                                                    $total_balance = DB::connection(Auth::user()->database_name)->table('accounts')
+                                                                        ->where('accounts.code_one', $var->code_one)
+                                                                        ->where('accounts.code_two', $var->code_two)
+                                                                        ->where('accounts.code_three', $var->code_three)
+                                                                        ->where('accounts.code_four', $var->code_four)
+                                                                        ->sum('balance_previus');   
                                                     /*---------------------------------------------------*/
                  
                                            
                  
                                                     $var->debe = $total_debe;
                                                     $var->haber = $total_haber;
+                                                    $var->balance_previus = $total_balance;
                    
                                                 }
                                                                            
@@ -245,8 +267,8 @@ class ReportController extends Controller
                                                
                                               
                                           
-                                         /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
-                                            $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
+                                                    /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */ 
+                                                        $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                         ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                         ->where('accounts.code_one', $var->code_one)
                                                                         ->where('accounts.code_two', $var->code_two)
@@ -254,28 +276,34 @@ class ReportController extends Controller
                                                                         ->where('detail_vouchers.status', 'C')
                                                                         //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
                                                                         ->whereRaw(
-            "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
-            [$date_begin, $date_end])
-                                                                                    ->sum('debe');
+                                                                        "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                                                        [$date_begin, $date_end])
+                                                                        ->sum('debe');
                                 
                                                         $total_haber =  DB::connection(Auth::user()->database_name)->table('accounts')
-                                                                                    ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
-                                                                                    ->where('accounts.code_one', $var->code_one)
-                                                                                    ->where('accounts.code_two', $var->code_two)
-                                                                                    ->where('accounts.code_three', $var->code_three)
-                                                                                    ->where('detail_vouchers.status', 'C')
-                                                                                    //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
-                                                                                    ->whereRaw(
-            "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
-            [$date_begin, $date_end])
-                                                                                    ->sum('haber');      
+                                                                        ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                                                        ->where('accounts.code_one', $var->code_one)
+                                                                        ->where('accounts.code_two', $var->code_two)
+                                                                        ->where('accounts.code_three', $var->code_three)
+                                                                        ->where('detail_vouchers.status', 'C')
+                                                                        //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                                                        ->whereRaw(
+                                                                        "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                                                        [$date_begin, $date_end])
+                                                                        ->sum('haber');    
+                                                                        
+                                                                        $total_balance = DB::connection(Auth::user()->database_name)->table('accounts')
+                                                                        ->where('accounts.code_one', $var->code_one)
+                                                                        ->where('accounts.code_two', $var->code_two)
+                                                                        ->where('accounts.code_three', $var->code_three)
+                                                                        ->sum('balance_previus');   
                                                     /*---------------------------------------------------*/                               
                             
                                                     
                             
                                                     $var->debe = $total_debe;
                                                     $var->haber = $total_haber;       
-                                                                    
+                                                    $var->balance_previus = $total_balance;
                                                 
                                                         
                                                 }
@@ -289,9 +317,9 @@ class ReportController extends Controller
                                                                                         ->where('accounts.code_two', $var->code_two)
                                                                                         ->where('detail_vouchers.status', 'C')
                                                                                         //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
-                                                                                    ->    whereRaw(
-            "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
-            [$date_begin, $date_end])
+                                                                                        ->whereRaw(
+                                                                                        "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                                                                        [$date_begin, $date_end])
                                                                                         ->sum('debe');
                                 
                                                     
@@ -301,28 +329,37 @@ class ReportController extends Controller
                                                                                         ->where('accounts.code_two', $var->code_two)
                                                                                         ->where('detail_vouchers.status', 'C')
                                                                                         //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
-                                                                                    ->    whereRaw(
-            "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
-            [$date_begin, $date_end])
+                                                                                        ->whereRaw(
+                                                                                        "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                                                                        [$date_begin, $date_end])
                                                                                         ->sum('haber');
+
+                                                        $total_balance = DB::connection(Auth::user()->database_name)->table('accounts')
+                                                                                        ->where('accounts.code_one', $var->code_one)
+                                                                                        ->where('accounts.code_two', $var->code_two)
+                                                                                        ->sum('balance_previus'); 
                                                     /*---------------------------------------------------*/
                                                     
                                                     $var->debe = $total_debe;
                                                     $var->haber = $total_haber;
-                                                
+                                                    $var->balance_previus = $total_balance;
                                                     
                                                     }
                                                 }else{
                                                     //Cuentas NIVEL 2 EJEMPLO 1.0.0.0
-                                                /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
+                                                    /*CALCULA LOS SALDOS DESDE DETALLE COMPROBANTE */
+                                                    if($var->code_one == 3){
+                                                        $var = $this->calculation_capital($var,'bolivares',$date_begin,$date_end);
+                                                    
+                                                    }else{
                                                         $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
                                                                                     ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
                                                                                     ->where('accounts.code_one', $var->code_one)
                                                                                     ->where('detail_vouchers.status', 'C')
                                                                                     //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
                                                                                     ->whereRaw(
-            "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
-            [$date_begin, $date_end])
+                                                                                    "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                                                                    [$date_begin, $date_end])
                                                                                     ->sum('debe');
                                 
                                                     
@@ -333,16 +370,19 @@ class ReportController extends Controller
                                                                                     ->where('detail_vouchers.status', 'C')
                                                                                     //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
                                                                                     ->whereRaw(
-            "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
-            [$date_begin, $date_end])
+                                                                                    "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                                                                    [$date_begin, $date_end])
                                                                                     ->sum('haber');
-                                                /*---------------------------------------------------*/
+                                                        $total_balance = DB::connection(Auth::user()->database_name)->table('accounts')
+                                                                                    ->where('accounts.code_one', $var->code_one)
+                                                                                    ->sum('balance_previus'); 
+                                                        /*---------------------------------------------------*/
                             
                                                     
-                                                    $var->debe = $total_debe;
-                                                    $var->haber = $total_haber;           
-                                                
-                                
+                                                        $var->debe = $total_debe;
+                                                        $var->haber = $total_haber;           
+                                                        $var->balance_previus = $total_balance;
+                                                    }
                                                 }
                                             }else{
                                                 return redirect('/accounts')->withDanger('El codigo uno es igual a cero!');
@@ -358,6 +398,73 @@ class ReportController extends Controller
     }
 
 
+    public function calculation_capital($var,$coin,$date_begin,$date_end)
+    {
+        $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
+                                    ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                    ->where('accounts.code_one','>=', $var->code_one)
+                                    ->where('detail_vouchers.status', 'C')
+                                    //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                    ->whereRaw(
+                                    "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                    [$date_begin, $date_end])
+                                    ->sum('debe');
 
+    
+    
+        $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
+                                    ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                                    ->where('accounts.code_one','>=', $var->code_one)
+                                    ->where('detail_vouchers.status', 'C')
+                                    //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                                    ->whereRaw(
+                                    "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                                    [$date_begin, $date_end])
+                                    ->sum('haber');
+        $total_balance = DB::connection(Auth::user()->database_name)->table('accounts')
+                                    ->where('accounts.code_one', $var->code_one)
+                                    ->sum('balance_previus'); 
+        /*---------------------------------------------------*/
+
+    
+        $var->debe = $total_debe;
+        $var->haber = $total_haber;           
+        $var->balance_previus = $total_balance;
+
+        return $var;
+    }
+
+    public function calculation_superavit($var,$code,$coin,$date_begin,$date_end)
+    {
+        $total_debe = DB::connection(Auth::user()->database_name)->table('accounts')
+                ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                ->where('accounts.code_one','>=', $code)
+                ->where('detail_vouchers.status', 'C')
+                ->whereRaw(
+                "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                [$date_begin, $date_end])
+                ->sum('debe');
+
+
+
+        $total_haber = DB::connection(Auth::user()->database_name)->table('accounts')
+                ->join('detail_vouchers', 'detail_vouchers.id_account', '=', 'accounts.id')
+                ->where('accounts.code_one','>=', $code)
+                ->where('detail_vouchers.status', 'C')
+                //->whereBetween('detail_vouchers.created_at', [$date_begin, $date_end])
+                ->whereRaw(
+                "(DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') >= ? AND DATE_FORMAT(detail_vouchers.created_at, '%Y-%m-%d') <= ?)", 
+                [$date_begin, $date_end])
+                ->sum('haber');
+
+
+        $var->debe = $total_debe;
+        $var->haber = $total_haber;    
+        
+ 
+         return $var;
+ 
+    }
+ 
     
 }

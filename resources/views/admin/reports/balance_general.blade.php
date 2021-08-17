@@ -9,6 +9,7 @@
 <style>
   table, td, th {
     border: 1px solid black;
+    font-size: x-small;
   }
   
   table {
@@ -246,7 +247,7 @@
   </tr> 
   @endif
   <tr>
-    <th style="text-align: left; font-weight: normal; width: 58%; border-left-color: white; border-right-color: white; background:rgb(171, 224, 255); font-weight: bold; ">Total {{ $description }} : </th>
+    <th style="text-align: left; font-weight: normal; width: 58%; border-left-color: white; border-right-color: white; background:rgb(171, 224, 255); font-weight: bold; ">Total {{ $description ?? '' }} : </th>
     <th style="text-align: right; font-weight: normal; width: 21%; border-color: white; font-weight: bold;">{{ number_format($total_level1, 2, ',', '.') }}</th>
     <th style="text-align: center; font-weight: normal; width: 21%; border-color: white; font-weight: bold;"></th>
   </tr> 

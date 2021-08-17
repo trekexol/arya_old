@@ -17,7 +17,7 @@
                             <label for="date_end" class="col-sm-1 col-form-label text-md-right">Desde</label>
 
                             <div class="col-sm-3">
-                                <input id="date_begin" type="date" class="form-control @error('date_begin') is-invalid @enderror" name="date_begin" value="{{  date('Y-m-d', strtotime($detail_old->created_at ?? $date_begin ??'')) }}" required autocomplete="date_begin">
+                                <input id="date_begin" type="date" class="form-control @error('date_begin') is-invalid @enderror" name="date_begin" value="{{  date('Y-m-d', strtotime($detail_old->created_at ?? $date_begin ?? $datenow ??'')) }}" required autocomplete="date_begin">
 
                                 @error('date_begin')
                                     <span class="invalid-feedback" role="alert">
@@ -28,7 +28,7 @@
                             <label for="date_end" class="col-sm-1 col-form-label text-md-right">hasta </label>
 
                             <div class="col-sm-3">
-                                <input id="date_begin" type="date" class="form-control @error('date_end') is-invalid @enderror" name="date_end" value="{{ $date_end ?? $datenow ?? '' }}" required autocomplete="date_end">
+                                <input id="date_end" type="date" class="form-control @error('date_end') is-invalid @enderror" name="date_end" value="{{ date('Y-m-d', strtotime($date_end ?? $datenow))}}" required autocomplete="date_end">
 
                                 @error('date_end')
                                     <span class="invalid-feedback" role="alert">
@@ -65,7 +65,7 @@
                         </div>
                     </form>
                         <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="{{ route('balancegenerals.balance_pdf',[$date_begin ?? '',$date_end ?? '',$level ?? '']) }}" allowfullscreen></iframe>
+                            <iframe class="embed-responsive-item" src="{{ route('balancegenerals.balance_pdf',[$date_begin ?? $datenow,$date_end ?? $datenow,$level ?? 5]) }}" allowfullscreen></iframe>
                           </div>
                         
                         </div>
