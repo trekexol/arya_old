@@ -271,6 +271,9 @@
                         <input type="hidden" id="total_retiene_iva" name="total_retiene_iva" value="{{$total_retiene_iva / ($bcv ?? 1)}}" readonly>
                         <input type="hidden" id="total_retiene_islr" name="total_retiene_islr" value="{{$total_retiene_islr / ($bcv ?? 1)}}" readonly>
 
+                        <input type="hidden" id="total_mercancia" name="total_mercancia" value="{{$total_mercancia ?? 0 / ($bcv ?? 1)}}" readonly>
+                        <input type="hidden" id="total_servicios" name="total_servicios" value="{{$total_servicios ?? 0 / ($bcv ?? 1)}}" readonly>
+
                         
                         <div class="form-group row" id="formulario1" >
                             <label for="amount_pays" class="col-md-2 col-form-label text-md-right">Forma de Pago:</label>

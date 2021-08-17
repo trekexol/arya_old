@@ -699,7 +699,7 @@ class AccountController extends Controller
 
             $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus) AS balance
                             FROM accounts a
-                            WHERE a.code_one >= ?
+                            WHERE a.code_one = ?
                             '
                             , [$var->code_one]);
             
@@ -724,7 +724,7 @@ class AccountController extends Controller
 
                 $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus/a.rate) AS balance
                             FROM accounts a
-                            WHERE a.code_one >= ?
+                            WHERE a.code_one = ?
                             '
                             , [$var->code_one]);
 
@@ -762,11 +762,6 @@ class AccountController extends Controller
                         '
                         , [$code,'C']);
 
-        $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus) AS balance
-                        FROM accounts a
-                        WHERE a.code_one >= ?
-                        '
-                        , [$code]);
         
         }else{
             $total_debe =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(d.debe/d.tasa) AS debe
@@ -787,11 +782,6 @@ class AccountController extends Controller
             '
             , [$code,'C']);
 
-            $total_balance =   DB::connection(Auth::user()->database_name)->select('SELECT SUM(a.balance_previus/a.rate) AS balance
-                        FROM accounts a
-                        WHERE a.code_one >= ?
-                        '
-                        , [$code]);
 
         }
         $total_debe = $total_debe[0]->debe;
@@ -799,9 +789,9 @@ class AccountController extends Controller
         $var->debe = $total_debe;
         $var->haber = $total_haber;
 
-        $total_balance = $total_balance[0]->balance;
+        //$total_balance = $total_balance[0]->balance;
 
-        $var->balance = $total_balance;
+        //$var->balance = $total_balance;
 
         return $var;
 

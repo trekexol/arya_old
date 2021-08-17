@@ -155,8 +155,12 @@
                                         <td style="text-align:right; color:black; ">
                                             <a href="{{ route('accounts.movements',$account->id) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
                                         </td>
-                                        
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                        <!-- solo se suma el balance general si son codigo 1 hasta el 3 -->
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                        @endif
                                     @else
                                         <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance, 2, ',', '.')}}<br>{{number_format($balance_new, 2, ',', '.')}} $</td>
                                         <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en dolares-->
@@ -166,8 +170,12 @@
                                         <td style="text-align:right; color:black; ">
                                             <a href="{{ route('accounts.movements',[$account->id,$coin]) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}<br> {{number_format($account->dolar_haber ?? 0, 2, ',', '.')}}$</a>
                                         </td>
-                                        
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>
+                                        <!-- solo se suma el balance general si son codigo 1 hasta el 3 -->
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                        @endif
                                     @endif
                                 @else
                                     @if($coin != "bolivares")
@@ -179,7 +187,12 @@
                                         <td style="text-align:right; color:black; ">
                                             <a href="{{ route('accounts.movements',[$account->id,$coin]) }}" style="color: black; font-weight: bold;" title="Ver Movimientos"> {{number_format($account->haber, 2, ',', '.')}}</a>
                                         </td>
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                        <!-- solo se suma el balance general si son codigo 1 hasta el 3 -->
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                        @endif
                                     @else
                                         <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new, 2, ',', '.')}}</td>
                                         <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en bolivares-->
@@ -189,7 +202,12 @@
                                         <td style="text-align:right; color:black; ">
                                             <a href="{{ route('accounts.movements',[$account->id,$coin]) }}" style="color: black; font-weight: bold;" title="Ver Movimientos"> {{number_format($account->haber, 2, ',', '.')}}</a>
                                         </td>
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                        <!-- solo se suma el balance general si son codigo 1 hasta el 3 -->
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                        @endif
                                     @endif
                                 @endif
                             <!-- Cuando el status de la cuenta es 1, quiere decir que NO tiene movimientos-->
@@ -200,15 +218,23 @@
                                         <!-- Cuando quiero ver mis saldos todos en dolares-->
                                         <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}}</td>
                                         <td style="text-align:right; color:black; ">{{number_format($account->haber, 2, ',', '.')}}</td>
-                                        
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                        <!-- solo se suma el balance general si son codigo 1 hasta el 3 -->
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                        @endif
                                     @else
                                         <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance, 2, ',', '.')}}<br>{{number_format($balance_new, 2, ',', '.')}} $</td>
                                         <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en dolares-->
                                         <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe, 2, ',', '.')}} <br> {{number_format($account->dolar_debe ?? 0, 2, ',', '.')}}$</td>
                                         <td style="text-align:right; color:black; ">{{number_format($account->haber, 2, ',', '.')}}<br> {{number_format($account->dolar_haber ?? 0, 2, ',', '.')}}$</td>
-                                        
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>
+                                        <!-- solo se suma el balance general si son codigo 1 hasta el 3 -->
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>                                                       
+                                        @endif
                                     @endif
                                 @else
                                     @if($coin != "bolivares")
@@ -220,7 +246,11 @@
                                         <td style="text-align:right; color:black; ">
                                             {{number_format($account->haber, 2, ',', '.')}}
                                         </td>
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                        @endif
                                     @else
                                         <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new, 2, ',', '.')}}</td>
                                         <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en bolivares-->
@@ -230,7 +260,11 @@
                                         <td style="text-align:right; color:black; ">
                                             {{number_format($account->haber, 2, ',', '.')}}
                                         </td>
-                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                        @if ($account->code_one <= 3)
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                        @else
+                                            <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                        @endif
                                     @endif
                                 @endif
                             @endif
@@ -283,8 +317,11 @@
                                     <td style="text-align:right; color:black; ">
                                         <a href="{{ route('accounts.movements',[$account->id,$coin]) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
                                     </td>
-                                    
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                    @endif
                                 @else
                                     <td style="text-align:right; color:black; font-weight: bold;"> {{number_format($account->balance, 2, ',', '.')}}<br>{{number_format($balance_new ?? $account->balance, 2, ',', '.')}}$</td>
                                     <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en dolares-->
@@ -294,8 +331,11 @@
                                     <td style="text-align:right; color:black; ">
                                         <a href="{{ route('accounts.movements',[$account->id,$coin]) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}<br> {{number_format($account->dolar_haber ?? 0, 2, ',', '.')}}$</a>
                                     </td>
-                                    
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}} <br> {{number_format($account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>                                                       
+                                    @endif
                                 @endif
                             <!-- Cuando la cuenta tiene movimientos-->
                             @else
@@ -308,8 +348,11 @@
                                     <td style="text-align:right; color:black; ">
                                         <a href="{{ route('accounts.movements',[$account->id,$coin]) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
                                     </td>
-                                    
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}</td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}</td>                                                       
+                                    @endif
                                 @else
                                     <td style="text-align:right; color:black; font-weight: bold;"> {{number_format($account->balance, 2, ',', '.')}}</td>
                                     <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en dolares-->
@@ -319,8 +362,11 @@
                                     <td style="text-align:right; color:black; ">
                                         <a href="{{ route('accounts.movements',[$account->id,$coin]) }}" style="color: black; font-weight: bold;" title="Ver Movimientos">{{number_format($account->haber, 2, ',', '.')}}</a>
                                     </td>
-                                    
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                    @endif
                                 @endif
                             @endif
                         @else
@@ -334,8 +380,11 @@
                                     <td style="text-align:right; color:black; ">
                                         {{number_format($account->haber, 2, ',', '.')}}
                                     </td>
-                                    
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                    @endif
                                 @else
                                     <td style="text-align:right; color:black; font-weight: bold;"> {{number_format($account->balance, 2, ',', '.')}}<br>{{number_format($balance_new ?? $account->balance, 2, ',', '.')}}$</td>
                                     <!-- Cuando quiero ver mis saldos todos en bolivares y mi cuenta es en dolares-->
@@ -345,7 +394,11 @@
                                     <td style="text-align:right; color:black; ">
                                         {{number_format($account->haber, 2, ',', '.')}}<br> {{number_format($account->dolar_haber ?? 0, 2, ',', '.')}}$
                                     </td>
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}<br>{{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}} <br>{{number_format($balance_new + $account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}} <br>{{number_format($account->dolar_debe - $account->dolar_haber, 2, ',', '.')}}$</td>                                                       
+                                    @endif
                                 @endif
                             @else
                                 <!-- Sin movimientos , cuenta en bolivares y la moneda seleccionada fue ver en bolivares-->
@@ -357,8 +410,11 @@
                                     <td style="text-align:right; color:black; ">
                                         {{number_format($account->haber, 2, ',', '.')}}
                                     </td>
-                                    
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}} </td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                    @endif
                                 @else 
                                     <td style="text-align:right; color:black; font-weight: bold;"> {{number_format($account->balance, 2, ',', '.')}}</td>                                 
                                     <td style="text-align:right; color:black; font-weight: bold;">
@@ -367,7 +423,11 @@
                                     <td style="text-align:right; color:black; ">
                                         {{number_format($account->haber, 2, ',', '.')}}
                                     </td>
-                                    <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>
+                                    @if ($account->code_one <= 3)
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->balance + $account->debe - $account->haber, 2, ',', '.')}}</td>             
+                                    @else
+                                        <td style="text-align:right; color:black; font-weight: bold;">{{number_format($account->debe - $account->haber, 2, ',', '.')}}</td>                                                       
+                                    @endif
                                 @endif
                             @endif
                         @endif

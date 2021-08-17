@@ -470,7 +470,6 @@ class QuotationController extends Controller
         $cost = str_replace(',', '.', str_replace('.', '',request('cost')));
 
         
-        
         $value_return = $this->check_amount($quotation->id,$var->id_inventory,$amount);
 
         if($value_return != 'exito'){
@@ -511,21 +510,36 @@ class QuotationController extends Controller
 
     public function check_amount($id_quotation,$id_inventory,$amount_new)
     {
-        
-        $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
+        $inventories_quotations = DB::connection(Auth::user()->database_name)
+                ->table('products')
+                ->join('inventories', 'products.id', '=', 'inventories.product_id')
+                ->where('inventories.id',$id_inventory)
+                ->select('products.*')
+                ->first(); 
 
-        $sum_amount = DB::connection(Auth::user()->database_name)->table('quotation_products')
-                        ->where('id_quotation',$id_quotation)
-                        ->where('id_inventory',$id_inventory)
-                        ->sum('amount');
+        //si es un servicio no se chequea que posea inventario
 
-        $total_in_quotation = $sum_amount + $amount_new;
+        if(isset($inventories_quotations) && ($inventories_quotations->type == "MERCANCIA")){
+            $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
 
-        if($inventory->amount >= $total_in_quotation){
-            return "exito";
+            $sum_amount = DB::connection(Auth::user()->database_name)->table('quotation_products')
+                            ->where('id_quotation',$id_quotation)
+                            ->where('id_inventory',$id_inventory)
+                            ->sum('amount');
+    
+            $total_in_quotation = $sum_amount + $amount_new;
+    
+            if($inventory->amount >= $total_in_quotation){
+                return "exito";
+            }else{
+                return "no_hay_cantidad_suficiente";
+            }
         }else{
-            return "no_hay_cantidad_suficiente";
+            return "exito";
         }
+        
+
+        
     
     }
 

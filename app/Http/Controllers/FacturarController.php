@@ -84,6 +84,9 @@ class FacturarController extends Controller
              $total_retiene_islr = 0;
              $retiene_islr = 0;
 
+             $total_mercancia= 0;
+             $total_servicios= 0;
+
              foreach($inventories_quotations as $var){
                  //Se calcula restandole el porcentaje de descuento (discount)
                     $percentage = (($var->price * $var->amount_quotation) * $var->discount)/100;
@@ -106,10 +109,16 @@ class FacturarController extends Controller
                 }
 
                 //me suma todos los precios de costo de los productos
-                 if($var->money == 'Bs'){
+                 if(($var->money == 'Bs') && ($var->type == "MERCANCIA")){
                     $price_cost_total += $var->price_buy * $var->amount_quotation;
-                }else{
+                }else if(($var->money != 'Bs') && ($var->type == "MERCANCIA")){
                     $price_cost_total += $var->price_buy * $var->amount_quotation * $quotation->bcv;
+                }
+
+                if($var->type == "MERCANCIA"){
+                    $total_mercancia = ($var->price * $var->amount_quotation) - $percentage;
+                }else{
+                    $total_servicios = ($var->price * $var->amount_quotation) - $percentage;
                 }
              }
 
@@ -156,7 +165,8 @@ class FacturarController extends Controller
             }
              return view('admin.quotations.createfacturar',compact('price_cost_total','coin','quotation'
                         ,'payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta'
-                        ,'datenow','bcv','anticipos_sum','total_retiene_iva','total_retiene_islr','is_after'));
+                        ,'datenow','bcv','anticipos_sum','total_retiene_iva','total_retiene_islr','is_after'
+                        ,'total_mercancia','total_servicios'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -493,6 +503,10 @@ class FacturarController extends Controller
 
         $sin_formato_grandtotal = str_replace(',', '.', str_replace('.', '', request('grandtotal_form')));
         $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount_form')));
+
+
+        $total_mercancia = request('total_mercancia');
+        $total_servicios = request('total_servicios');
 
         $total_iva = 0;
 
@@ -1283,7 +1297,7 @@ class FacturarController extends Controller
                 $retorno = $this->discount_inventory($quotation->id);
 
                 if($retorno != "exito"){
-                    return redirect('quotations/facturar/'.$quotation->id.'');
+                    return redirect('quotations/facturar/'.$quotation->id.'/'.$quotation->coin.'');
                 }
             }
             
@@ -1467,10 +1481,20 @@ class FacturarController extends Controller
 
                 //Ingresos por SubSegmento de Bienes
 
-                $account_subsegmento = Account::on(Auth::user()->database_name)->where('description', 'like', 'Ventas por Bienes')->first();
+                if($total_mercancia != 0){
+                    $account_subsegmento = Account::on(Auth::user()->database_name)->where('description', 'like', 'Ventas por Bienes')->first();
 
-                if(isset($account_subsegmento)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$sub_total);
+                    if(isset($account_subsegmento)){
+                        $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$total_mercancia);
+                    }
+                }
+                
+                if($total_servicios != 0){
+                    $account_subsegmento = Account::on(Auth::user()->database_name)->where('description', 'like', 'Ventas por Servicios')->first();
+
+                    if(isset($account_subsegmento)){
+                        $this->add_movement($bcv,$header_voucher->id,$account_subsegmento->id,$quotation->id,$user_id,0,$total_servicios);
+                    }
                 }
 
                 //Debito Fiscal IVA por Pagar
@@ -1487,18 +1511,21 @@ class FacturarController extends Controller
                 
                 //Mercancia para la Venta
                 
-                $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
+                if($price_cost_total != 0){
 
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
-                }
+                    $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
 
-                //Costo de Mercancia
+                    if(isset($account_cuentas_por_cobrar)){
+                        $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
+                    }
 
-                $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancía')->first();
+                    //Costo de Mercancia
 
-                if(isset($account_cuentas_por_cobrar)){
-                    $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
+                    $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancía')->first();
+
+                    if(isset($account_cuentas_por_cobrar)){
+                        $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
+                    }
                 }
                 /*----------- */
             }
@@ -1577,20 +1604,23 @@ class FacturarController extends Controller
             /*Primero Revisa que todos los productos tengan inventario suficiente*/
             $no_hay_cantidad_suficiente = DB::connection(Auth::user()->database_name)->table('inventories')
                                     ->join('quotation_products', 'quotation_products.id_inventory','=','inventories.id')
+                                    ->join('products', 'products.id','=','inventories.product_id')
                                     ->where('quotation_products.id_quotation','=',$id_quotation)
+                                    ->where('products.type','LIKE','MERCANCIA')
                                     ->where('quotation_products.amount','<','inventories.amount')
                                     ->select('inventories.code as code','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id_quotation as id_quotation','quotation_products.discount as discount',
                                     'quotation_products.amount as amount_quotation')
                                     ->first(); 
         
             if(isset($no_hay_cantidad_suficiente)){
-                return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('En el Inventario de Codigo: '.$no_hay_cantidad_suficiente->code.' no hay Cantidad suficiente!');
+                return redirect('quotations/facturar/'.$id_quotation.'/bolivares')->withDanger('En el Inventario de Codigo: '.$no_hay_cantidad_suficiente->code.' no hay Cantidad suficiente!');
             }
 
         /*Luego, descuenta del Inventario*/
             $inventories_quotations = DB::connection(Auth::user()->database_name)->table('products')->join('inventories', 'products.id', '=', 'inventories.product_id')
             ->join('quotation_products', 'inventories.id', '=', 'quotation_products.id_inventory')
             ->where('quotation_products.id_quotation',$id_quotation)
+            ->where('products.type','LIKE','MERCANCIA')
             ->select('products.*','quotation_products.price as price','quotation_products.rate as rate','quotation_products.id as id_quotation','quotation_products.discount as discount',
             'quotation_products.amount as amount_quotation')
             ->get(); 
@@ -1613,14 +1643,14 @@ class FacturarController extends Controller
                                 $quotation_product->price = $inventories_quotation->price;
                                 $quotation_product->save();
                             }else{
-                                return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de Codigo: '.$inventory->code.' no tiene Cantidad suficiente!');
+                                return redirect('quotations/facturar/'.$id_quotation.'/bolivares')->withDanger('El Inventario de Codigo: '.$inventory->code.' no tiene Cantidad suficiente!');
                             }
                             
                         }else{
-                            return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario no existe!');
+                            return redirect('quotations/facturar/'.$id_quotation.'/bolivares')->withDanger('El Inventario no existe!');
                         }
                     }else{
-                    return redirect('quotations/facturar/'.$id_quotation.'')->withDanger('El Inventario de la cotizacion no existe!');
+                    return redirect('quotations/facturar/'.$id_quotation.'/bolivares')->withDanger('El Inventario de la cotizacion no existe!');
                     }
 
                 }
