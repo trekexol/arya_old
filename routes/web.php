@@ -629,6 +629,9 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
 
     Route::get('listinventory/{code}','ExpensesAndPurchaseController@listinventory')->name('expensesandpurchases.listinventory');
 
+
+    Route::get('retencioniva/{id_expense}','ExpensesAndPurchaseController@retencioniva')->name('expensesandpurchases.retencioniva');
+
 });
 
 Route::group(["prefix"=>'directpaymentorders'],function(){
@@ -746,4 +749,10 @@ Route::group(["prefix"=>'daily_listing'],function(){
     Route::post('store','DailyListingController@store')->name('daily_listing.store');
     Route::post('printjournalbook','DailyListingController@print_journalbook')->name('daily_listing.print_journalbook');
    
+});
+
+
+Route::group(["prefix"=>'taxes'],function(){
+    Route::get('ivapayment','TaxesController@iva_payment')->name('taxes.iva_payment');
+    Route::get('listaccount/{type}','TaxesController@list_account')->name('taxes.list_account');
 });

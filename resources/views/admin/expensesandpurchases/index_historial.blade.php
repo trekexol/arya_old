@@ -70,10 +70,14 @@
                     @foreach ($expensesandpurchases as $expensesandpurchase)
                         <tr>
                            
-                            <td>{{$expensesandpurchase->invoice}}</td>
-                            <td>{{$expensesandpurchase->serie}}</td>
-                            <td>{{$expensesandpurchase->providers['razon_social']}}</td>
-                            <td>{{$expensesandpurchase->date}}</td>
+                            <td class="text-center">
+                                <a href="{{ route('expensesandpurchases.retencioniva',$expensesandpurchase->id) }}" title="Ver Detalle" class="text-center text-dark font-weight-bold">
+                                    {{$expensesandpurchase->invoice ?? ''}}
+                                </a>
+                            </td>
+                            <td class="text-center">{{$expensesandpurchase->serie ?? ''}}</td>
+                            <td class="text-center">{{$expensesandpurchase->providers['razon_social'] ?? ''}}</td>
+                            <td class="text-center">{{$expensesandpurchase->date}}</td>
                             <td class="text-right">{{number_format($expensesandpurchase->amount, 2, ',', '.')}}</td>
                             <td class="text-right">{{number_format($expensesandpurchase->amount_iva, 2, ',', '.')}}</td>
                             <td class="text-right">{{number_format($expensesandpurchase->amount_with_iva, 2, ',', '.')}}</td>

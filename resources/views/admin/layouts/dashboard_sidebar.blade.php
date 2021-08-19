@@ -240,6 +240,21 @@
             <i class="fas fa-fw fa-wrench"></i>
             <span>General</span></a>
     </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseImpuestos"
+            aria-expanded="true" aria-controls="collapseImpuestos">
+            <i class="fas fa-fw fa-book" ></i>
+            <span>Impuestos</span>
+        </a>
+        <div id="collapseImpuestos" class="collapse" aria-labelledby="headingImpuestos" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+             
+            <a class="collapse-item" href="{{ route('taxes.iva_payment')}}" > <i class="fas fa-coins fa-sm fa-fw mr-2 text-black-400"></i><strong>Pago de Iva</strong></a>
+             
+            </div>
+        </div>
+    </li>
    <!-- <li class="nav-item">
         <a class="nav-link" href="charts.html">
             <i class="fas fa-fw fa-user-friends"></i>

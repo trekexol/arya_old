@@ -100,6 +100,20 @@ class ExpensesAndPurchaseController extends Controller
         return view('admin.expensesandpurchases.createexpense',compact('datenow','provider'));
     }
 
+    public function retencion_iva($id_expense)
+    {
+        $expense = null;
+
+        if(isset($id_expense)){
+            $expense = Provider::on(Auth::user()->database_name)->find($id_expense);
+        }
+    
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d');  
+
+        return view('admin.expensesandpurchases.createexpense',compact('datenow','expense'));
+    }
+
     public function create_expense_detail($id_expense,$coin,$id_inventory = null)
     {
         
