@@ -153,12 +153,22 @@
                         <br>
                         <div class="form-group row">
                            
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <a onclick="pdf();" id="btnimprimir" name="btnimprimir" class="btn btn-info" title="imprimir">Imprimir Factura</a>  
                             </div>
-                            <div class="col-md-4">
-                                <a onclick="pdf_media();" id="btnfacturar" name="btnfacturar" class="btn btn-success" title="facturar">Imprimir Factura Media Carta</a>  
-                            </div>
+                            <div class="col-sm-3  dropdown mb-4">
+                                <button class="btn btn-success" type="button"
+                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false"
+                                    aria-expanded="false">
+                                    <i class="fas fa-bars"></i>
+                                    Opciones de Impresión
+                                </button>
+                                <div class="dropdown-menu animated--fade-in"
+                                    aria-labelledby="dropdownMenuButton">
+                                    <a onclick="pdf_retencion_iva();" href="#" class="dropdown-item">Imprimir Retención de Iva</a> 
+                                    <a onclick="pdf_media();" href="#" class="dropdown-item">Imprimir Factura Media Carta</a> 
+                                </div>
+                            </div> 
                             
                             <div class="col-md-3">
                                 <a href="{{ route('expensesandpurchases.movement',[$expense->id,$coin]) }}" id="btnmovement" name="btnmovement" class="btn btn-light" title="movement">Ver Movimiento de Cuenta</a>  
@@ -187,16 +197,21 @@
             coin = $(this).val();
             window.location = "{{route('expensesandpurchases.create_expense_voucher', [$expense->id,''])}}"+"/"+coin;
         });
-            function pdf() {
-                
-                var nuevaVentana= window.open("{{ route('pdf.expense',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
-        
-            }
-            function pdf_media() {
-                
-                var nuevaVentana2= window.open("{{ route('pdf.expense_media',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
-        
-            }
+        function pdf() {
+            
+            var nuevaVentana= window.open("{{ route('pdf.expense',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+    
+        }
+        function pdf_media() {
+            
+            var nuevaVentana2= window.open("{{ route('pdf.expense_media',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+    
+        }
+        function pdf_retencion_iva() {
+            
+            var nuevaVentana= window.open("{{ route('expensesandpurchases.retencioniva',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+    
+        }
            
     </script>
 @endsection

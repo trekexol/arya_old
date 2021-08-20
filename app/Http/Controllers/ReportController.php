@@ -145,6 +145,51 @@ class ReportController extends Controller
                  
     }
 
+
+    function retencion_iva_expense($date_begin = null,$date_end = null,$level = null)
+    {
+      
+        $pdf = App::make('dompdf.wrapper');
+
+        
+        $date = Carbon::now();
+        $datenow = $date->format('Y-m-d'); 
+        $period = $date->format('Y'); 
+        $detail_old = DetailVoucher::on(Auth::user()->database_name)->orderBy('created_at','asc')->first();
+
+        if(isset($date_begin)){
+            $from = $date_begin;
+        }else{
+            $from = $detail_old->created_at->format('Y-m-d');
+        }
+        if(isset($date_end)){
+            $to = $date_end;
+        }else{
+            $to = $datenow;
+        }
+        if(isset($level)){
+            
+        }else{
+            $level = 5;
+        }
+
+        $accounts_all = $this->calculation($from,$to);
+
+        $accounts = $accounts_all->filter(function($account)
+        {
+            if($account->code_one <= 3){
+                $total = $account->balance_previus + $account->debe - $account->haber;
+                if ($total != 0) {
+                    return $account;
+                }
+            }
+            
+        });
+
+        $pdf = $pdf->loadView('admin.reports.balance_general',compact('datenow','accounts','level','detail_old','date_begin','date_end'));
+        return $pdf->stream();
+                 
+    }
     //agregar que retorne el monto en dolares
     public function calculation($date_begin,$date_end)
     {

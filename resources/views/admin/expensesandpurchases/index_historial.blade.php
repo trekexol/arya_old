@@ -27,6 +27,8 @@
       </div>
     </div>
   </div>
+
+ 
   <!-- /.container-fluid -->
   {{-- VALIDACIONES-RESPUESTA--}}
   @include('admin.layouts.success')   {{-- SAVE --}}
@@ -71,7 +73,7 @@
                         <tr>
                            
                             <td class="text-center">
-                                <a href="{{ route('expensesandpurchases.retencioniva',$expensesandpurchase->id) }}" title="Ver Detalle" class="text-center text-dark font-weight-bold">
+                                <a href="{{ route('expensesandpurchases.create_expense_voucher',[$expensesandpurchase->id,$expensesandpurchase->coin ?? 'bolivares']) }}" title="Ver Detalle" class="text-center text-dark font-weight-bold">
                                     {{$expensesandpurchase->invoice ?? ''}}
                                 </a>
                             </td>
@@ -98,7 +100,7 @@
         </div>
     </div>
 </div>
-  
+
 @endsection
 
 @section('javascript')

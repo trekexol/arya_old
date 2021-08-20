@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App;
 use App\Account;
 use App\Branch;
 use App\Client;
@@ -17,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Anticipo;
 use App\Company;
+use App\IslrConcept;
 use Illuminate\Support\Facades\Auth;
 
 class ExpensesAndPurchaseController extends Controller
@@ -100,18 +103,27 @@ class ExpensesAndPurchaseController extends Controller
         return view('admin.expensesandpurchases.createexpense',compact('datenow','provider'));
     }
 
-    public function retencion_iva($id_expense)
+    public function retencion_iva($id_expense,$coin)
     {
+        $pdf = App::make('dompdf.wrapper');
         $expense = null;
+        $provider = null;
 
         if(isset($id_expense)){
-            $expense = Provider::on(Auth::user()->database_name)->find($id_expense);
+            $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
+            $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
         }
     
+
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d');  
+        $period = $date->format('Y-m'); 
 
-        return view('admin.expensesandpurchases.createexpense',compact('datenow','expense'));
+        $company = Company::on(Auth::user()->database_name)->find(1);
+                
+        
+        $pdf = $pdf->loadView('admin.expensesandpurchases.retencion_iva',compact('company','expense','datenow','period','provider'))->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 
     public function create_expense_detail($id_expense,$coin,$id_inventory = null)
@@ -206,10 +218,6 @@ class ExpensesAndPurchaseController extends Controller
             $bcv = null;
         }
         
-        
-
-
-
         return view('admin.expensesandpurchases.create_payment_voucher',compact('coin','expense','datenow','bcv'));
          
     }
@@ -272,7 +280,7 @@ class ExpensesAndPurchaseController extends Controller
              $base_imponible= 0;
              
              $retiene_iva = 0;
-             $retiene_islr = 0;
+            // $retiene_islr = 0;
 
              $total_retiene_iva = 0;
              $total_retiene_islr = 0;
@@ -283,12 +291,12 @@ class ExpensesAndPurchaseController extends Controller
                
                 if($var->exento == 0){
                     $base_imponible += ($var->price * $var->amount); 
-                }else{
+                }/*else{
                     $retiene_iva += ($var->price * $var->amount); 
-                }
+                }*/
 
                 if($var->islr == 1){
-                    $retiene_islr += ($var->price * $var->amount); 
+                    $total_retiene_islr += ($var->price * $var->amount); 
                 }
              }
 
@@ -330,28 +338,21 @@ class ExpensesAndPurchaseController extends Controller
              $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
 
             
-            if($provider->porc_retencion_iva != 0){
-                $total_retiene_iva = ($retiene_iva * $provider->porc_retencion_iva) /100;
-            }
-
-            
-            if($provider->porc_retencion_islr != 0){
-                $total_retiene_islr = ($retiene_islr * $provider->porc_retencion_islr) /100;
-            }
-
-            /*-------------- */
              
+            $islrconcepts = IslrConcept::on(Auth::user()->database_name)->orderBy('id','asc')->get();
      
              return view('admin.expensesandpurchases.create_payment',compact('coin','expense','datenow'
                                 ,'expense_details','accounts_bank', 'accounts_efectivo'
                                 ,'accounts_punto_de_venta','anticipos_sum'
-                                ,'total_retiene_iva','total_retiene_islr','bcv'));
+                                ,'total_retiene_iva','total_retiene_islr','bcv','provider'
+                                ,'islrconcepts'));
          
          
     }
 
     public function create_payment_after($id_expense,$coin)
     {
+       
         $expense = null;
         $provider = null;
         $expense_details = null;
@@ -366,7 +367,24 @@ class ExpensesAndPurchaseController extends Controller
             return redirect('/expensesandpurchases')->withDanger('El Pago no existe');
         } 
 
-            $anticipos_sum = 0;//Anticipo::on(Auth::user()->database_name)->where('status',1)->where('id_client',$expense->id_client)->sum('amount');
+            $anticipos_sum_bolivares = Anticipo::on(Auth::user()->database_name)->where('status',1)
+                                                ->where('id_provider',$expense->id_provider)
+                                                ->where('coin','like','bolivares')
+                                                ->sum('amount');
+
+            $total_dolar_anticipo =    DB::connection(Auth::user()->database_name)->select('SELECT SUM(amount/rate) AS dolar
+                                        FROM anticipos
+                                        WHERE id_provider = ? AND
+                                        coin not like ? AND
+                                        status = ?
+                                        '
+                                        , [$expense->id_provider,'bolivares',1]);
+
+            $anticipos_sum_dolares = 0;
+            if(isset($total_dolar_anticipo[0]->dolar)){
+                $anticipos_sum_dolares = $total_dolar_anticipo[0]->dolar;
+                
+            }
 
             $accounts_bank = DB::connection(Auth::user()->database_name)->table('accounts')->where('code_one', 1)
                         ->where('code_two', 1)
@@ -386,6 +404,12 @@ class ExpensesAndPurchaseController extends Controller
           
              $total= 0;
              $base_imponible= 0;
+             
+             $retiene_iva = 0;
+            // $retiene_islr = 0;
+
+             $total_retiene_iva = 0;
+             $total_retiene_islr = 0;
 
              foreach($expense_details as $var){
                  
@@ -394,8 +418,13 @@ class ExpensesAndPurchaseController extends Controller
                 if($var->exento == 0){
                     $base_imponible += ($var->price * $var->amount); 
                 }
+
+                if($var->islr == 1){
+                    $total_retiene_islr += ($var->price * $var->amount); 
+                }
              }
 
+            
             
              $date = Carbon::now();
              $datenow = $date->format('Y-m-d');    
@@ -408,11 +437,39 @@ class ExpensesAndPurchaseController extends Controller
                 $total = $total / $expense->rate;
                 $base_imponible = $base_imponible / $expense->rate;
              }
+
              $expense->total_factura = $total;
              $expense->base_imponible = $base_imponible;
+
+             $anticipos_sum = 0;
+             if(isset($coin)){
+                 if($coin == 'bolivares'){
+                    $bcv = null;
+                    //Si la factura es en BS, y tengo anticipos en dolares, los multiplico los dolares por la tasa a la que estoy facturando
+                    $anticipos_sum_dolares =  $anticipos_sum_dolares * $expense->rate;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
+                 }else{
+                    $bcv = $expense->rate;
+                     //Si la factura es en Dolares, y tengo anticipos en bolivares, divido los bolivares por la tasa a la que estoy facturando
+                    $anticipos_sum_bolivares =  $anticipos_sum_bolivares / $expense->rate;
+                    $anticipos_sum = $anticipos_sum_bolivares + $anticipos_sum_dolares; 
+                 }
+             }else{
+                $bcv = null;
+             }
+
+             /*Aqui revisamos el porcentaje de retencion de iva que tiene el proveedor, para aplicarlo a productos que retengan iva */
+             $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
+
             
+             
+            $islrconcepts = IslrConcept::on(Auth::user()->database_name)->orderBy('id','asc')->get();
      
-             return view('admin.expensesandpurchases.create_payment_after',compact('coin','expense','datenow','expense_details','accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta','anticipos_sum'));
+             return view('admin.expensesandpurchases.create_payment_after',compact('coin','expense','datenow'
+                                ,'expense_details','accounts_bank', 'accounts_efectivo'
+                                ,'accounts_punto_de_venta','anticipos_sum'
+                                ,'total_retiene_iva','total_retiene_islr','bcv','provider'
+                                ,'islrconcepts'));
          
          
     }
@@ -1637,11 +1694,17 @@ class ExpensesAndPurchaseController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
 
-        $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible')));
+        
         $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('total_factura')));
+        $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible')));
         $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount')));
         $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('grand_total')));
          
+        $sin_formato_iva_retencion = str_replace(',', '.', str_replace('.', '', request('iva_retencion')));
+        $sin_formato_islr_retencion = str_replace(',', '.', str_replace('.', '', request('islr_retencion')));
+        
+        $sin_formato_anticipo = str_replace(',', '.', str_replace('.', '', request('anticipo')));
+        $sin_formato_total_pay = str_replace(',', '.', str_replace('.', '', request('total_pay')));
         
         $id_expense = request('id_expense');
         $user_id = request('user_id');
@@ -1650,19 +1713,27 @@ class ExpensesAndPurchaseController extends Controller
 
         $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->findOrFail($id_expense);
 
-        if($expense->coin != 'bolivares'){
+        if($coin != 'bolivares'){
             $sin_formato_amount_iva = $sin_formato_amount_iva * $expense->rate;
             $sin_formato_amount_with_iva = $sin_formato_amount_with_iva * $expense->rate;
             $sin_formato_base_imponible = $sin_formato_base_imponible * $expense->rate;
             $sin_formato_amount = $sin_formato_amount * $expense->rate;
-       
+
+            $sin_formato_iva_retencion = $sin_formato_iva_retencion * $expense->rate;
+            $sin_formato_islr_retencion = $sin_formato_islr_retencion * $expense->rate;
+            $sin_formato_anticipo = $sin_formato_anticipo * $expense->rate;
+            $sin_formato_total_pay = $sin_formato_total_pay * $expense->rate;
         }
 
 
         $expense->base_imponible = $sin_formato_base_imponible;
         $expense->amount =  $sin_formato_amount;
         $expense->amount_iva =  $sin_formato_amount_iva;
-        $expense->amount_with_iva =  $sin_formato_amount_with_iva;
+        $expense->amount_with_iva =  $sin_formato_total_pay;
+
+        $expense->retencion_iva =  $sin_formato_iva_retencion;
+        $expense->retencion_islr =  $sin_formato_islr_retencion;
+        $expense->anticipo =  $sin_formato_anticipo;
 
         $credit = request('credit');
 

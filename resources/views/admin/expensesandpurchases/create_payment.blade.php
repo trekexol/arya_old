@@ -80,6 +80,9 @@
                                     </span>
                                 @enderror
                             </div>
+                            <div class="col-md-1">
+                                <input class="form-check-input position-static" type="checkbox" id="retencion_iva_check" onclick="calculate();" name="retencion_iva_check"  value="option1" aria-label="...">          
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="grand_totals" class="col-md-2 col-form-label text-md-right">Total General</label>
@@ -95,7 +98,7 @@
                             <label for="islr_retencion" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
 
                             <div class="col-md-3">
-                                <input id="islr_retencion" type="text" class="form-control @error('islr_retencion') is-invalid @enderror" name="islr_retencion" value="{{ number_format($total_retiene_islr / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="islr_retencion">
+                                <input id="islr_retencion" type="text" class="form-control @error('islr_retencion') is-invalid @enderror" name="islr_retencion" value="0" readonly required autocomplete="islr_retencion">
 
                                 @error('islr_retencion')
                                     <span class="invalid-feedback" role="alert">
@@ -103,15 +106,29 @@
                                     </span>
                                 @enderror
                             </div>
+                            <div class="col-md-1">
+                                <input class="form-check-input position-static" type="checkbox" id="retencion_islr_check" onclick="calculate();checked_islr();" name="retencion_islr_check"  value="option1" aria-label="...">          
+                            </div>
                         </div>
-                        
+                        <div id="islr-form" class="form-group row">
+                            <div class="col-sm-3 offset-sm-8">
+                            <select class="form-control" name="islr_concept" id="islr_concept">
+                                <option disabled selected value="0">Seleccionar</option>
+                                @if (isset($islrconcepts))
+                                    @foreach ($islrconcepts as $islrconcept)
+                                        <option value="{{$islrconcept->value}}">{{ $islrconcept->description }} - {{$islrconcept->value}}%</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            </div>
+                        </div>
                         
                         <div class="form-group row">
 
                             <label for="anticipo" class="col-md-2 col-form-label text-md-right">Menos Anticipo:</label>
                             @if (empty($anticipos_sum))
                                 <div class="col-md-3">
-                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" readonly required autocomplete="anticipo"> 
+                                    <input id="anticipo" type="text" class="form-control @error('anticipo') is-invalid @enderror" name="anticipo" placeholder="0,00" value="0" readonly required autocomplete="anticipo"> 
                             
                                     @error('anticipo')
                                         <span class="invalid-feedback" role="alert">
@@ -224,8 +241,8 @@
 
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                        
-                        <input type="hidden" id="total_retiene_iva" name="total_retiene_iva" value="{{$total_retiene_iva / ($bcv ?? 1)}}" readonly>
-                        <input type="hidden" id="total_retiene_islr" name="total_retiene_islr" value="{{$total_retiene_islr / ($bcv ?? 1)}}" readonly>
+                        <input type="hidden" id="total_retiene_iva" name="total_retiene_iva" value="0" readonly>
+                        <input type="hidden" id="total_retiene_islr" name="total_retiene_islr" value="{{ $total_retiene_islr ?? 0 }}" readonly>
 
                         
 
@@ -791,6 +808,30 @@
             coin = $(this).val();
             window.location = "{{route('expensesandpurchases.create_payment', [$expense->id,''])}}"+"/"+coin;
         });
+
+        var islr_concept = 0;
+        $("#islr-form").hide();
+
+        function checked_islr() {
+            var retencion_islr_check = $("#retencion_islr_check").is(':checked');
+            
+            if(retencion_islr_check){
+                //valor inicial del porcentaje de islr
+                $("#islr-form").show();
+            }else{
+                $("#islr-form").hide();
+                islr_concept = 0;
+                calculate();
+            }
+            
+        }
+
+        
+
+        $("#islr_concept").on('change',function(){
+            islr_concept = $(this).val();
+            calculate();
+        });
     </script>
     <script type="text/javascript">
 
@@ -827,19 +868,44 @@
                 //document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
                 /*-----------------------------------*/
 
-
-
-
-
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
                 var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
+                //retencion de iva
+               
+                var retencion_iva_check = $("#retencion_iva_check").is(':checked');
 
-                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
-                //------------------------------
+                let porc_retencion_iva = "<?php echo $provider->porc_retencion_iva ?>";
+                var calc_retencion_iva = total_iva_exento * porc_retencion_iva / 100;
+                var total_retencion_iva = calc_retencion_iva.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                
+                document.getElementById("iva_retencion").value =  total_retencion_iva;
+                    
+                if(retencion_iva_check){
+                    document.getElementById("total_retiene_iva").value =  calc_retencion_iva;
+                }else{
+                    document.getElementById("total_retiene_iva").value = 0;
+                }
+                //-----------------------
 
+                //retencion de islr
+                var retencion_islr_check = $("#retencion_islr_check").is(':checked');
+                let total_retiene_islr= "<?php echo $total_retiene_islr / ($bcv ?? 1) ?>";
 
+                let porc_retencion_islr = islr_concept;
+                var calc_retencion_islr = total_retiene_islr * porc_retencion_islr / 100;
+                var total_retencion_islr = calc_retencion_islr.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                document.getElementById("islr_retencion").value =  total_retencion_islr;
+                 
+                if(retencion_islr_check){
+                    document.getElementById("total_retiene_islr").value =  calc_retencion_islr;
+                }else{
+                    document.getElementById("total_retiene_islr").value = 0;
+                }
+                //------------------------------------
 
                 document.getElementById("iva_amount").value = iva_format;
 
@@ -934,9 +1000,37 @@
 
                 var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
                
-                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
-                //------------------------------
+                //retencion de iva
+                let porc_retencion_iva = "<?php echo $provider->porc_retencion_iva ?>";
+                var calc_retencion_iva = total_iva_exento * porc_retencion_iva / 100;
+                var total_retencion_iva = calc_retencion_iva.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                
+                document.getElementById("iva_retencion").value =  total_retencion_iva;
+                    
+                if(retencion_iva_check){
+                    document.getElementById("total_retiene_iva").value =  calc_retencion_iva;
+                }else{
+                    document.getElementById("total_retiene_iva").value = 0;
+                }
+                //-----------------------
 
+                //retencion de islr
+                var retencion_islr_check = $("#retencion_islr_check").is(':checked');
+                let total_retiene_islr= "<?php echo $total_retiene_islr / ($bcv ?? 1) ?>";
+
+                let porc_retencion_islr = islr_concept;
+                var calc_retencion_islr = total_retiene_islr * porc_retencion_islr / 100;
+                var total_retencion_islr = calc_retencion_islr.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                document.getElementById("islr_retencion").value =  total_retencion_islr;
+                 
+                if(retencion_islr_check){
+                    document.getElementById("total_retiene_islr").value =  calc_retencion_islr;
+                }else{
+                    document.getElementById("total_retiene_islr").value = 0;
+                }
+                //------------------------------------
 
 
                 document.getElementById("iva_amount").value = iva_format;
@@ -1034,10 +1128,37 @@
 
                 var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
-                //document.getElementById("retencion").value = parseFloat(totalIvaMenos);
-                //------------------------------
+                 //retencion de iva
+                let porc_retencion_iva = "<?php echo $provider->porc_retencion_iva ?>";
+                var calc_retencion_iva = total_iva_exento * porc_retencion_iva / 100;
+                var total_retencion_iva = calc_retencion_iva.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                
+                document.getElementById("iva_retencion").value =  total_retencion_iva;
+                    
+                if(retencion_iva_check){
+                    document.getElementById("total_retiene_iva").value =  calc_retencion_iva;
+                }else{
+                    document.getElementById("total_retiene_iva").value = 0;
+                }
+                //-----------------------
 
+                //retencion de islr
+                var retencion_islr_check = $("#retencion_islr_check").is(':checked');
+                let total_retiene_islr= "<?php echo $total_retiene_islr / ($bcv ?? 1) ?>";
 
+                let porc_retencion_islr = islr_concept;
+                var calc_retencion_islr = total_retiene_islr * porc_retencion_islr / 100;
+                var total_retencion_islr = calc_retencion_islr.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                document.getElementById("islr_retencion").value =  total_retencion_islr;
+                 
+                if(retencion_islr_check){
+                    document.getElementById("total_retiene_islr").value =  calc_retencion_islr;
+                }else{
+                    document.getElementById("total_retiene_islr").value = 0;
+                }
+                //------------------------------------
 
                 document.getElementById("iva_amount").value = iva_format;
 
