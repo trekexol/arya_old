@@ -24,7 +24,7 @@
 </head>
 
 <body>
-  <br><br>
+  <br><br><br><br>
 <h3 style="text-align: center;">COMPROBANTE DE RETENCIÓN AL IMPUESTO AL VALOR AGREGADO</h3>
 <h5 style="">Ley IVA Art. 11: Serán responsables del pago de impuesto en calidad de agente de retención, los compradores o adquirientes de
 determindados bienes muebles y los receptores de ciertos servicios, a quienes la administración tribuitaria los designe como tal
@@ -82,24 +82,52 @@ determindados bienes muebles y los receptores de ciertos servicios, a quienes la
   
 </table>
 
+<?php 
+
+  $oper = 1;
+
+?>
+
+<br>
 <table>
   <tr>
-    <th style="font-size: x-small; width: 40%; border-bottom-color: white;">Oper</th>
-    <th style="font-size: x-small; width: 40%; border-bottom-color: white;">Fecha</th>
-    <th style="font-size: x-small; width: 20%; border-bottom-color: white;">No Factura</th>
-    <th style="font-size: x-small; width: 20%; border-bottom-color: white;">No Control Serie</th>
-    <th style="font-size: x-small; width: 20%; border-bottom-color: white;">No Nota Debito</th>
-    <th style="font-size: x-small; width: 20%; border-bottom-color: white;">No Nota Crédito</th>
-    <th style="font-size: x-small; width: 20%; border-bottom-color: white;">No Factura Afectada</th>
-    <th style="font-size: x-small; width: 20%; border-bottom-color: white;">Total Compra</th>
-    <th style="font-size: x-small; width: 20%; border-bottom-color: white;">Compra sin Derecho a Crédito Fiscal</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">Oper</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">Fecha</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">No Factura</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">No Control Serie</th>
+    <th style="font-size: x-small; width: 20%; text-align: center;">Total Compra</th>
+    <th style="font-size: x-small; width: 20%; text-align: center;">Compra sin Derecho a Crédito Fiscal</th>
+    <th style="font-size: x-small; width: 20%; text-align: center;">Base Imponible</th>
+    <th style="font-size: x-small; width: 10%; text-align: center;">Alicuota %</th>
+    <th style="font-size: x-small; width: 20%; text-align: center;">Impuesto IVA</th>
+    <th style="font-size: x-small; width: 20%; text-align: center;">IVA Retenido</th>
   </tr>
   <tr>
-    <td style="font-size: x-small;">{{ $provider->razon_social ?? ''}}</td>
-    <td style="font-size: x-small;">{{ $provider->code_provider ?? ''}}</td>
-    <td style="font-size: x-small;">{{ $period ?? ''}}</td>
+    <td style="font-size: x-small; text-align: center;">{{ $oper }}</td>
+    <td style="font-size: x-small; text-align: center;">{{ $datenow ?? '' }}</td>
+    <td style="font-size: x-small; text-align: center;">{{ $expense->id ?? '' }}</td>
+    <td style="font-size: x-small; text-align: center;">{{ $expense->serie ?? ''}}</td>
+    <td style="font-size: x-small; text-align: right;">{{ number_format(($expense->amount_with_iva ?? 0) + ($expense->retencion_iva ?? 0), 0, '', '.')}}</td>
+    <td style="font-size: x-small; text-align: right;"></td> 
+    <td style="font-size: x-small; text-align: right;">{{ number_format($expense->base_imponible ?? 0, 0, '', '.') }}</td>
+    <td style="font-size: x-small; text-align: right;">{{ number_format($expense->iva_percentage ?? 0, 0, '', '.')}}</td>
+    <td style="font-size: x-small; text-align: right;">{{ number_format($expense->amount_iva ?? 0, 0, '', '.')}}</td>
+    <td style="font-size: x-small; text-align: right;">{{ number_format($expense->retencion_iva ?? 0, 0, '', '.')}}</td>
   </tr>
-  
+
 </table>
+
+<br><br><br><br><br><br>
+<table style="width: 100%;">
+  <tr>
+    <th  class="text-left font-weight-normal" style="border-color: #ffffff; width: 50%; text-align: center;">____________________________________</th>
+    <th  class="text-left" style="border-color: #ffffff; width: 50%; text-align: center;">_______________________________________________</th>
+  </tr>
+  <tr>
+    <th  style="border-color: #ffffff; width: 50%; text-align: center; font-size: small;">FIRMA BENEFICIARIO</th>
+    <th  style="border-color: #ffffff; width: 50%; text-align: center; font-size: small;">FIRMA Y SELLO DEL AGENTE DE RETENCIÓN</th>
+  </tr>
+</table>
+
 </body>
 </html>

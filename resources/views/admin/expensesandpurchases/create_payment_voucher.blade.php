@@ -166,6 +166,7 @@
                                 <div class="dropdown-menu animated--fade-in"
                                     aria-labelledby="dropdownMenuButton">
                                     <a onclick="pdf_retencion_iva();" href="#" class="dropdown-item">Imprimir Retención de Iva</a> 
+                                    <a onclick="pdf_retencion_islr();" href="#" class="dropdown-item">Imprimir Retención de ISLR</a> 
                                     <a onclick="pdf_media();" href="#" class="dropdown-item">Imprimir Factura Media Carta</a> 
                                 </div>
                             </div> 
@@ -210,6 +211,12 @@
         function pdf_retencion_iva() {
             
             var nuevaVentana= window.open("{{ route('expensesandpurchases.retencioniva',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
+    
+        }
+
+        function pdf_retencion_islr() {
+            
+            var nuevaVentana= window.open("{{ route('expensesandpurchases.retencionislr',[$expense->id,$coin])}}","ventana","left=800,top=800,height=800,width=1000,scrollbar=si,location=no ,resizable=si,menubar=no");
     
         }
            

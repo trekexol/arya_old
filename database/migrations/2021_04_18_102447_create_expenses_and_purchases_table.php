@@ -18,6 +18,7 @@ class CreateExpensesAndPurchasesTable extends Migration
 
             $table->unsignedBigInteger('id_provider');
             $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_islr_concept')->nullable();
 
             $table->string('invoice',30)->nullable();
             $table->string('serie',30)->nullable();
@@ -46,6 +47,7 @@ class CreateExpensesAndPurchasesTable extends Migration
             $table->string('status',1);
             $table->foreign('id_provider')->references('id')->on('providers');
             $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_islr_concept')->references('id')->on('islr_concepts');
 
             $table->timestamps();
         });

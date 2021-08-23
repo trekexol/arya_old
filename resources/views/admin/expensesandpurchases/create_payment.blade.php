@@ -32,6 +32,7 @@
                 <div class="card-body" >
                     <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                     <input type="hidden" name="coin" value="{{$coin}}" readonly>
+                    <input type="hidden" id="id_islr_concept_credit" name="id_islr_concept_credit" value="0" readonly>
 
 
                         <div class="form-group row">
@@ -81,7 +82,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-1">
-                                <input class="form-check-input position-static" type="checkbox" id="retencion_iva_check" onclick="calculate();" name="retencion_iva_check"  value="option1" aria-label="...">          
+                                <input class="form-check-input position-static" type="checkbox" id="retencion_iva_check" name="retencion_iva_check" onclick="calculate();"  value="option1" aria-label="...">          
                             </div>
                         </div>
                         <div class="form-group row">
@@ -107,7 +108,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-1">
-                                <input class="form-check-input position-static" type="checkbox" id="retencion_islr_check" onclick="calculate();checked_islr();" name="retencion_islr_check"  value="option1" aria-label="...">          
+                                <input class="form-check-input position-static" type="checkbox" id="retencion_islr_check"  onclick="calculate();checked_islr();" name="retencion_islr_check"  value="option1" aria-label="...">          
                             </div>
                         </div>
                         <div id="islr-form" class="form-group row">
@@ -116,7 +117,7 @@
                                 <option disabled selected value="0">Seleccionar</option>
                                 @if (isset($islrconcepts))
                                     @foreach ($islrconcepts as $islrconcept)
-                                        <option value="{{$islrconcept->value}}">{{ $islrconcept->description }} - {{$islrconcept->value}}%</option>
+                                        <option value="{{$islrconcept->value}}"  data-id="{{ $islrconcept->id }}" >{{ $islrconcept->description }} - {{$islrconcept->value}}%</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -212,6 +213,8 @@
             </form>           
             <form method="POST" action="{{ route('expensesandpurchases.store_expense_payment') }}" enctype="multipart/form-data">
                 @csrf   
+                        <input type="hidden" id="id_islr_concept" name="id_islr_concept" value="0" readonly>
+
 
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
 
@@ -830,6 +833,8 @@
 
         $("#islr_concept").on('change',function(){
             islr_concept = $(this).val();
+            document.getElementById("id_islr_concept").value = $(this).find(':selected').data('id');
+            document.getElementById("id_islr_concept_credit").value = $(this).find(':selected').data('id');
             calculate();
         });
     </script>

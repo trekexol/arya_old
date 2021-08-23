@@ -631,6 +631,7 @@ Route::group(["prefix"=>'expensesandpurchases'],function(){
 
 
     Route::get('retencioniva/{id_expense}/{coin}','ExpensesAndPurchaseController@retencion_iva')->name('expensesandpurchases.retencioniva');
+    Route::get('retencionislr/{id_expense}/{coin}','ExpensesAndPurchaseController@retencion_islr')->name('expensesandpurchases.retencionislr');
 
 });
 

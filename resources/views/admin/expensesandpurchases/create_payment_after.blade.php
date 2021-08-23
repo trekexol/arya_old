@@ -105,8 +105,12 @@
                                 @enderror
                             </div>
                             <div class="col-md-1">
-                                <input class="form-check-input position-static" type="checkbox" id="retencion_islr_check" onclick="calculate();checked_islr();" name="retencion_islr_check"  value="option1" aria-label="...">          
-                            </div>
+                                @if (isset($expense->id_islr_concept))
+                                    <input class="form-check-input position-static" checked type="checkbox" id="retencion_islr_check" onclick="calculate();checked_islr();" name="retencion_islr_check"  value="option1" aria-label="...">                                     
+                                @else
+                                    <input class="form-check-input position-static" type="checkbox" id="retencion_islr_check" onclick="calculate();checked_islr();" name="retencion_islr_check"  value="option1" aria-label="...">          
+                                @endif
+                                 </div>
                         </div>
                         <div id="islr-form" class="form-group row">
                             <div class="col-sm-3 offset-sm-8">
@@ -114,8 +118,12 @@
                                 <option disabled selected value="0">Seleccionar</option>
                                 @if (isset($islrconcepts))
                                     @foreach ($islrconcepts as $islrconcept)
-                                        <option value="{{$islrconcept->value}}">{{ $islrconcept->description }} - {{$islrconcept->value}}%</option>
-                                    @endforeach
+                                        @if (isset($expense->id_islr_concept) && ($expense->id_islr_concept == $islrconcept->id))
+                                            <option value="{{$islrconcept->value}}" selected>{{ $islrconcept->description }} - {{$islrconcept->value}}%</option>       
+                                        @else
+                                            <option value="{{$islrconcept->value}}">{{ $islrconcept->description }} - {{$islrconcept->value}}%</option>                               
+                                        @endif
+                                         @endforeach
                                 @endif
                             </select>
                             </div>
@@ -188,6 +196,7 @@
                     
             <form method="POST" action="{{ route('expensesandpurchases.store_expense_payment') }}" enctype="multipart/form-data">
                 @csrf   
+                        <input type="hidden" id="id_islr_concept" name="id_islr_concept" value="{{ $expense->id_islr_concept ?? null }}" readonly>
 
                         <input type="hidden" name="id_expense" value="{{$expense->id}}" readonly>
 
@@ -785,8 +794,13 @@
             window.location = "{{route('expensesandpurchases.create_payment', [$expense->id,''])}}"+"/"+coin;
         });
 
-        var islr_concept = 0;
-        $("#islr-form").hide();
+        var islr_concept = "<?php echo $expense->islr_concepts['value'] ?? 0 ?>";
+        if(islr_concept == 0){
+            $("#islr-form").hide();
+        }else{
+            $("#islr-form").show();
+        }
+        
 
         function checked_islr() {
             var retencion_islr_check = $("#retencion_islr_check").is(':checked');
@@ -806,6 +820,7 @@
 
         $("#islr_concept").on('change',function(){
             islr_concept = $(this).val();
+            document.getElementById("id_islr_concept").value = $(this).find(':selected').data('id');
             calculate();
         });
     </script>
@@ -869,6 +884,7 @@
                 //retencion de islr
                 var retencion_islr_check = $("#retencion_islr_check").is(':checked');
                 let total_retiene_islr= "<?php echo $total_retiene_islr / ($bcv ?? 1) ?>";
+                let id_islr_concept_expense     = "<?php echo $expense->id_islr_concept ?? -1 ?>";
 
                 let porc_retencion_islr = islr_concept;
                 var calc_retencion_islr = total_retiene_islr * porc_retencion_islr / 100;

@@ -114,16 +114,62 @@ class ExpensesAndPurchaseController extends Controller
             $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
         }
     
+        if((isset($expense)) && ($expense->retencion_iva != 0)){
+            $date = Carbon::now();
+            $datenow = $date->format('d-m-Y');  
+            $period = $date->format('Y-m'); 
+    
+            $company = Company::on(Auth::user()->database_name)->find(1);
+                    
+            
+            $pdf = $pdf->loadView('admin.expensesandpurchases.retencion_iva',compact('company','expense','datenow','period','provider'))->setPaper('a4', 'landscape');
+            return $pdf->stream();
+        }else{
+            return redirect('/expensesandpurchases/expensevoucher/'.$id_expense.'/bolivares')->withDanger('Esta factura no retiene IVA!');
+        }
 
-        $date = Carbon::now();
-        $datenow = $date->format('Y-m-d');  
-        $period = $date->format('Y-m'); 
+    }
 
-        $company = Company::on(Auth::user()->database_name)->find(1);
+    public function retencion_islr($id_expense,$coin)
+    {
+        $pdf = App::make('dompdf.wrapper');
+        $expense = null;
+        $provider = null;
+
+        if(isset($id_expense)){
+            $expense = ExpensesAndPurchase::on(Auth::user()->database_name)->find($id_expense);
+            $provider = Provider::on(Auth::user()->database_name)->find($expense->id_provider);
+        }
+    
+        if((isset($expense)) && ($expense->retencion_islr != 0)){
+            $date = Carbon::now();
+            $datenow = $date->format('d-m-Y');  
+            $period = $date->format('Y-m'); 
+    
+            $company = Company::on(Auth::user()->database_name)->find(1);
+                  
+            /*$expense_details = ExpensesDetail::on(Auth::user()->database_name)
+                                ->where('id_expense',$expense->id)
+                                ->where('islr',1)->sum('amount * price');*/
+
+            $expense_details =  DB::connection(Auth::user()->database_name)->select('SELECT SUM(amount * price) AS total
+                                FROM expenses_details
+                                WHERE id_expense = ? AND
+                                islr = 1 
+                                '
+                                , [$expense->id]);
                 
-        
-        $pdf = $pdf->loadView('admin.expensesandpurchases.retencion_iva',compact('company','expense','datenow','period','provider'))->setPaper('a4', 'landscape');
-        return $pdf->stream();
+
+            $total_islr_details = $expense_details[0]->total;
+
+            
+            
+            $pdf = $pdf->loadView('admin.expensesandpurchases.retencion_islr',compact('total_islr_details','company','expense','datenow','period','provider'))->setPaper('a4', 'landscape');
+            return $pdf->stream();
+        }else{
+            return redirect('/expensesandpurchases/expensevoucher/'.$id_expense.'/bolivares')->withDanger('Esta factura no retiene ISLR!');
+        }
+
     }
 
     public function create_expense_detail($id_expense,$coin,$id_inventory = null)
@@ -280,7 +326,6 @@ class ExpensesAndPurchaseController extends Controller
              $base_imponible= 0;
              
              $retiene_iva = 0;
-            // $retiene_islr = 0;
 
              $total_retiene_iva = 0;
              $total_retiene_islr = 0;
@@ -291,9 +336,7 @@ class ExpensesAndPurchaseController extends Controller
                
                 if($var->exento == 0){
                     $base_imponible += ($var->price * $var->amount); 
-                }/*else{
-                    $retiene_iva += ($var->price * $var->amount); 
-                }*/
+                }
 
                 if($var->islr == 1){
                     $total_retiene_islr += ($var->price * $var->amount); 
@@ -1634,6 +1677,11 @@ class ExpensesAndPurchaseController extends Controller
                         $expense->anticipo = 0;
                     }
 
+                    $id_islr_concept = request('id_islr_concept');
+
+                    if(isset($id_islr_concept) && ($id_islr_concept > 0)){
+                        $expense->id_islr_concept = $id_islr_concept;
+                    }    
 
                     $expense->base_imponible = $base_imponible;
                     $expense->amount =  $sin_formato_amount;
@@ -1700,8 +1748,23 @@ class ExpensesAndPurchaseController extends Controller
         $sin_formato_amount_iva = str_replace(',', '.', str_replace('.', '', request('iva_amount')));
         $sin_formato_amount_with_iva = str_replace(',', '.', str_replace('.', '', request('grand_total')));
          
-        $sin_formato_iva_retencion = str_replace(',', '.', str_replace('.', '', request('iva_retencion')));
-        $sin_formato_islr_retencion = str_replace(',', '.', str_replace('.', '', request('islr_retencion')));
+        $retencion_iva_check = request('retencion_iva_check');
+        
+        if(isset($retencion_iva_check)){
+            $sin_formato_iva_retencion = str_replace(',', '.', str_replace('.', '', request('iva_retencion')));
+        }else{
+            $sin_formato_iva_retencion = 0;
+        }
+
+        $retencion_islr_check = request('retencion_islr_check');
+        
+        if(isset($retencion_islr_check)){
+            $sin_formato_islr_retencion = str_replace(',', '.', str_replace('.', '', request('islr_retencion')));       
+        }else{
+            $sin_formato_islr_retencion = 0;
+        }
+
+        
         
         $sin_formato_anticipo = str_replace(',', '.', str_replace('.', '', request('anticipo')));
         $sin_formato_total_pay = str_replace(',', '.', str_replace('.', '', request('total_pay')));
@@ -1725,6 +1788,11 @@ class ExpensesAndPurchaseController extends Controller
             $sin_formato_total_pay = $sin_formato_total_pay * $expense->rate;
         }
 
+        $id_islr_concept = request('id_islr_concept_credit');
+
+        if(isset($id_islr_concept) && ($id_islr_concept > 0)){
+            $expense->id_islr_concept = $id_islr_concept;
+        }    
 
         $expense->base_imponible = $sin_formato_base_imponible;
         $expense->amount =  $sin_formato_amount;
@@ -1757,12 +1825,14 @@ class ExpensesAndPurchaseController extends Controller
     
         $header_voucher->save();
     
-        //Mercancia para la Venta
+        $expense_details = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
+                    
+        foreach($expense_details as $var){
+            $account = Account::on(Auth::user()->database_name)->find($var->id_account);
             
-        $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
-
-        if(isset($account_mercancia_venta)){
-            $this->add_movement($expense->rate,$header_voucher->id,$account_mercancia_venta->id,$expense->id,$user_id,$sin_formato_amount,0);
+            if(isset($account)){
+                $this->add_movement($expense->rate,$header_voucher->id,$account->id,$expense->id,$user_id,$var->price * $var->amount,0);
+            }
         }
 
         //IVA credito Fiscal

@@ -353,42 +353,28 @@ class PDFController extends Controller
 
                  $payment_expenses = ExpensePayment::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
                  
-                 foreach($payment_expenses as $var){
-                    $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                 
+                 if(!$payment_expenses->isEmpty()){
+                    foreach($payment_expenses as $var){
+                        $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                     }
                  }
+                 
 
 
                 $inventories_expenses = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
-            
-                $total= 0;
-                $base_imponible= 0;
-                $ventas_exentas= 0;
-                foreach($inventories_expenses as $var){
-                   
-                    $total += ($var->price * $var->amount);
-                    //----------------------------- 
+           
 
-                    if($var->exento == 0){
-                        $base_imponible += ($var->price * $var->amount); 
-
-                    }
-                    if($var->exento == 1){
-                        $ventas_exentas += ($var->price * $var->amount); 
-    
-                    }
+                 if($coin == 'bolivares'){
+                    $bcv = null;
+                    
+                }else{
+                    $bcv = $expense->rate;
                 }
-                if($coin != 'bolivares'){
-                    $total = $total / $expense->rate;
-                    $base_imponible = $base_imponible / $expense->rate;
-                    $ventas_exentas = $ventas_exentas / $expense->rate;
-                }
-                 $expense->sub_total = $total;
-                 $expense->base_imponible = $base_imponible;
-                 $expense->ventas_exentas = $ventas_exentas;
 
                  $company = Company::on(Auth::user()->database_name)->find(1);
 
-                 $pdf = $pdf->loadView('pdf.expense',compact('coin','expense','inventories_expenses','payment_expenses','company'));
+                 $pdf = $pdf->loadView('pdf.expense',compact('bcv','coin','expense','inventories_expenses','payment_expenses','company'));
                  return $pdf->stream();
          
                 }else{
@@ -420,14 +406,17 @@ class PDFController extends Controller
 
                  $payment_expenses = ExpensePayment::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
 
-                 foreach($payment_expenses as $var){
-                    $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                 if(!$payment_expenses->isEmpty()){
+                    foreach($payment_expenses as $var){
+                        $var->payment_type = $this->asignar_payment_type($var->payment_type);
+                     }
                  }
+                 
 
 
                 $inventories_expenses = ExpensesDetail::on(Auth::user()->database_name)->where('id_expense',$expense->id)->get();
             
-                $total= 0;
+                /*$total= 0;
                 $base_imponible= 0;
                 $ventas_exentas= 0;
                 foreach($inventories_expenses as $var){
@@ -456,10 +445,17 @@ class PDFController extends Controller
                  $expense->sub_total = $total;
                  $expense->base_imponible = $base_imponible;
                  $expense->ventas_exentas = $ventas_exentas;
+*/
 
+                if($coin == 'bolivares'){
+                    $bcv = null;
+                    
+                }else{
+                    $bcv = $expense->rate;
+                }
                  $company = Company::on(Auth::user()->database_name)->find(1);
 
-                 $pdf = $pdf->loadView('pdf.expense_media',compact('coin','expense','inventories_expenses','payment_expenses','company'));
+                 $pdf = $pdf->loadView('pdf.expense_media',compact('bcv','coin','expense','inventories_expenses','payment_expenses','company'));
                  return $pdf->stream();
          
                 }else{
