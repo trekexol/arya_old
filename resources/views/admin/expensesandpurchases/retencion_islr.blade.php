@@ -49,7 +49,6 @@
 </table>
 <br><br>
 
-
 <table>
   <tr>
     <th style="font-size: x-small; width: 10%; text-align: center;">Fecha</th>

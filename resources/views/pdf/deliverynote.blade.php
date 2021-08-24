@@ -27,7 +27,7 @@
 
 
   <br><br><br><br><br><br><br><br><br>
-  <h4 style="color: black">FACTURA NRO: {{ str_pad($quotation->id, 6, "0", STR_PAD_LEFT)}}</h4>
+  <h4 style="color: black">NOTA DE ENTREGA NRO: {{ str_pad($quotation->id, 6, "0", STR_PAD_LEFT)}}</h4>
 
  
    
@@ -132,7 +132,7 @@
 <?php
   $iva = ($quotation->base_imponible * $quotation->iva_percentage)/100;
 
-  $total = $quotation->total_factura + $iva - ($total_retiene_iva ?? 0) - ($total_retiene_islr ?? 0);
+  $total = $quotation->total_factura + $iva;
 
   $total_petro = $total / ($bcv ?? 1) / $company->rate_petro;
 
@@ -158,18 +158,6 @@
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">I.V.A.{{ $quotation->iva_percentage }}%</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($iva, 2, ',', '.') }}</th>
   </tr> 
-  @if ($total_retiene_iva != 0)
-    <tr>
-      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de Iva</th>
-      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_retiene_iva / ($bcv ?? 1), 2, ',', '.') }}</th>
-    </tr> 
-  @endif 
-  @if ($total_retiene_islr != 0)
-    <tr>
-      <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">Retención de ISLR</th>
-      <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_retiene_islr / ($bcv ?? 1), 2, ',', '.') }}</th>
-    </tr> 
-  @endif 
   <tr>
     <th style="text-align: right; font-weight: normal; width: 79%; border-bottom-color: white;">MONTO TOTAL</th>
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total, 2, ',', '.') }}</th>
@@ -179,7 +167,7 @@
     <th style="text-align: right; font-weight: normal; width: 21%;">{{ number_format($total_petro, 6, ',', '.') }}</th>
   </tr> 
   <tr>
-    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"><pre>ESTA FACTURA VA SIN TACHADURAS NI ENMIENDAS        </pre></th>
+    <th style="text-align: left; font-weight: normal; width: 79%; border-top-color: rgb(17, 9, 9); border-right-color: white; font-size: small;"><pre>NOTA DE ENTREGA        </pre></th>
     <th style="text-align: right; font-weight: normal; width: 21%; "></th>
   </tr> 
   

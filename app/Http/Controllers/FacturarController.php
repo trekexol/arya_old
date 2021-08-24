@@ -148,9 +148,11 @@ class FacturarController extends Controller
             /*Aqui revisamos el porcentaje de retencion de iva que tiene el cliente, para aplicarlo a productos que retengan iva */
              $client = Client::on(Auth::user()->database_name)->find($quotation->id_client);
 
-                if($client->percentage_retencion_iva != 0){
+             
+
+                /*if($client->percentage_retencion_iva != 0){
                     $total_retiene_iva = ($retiene_iva * $client->percentage_retencion_iva) /100;
-                }
+                }*/
 
                
                 if($client->percentage_retencion_islr != 0){
@@ -165,8 +167,8 @@ class FacturarController extends Controller
             }
              return view('admin.quotations.createfacturar',compact('price_cost_total','coin','quotation'
                         ,'payment_quotations', 'accounts_bank', 'accounts_efectivo', 'accounts_punto_de_venta'
-                        ,'datenow','bcv','anticipos_sum','total_retiene_iva','total_retiene_islr','is_after'
-                        ,'total_mercancia','total_servicios'));
+                        ,'datenow','bcv','anticipos_sum','total_retiene_islr','is_after'
+                        ,'total_mercancia','total_servicios','client'));
          }else{
              return redirect('/quotations')->withDanger('La cotizacion no existe');
          } 
@@ -424,20 +426,24 @@ class FacturarController extends Controller
         }
         
         //Mercancia para la Venta
+
+        if((isset($price_cost_total)) && ($price_cost_total != 0)){
+            $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
+
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
+            }
+    
+            //Costo de Mercancia
+    
+            $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancia')->first();
+    
+            if(isset($account_cuentas_por_cobrar)){
+                $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
+            }
+        }
         
-        $account_mercancia_venta = Account::on(Auth::user()->database_name)->where('description', 'like', 'Mercancia para la Venta')->first();
-
-        if(isset($account_cuentas_por_cobrar)){
-            $this->add_movement($bcv,$header_voucher->id,$account_mercancia_venta->id,$quotation->id,$user_id,0,$price_cost_total);
-        }
-
-        //Costo de Mercancia
-
-        $account_costo_mercancia = Account::on(Auth::user()->database_name)->where('description', 'like', 'Costo de Mercancia')->first();
-
-        if(isset($account_cuentas_por_cobrar)){
-            $this->add_movement($bcv,$header_voucher->id,$account_costo_mercancia->id,$quotation->id,$user_id,$price_cost_total,0);
-        }
+       
 
         return redirect('quotations/facturado/'.$quotation->id.'/'.$quotation->coin.'')->withSuccess('Factura Guardada con Exito!');
     }

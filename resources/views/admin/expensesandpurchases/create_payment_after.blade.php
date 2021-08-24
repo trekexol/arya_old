@@ -79,7 +79,11 @@
                                 @enderror
                             </div>
                             <div class="col-md-1">
-                                <input class="form-check-input position-static" type="checkbox" id="retencion_iva_check" onclick="calculate();" name="retencion_iva_check"  value="option1" aria-label="...">          
+                                @if (isset($expense->retencion_iva) && ($expense->retencion_iva != 0))
+                                    <input class="form-check-input position-static" checked type="checkbox" id="retencion_iva_check" onclick="calculate();" name="retencion_iva_check"  value="option1" aria-label="...">                                  
+                                @else
+                                    <input class="form-check-input position-static" type="checkbox" id="retencion_iva_check" onclick="calculate();" name="retencion_iva_check"  value="option1" aria-label="...">                                  
+                                @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -791,7 +795,7 @@
         });
         $("#coin").on('change',function(){
             coin = $(this).val();
-            window.location = "{{route('expensesandpurchases.create_payment', [$expense->id,''])}}"+"/"+coin;
+            window.location = "{{route('expensesandpurchases.create_payment_after', [$expense->id,''])}}"+"/"+coin;
         });
 
         var islr_concept = "<?php echo $expense->islr_concepts['value'] ?? 0 ?>";
@@ -940,7 +944,7 @@
 
                 document.getElementById("total_pay").value =  total_payformat;
 
-                document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
+                document.getElementById("total_pay_form").value =  total_pay.toFixed(3);
 
                 document.getElementById("iva_form").value =  inputIva;
 
@@ -1064,7 +1068,7 @@
 
                 document.getElementById("total_pay").value =  total_payformat;
 
-                document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
+                document.getElementById("total_pay_form").value =  total_pay.toFixed(3);
 
                 document.getElementById("iva_form").value =  inputIva;
               
@@ -1193,7 +1197,7 @@
 
                 document.getElementById("total_pay").value =  total_payformat;
 
-                document.getElementById("total_pay_form").value =  total_pay.toFixed(2);
+                document.getElementById("total_pay_form").value =  total_pay.toFixed(3);
 
                 document.getElementById("iva_form").value =  inputIva;
 

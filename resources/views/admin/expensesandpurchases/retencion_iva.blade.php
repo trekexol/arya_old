@@ -85,7 +85,7 @@ determindados bienes muebles y los receptores de ciertos servicios, a quienes la
 <?php 
 
   $oper = 1;
-
+  $total = $expense->amount_with_iva + ($expense->retencion_iva ?? 0) + ($expense->retencion_islr ?? 0) + ($expense->anticipo ?? 0);
 ?>
 
 <br>
@@ -107,7 +107,7 @@ determindados bienes muebles y los receptores de ciertos servicios, a quienes la
     <td style="font-size: x-small; text-align: center;">{{ $datenow ?? '' }}</td>
     <td style="font-size: x-small; text-align: center;">{{ $expense->id ?? '' }}</td>
     <td style="font-size: x-small; text-align: center;">{{ $expense->serie ?? ''}}</td>
-    <td style="font-size: x-small; text-align: right;">{{ number_format(($expense->amount_with_iva ?? 0) + ($expense->retencion_iva ?? 0), 0, '', '.')}}</td>
+    <td style="font-size: x-small; text-align: right;">{{ number_format(($total ?? 0), 0, '', '.')}}</td>
     <td style="font-size: x-small; text-align: right;"></td> 
     <td style="font-size: x-small; text-align: right;">{{ number_format($expense->base_imponible ?? 0, 0, '', '.') }}</td>
     <td style="font-size: x-small; text-align: right;">{{ number_format($expense->iva_percentage ?? 0, 0, '', '.')}}</td>

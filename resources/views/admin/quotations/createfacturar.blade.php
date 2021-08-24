@@ -84,6 +84,28 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="porc_retencion_iva" class="col-md-4 col-form-label text-md-right">Porcentaje Retención Iva:</label>
+                            <div class="col-md-2">
+                                <input id="porc_retencion_iva" type="text" class="form-control @error('porc_retencion_iva') is-invalid @enderror" value="{{ $client->percentage_retencion_iva ?? 0 }}" readonly name="porc_retencion_iva" autocomplete="porc_retencion_iva">
+    
+                                @error('porc_retencion_iva')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <label for="porc_retencion_islr" class="col-md-3 col-form-label text-md-right">Porcentaje Retención ISLR:</label>
+                            <div class="col-md-2">
+                                <input id="porc_retencion_islr" type="text" class="form-control @error('porc_retencion_islr') is-invalid @enderror" value="{{ $client->percentage_retencion_islr ?? 0 }}" readonly name="porc_retencion_islr"  autocomplete="porc_retencion_islr">
+                                @error('porc_retencion_islr')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="iva_amount" class="col-md-2 col-form-label text-md-right">Monto de Iva</label>
                             <div class="col-md-4">
                                 <input id="iva_amount" type="text" class="form-control @error('iva_amount') is-invalid @enderror" name="iva_amount"  readonly required autocomplete="iva_amount"> 
@@ -97,7 +119,7 @@
                             <label for="iva_retencion" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
 
                             <div class="col-md-3">
-                                <input id="iva_retencion" type="text" class="form-control @error('iva_retencion') is-invalid @enderror" name="iva_retencion" value="{{ number_format($total_retiene_iva / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="iva_retencion">
+                                <input id="iva_retencion" type="text" class="form-control @error('iva_retencion') is-invalid @enderror" name="iva_retencion" readonly required autocomplete="iva_retencion">
 
                                 @error('iva_retencion')
                                     <span class="invalid-feedback" role="alert">
@@ -268,7 +290,7 @@
 
                         <input id="user_id" type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id">
                         
-                        <input type="hidden" id="total_retiene_iva" name="total_retiene_iva" value="{{$total_retiene_iva / ($bcv ?? 1)}}" readonly>
+                        <input type="hidden" id="total_retiene_iva" name="total_retiene_iva"  readonly>
                         <input type="hidden" id="total_retiene_islr" name="total_retiene_islr" value="{{$total_retiene_islr / ($bcv ?? 1)}}" readonly>
 
                         <input type="hidden" id="total_mercancia" name="total_mercancia" value="{{$total_mercancia ?? 0 / ($bcv ?? 1)}}" readonly>
@@ -880,10 +902,6 @@
                 //document.getElementById("sub_total_form").value =  montoFormat_sub_total_form;
                 /*-----------------------------------*/
 
-
-
-
-
                 var total_iva_exento =  parseFloat(totalIvaMenos);
 
                 var iva_format = total_iva_exento.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
@@ -923,13 +941,24 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-               // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
+               
+                //retencion de iva
 
-                var total_iva_retencion = document.getElementById("total_retiene_iva").value;
+                let porc_retencion_iva = "<?php echo $client->percentage_retencion_iva ?>";
+                var calc_retencion_iva = total_iva_exento * porc_retencion_iva / 100;
+                var total_retencion_iva = calc_retencion_iva.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                document.getElementById("iva_retencion").value =  total_retencion_iva;
+                    
+                document.getElementById("total_retiene_iva").value =  calc_retencion_iva;
+                
+                //-----------------------
 
-                var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+                //retencion de islr
+                    var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+                //------------------------------------
 
-                var total_pay = total_pay - total_iva_retencion - total_islr_retencion;
+                var total_pay = total_pay - calc_retencion_iva - total_islr_retencion;
 
                 var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
                 
@@ -1021,12 +1050,23 @@
 
                 // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
 
-                var total_iva_retencion = document.getElementById("total_retiene_iva").value;
+                //retencion de iva
+                
+                let porc_retencion_iva = "<?php echo $client->percentage_retencion_iva ?>";
+                var calc_retencion_iva = total_iva_exento * porc_retencion_iva / 100;
+                var total_retencion_iva = calc_retencion_iva.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                document.getElementById("iva_retencion").value =  total_retencion_iva;
+                    
+                document.getElementById("total_retiene_iva").value =  calc_retencion_iva;
+                
+                //-----------------------
 
-                var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+                //retencion de islr
+                    var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+                //------------------------------------
 
-                var total_pay = total_pay - total_iva_retencion - total_islr_retencion;
-
+                var total_pay = total_pay - calc_retencion_iva - total_islr_retencion;
                 var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
                 document.getElementById("total_pay").value =  total_payformat;
@@ -1119,13 +1159,23 @@
 
                 var total_pay = parseFloat(totalFactura) + total_iva_exento - montoFormat_anticipo;
 
-                // var total_pay = parseFloat(totalFactura) + total_iva_exento - inputAnticipo;
+               //retencion de iva
+                
+               let porc_retencion_iva = "<?php echo $client->percentage_retencion_iva ?>";
+                var calc_retencion_iva = total_iva_exento * porc_retencion_iva / 100;
+                var total_retencion_iva = calc_retencion_iva.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+            
+                document.getElementById("iva_retencion").value =  total_retencion_iva;
+                    
+                document.getElementById("total_retiene_iva").value =  calc_retencion_iva;
+                
+                //-----------------------
 
-                var total_iva_retencion = document.getElementById("total_retiene_iva").value;
+                //retencion de islr
+                    var total_islr_retencion = document.getElementById("total_retiene_islr").value;
+                //------------------------------------
 
-                var total_islr_retencion = document.getElementById("total_retiene_islr").value;
-
-                var total_pay = total_pay - total_iva_retencion - total_islr_retencion;
+                var total_pay = total_pay - calc_retencion_iva - total_islr_retencion;
 
                 var total_payformat = total_pay.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 

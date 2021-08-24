@@ -84,16 +84,12 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="iva_retencion" class="col-md-2 col-form-label text-md-right">Retencion IVA:</label>
-
-                            <div class="col-md-3">
-                                <input id="iva_retencion" type="text" class="form-control @error('iva_retencion') is-invalid @enderror" name="iva_retencion" value="{{ number_format($total_retiene_iva / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="iva_retencion">
-
-                                @error('iva_retencion')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
+                            <div class="col-md-2">
+                            <select class="form-control" name="iva" id="iva">
+                                <option value="16">16%</option>
+                                <option value="12">12%</option>
+                            </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -107,16 +103,16 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="islr_retencion" class="col-md-2 col-form-label text-md-right">Retencion ISLR:</label>
-
-                            <div class="col-md-3">
-                                <input id="islr_retencion" type="text" class="form-control @error('islr_retencion') is-invalid @enderror" name="islr_retencion" value="{{ number_format($total_retiene_islr / ($bcv ?? 1), 2, ',', '.') }}" readonly required autocomplete="islr_retencion">
-
-                                @error('islr_retencion')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
+                            <div class="col-md-2">
+                                <select class="form-control" name="coin" id="coin">
+                                    <option value="bolivares">Bolívares</option>
+                                    @if($coin == 'dolares')
+                                        <option selected value="dolares">Dolares</option>
+                                    @else 
+                                        <option value="dolares">Dolares</option>
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -130,29 +126,9 @@
                                     </span>
                                 @enderror
                             </div>
-                            <label for="iva" class="col-md-2 col-form-label text-md-right">IVA:</label>
-                            <div class="col-md-2">
-                            <select class="form-control" name="iva" id="iva">
-                                <option value="16">16%</option>
-                                <option value="12">12%</option>
-                            </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label id="coinlabel" for="coin" class="col-md-2 col-form-label text-md-right">Moneda:</label>
-
-                            <div class="col-md-2">
-                                <select class="form-control" name="coin" id="coin">
-                                    <option value="bolivares">Bolívares</option>
-                                    @if($coin == 'dolares')
-                                        <option selected value="dolares">Dolares</option>
-                                    @else 
-                                        <option value="dolares">Dolares</option>
-                                    @endif
-                                </select>
-                            </div>
                             
                         </div>
+                      
                         
                         <br>
                         <div class="form-group row">
@@ -235,12 +211,8 @@
 
                 document.getElementById("sub_total").value = grand_totalformat;
 
-
-                var total_iva_retencion = "<?php echo $total_retiene_iva  / ($bcv ?? 1)?>";
-
-                var total_islr_retencion = "<?php echo $total_retiene_islr / ($bcv ?? 1)?>";
-
-                var total = grand_total - total_iva_retencion - total_islr_retencion;
+                
+                var total = grand_total;
 
                 document.getElementById("grand_total").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
                
@@ -306,12 +278,7 @@
 
         document.getElementById("sub_total").value = grand_totalformat;
 
-
-        var total_iva_retencion = "<?php echo $total_retiene_iva  / ($bcv ?? 1)?>";
-
-        var total_islr_retencion = "<?php echo $total_retiene_islr / ($bcv ?? 1)?>";
-
-        var total = grand_total - total_iva_retencion - total_islr_retencion;
+        var total = grand_total;
 
         document.getElementById("grand_total").value = total.toLocaleString('de-DE', {minimumFractionDigits: 2,maximumFractionDigits: 2});
 

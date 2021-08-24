@@ -282,12 +282,13 @@ class QuotationController extends Controller
             $bcv = $company->rate;
         }
 
-        if(($type == 'servicios')){
+        if(($type == 'servicios') || $inventories->isEmpty()){
 
+            $type = 'servicios';
             $services = DB::connection(Auth::user()->database_name)->table('inventories')
             ->join('products', 'products.id', '=', 'inventories.product_id')
             ->where('products.type','SERVICIO')
-            ->select('products.*')
+            ->select('products.*','inventories.id as id_inventory')
             ->get();
             
             return view('admin.quotations.selectservice',compact('type','services','id_quotation','coin','bcv','bcv_quotation_product'));

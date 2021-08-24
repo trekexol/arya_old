@@ -252,14 +252,7 @@ class ExpensesAndPurchaseController extends Controller
         $datenow = $date->format('Y-m-d');  
 
         if($coin != 'bolivares'){
-            $company = Company::on(Auth::user()->database_name)->find(1);
-
-            if($company->tiporate_id == 1){
-                $bcv = $this->search_bcv();
-            }else{
-                //si la tasa es fija
-                $bcv = $company->rate;
-            }
+            $bcv = $expense->rate;
         }else{
             $bcv = null;
         }
@@ -1742,6 +1735,7 @@ class ExpensesAndPurchaseController extends Controller
         $date = Carbon::now();
         $datenow = $date->format('Y-m-d'); 
 
+        //dd($request);
         
         $sin_formato_amount = str_replace(',', '.', str_replace('.', '', request('total_factura')));
         $sin_formato_base_imponible = str_replace(',', '.', str_replace('.', '', request('base_imponible')));
