@@ -423,7 +423,7 @@ class QuotationController extends Controller
 
     public function storeproduct(Request $request)
     {
-
+        dd($request);
         $data = request()->validate([
             
         

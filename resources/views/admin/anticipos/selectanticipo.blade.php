@@ -64,12 +64,14 @@
                    
                     @if (Auth::user()->role_id  == '1')
                         <td>
-                            @if ($anticipo->status == 1)
-                                <input onclick="changestatus({{ $anticipo->id }});" class="form-check-input" type="checkbox" id="flexCheckChecked{{$anticipo->id}}" checked>                        
+                            @if ($anticipo->status == 1) 
+                            
+                                <input onclick="changestatus({{ $anticipo->id }});" type="checkbox" id="flexCheckChecked{{$anticipo->id}}" checked>                        
+                     
                             @else
-                                <input onclick="changestatus({{ $anticipo->id }});" class="form-check-input" type="checkbox" id="flexCheckChecked{{$anticipo->id}}">                        
+                                <input onclick="changestatus({{ $anticipo->id }});" type="checkbox" id="flexCheckChecked{{$anticipo->id}}">                        
                             @endif
-                           </td>
+                        </td>
                     @endif
                     </tr>
                     @endforeach

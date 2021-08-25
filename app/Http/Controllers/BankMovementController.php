@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Account;
 use App\Client;
+use App\Company;
 use App\DetailVoucher;
 use App\HeaderVoucher;
 use App\Segment;
@@ -103,7 +104,15 @@ class BankMovementController extends Controller
                                         ->orderBY('description','asc')->pluck('description','id')->toArray();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
-            $bcv = $this->search_bcv();
+            
+            $company = Company::on(Auth::user()->database_name)->find(1);
+            //Si la taza es automatica
+            if($company->tiporate_id == 1){
+                $bcv = $this->search_bcv();
+            }else{
+                //si la tasa es fija
+                $bcv = $company->rate;
+            }
 
             return view('admin.bankmovements.createdeposit',compact('bcv','account','datenow','contrapartidas'));
 
@@ -125,7 +134,15 @@ class BankMovementController extends Controller
                                         ->orderBY('description','asc')->pluck('description','id')->toArray();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
-            $bcv = $this->search_bcv();
+            
+            $company = Company::on(Auth::user()->database_name)->find(1);
+            //Si la taza es automatica
+            if($company->tiporate_id == 1){
+                $bcv = $this->search_bcv();
+            }else{
+                //si la tasa es fija
+                $bcv = $company->rate;
+            }
 
             return view('admin.bankmovements.createretirement',compact('bcv','account','datenow','contrapartidas'));
 
@@ -149,7 +166,15 @@ class BankMovementController extends Controller
                                         ->get();
             $date = Carbon::now();
             $datenow = $date->format('Y-m-d');  
-            $bcv = $this->search_bcv();
+            
+            $company = Company::on(Auth::user()->database_name)->find(1);
+            //Si la taza es automatica
+            if($company->tiporate_id == 1){
+                $bcv = $this->search_bcv();
+            }else{
+                //si la tasa es fija
+                $bcv = $company->rate;
+            }
 
             return view('admin.bankmovements.createtransfer',compact('bcv','account','datenow','counterparts'));
 

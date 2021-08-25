@@ -116,9 +116,9 @@ class FacturarController extends Controller
                 }
 
                 if($var->type == "MERCANCIA"){
-                    $total_mercancia = ($var->price * $var->amount_quotation) - $percentage;
+                    $total_mercancia += ($var->price * $var->amount_quotation) - $percentage;
                 }else{
-                    $total_servicios = ($var->price * $var->amount_quotation) - $percentage;
+                    $total_servicios += ($var->price * $var->amount_quotation) - $percentage;
                 }
              }
 

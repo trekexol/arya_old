@@ -21,111 +21,100 @@
     text-align: left;
   }
   </style>
+  
 </head>
 
 <body>
 
 
   <br>
-  <h5 style="color: black">Empresa: {{ $company->razon_social ?? ''}} </h5>
-  <h5 style="color: black"> Rif: {{ $company->code_rif ?? ''}}</h5>
-  <h5 style="color: black;">Fecha de Emisión: {{ $datenow }}</h5>
-   
-  <h4 style="color: black; text-align: center">LISTADO MOVIMIENTO DE CUENTAS</h4>
-  <h5 style="color: black; text-align: center">Código de Cuenta: {{ $account->code_one ?? ''}}.{{ $account->code_two ?? ''}}.{{ $account->code_three ?? ''}}.{{ $account->code_four ?? ''}}.{{ $account->code_five ?? ''}}</h5>
-  <h5 style="color: black; text-align: center">Cuenta: {{ $account->description ?? ''}}</h5>
+  <h5 style="color: black; text-align: center;">{{ $company->razon_social ?? ''}} / Rif: {{ $company->code_rif ?? ''}} / Fecha de Emisión: {{ $datenow }}</h5>
+  
+  <h4 style="color: black; text-align: center;">LISTADO MOVIMIENTO DE CUENTAS</h4>
+  <h5 style="color: black; text-align: center;">Código de Cuenta: {{ $account->code_one ?? ''}}.{{ $account->code_two ?? ''}}.{{ $account->code_three ?? ''}}.{{ $account->code_four ?? ''}}.{{ $account->code_five ?? ''}}</h5>
+  <h5 style="color: black; text-align: center;">Cuenta: {{ $account->description ?? ''}}</h5>
   
  
-  <h5 style="color: black; text-align: center">Fecha desde: {{ $date_begin ?? '' }} / hasta {{ $date_end ?? ''}}</h5>
+  <h5 style="color: black; text-align: right;">Saldo actual a la fecha: {{ number_format($saldo ?? 0, 2, ',', '.')}}</h5>
   
   @if (isset($detailvouchers))
       <?php 
-        //inicializamos el marcador
-        $id_header_old = 0;
-        $marcador = true;
-        $primera_tabla = false;
-        $total_debe = 0;
-        $total_haber = 0;
-        $total_saldo = 0;
-      ?>
-    @foreach ($detailvouchers as $detail)
+      $total_debe = 0;
+      $total_haber = 0;
+      $saldo_inicial = ($account->balance_previus ?? 0) + ($detailvouchers_saldo_debe ?? 0) - ($detailvouchers_saldo_haber ?? 0);
     
-      <?php 
-        if(($id_header_old == 0) || ($detail->id_header != $id_header_old)){
-          $id_header_old = $detail->id_header;
-          $marcador = true;
-        }
-        
-          if($detail->debe != 0){
-            $total_saldo += $detail->debe;
-          }else{
-            $total_saldo += $detail->haber;
-          }
-      ?>
-      @if ($marcador == true)
-        @if ($primera_tabla == true)
-          </table>
-          <table style="width: 100%;">
-            <tr>
-              <td style="text-align: center; width: 30%;">Descripción</td>
-              <td style="text-align: center; width: 30%;">{{ $detail->header_description ?? '' }}</td>
-              <td style="text-align: center; width: 20%;">{{ number_format($total_debe ?? 0, 2, ',', '.')}}</td>
-              <td style="text-align: center; width: 20%;">{{ number_format($total_haber ?? 0, 2, ',', '.')}}</td>
-            </tr>
-          </table>
-            <?php 
-              $total_debe = 0;
-              $total_haber = 0;
-            ?>
-          <br>
-        @else
-          <?php 
-            $primera_tabla = true;
-          ?>
-        @endif
+      $total_saldo = $saldo_inicial;
 
-        <table style="width: 100%;">
-          <tr>
-            <th style="text-align: center; width: 20%;">Fecha</th>
-            <th style="text-align: center; width: 10%;">Ref</th>
-            <th style="text-align: center; width: 30%;">Descripcion</th>
-            <th style="text-align: center; width: 20%;">Debe</th>
-            <th style="text-align: center; width: 20%;">Haber</th>
-            <th style="text-align: center; width: 20%;">Saldo</th>
-          </tr>
-      @endif
+     ?>
+    <table style="width: 100%;">
+      <tr>
+        <th style="text-align: center; width: 20%;">Fecha</th>
+        <th style="text-align: center; width: 10%;">Ref</th>
+        <th style="text-align: center; width: 30%;">Descripcion</th>
+        <th style="text-align: center; width: 20%;">Debe</th>
+        <th style="text-align: center; width: 20%;">Haber</th>
+        <th style="text-align: center; width: 20%;">Saldo</th>
+      </tr>
       
+      @foreach ($detailvouchers as $detail)
+        <?php 
+          if((isset($detail->debe)) && ($detail->debe != 0)){
+            $total_debe += $detail->debe;
+          }else if((isset($detail->haber)) && ($detail->haber != 0)){
+            $total_haber += $detail->haber;
+          }
+        ?>
         <tr>
           <td style="text-align: center;">{{ $detail->date ?? ''}}</td>
           <td style="text-align: center;">{{ $detail->id_header ?? ''}}</td>
           <td style="text-align: center;">{{ $detail->header_description ?? ''}}</td>
           <td style="text-align: center;">{{ number_format($detail->debe ?? 0, 2, ',', '.')}}</td>
           <td style="text-align: center;">{{ number_format($detail->haber ?? 0, 2, ',', '.')}}</td>
-          <td style="text-align: center;">{{ number_format($total_saldo ?? 0, 2, ',', '.')}}</td>
+          <td style="text-align: center;">{{ number_format($detail->saldo ?? 0, 2, ',', '.')}}</td>
         </tr>
-        <?php 
-          $marcador = false;
-          $total_debe += $detail->debe;
-          $total_haber += $detail->haber;
-          $description_final = $detail->header_description;
+      @endforeach
+    
 
-         
-        ?>
-      
-    @endforeach
+    <tr>
+      <td style="text-align: center;"></td>
+      <td style="text-align: center;"></td>
+      <td style="text-align: center;">Saldo Inicial</td>
+      <td style="text-align: center;"></td>
+      <td style="text-align: center;"></td>
+      <td style="text-align: center;">{{ number_format($saldo_inicial, 2, ',', '.')}}</td>
+    </tr>
+  </table>
+@endif
     <table style="width: 100%;">
       <tr>
-        <td style="text-align: center; width: 30%;">Descripción</td>
-        <td style="text-align: center; width: 30%;">{{ $description_final ?? '' }}</td>
-        <td style="text-align: center; width: 20%;">{{ number_format($total_debe ?? 0, 2, ',', '.')}}</td>
-        <td style="text-align: center; width: 20%;">{{ number_format($total_haber ?? 0, 2, ',', '.')}}</td>
-        <td style="text-align: center; width: 20%;">{{ number_format($total_saldo ?? 0, 2, ',', '.')}}</td>
+        <th style="text-align: center; width: 20%; border-color: white;"></th>
+        <th style="text-align: center; width: 10%; border-color: white;"></th>
+        <th style="text-align: center; width: 30%; border-color: white; border-right-color: black;"></th>
+        <th style="text-align: center; width: 20%; ">{{ number_format($total_debe ?? 0, 2, ',', '.')}}</th>
+        <th style="text-align: center; width: 20%;">{{ number_format($total_haber ?? 0, 2, ',', '.')}}</th>
+        <th style="text-align: center; width: 20%; border-color: white; border-left-color: black;"></th>
       </tr>
     </table>
-  @endif
-  
-  
-
-
+    <table style="width: 100%;">
+      <tr>
+        <th style="text-align: center; width: 20%; border-color: white;"></th>
+        <th style="text-align: center; width: 10%; border-color: white;"></th>
+        <th style="text-align: center; width: 30%; border-color: white;"></th>
+        <th style="text-align: center; width: 20%; border-color: white;"></th>
+        <th style="text-align: center; width: 20%; border-color: white; border-right-color: black;">Saldo del mes</th>
+        <th style="text-align: center; width: 20%;">{{ number_format($total_debe - $total_haber, 2, ',', '.')}}</th>
+      </tr>
+    </table>
+    <table style="width: 100%;">
+      <tr>
+        <th style="text-align: center; width: 20%;border-color: white;"></th>
+        <th style="text-align: center; width: 10%;border-color: white;"></th>
+        <th style="text-align: center; width: 30%;border-color: white;"></th>
+        <th style="text-align: right; width: 40%;border-color: white; border-right-color: black;">Saldo actual a la fecha</th>
+        <th style="text-align: center; width: 20%;">{{ number_format($saldo, 2, ',', '.')}}</th>
+      </tr>
+    </table>
 </body>
+
+
 </html>

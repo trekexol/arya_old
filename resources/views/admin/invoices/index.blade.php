@@ -29,7 +29,8 @@
 
 
 
-
+<form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
+@csrf
 <!-- container-fluid -->
 <div class="container-fluid">
 
@@ -38,7 +39,9 @@
       <div class="col-md-6">
           <h2>Facturas</h2>
       </div>
-      
+      <div class="col-md-6">
+        <button type="submit" title="Agregar" id="btncobrar" class="btn btn-primary  float-md-right" >Cobrar Facturas</a>
+      </div>
     </div>
   </div>
   <!-- /.container-fluid -->
@@ -72,6 +75,7 @@
                 <th class="text-center">Iva</th>
                 <th class="text-center">Monto Con Iva</th>
                 <th class="text-center"></th>
+                <th class="text-center"></th>
             </tr>
             </thead>
             
@@ -92,9 +96,14 @@
                             <td class="text-center font-weight-bold">
                                 <a href="{{ route('quotations.createfacturado',[$quotation->id,$quotation->coin ?? 'bolivares']) }}" title="Ver Factura" class="text-center text-success font-weight-bold">Cobrado</a>
                             </td>
+                            <td class="text-center font-weight-bold">
+                            </td>
                             @else
                             <td class="text-center font-weight-bold">
                                 <a href="{{ route('quotations.createfacturar_after',[$quotation->id,$quotation->coin ?? 'bolivares']) }}" title="Cobrar Factura" class="font-weight-bold text-dark">Click para Cobrar</a>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="check{{ $quotation->id }}" value="{{ $quotation->id }}" id="flexCheckChecked">    
                             </td>
                             @endif
                             
@@ -108,7 +117,7 @@
         </div>
     </div>
 </div>
-  
+</form>
 @endsection
 @section('javascript')
     <script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Company;
 use App\DetailVoucher;
 use App\HeaderVoucher;
 use App\Inventory;
@@ -93,7 +94,14 @@ class InventoryController extends Controller
        
         $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
 
-        $bcv = $this->search_bcv();
+        $company = Company::on(Auth::user()->database_name)->find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
 
         $contrapartidas     = Account::on(Auth::user()->database_name)->where('code_one', '<>',0)
                                                                     ->where('code_two', '<>',0)
@@ -108,7 +116,14 @@ class InventoryController extends Controller
    public function create_decrease_inventory($id_inventory)
    {
         $inventory = Inventory::on(Auth::user()->database_name)->find($id_inventory);
-        $bcv = $this->search_bcv();
+        $company = Company::on(Auth::user()->database_name)->find(1);
+        //Si la taza es automatica
+        if($company->tiporate_id == 1){
+            $bcv = $this->search_bcv();
+        }else{
+            //si la tasa es fija
+            $bcv = $company->rate;
+        }
 
         return view('admin.inventories.create_decrease_inventory',compact('inventory','bcv'));
    }
