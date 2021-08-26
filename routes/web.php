@@ -513,8 +513,9 @@ Route::group(["prefix"=>'invoices'],function(){
     Route::get('/','InvoiceController@index')->name('invoices');
 
     Route::get('movementinvoice/{id_invoice}/{coin?}','InvoiceController@movementsinvoice')->name('invoices.movement');
-    
-   
+    Route::post('multipayment','InvoiceController@multipayment')->name('invoices.multipayment');
+    Route::post('storemultipayment','InvoiceController@storemultipayment')->name('invoices.storemultipayment');
+
  });
 
  Route::group(["prefix"=>'pdf'],function(){

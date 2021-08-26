@@ -266,7 +266,7 @@ class QuotationController extends Controller
         $inventories = DB::connection(Auth::user()->database_name)->table('inventories')
             ->join('products', 'products.id', '=', 'inventories.product_id')
             ->where('products.type','MERCANCIA')
-            ->select('products.*','inventories.amount as amount')
+            ->select('products.*','inventories.amount as amount','inventories.id as id_inventory')
             ->get();
         
         $quotation = Quotation::on(Auth::user()->database_name)->find($id_quotation);
@@ -423,7 +423,7 @@ class QuotationController extends Controller
 
     public function storeproduct(Request $request)
     {
-        dd($request);
+        
         $data = request()->validate([
             
         

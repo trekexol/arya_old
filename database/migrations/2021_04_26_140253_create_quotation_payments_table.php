@@ -15,7 +15,7 @@ class CreateQuotationPaymentsTable extends Migration
     {
         Schema::create('quotation_payments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_quotation');
+            $table->unsignedBigInteger('id_quotation')->nullable();
             $table->unsignedBigInteger('id_account')->nullable();
 
 

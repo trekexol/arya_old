@@ -29,7 +29,7 @@
 
 
 
-<form method="POST" action="{{ route('quotations.storeproduct') }}" enctype="multipart/form-data" onsubmit="return validacion()">
+<form method="POST" action="{{ route('invoices.multipayment') }}" enctype="multipart/form-data" onsubmit="return validacion()">
 @csrf
 <!-- container-fluid -->
 <div class="container-fluid">
